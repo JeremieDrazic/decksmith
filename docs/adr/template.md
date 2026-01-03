@@ -1,6 +1,6 @@
 # ADR-XXXX: [TITLE]
 
-**Last Updated:** YYYY-MM-DD  
+**Last Updated:** [DATE]  
 **Status:** Draft  
 **Context:** Decksmith
 
@@ -8,41 +8,56 @@
 
 ## Context
 
-[Describe the architectural problem or question this ADR addresses.
-What forces are at play? What constraints exist?]
+[Describe the architectural problem or question this ADR addresses]
 
 ## Current Decision
 
-[State the decision clearly and unambiguously.
-Use imperative language: "We will...", "The system shall..."]
+[State the decision clearly and unambiguously]
 
 ## Rationale
 
-[Explain why this decision makes sense given the project's values:
-- Separation of concerns
-- Explicit data contracts  
-- Deterministic behavior
-- Maintainability
-- Clarity over cleverness
-
-How does this decision support these values?]
+[Explain why this decision makes sense given the project's values: 
+- separation of concerns
+- explicit data contracts
+- deterministic behavior
+- maintainability
+- clarity over cleverness]
 
 ## Trade-offs
 
 **Benefits:**
-- [What we gain from this decision]
+- [What we gain]
 
 **Costs:**
-- [What we lose or must accept]
+- [What we lose or accept]
 
 **Risks:**
-- [What could go wrong or require mitigation]
+- [What could go wrong]
 
 ## Evolution History
 
-### YYYY-MM-DD: Initial decision
-- [Brief summary of the decision and reasoning]
+### [DATE]: Initial decision
+- [Summary of the decision]
 
 ## References
 
-- [Links to specs, external docs, discussions, or related ADRs]
+- [Links to specs, discussions, or external docs]
+```
+
+### b) Prompt pour Claude Code
+
+Quand tu veux générer un ADR, tu dirais quelque chose comme :
+```
+I need to document an architecture decision.
+
+Topic: [e.g., "Use Zod for all DTO validation"]
+
+Please:
+1. Read .claude/adr-template.md
+2. Check docs/adr/ for the next available number
+3. Create a new ADR file following the template
+4. Fill in all sections based on our conversation
+5. Update docs/adr/README.md with the new entry
+6. Respect the project values (see project context)
+
+Ask me clarifying questions if needed before writing.
