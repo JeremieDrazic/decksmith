@@ -28,7 +28,7 @@ All architectural decisions should respect Decksmith's core values:
 
 | # | Title | Last Updated | Status |
 |---|-------|--------------|--------|
-_None yet_
+| [0001](./0001-use-fastify-as-web-framework.md) | Use Fastify as Web Framework for apps/api | 2026-01-01 | Active |
 
 ## Deprecated
 
