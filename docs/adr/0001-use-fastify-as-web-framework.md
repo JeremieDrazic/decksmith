@@ -102,7 +102,7 @@ This is particularly valuable when working with AI assistants like Claude Code.
 - **Less flexible by design**: Fastify constrains certain patterns that are trivial in Express—this is intentional and aligns with our values, but represents a loss of "freedom"
 
 ### Risks
-- **Over-engineering for a personal project**: Mitigated by Spec Kit process and conscious scope control
+- **Over-engineering for a personal project**: Mitigated by incremental approach and conscious scope control
 - **Framework maintenance**: Low risk—Fastify is stable, mature, used in production by major companies, with a solid core team
 - **Lock-in if we change direction**: Low risk—Fastify is just the API layer; routes, DTOs, and domain logic are portable to other frameworks if needed
 - **Framework loses popularity**: Very low risk—Fastify has consistent releases and strong adoption

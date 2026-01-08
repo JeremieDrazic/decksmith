@@ -61,7 +61,6 @@ Do not suggest alternatives unless there's a strong technical reason.
 
 ## Working Process
 - Incremental, task-driven
-- Spec-driven workflow (inspired by GitHub Spec Kit)
 - ADR-style decisions documented
 - Code + docs written together
 
