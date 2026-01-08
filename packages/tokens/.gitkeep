@@ -1,0 +1,8 @@
+# packages/tokens
+
+Shared design tokens (spacing, radius, colors, fonts, icons).
+Design primitives used by UI components.
+
+Dependencies: None
+
+See: ADR-0005 (Package Boundaries)

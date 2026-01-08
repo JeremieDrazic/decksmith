@@ -1,0 +1,8 @@
+# packages/scryfall
+
+Scryfall API client, normalization, and caching strategy.
+Handles card data fetching and transformation.
+
+Dependencies: packages/schema
+
+See: ADR-0005 (Package Boundaries)

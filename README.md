@@ -1,8 +1,10 @@
 # Decksmith
 
-Decksmith is a personal tool for building Magic: The Gathering decks and generating clean, print-ready proxy sheets.
+Decksmith is a personal tool for building Magic: The Gathering decks and generating clean,
+print-ready proxy sheets.
 
-It is designed first for my own use: to experiment, iterate, and build decks seriously — with a strong focus on correctness, structure, and long-term maintainability.  
+It is designed first for my own use: to experiment, iterate, and build decks seriously — with a
+strong focus on correctness, structure, and long-term maintainability.  
 If it’s useful to others, even better.
 
 ---
@@ -16,7 +18,8 @@ Decksmith focuses on **craft**:
 - iterating on ideas
 - preparing clean proxy sheets ready for printing and cutting
 
-The goal is not to replace existing tools, but to offer a **focused, well-engineered workflow** from decklist to physical playtest.
+The goal is not to replace existing tools, but to offer a **focused, well-engineered workflow** from
+decklist to physical playtest.
 
 Decksmith follows a few simple principles:
 
@@ -39,6 +42,7 @@ Decksmith follows a few simple principles:
 - Print-ready PDF export (crop marks, correct sizing)
 
 Future features may include:
+
 - deck versioning
 - tags and notes
 - public deck sharing
@@ -49,6 +53,7 @@ Future features may include:
 ## Architecture Overview
 
 Decksmith is built as a **modular monorepo**, designed to support:
+
 - a web application
 - a future mobile application
 - background jobs (PDF generation)
@@ -105,6 +110,7 @@ Decksmith is built as a **modular monorepo**, designed to support:
 ## Tech Stack
 
 ### Frontend
+
 - React + TypeScript
 - Vite
 - TanStack Router
@@ -113,12 +119,14 @@ Decksmith is built as a **modular monorepo**, designed to support:
 - shadcn/ui
 
 ### Backend
+
 - Node.js
 - Fastify
 - Prisma
 - Supabase (Postgres, Auth, Storage)
 
 ### Tooling
+
 - pnpm + Turborepo
 - Zod (schemas and validation)
 - Vitest / Playwright
@@ -136,7 +144,8 @@ Decksmith is built incrementally, with a strong emphasis on:
 - documentation written alongside code
 - avoiding premature abstraction
 
-This project is also an experiment in using AI as a **coding assistant**, not as a replacement for design or judgment.
+This project is also an experiment in using AI as a **coding assistant**, not as a replacement for
+design or judgment.
 
 ---
 

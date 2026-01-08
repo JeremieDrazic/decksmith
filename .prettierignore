@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+pnpm-lock.yaml
+
+# Build outputs
+dist
+build
+.turbo
+coverage
+storybook-static
+
+# Generated files
+*.generated.ts
+*.d.ts.map
+
+# Documentation
+CHANGELOG.md
+
+# Git
+.git

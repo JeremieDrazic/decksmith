@@ -1,0 +1,8 @@
+# packages/query
+
+TanStack Query hooks and query keys.
+Shared data fetching logic for web and mobile.
+
+Dependencies: packages/api-client, packages/schema
+
+See: ADR-0005 (Package Boundaries)
