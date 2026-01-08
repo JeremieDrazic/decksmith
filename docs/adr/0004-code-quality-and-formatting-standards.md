@@ -156,9 +156,14 @@ strategy.
 
 ### 2026-01-08: Initial decision
 
-- Chose Prettier for formatting (no semicolons, single quotes, 100 char width)
+- Chose Prettier for formatting (semicolons enabled, single quotes, 100 char width)
 - Chose ESLint for linting (TypeScript + React plugins)
 - Defined strategy for shared config in `packages/config` (implementation deferred)
+- **Implementation note**: Configuration files placed at repository root initially
+  (`.prettierrc.json`, `eslint.config.js`, `tsconfig.json`) for immediate functionality. Migration
+  to `packages/config` will occur during package scaffolding phase when duplication becomes apparent
+  and shared configs provide clear value. This follows the principle of avoiding premature
+  abstraction.
 
 ## References
 
