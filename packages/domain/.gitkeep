@@ -1,0 +1,8 @@
+# packages/domain
+
+Pure domain logic (deck parsing, rules, print planning).
+No I/O, no frameworks - fully deterministic and testable.
+
+Dependencies: packages/schema only
+
+See: ADR-0005 (Package Boundaries), ADR-0006 (Pure unit tests), CLAUDE.md (Domain logic only in packages/domain)

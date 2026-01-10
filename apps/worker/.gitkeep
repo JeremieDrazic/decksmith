@@ -1,0 +1,6 @@
+# apps/worker
+
+Background worker for PDF generation and heavy tasks.
+Processes print jobs asynchronously from the API.
+
+See: README.md (Architecture Overview), CLAUDE.md (PDF generation only in worker)

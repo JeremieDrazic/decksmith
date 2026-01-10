@@ -1,0 +1,9 @@
+# packages/db
+
+Prisma schema and database access (server-side only).
+Prisma models are NEVER exported outside this package.
+
+Dependencies: packages/schema only
+Used by: apps/api, apps/worker
+
+See: ADR-0005 (Package Boundaries), CLAUDE.md (Prisma models never exposed outside API)

@@ -1,0 +1,8 @@
+# packages/schema
+
+Zod schemas defining all API contracts (DTOs).
+Shared data contracts between frontend and backend.
+
+Dependencies: None (only Zod as peer dependency)
+
+See: ADR-0005 (Package Boundaries), CLAUDE.md (All boundaries use DTOs from packages/schema)

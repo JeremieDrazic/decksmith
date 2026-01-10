@@ -1,0 +1,8 @@
+# packages/config
+
+Shared configs (tsconfig, prettier, eslint, tailwind, vitest, storybook).
+Configuration presets reused across all packages.
+
+Dependencies: DevDependencies only
+
+See: ADR-0003 (TypeScript config), ADR-0004 (Code quality), ADR-0006 (Testing)

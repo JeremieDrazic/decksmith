@@ -1,0 +1,8 @@
+# packages/pdf
+
+Deterministic PDF generation engine (A4, layouts, crop marks).
+Used ONLY by apps/worker for background processing.
+
+Dependencies: packages/domain, packages/schema
+
+See: ADR-0005 (Package Boundaries), CLAUDE.md (PDF generation only in worker)

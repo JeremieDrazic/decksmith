@@ -1,0 +1,6 @@
+# apps/web
+
+Web SPA (React, Vite, TanStack Router/Query, Tailwind, shadcn/ui)
+Main user interface for deck building and proxy sheet preparation.
+
+See: README.md (Architecture Overview)

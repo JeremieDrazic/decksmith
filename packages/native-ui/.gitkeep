@@ -1,0 +1,8 @@
+# packages/native-ui
+
+React Native UI components for mobile app (future).
+Shared component library for apps/mobile.
+
+Dependencies: packages/tokens
+
+See: ADR-0005 (Package Boundaries), ADR-0006 (Storybook with play functions)

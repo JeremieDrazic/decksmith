@@ -1,0 +1,6 @@
+# apps/api
+
+HTTP API (Fastify, Zod, Prisma)
+Handles authentication, deck data, and job orchestration.
+
+See: README.md (Architecture Overview), ADR-0001 (Fastify decision)

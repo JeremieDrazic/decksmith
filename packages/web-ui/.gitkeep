@@ -1,0 +1,8 @@
+# packages/web-ui
+
+React UI components (shadcn + Tailwind).
+Shared component library for apps/web.
+
+Dependencies: packages/tokens
+
+See: ADR-0005 (Package Boundaries), ADR-0006 (Storybook with play functions)

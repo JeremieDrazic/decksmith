@@ -1,0 +1,8 @@
+# packages/api-client
+
+Typed API client shared by web and mobile apps.
+Provides type-safe HTTP methods for calling apps/api.
+
+Dependencies: packages/schema
+
+See: ADR-0005 (Package Boundaries), ADR-0006 (HTTP mocking with MSW)

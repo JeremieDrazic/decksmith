@@ -2,7 +2,8 @@
 
 Amend an existing ADR to reflect evolution of the decision.
 
-ADRs in Decksmith are living documents - they can be updated as context changes or new information emerges.
+ADRs in Decksmith are living documents - they can be updated as context changes or new information
+emerges.
 
 ---
 
@@ -11,14 +12,14 @@ ADRs in Decksmith are living documents - they can be updated as context changes 
 Project: Decksmith - Magic: The Gathering deck management tool
 
 Core Values:
+
 - Separation of concerns
 - Explicit data contracts
 - Deterministic behavior
 - Maintainability
 - Clarity over cleverness
 
-ADR Location: docs/adr/
-ADR Format: Living documents with Evolution History
+ADR Location: docs/adr/ ADR Format: Living documents with Evolution History
 
 ---
 
@@ -34,6 +35,7 @@ Ask the user:
    - Provide filename
 
 Examples:
+
 - "ADR-0001"
 - "Use Fastify for API Server"
 - "0001-use-fastify.md"
@@ -41,7 +43,7 @@ Examples:
 ### Step 2: Read the current ADR
 
 1. Find the file in docs/adr/
-   - If user gave number: find XXXX-*.md
+   - If user gave number: find XXXX-\*.md
    - If user gave title: search for matching title
    - If user gave filename: read directly
 
@@ -54,12 +56,12 @@ Examples:
    - Key points from rationale
 
 Example:
+
 > I've read ADR-0001: Use Fastify for API Server
-> 
-> Current decision: Use Fastify as the web framework for apps/api
-> Last updated: 2025-01-04
-> Status: Active
-> 
+>
+> Current decision: Use Fastify as the web framework for apps/api Last updated: 2025-01-04 Status:
+> Active
+>
 > Key rationale: TypeScript-first, explicit validation, clear plugin system
 
 ### Step 3: Understand the change
@@ -92,7 +94,7 @@ Ask the user to confirm the scope before proceeding.
 1. **Always add an entry to Evolution History**
 
 Format:
-    
+
     ### YYYY-MM-DD: [Brief title of change]
     - [Description of what changed and why]
     - [Any new implications or learnings]
@@ -102,28 +104,33 @@ Place it at the TOP of Evolution History (reverse chronological order).
 2. **Update other sections if needed:**
 
 If the decision itself changed:
+
 - Update "Current Decision" section
 
 If new reasoning emerged:
+
 - Update or extend "Rationale" section
 
 If new trade-offs discovered:
+
 - Add to "Trade-offs" section (Benefits, Costs, or Risks)
 
 If new related docs:
+
 - Add to "References" section
 
 3. **Update metadata**
 
 - Set "Last Updated" to today's date (YYYY-MM-DD format)
 - Update "Status" if applicable:
-  * Keep as "Active" for most updates
-  * Change to "Deprecated" if being replaced
-  * Add superseding ADR reference if deprecated
+  - Keep as "Active" for most updates
+  - Change to "Deprecated" if being replaced
+  - Add superseding ADR reference if deprecated
 
 ### Step 6: Validate
 
 Check:
+
 - Evolution History is in reverse chronological order (newest first)
 - New entry has today's date
 - New entry has clear description of what changed
@@ -134,11 +141,13 @@ Check:
 ### Step 7: Show and confirm
 
 Show the user:
+
 1. Summary of changes made
 2. The new Evolution History entry
 3. Any other sections that were updated
 
 Ask:
+
 - "Does this update accurately reflect the evolution?"
 - "Should the status remain 'Active' or change?"
 - "Any other adjustments needed?"
@@ -150,14 +159,14 @@ Ask:
 User: "Update ADR-0001 - we've decided to also use @fastify/cors plugin"
 
 You respond:
+
 > I've read ADR-0001: Use Fastify for API Server.
-> 
-> Current decision: Use Fastify as the web framework for apps/api
-> Last updated: 2025-01-04
-> Status: Active
-> 
+>
+> Current decision: Use Fastify as the web framework for apps/api Last updated: 2025-01-04 Status:
+> Active
+>
 > You want to add information about @fastify/cors. Let me ask:
-> 
+>
 > 1. Why was this plugin chosen over alternatives?
 > 2. Were there other options (manual CORS, other plugins)?
 > 3. Any new trade-offs or benefits from this choice?
@@ -165,24 +174,30 @@ You respond:
 User provides answers.
 
 You respond:
+
 > Perfect! I'll update the ADR with:
-> 
+>
 > Evolution History entry:
+>
 > ### 2025-01-10: Added CORS handling with @fastify/cors
+>
 > - Decided to use @fastify/cors plugin for explicit CORS configuration
-> - Alternative was manual CORS middleware, but plugin is better maintained and aligns with Fastify ecosystem
+> - Alternative was manual CORS middleware, but plugin is better maintained and aligns with Fastify
+>   ecosystem
 > - Reinforces "explicit contracts" value
-> 
+>
 > Should I also update the Rationale section to mention CORS handling?
 
 User: "Yes"
 
 You respond:
+
 > Done! I've updated:
+>
 > 1. Added Evolution History entry
 > 2. Extended Rationale to mention CORS plugin choice
 > 3. Updated "Last Updated" to 2025-01-10
-> 
+>
 > The ADR now reflects the expanded use of Fastify plugins.
 
 ---
@@ -199,26 +214,26 @@ If the user says the decision is no longer valid:
 
 3. Add deprecation entry to Evolution History:
 
-    ### YYYY-MM-DD: Deprecated
-    - This decision has been superseded by ADR-XXXX: [New Decision Title]
-    - Reason: [Brief explanation]
-    - Migration: [If applicable, how to migrate]
+   ### YYYY-MM-DD: Deprecated
+   - This decision has been superseded by ADR-XXXX: [New Decision Title]
+   - Reason: [Brief explanation]
+   - Migration: [If applicable, how to migrate]
 
 4. If new ADR doesn't exist yet, offer: "Should I create the new ADR now?"
 
 Example:
 
     # ADR-0001: Use Fastify for API Server
-    
+
     **Last Updated:** 2025-03-15
     **Status:** Deprecated (superseded by ADR-0010)
-    
+
     ---
-    
+
     [... original sections ...]
-    
+
     ## Evolution History
-    
+
     ### 2025-03-15: Deprecated
     - Superseded by ADR-0010: Use Hono for API Server
     - Reason: Need for edge runtime compatibility
@@ -295,6 +310,7 @@ Ask the user:
 ## Tips for Good Updates
 
 DO:
+
 - Be specific about what changed and why
 - Date every entry
 - Keep the historical context
@@ -302,6 +318,7 @@ DO:
 - Link to related changes (specs, code, other ADRs)
 
 DON'T:
+
 - Delete or modify old Evolution History entries
 - Be vague about what changed
 - Update without explanation
