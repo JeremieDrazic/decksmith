@@ -8,12 +8,29 @@ Per-user settings for language, units, currency, theme, and UI customization.
 
 ### Language
 - **English (en):** Default
-- **French (fr):** Full UI translation
+- **French (fr):** Full UI translation + card localization
 
 **Affects:**
 - UI labels, buttons, validation messages
 - API error responses (i18n)
 - Date/time formatting
+- **Card names and oracle text** (see [card-search.md](./card-search.md) for details)
+  - Card search results display localized names (e.g., "Éclair" instead of "Lightning Bolt")
+  - Deck lists show cards in selected language
+  - Collection displays use localized card data
+  - **Fallback:** If translation unavailable, displays English name
+
+**Multi-Language Card Support:**
+Decksmith stores card data in multiple languages locally (English + French) and displays cards based on the user's language preference. This affects:
+- Card autocomplete search results
+- Deck card lists
+- Collection views
+- Any UI component displaying card names or oracle text
+
+**Example:**
+- User with `language: 'fr'` sees "Éclair" when searching for Lightning Bolt
+- User with `language: 'en'` sees "Lightning Bolt"
+- If French translation missing, both users see "Lightning Bolt" (English fallback)
 
 ### Units
 - **Metric (mm/cm):** Default for card dimensions, PDF margins
@@ -70,6 +87,8 @@ Stored in `UserPreferences.collection_view_config`:
 2. **Language affects API responses:**
    - Validation errors translated server-side
    - Example: `"Quantity must be ≥ 1"` → `"La quantité doit être ≥ 1"`
+   - Card data localized based on user preference
+   - Example: `/api/cards/search?q=bolt` returns `{ name: "Éclair" }` for French users, `{ name: "Lightning Bolt" }` for English users
 
 3. **Units only affect display:**
    - Backend always stores mm

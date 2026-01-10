@@ -11,10 +11,11 @@ User (Supabase Auth)
   ├─ 1:1 → UserPreferences
   ├─ 1:N → CollectionEntry
   ├─ 1:N → Deck
-  └─ 1:N → Tag
+  ├─ 1:N → Tag
+  └─ 1:N → RecommendationFeedback
 
 Card (Scryfall Oracle)
-  └─ 1:N → CardPrint
+  └─ 1:N → CardPrint (now includes multi-language variants)
 
 CardPrint
   ├─ N:N → CollectionEntry
@@ -22,6 +23,7 @@ CardPrint
 
 Deck
   ├─ 1:N → DeckSection
+  ├─ 1:N → DeckRecommendation
   └─ N:N → Tag (via DeckTag)
 
 DeckSection
@@ -30,6 +32,9 @@ DeckSection
 Tag
   ├─ N:N → Deck (via DeckTag)
   └─ N:N → CollectionEntry (via CollectionEntryTag)
+
+DeckRecommendation
+  └─ 1:N → RecommendationFeedback
 
 CraftGuideArticle (standalone)
 ```
@@ -142,6 +147,10 @@ Represents a **specific edition/variant** of a card.
 | `nonfoil` | Boolean | Can this print be non-foil? |
 | `prices` | JSONB | `{usd, usd_foil, eur, eur_foil}` (nullable strings) |
 | `prices_updated_at` | Timestamp | When prices last synced |
+| `language` | String(2) | Language code (`en`, `fr`, `es`, etc.) Default: `en` |
+| `localized_name` | String | Localized card name (nullable) |
+| `localized_type` | String | Localized type line (nullable) |
+| `localized_text` | String | Localized oracle text (nullable) |
 | `created_at` | Timestamp | First sync date |
 | `updated_at` | Timestamp | Last Scryfall sync |
 
@@ -152,11 +161,16 @@ Represents a **specific edition/variant** of a card.
 
 **Business Rules:**
 - Multiple prints per Oracle ID (e.g., "Lightning Bolt" has 50+ prints)
+- **Multi-language support:** Each language variant is a separate CardPrint row
+- Scryfall treats language variants as distinct prints (different `scryfall_id`)
+- Localized fields fallback to English if null
 - Prices can be null (not all cards have market data)
 - `foil` and `nonfoil` both true = card exists in both variants
 
 **Indexes:**
-- `(oracle_id, set_code, collector_number)` unique index
+- `(oracle_id, set_code, collector_number, language)` unique index (updated for multi-language)
+- `(language)` index for language filtering
+- `(oracle_id, language)` composite index for localized lookups
 - `scryfall_id` unique index
 
 ---
@@ -359,6 +373,72 @@ Static educational content (equipment guides, tutorials).
 
 ---
 
+### 11. DeckRecommendation
+
+AI-powered card recommendations for deck improvement.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID (PK) | Unique recommendation ID |
+| `deck_id` | UUID (FK) | References `Deck.id` |
+| `algorithm_version` | String | Version of recommendation algorithm (e.g., "v1.0.0") |
+| `identified_gaps` | JSONB | Deck gaps found by algorithm `{"ramp": "low", "removal": "missing_board_wipes"}` |
+| `rule_suggestions` | JSONB | Rule-based card suggestions `[{card_id, reason, priority}]` |
+| `llm_model` | String | LLM model used (e.g., "claude-3.5-sonnet-20250929") (nullable) |
+| `llm_prompt_tokens` | Integer | Tokens used in prompt (nullable) |
+| `llm_completion_tokens` | Integer | Tokens used in completion (nullable) |
+| `llm_cost_usd` | Decimal | Cost of LLM API call (nullable) |
+| `llm_suggestions` | JSONB | LLM-refined suggestions `[{card_id, reasoning, priority}]` (nullable) |
+| `llm_summary` | Text | Strategic deck summary from LLM (nullable) |
+| `user_feedback` | Enum | `helpful` or `not_helpful` (nullable) |
+| `created_at` | Timestamp | When recommendation was generated |
+| `expires_at` | Timestamp | TTL (7 days from creation) |
+
+**Relationships:**
+- N:1 → `Deck` (via `deck_id`)
+- 1:N → `RecommendationFeedback`
+
+**Constraints:**
+- `deck_id` index for lookup
+
+**Business Rules:**
+- Hybrid approach: Rules-based algorithm + LLM refinement
+- Recommendations cached for 7 days (TTL)
+- Collection-aware (prioritizes owned cards)
+- Pricing-aware (suggests budget alternatives)
+- Format-aware (only legal cards)
+- Rate limiting: 10 analyses per hour per user
+- LLM cost tracking: ~$0.012 per analysis
+
+**Indexes:**
+- `(deck_id)` index
+- `(expires_at)` index for cleanup job
+
+---
+
+### 12. RecommendationFeedback
+
+User feedback on recommendations for algorithm improvement.
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | UUID (PK) | Unique feedback ID |
+| `recommendation_id` | UUID (FK) | References `DeckRecommendation.id` |
+| `user_id` | UUID (FK) | References `User.id` |
+| `feedback` | Enum | `helpful` or `not_helpful` |
+| `comment` | Text | Optional user comment (nullable) |
+| `created_at` | Timestamp | Feedback submission date |
+
+**Relationships:**
+- N:1 → `DeckRecommendation` (via `recommendation_id`)
+- N:1 → `User` (via `user_id`)
+
+**Business Rules:**
+- Used to improve recommendation algorithm over time
+- One feedback per user per recommendation
+
+---
+
 ## Join Tables
 
 ### DeckTag
@@ -391,13 +471,15 @@ Static educational content (equipment guides, tutorials).
 |-------|-------------------|--------------|
 | `UserPreferences` | `user_id` | `user_id → User.id` |
 | `Card` | `oracle_id` | - |
-| `CardPrint` | `scryfall_id`, `(oracle_id, set_code, collector_number)` | `oracle_id → Card.oracle_id` |
+| `CardPrint` | `scryfall_id`, `(oracle_id, set_code, collector_number, language)` | `oracle_id → Card.oracle_id` |
 | `CollectionEntry` | `(user_id, card_print_id, is_foil, condition)` | `user_id → User.id`, `card_print_id → CardPrint.id` |
 | `Deck` | `public_slug` (when `is_public = true`) | `user_id → User.id` |
 | `DeckSection` | `(deck_id, position)` | `deck_id → Deck.id` |
 | `DeckCard` | `(section_id, position)` | `section_id → DeckSection.id`, `card_print_id → CardPrint.id` |
 | `Tag` | `(user_id, name, type)` | `user_id → User.id` |
 | `CraftGuideArticle` | `slug` | - |
+| `DeckRecommendation` | - | `deck_id → Deck.id` |
+| `RecommendationFeedback` | - | `recommendation_id → DeckRecommendation.id`, `user_id → User.id` |
 
 ---
 
@@ -409,9 +491,12 @@ Static educational content (equipment guides, tutorials).
 | `User` | `CollectionEntry` | CASCADE |
 | `User` | `Deck` | CASCADE |
 | `User` | `Tag` | CASCADE |
+| `User` | `RecommendationFeedback` | CASCADE |
 | `Deck` | `DeckSection` | CASCADE |
 | `Deck` | `DeckTag` | CASCADE |
+| `Deck` | `DeckRecommendation` | CASCADE |
 | `DeckSection` | `DeckCard` | CASCADE |
+| `DeckRecommendation` | `RecommendationFeedback` | CASCADE |
 | `Card` | `CardPrint` | RESTRICT (prevent orphan prints) |
 | `CardPrint` | `CollectionEntry` | RESTRICT (prevent accidental deletion) |
 | `CardPrint` | `DeckCard` | RESTRICT |
@@ -425,7 +510,7 @@ Static educational content (equipment guides, tutorials).
 **See [user-auth.md](./user-auth.md) for full RLS policies.**
 
 Summary:
-- Users can only read/write their own `CollectionEntry`, `Deck`, `Tag`, `UserPreferences`
+- Users can only read/write their own `CollectionEntry`, `Deck`, `Tag`, `UserPreferences`, `DeckRecommendation`, `RecommendationFeedback`
 - Public decks are readable by anyone (via `public_slug`)
 - `Card`, `CardPrint`, `CraftGuideArticle` are globally readable
 - Scryfall sync worker has elevated permissions for bulk upserts
@@ -446,9 +531,16 @@ Summary:
 3. **Card search:**
    - Full-text `tsvector` on `Card(name, type_line, oracle_text)`
    - `(set_code)` on `CardPrint`
+   - `(language)` on `CardPrint` (multi-language filtering)
+   - `(oracle_id, language)` composite on `CardPrint` (localized lookups)
 
 4. **Public deck sharing:**
    - `(public_slug)` unique on `Deck` (partial index)
+
+5. **Deck recommendations:**
+   - `(deck_id)` on `DeckRecommendation`
+   - `(expires_at)` on `DeckRecommendation` (TTL cleanup)
+   - `(recommendation_id)` on `RecommendationFeedback`
 
 ### Low-Traffic (Acceptable Sequential Scans)
 

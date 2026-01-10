@@ -189,6 +189,502 @@ coverage = (owned_cards / total_cards) * 100
 
 ---
 
+### Enhanced Deck Statistics
+
+**Overview:**
+Beyond basic mana curve and color distribution, Decksmith provides strategic deck analysis to help identify strengths and weaknesses. All statistics are calculated using oracle text pattern matching (no external APIs).
+
+#### Card Draw Analysis
+
+**Metrics:**
+- **Total draw sources**: Count of cards with draw effects
+- **Permanent draw engines**: Cards that repeatedly draw (Rhystic Study, Phyrexian Arena)
+- **One-shot draw**: Cards that draw once (Divination, Night's Whisper)
+- **Average draw per turn cycle**: Estimated cards drawn per full rotation (4 turns)
+
+**Pattern Detection:**
+Uses regex patterns to identify draw effects:
+```typescript
+/draw (\d+) cards?/i        // "draw 2 cards"
+/draw a card/i               // "draw a card"
+/whenever .* draw a card/i   // Triggered draw
+```
+
+**Example Output:**
+```json
+{
+  "card_draw": {
+    "sources": [
+      { "card_name": "Rhystic Study", "type": "permanent", "draw_amount": 1, "cmc": 3 },
+      { "card_name": "Divination", "type": "one_shot", "draw_amount": 2, "cmc": 3 }
+    ],
+    "total_draw_spells": 12,
+    "permanent_draw_engines": 5,
+    "avg_draw_per_cycle": 2.5
+  }
+}
+```
+
+#### Removal & Interaction Analysis
+
+**Categories:**
+- **Spot removal**: Single-target removal (Swords to Plowshares, Murder)
+- **Board wipes**: Mass removal (Wrath of God, Blasphemous Act)
+- **Counters**: Counterspells (Counterspell, Negate)
+- **Removal density**: Percentage of non-land cards that interact
+
+**Pattern Detection:**
+```typescript
+/destroy target creature/i      // Spot removal (creature)
+/destroy target artifact/i       // Spot removal (artifact)
+/destroy all creatures/i         // Board wipe
+/counter target spell/i          // Counterspell
+```
+
+**Example Output:**
+```json
+{
+  "removal": {
+    "spot_removal": [
+      { "card_name": "Swords to Plowshares", "category": "creature", "cmc": 1 },
+      { "card_name": "Nature's Claim", "category": "artifact", "cmc": 1 }
+    ],
+    "board_wipes": [
+      { "card_name": "Wrath of God", "category": "creature", "cmc": 4 }
+    ],
+    "counters": [
+      { "card_name": "Counterspell", "category": "counter", "cmc": 2 }
+    ],
+    "total_interaction": 15,
+    "removal_density": 25.5
+  }
+}
+```
+
+**Removal Density Calculation:**
+```
+removal_density = (total_interaction / non_land_cards) × 100
+```
+
+Example: 15 interaction spells / 63 non-land cards = 23.8% density
+
+#### Ramp & Acceleration Analysis
+
+**Categories:**
+- **Mana rocks**: Artifacts that tap for mana (Sol Ring, Arcane Signet)
+- **Land ramp**: Spells that fetch lands (Rampant Growth, Cultivate)
+- **Mana dorks**: Creatures that tap for mana (Llanowar Elves, Birds of Paradise)
+- **Ramp curve**: Distribution of ramp by CMC (helps identify early vs. late ramp)
+- **Average ramp CMC**: When ramp comes online
+
+**Pattern Detection:**
+```typescript
+// Mana dorks (creatures that tap for mana)
+typeLine.includes('creature') && oracleText.match(/\{t\}: add/i)
+
+// Land ramp
+oracleText.match(/search .* library .* land|put .* land .* onto the battlefield/i)
+
+// Mana rocks
+typeLine.includes('artifact') && oracleText.match(/\{t\}: add/i)
+```
+
+**Example Output:**
+```json
+{
+  "ramp": {
+    "mana_rocks": [
+      { "card_name": "Sol Ring", "cmc": 1, "ramp_amount": 2 },
+      { "card_name": "Arcane Signet", "cmc": 2, "ramp_amount": 1 }
+    ],
+    "land_ramp": [
+      { "card_name": "Rampant Growth", "cmc": 2, "ramp_amount": 1 },
+      { "card_name": "Cultivate", "cmc": 3, "ramp_amount": 2 }
+    ],
+    "mana_dorks": [
+      { "card_name": "Llanowar Elves", "cmc": 1, "ramp_amount": 1 }
+    ],
+    "total_ramp": 12,
+    "avg_ramp_cmc": 2.3,
+    "ramp_curve": { "1": 5, "2": 4, "3": 3 }
+  }
+}
+```
+
+**Ramp Curve Visualization:**
+```
+CMC 1: █████ (5 cards)
+CMC 2: ████  (4 cards)
+CMC 3: ███   (3 cards)
+```
+
+#### Win Condition Analysis
+
+**Categories:**
+- **Primary win cons**: Cards that instantly win or create overwhelming advantage
+- **Backup win cons**: High-power finishers (large creatures, planeswalkers)
+- **Combo pieces**: Cards that combo together for wins
+- **Redundancy score**: How many win conditions deck has (0-100%)
+
+**Pattern Detection:**
+```typescript
+// Instant wins
+oracleText.match(/you win the game|target player loses the game/i)
+
+// High-power finishers
+typeLine.includes('Creature') && power >= 5
+
+// Combo pieces (heuristic)
+oracleText.match(/when .* enters the battlefield|whenever .* deals damage/i)
+```
+
+**Example Output:**
+```json
+{
+  "win_conditions": {
+    "primary_win_cons": [
+      { "card_name": "Thassa's Oracle", "type": "instant_win", "cmc": 2 },
+      { "card_name": "Approach of the Second Sun", "type": "instant_win", "cmc": 7 }
+    ],
+    "backup_win_cons": [
+      { "card_name": "Atraxa, Praetors' Voice", "type": "finisher", "cmc": 4 },
+      { "card_name": "Craterhoof Behemoth", "type": "finisher", "cmc": 8 }
+    ],
+    "combo_pieces": [
+      { "card_name": "Demonic Consultation", "type": "combo_piece", "cmc": 1 }
+    ],
+    "redundancy_score": 80
+  }
+}
+```
+
+**Redundancy Score Calculation:**
+```
+redundancy_score = min((total_win_cons / 5) × 100, 100)
+```
+- 0 win cons = 0% (no way to win)
+- 3 win cons = 60% (fragile)
+- 5+ win cons = 100% (redundant)
+
+**API Endpoint:**
+```
+GET /api/decks/:id/stats/enhanced
+```
+
+Returns all four analyses in a single response.
+
+**Performance:**
+- Calculation time: < 500ms for 100-card deck
+- All pattern matching done in application layer (no database queries)
+- Results cached for 5 minutes (invalidated on deck edit)
+
+---
+
+### AI-Powered Card Recommendations
+
+**Overview:**
+Decksmith uses a **hybrid recommendation system** (rules-based algorithm + LLM refinement) to suggest cards that improve deck strategy. Recommendations are:
+- **Pricing-aware**: Prioritize cards in user's budget
+- **Collection-aware**: Highlight cards user already owns
+- **Format-aware**: Only suggest legal cards
+- **Strategic**: Address specific deck weaknesses
+
+#### How It Works
+
+**Step 1: Deck Analysis**
+The system analyzes the deck using enhanced statistics (above) to identify gaps:
+- Low ramp density (< target for format)
+- Insufficient card draw
+- Missing removal types (no board wipes)
+- Low win condition redundancy
+
+**Step 2: Rules-Based Suggestions**
+Algorithm generates candidate cards based on gaps:
+```typescript
+function generateRuleBasedSuggestions(deck, gaps, userCollection) {
+  const suggestions = []
+
+  // Example: Ramp gap
+  if (gaps.ramp === 'low') {
+    const rampCards = findSimilarCards({
+      category: 'ramp',
+      colors: deck.colorIdentity,
+      cmc_max: 3,
+      format: deck.format,
+    })
+
+    for (const card of rampCards.slice(0, 5)) {
+      suggestions.push({
+        oracle_id: card.oracle_id,
+        card_name: card.name,
+        category: 'ramp',
+        priority: 'high',
+        reason: 'Low ramp density. This accelerates mana.',
+        price_usd: card.prices?.usd,
+        in_collection: userCollection.includes(card.oracle_id),
+      })
+    }
+  }
+
+  // Sort: high priority → in collection → cheap
+  return suggestions.sort((a, b) => {
+    if (a.priority !== b.priority) return a.priority === 'high' ? -1 : 1
+    if (a.in_collection !== b.in_collection) return a.in_collection ? -1 : 1
+    return (a.price_usd || 999) - (b.price_usd || 999)
+  })
+}
+```
+
+**Step 3: LLM Refinement**
+Claude API refines suggestions with strategic reasoning:
+
+**Prompt Template:**
+```
+You are an expert MTG deck builder analyzing a Commander deck.
+
+Deck: "Atraxa Superfriends"
+Stats: { ramp: { total_ramp: 5 }, card_draw: { total_draw_spells: 8 }, ... }
+Gaps: { ramp: "low", card_draw: "adequate", removal: { board_wipes: "missing" } }
+
+Rule-based suggestions:
+- Sol Ring ($1.50): Low ramp density. This accelerates mana.
+- Arcane Signet ($2.00): Fixes colors and ramps.
+- Wrath of God ($5.00): No board wipes. Resets battlefield.
+
+Task:
+1. Summarize deck strengths/weaknesses (2-3 sentences)
+2. Refine suggestions: keep good ones, remove bad ones, add alternatives
+3. Prioritize by strategic impact
+
+Output JSON:
+{
+  "summary": "...",
+  "suggestions": [{ "card_name": "...", "priority": "high", "reasoning": "..." }],
+  "reasoning": "..."
+}
+```
+
+**LLM Response Example:**
+```json
+{
+  "summary": "Deck has strong card draw but lacks early ramp and board wipes. This makes it vulnerable to aggressive strategies and tribal decks. Adding 2-3 mana rocks and a mass removal spell improves consistency.",
+  "suggestions": [
+    {
+      "card_name": "Arcane Signet",
+      "priority": "high",
+      "reasoning": "Fixes colors in 4-color deck and ramps turn 2. Essential for consistency."
+    },
+    {
+      "card_name": "Wrath of God",
+      "priority": "high",
+      "reasoning": "Your only board wipe is Cyclonic Rift. Wrath provides unconditional removal at instant speed."
+    },
+    {
+      "card_name": "Sol Ring",
+      "priority": "medium",
+      "reasoning": "Powerful ramp, but algorithm already suggested two mana rocks. Consider cutting a higher CMC card instead."
+    }
+  ],
+  "reasoning": "Prioritized Arcane Signet over Sol Ring because deck needs color fixing more than raw mana. Wrath of God is critical since deck has no other unconditional board wipes."
+}
+```
+
+#### Job Queue Integration
+
+Recommendations are generated asynchronously using BullMQ (see [ADR-0007](../adr/0007-job-queue-bullmq-redis.md)):
+
+**Queue Job:**
+```typescript
+// apps/worker/src/jobs/deck-recommendations.ts
+export const recommendationsWorker = new Worker(
+  'deck-recommendations',
+  async (job) => {
+    const { deckId, userId } = job.data
+
+    // 1. Fetch deck + stats
+    const deck = await fetchDeckWithStats(deckId)
+    const userCollection = await fetchUserCollection(userId)
+
+    // 2. Run rules-based algorithm
+    const gaps = identifyDeckGaps(deck, deck.stats)
+    const ruleSuggestions = await generateRuleBasedSuggestions(deck, gaps, userCollection)
+
+    // 3. LLM refinement (Claude API)
+    const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY)
+    const llmResult = await claudeClient.analyzeDeck({
+      deck_name: deck.name,
+      format: deck.format,
+      card_list: deck.cards.map(c => `${c.name} (${c.cmc})`),
+      current_stats: deck.stats,
+      identified_gaps: gaps,
+      rule_suggestions: ruleSuggestions,
+    })
+
+    // 4. Save to database
+    const costUsd = calculateLLMCost(llmResult.usage)
+
+    await prisma.deckRecommendation.create({
+      data: {
+        deck_id: deckId,
+        algorithm_version: 'v1.0.0',
+        identified_gaps: gaps,
+        rule_suggestions: ruleSuggestions,
+        llm_model: 'claude-3.5-sonnet-20250929',
+        llm_prompt_tokens: llmResult.usage.prompt_tokens,
+        llm_completion_tokens: llmResult.usage.completion_tokens,
+        llm_cost_usd: costUsd,
+        llm_suggestions: llmResult.refined_suggestions,
+        llm_summary: llmResult.summary,
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7-day TTL
+      },
+    })
+
+    return { success: true, cost_usd: costUsd }
+  },
+  {
+    connection: redisConnection,
+    concurrency: 2,
+    limiter: { max: 10, duration: 60000 }, // Anthropic rate limit protection
+  }
+)
+```
+
+#### API Endpoints
+
+**Trigger Analysis:**
+```
+POST /api/decks/:id/recommendations/analyze
+```
+
+**Request:**
+- Authenticated user
+- Rate limit: 10 analyses per hour
+
+**Response:**
+```json
+{
+  "status": "pending" | "cached",
+  "job_id": "uuid",
+  "message": "Analysis started. This may take 10-30 seconds."
+}
+```
+
+**Get Recommendations:**
+```
+GET /api/decks/:id/recommendations
+```
+
+**Response:**
+```json
+{
+  "id": "recommendation_uuid",
+  "summary": "Deck has strong card draw but lacks early ramp...",
+  "suggestions": [
+    {
+      "card_name": "Arcane Signet",
+      "priority": "high",
+      "reasoning": "Fixes colors in 4-color deck...",
+      "price_usd": "2.00",
+      "in_collection": true
+    }
+  ],
+  "identified_gaps": {
+    "ramp": "low",
+    "card_draw": "adequate",
+    "removal": { "board_wipes": "missing" }
+  },
+  "created_at": "2026-01-10T12:00:00Z"
+}
+```
+
+**Provide Feedback:**
+```
+POST /api/recommendations/:id/feedback
+```
+
+**Request Body:**
+```json
+{
+  "feedback": "helpful" | "not_helpful",
+  "comment": "Great suggestions! Added Arcane Signet to my deck."
+}
+```
+
+#### Cost & Performance
+
+**LLM API Costs:**
+- **Model**: Claude 3.5 Sonnet
+- **Pricing**: $0.003/1K input tokens, $0.015/1K output tokens
+- **Average analysis**: ~1500 input + 500 output ≈ **$0.012 per request**
+- **Monthly budget (1000 users × 5 decks × 1 analysis)**: ~$60/month
+
+**Rate Limiting:**
+- **Per user**: 10 analyses per hour
+- **Worker concurrency**: 2 requests at a time
+- **Anthropic rate limit**: 10 requests/minute
+
+**Caching Strategy:**
+- **TTL**: 7 days per recommendation
+- **Invalidation**: Re-analyze if deck changes significantly (> 10 cards modified)
+- **Storage**: JSONB fields in `DeckRecommendation` table
+
+**Performance Targets:**
+| Metric | Target | Notes |
+|--------|--------|-------|
+| Algorithm execution | < 2s | Pure JS pattern matching |
+| LLM API call | 10-30s | Depends on Anthropic load |
+| Total analysis time | 15-35s | Async job (non-blocking) |
+
+#### User Experience Flow
+
+1. **User opens deck** → Sees "Analyze Deck" button
+2. **User clicks "Analyze"** → POST request creates job
+3. **Loading state** → "Analyzing deck... (15-35 seconds)"
+4. **Job completes** → Recommendations appear with summary
+5. **User reviews suggestions** → Can add cards directly to deck
+6. **User provides feedback** → "Was this helpful?" (thumbs up/down)
+
+**UI Mockup:**
+```
+┌─────────────────────────────────────────────────┐
+│ 🤖 AI Recommendations                           │
+├─────────────────────────────────────────────────┤
+│ "Deck has strong card draw but lacks early     │
+│  ramp and board wipes..."                       │
+├─────────────────────────────────────────────────┤
+│ ⚠ High Priority                                 │
+│ ┌──────────────────────────────────────────┐   │
+│ │ Arcane Signet                     $2.00  │   │
+│ │ ✓ In Collection                          │   │
+│ │ "Fixes colors in 4-color deck and ramps  │   │
+│ │  turn 2. Essential for consistency."     │   │
+│ │                         [Add to Deck]    │   │
+│ └──────────────────────────────────────────┘   │
+│                                                  │
+│ ⚠ High Priority                                 │
+│ ┌──────────────────────────────────────────┐   │
+│ │ Wrath of God                      $5.00  │   │
+│ │ ✗ Not Owned                              │   │
+│ │ "Your only board wipe is Cyclonic Rift.  │   │
+│ │  Wrath provides unconditional removal."  │   │
+│ │                         [Add to Deck]    │   │
+│ └──────────────────────────────────────────┘   │
+│                                                  │
+│ 💡 Medium Priority                              │
+│ ┌──────────────────────────────────────────┐   │
+│ │ Sol Ring                          $1.50  │   │
+│ │ ✓ In Collection                          │   │
+│ │ "Powerful ramp, but consider cutting a   │   │
+│ │  higher CMC card instead."               │   │
+│ │                         [Add to Deck]    │   │
+│ └──────────────────────────────────────────┘   │
+│                                                  │
+│ Was this helpful? [👍] [👎]                     │
+└─────────────────────────────────────────────────┘
+```
+
+---
+
 ### Deck Cost Calculator
 
 **As a budget player, I want to see how much it costs to build my deck with real cards so I can decide what to proxy.**

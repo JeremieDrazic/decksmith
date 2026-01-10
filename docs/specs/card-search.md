@@ -85,6 +85,139 @@ async function upsertCardBatch(cards: ScryfallCard[]) {
 
 ---
 
+### Multi-Language Card Support
+
+**Overview:**
+Decksmith supports displaying cards in multiple languages, synchronized with the user's app language preference (see [user-preferences.md](./user-preferences.md)). Languages are stored locally in the database for fast, offline-first access.
+
+**Initial Supported Languages:**
+- English (`en`) — Default, always available
+- French (`fr`) — MVP priority (second-largest MTG market)
+
+**Data Model:**
+Each language variant of a card print is stored as a separate `CardPrint` row with additional localization fields:
+
+```prisma
+model CardPrint {
+  // ... existing fields ...
+
+  // Multi-language support
+  language          String   @default("en") // ISO 639-1 code
+  localized_name    String?  // e.g., "Éclair" (Lightning Bolt in French)
+  localized_type    String?  // e.g., "Éphémère" (Instant in French)
+  localized_text    String?  // Oracle text in target language
+
+  @@unique([oracle_id, set_code, collector_number, language])
+  @@index([language])
+  @@index([oracle_id, language])
+}
+```
+
+**Sync Strategy:**
+The daily Scryfall bulk sync is extended to fetch multi-language data:
+
+```typescript
+export async function syncScryfallBulkData() {
+  const languages = ['en', 'fr'] // Add more as needed
+
+  for (const lang of languages) {
+    console.log(`Syncing language: ${lang}`)
+
+    // 1. Fetch bulk data for specific language
+    const bulkData = await fetchBulkDataMetadata()
+    const langBulkData = bulkData.data.find(d =>
+      d.type === 'default_cards' && (!d.lang || d.lang === lang)
+    )
+
+    // 2. Download and parse JSON
+    const cards = await downloadAndParseJSON(langBulkData.download_uri)
+
+    // 3. Upsert cards with language-specific fields
+    for (const batch of chunk(cards, 1000)) {
+      await upsertCardBatchWithLanguage(batch, lang)
+    }
+  }
+
+  console.log(`Multi-language sync complete`)
+}
+
+async function upsertCardBatchWithLanguage(cards: ScryfallCard[], language: string) {
+  const printValues = cards.map(c => ({
+    // ... existing fields ...
+    language: c.lang || 'en',
+    localized_name: c.printed_name || c.name,
+    localized_type: c.printed_type_line || c.type_line,
+    localized_text: c.printed_text || c.oracle_text,
+  }))
+
+  await prisma.cardPrint.createMany({
+    data: printValues,
+    skipDuplicates: false // Upsert on conflict
+  })
+}
+```
+
+**Performance Impact:**
+- **Storage:** +100MB per language (~150MB for EN, ~100MB for FR)
+- **Sync Duration:** 15 min → 25-30 min (fetching 2 languages)
+- **Database Size:** ~200MB → ~300MB (EN + FR)
+
+**Search Behavior:**
+- **Search always uses English `Card.name`** (maintains full-text index performance)
+- **Results display localized names** based on user preference
+- **Fallback:** If localized name missing, show English name
+
+**API Response Example:**
+```json
+{
+  "oracle_id": "uuid",
+  "name": "Éclair",           // Localized name (French)
+  "type_line": "Éphémère",    // Localized type
+  "oracle_text": "L'Éclair inflige 3 blessures...",
+  "language": "fr",
+  "original_name": "Lightning Bolt"  // English fallback
+}
+```
+
+**Localization Function:**
+```typescript
+export function getLocalizedCardName(
+  card: Card,
+  prints: CardPrint[],
+  userLanguage: string
+): string {
+  // 1. Try user's preferred language
+  const localizedPrint = prints.find(p => p.language === userLanguage)
+  if (localizedPrint?.localized_name) {
+    return localizedPrint.localized_name
+  }
+
+  // 2. Fallback to English
+  const englishPrint = prints.find(p => p.language === 'en')
+  if (englishPrint?.localized_name) {
+    return englishPrint.localized_name
+  }
+
+  // 3. Final fallback: Card.name (always English)
+  return card.name
+}
+```
+
+**User Experience:**
+1. User sets app language to French in settings
+2. Card search shows French card names (e.g., "Éclair" instead of "Lightning Bolt")
+3. Deck lists display localized names
+4. If French translation unavailable, fallback to English
+5. User can override language per search with `?language=en` query param
+
+**Future Expansion:**
+Additional languages can be added by extending the `languages` array in the sync job:
+```typescript
+const languages = ['en', 'fr', 'es', 'de', 'it', 'pt', 'ja', 'ko', 'ru', 'zh']
+```
+
+---
+
 ### Full-Text Search
 
 **Postgres `tsvector` Index:**
@@ -241,6 +374,7 @@ GET /api/cards/autocomplete?q=lig&limit=10
 - `legality`: Format legality (e.g., "commander:legal")
 - `types`: Card types (comma-separated)
 - `foil`: Boolean (foilable only)
+- `language`: Language code (optional, defaults to user preference, e.g., "fr", "en")
 - `page`, `limit`: Pagination
 
 **Response:**
@@ -324,8 +458,9 @@ GET /api/cards/autocomplete?q=lig&limit=10
 **Query Params:**
 - `q`: Search query (min 2 chars)
 - `limit`: Max results (default 10, max 20)
+- `language`: Language code (optional, defaults to user preference, e.g., "fr", "en")
 
-**Response:** Simplified card list (name, image, mana cost, top 3 prints)
+**Response:** Simplified card list (name, image, mana cost, top 3 prints) with localized names based on language preference
 
 ---
 
