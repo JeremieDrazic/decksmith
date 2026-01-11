@@ -574,6 +574,79 @@ WHERE ce.user_id = $1;
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Collection Grid:**
+- **2-column grid** (not 4-column like desktop)
+- **Card images**: Progressive loading, lazy loading (Intersection Observer)
+- **Tap card**: Opens full-screen card details modal
+- **3D viewer**: Touch gestures (swipe to rotate card, pinch to zoom)
+- **Long-press**: Context menu (Edit, Remove, Move to Deck)
+
+**Filters:**
+- **Bottom sheet**: Tap "Filters" → Sheet slides up with color, set, condition filters
+- **Filter chips**: Active filters shown as chips (tap X to remove)
+- **Persistence**: Filter state persists to localStorage
+
+**Bulk Actions:**
+- **Select mode**: Tap "Select" button → Checkboxes appear on cards
+- **Bottom bar**: When cards selected → "Add to Deck", "Export", "Delete" buttons (56px height)
+- **Select all**: Checkbox in header (44px touch target)
+
+**Add Card:**
+- **Full-screen search**: Tap "+ Add Card" → Full-screen search overlay
+- **Quantity picker**: After selecting card → Modal with +/- buttons (44px)
+- **Condition dropdown**: Tap to select (NM, LP, MP, HP, DMG)
+
+**Collection Stats:**
+- **Essential stats only**: Total cards, total value, most valuable card
+- **"View Full Stats" button**: Opens modal with charts (mana curve, color distribution, set breakdown)
+
+**Touch Interactions:**
+- All buttons: 44px minimum
+- Swipe card image to rotate in 3D viewer
+- Long-press for context menu
+- Pull to refresh collection (reload prices)
+
+**Performance Targets:**
+- Collection load: < 500ms for 1000 cards (virtual scrolling)
+- Image loading: Progressive (thumbnails first)
+- 3D viewer: 60fps rotation (WebGL)
+- Stats calculation: < 300ms (client-side in `packages/domain`)
+
+**Offline Behavior:**
+- Requires internet (card data and prices need API)
+- Error if offline: "No internet. Collection requires connection."
+
+### Tablet (768-1023px)
+
+**3-column grid** (between mobile 2-col and desktop 4-col)
+**Side panel** for filters (not bottom sheet)
+
+### Future Native Mobile
+
+**Offline Support:**
+- Full collection stored locally (SQLite)
+- Prices update when online (stale prices shown with "Last updated" indicator)
+- Background sync when app opens (Wi-Fi only)
+
+**Platform Features:**
+- **Camera import**: Scan cards with camera → OCR adds to collection (future enhancement)
+- **Share via system sheet**: Export collection as CSV, share via WhatsApp/email
+- **Biometric lock**: Optional Face ID/Touch ID for collection access
+
+**Domain Logic Reuse:**
+- Collection calculations (total value, stats) in `packages/domain` work on web and native
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Touch targets, progressive loading
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Grid layout, filter patterns
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — CollectionEntry, CardPrint schemas

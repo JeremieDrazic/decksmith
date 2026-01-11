@@ -1212,6 +1212,86 @@ export function validateBanlist(
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Deck List View:**
+- **Layout**: Card list view (not table) with collapsible sections
+- **Each deck card shows**: Deck name, format badge, card count, coverage percentage
+- **Tap to open**: Full-screen deck editor
+- **Actions**: Swipe left to delete deck (with confirmation)
+
+**Deck Editor:**
+- **Full-screen layout** (no sidebar)
+- **Search cards**: Tap "+ Add Card" → Full-screen search overlay
+- **Add cards**: Tap card in search results → Bottom sheet with "Add to Deck" + quantity picker (+/- buttons, 44px touch targets)
+- **Remove cards**: Swipe card left → Delete button appears
+- **Edit quantities**: Tap card in deck → Modal with +/- buttons (large touch targets)
+- **Sections**: Collapsible accordion (tap to expand/collapse)
+- **Reorder cards**: Long-press → drag handle appears (touch-friendly drag)
+
+**Deck Stats:**
+- **Essential stats only**: Card count, average CMC, coverage percentage
+- **Mana curve**: Simplified bar chart (horizontal scroll if needed)
+- **"View Full Stats" button**: Opens modal with complete analysis (scrollable)
+
+**Validation Errors:**
+- **Bottom banner**: "⚠ 3 validation errors" (tap to expand)
+- **Expanded view**: Sheet slides up with error list
+
+**Touch Interactions:**
+- All buttons/cards: 44px minimum touch target (WCAG AAA)
+- Swipe-to-delete: Standard iOS/Android pattern
+- Long-press to reorder: Visual feedback (card lifts up, drag handle appears)
+
+**Performance Targets:**
+- Deck list load: < 300ms for 50 decks (lazy load if more)
+- Deck editor load: < 500ms for 100-card deck
+- Add card: < 200ms (optimistic UI update)
+- Stats calculation: < 300ms (client-side calculation in `packages/domain`)
+
+**Filters Persistence:**
+- Deck list filters (format, tags) persist to localStorage
+- Restored on page load (user doesn't re-filter every session)
+
+### Tablet (768-1023px)
+
+**Two-column layout:**
+- Left: Deck list (sticky)
+- Right: Deck editor (side-by-side when deck selected)
+
+**Hybrid interactions:**
+- Touch targets remain 44px (some tablets are touch-only)
+- Drag-and-drop enabled (if mouse/trackpad detected)
+- Bottom sheets become slide-over panels (not full-screen)
+
+### Future Native Mobile
+
+**Offline Support:**
+- Full offline deck building (decks stored in SQLite)
+- Background sync when online (conflict resolution via last-write-wins)
+- Optimistic UI updates (add/remove cards instantly, sync later)
+
+**Platform-Specific Features:**
+- Share deck via system share sheet (WhatsApp, Discord, etc.)
+- Deep linking: `decksmith://decks/:id` opens deck in app
+- Biometric unlock for premium features (Pro users)
+- Camera integration: Scan cards to add to deck (OCR future feature)
+
+**Domain Logic Reuse:**
+- Validation functions (`validateSingleton`, `validateColorIdentity`, `validateBanlist`) in `packages/domain` work identically on web and native
+- Stats calculations (mana curve, color distribution, enhanced analysis) shared via `packages/domain`
+- No business logic duplication (align with ADR-0008: Domain layer design)
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Breakpoints, touch targets, offline strategy
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Feature parity matrix, UX patterns
+- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for native app
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — Deck, DeckSection, DeckCard schemas

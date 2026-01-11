@@ -164,6 +164,55 @@ Update preferences.
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Settings UI:**
+- **Grouped sections**: Collapsible sections (Language, Appearance, Defaults, Units)
+- **Full-screen page**: Settings take full screen (not sidebar)
+- **Large toggles**: Theme toggle, units toggle (44px touch targets)
+- **Dropdowns**: Language, currency, print selection (56px row height)
+
+**Touch Interactions:**
+- All toggle switches: 44px minimum
+- Dropdown menus: Large touch targets
+- Swipe down to refresh (reloads preferences from API)
+
+**Theme Toggle:**
+- **Instant apply**: Theme changes immediately (no save button)
+- **Persistence**: Saved to `UserPreferences` table (syncs across devices)
+
+**Language Picker:**
+- **Tap to change**: Opens bottom sheet with language options
+- **Page reload**: After selection (language affects UI strings)
+
+**Performance Targets:**
+- Settings load: < 200ms
+- Preference update: < 300ms (API save)
+- Theme switch: < 100ms (CSS variable swap)
+
+### Tablet (768-1023px)
+
+**Sidebar + main content**: Settings sidebar with content area (like desktop)
+
+### Future Native Mobile
+
+**Platform Features:**
+- **System preferences**: Sync with device theme (light/dark)
+- **Local storage**: Preferences cached locally, sync when online
+- **Notifications settings**: Push notification preferences (in-app)
+
+**Domain Logic Reuse:**
+- Preference validation in `packages/domain` (e.g., validate units, currency)
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Touch targets
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Settings layout
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — UserPreferences schema

@@ -686,6 +686,82 @@ const scryfallSyncWorker = new Worker(
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Search Interface:**
+- **Full-screen search**: Tap search bar → Full-screen overlay (not sidebar)
+- **Search input**: Large (44px height, 16px font to prevent iOS zoom)
+- **Autocomplete results**: Full-width list (not dropdown), large touch targets (60px row height)
+- **Tap to select**: Tap card → Shows card details or adds to deck (context-dependent)
+
+**Filter Interface:**
+- **Two-tier filters** (see [ADR-0009](../adr/0009-responsive-feature-strategy.md)):
+  - **Basic filters** (always visible): Color icons (WUBRG), card type dropdown
+  - **Advanced filters** (bottom sheet): Tap "More Filters" button → Sheet slides up with CMC range, rarity, set, legality
+- **Filter chips**: Selected filters shown as chips (tap X to remove)
+- **Filter persistence**: Filters persist to localStorage (restored on next session)
+- **Clear all button**: Tap to reset all filters
+
+**Results Grid:**
+- **2-column grid** (not 4-column like desktop)
+- **Card images**: Progressive loading (thumbnail → full on tap)
+- **Lazy loading**: Intersection Observer for images (load as user scrolls)
+- **Virtual scrolling**: For 1000+ results (use `@tanstack/react-virtual`)
+- **Infinite scroll**: Load more results as user scrolls (no pagination buttons)
+
+**Language Toggle:**
+- **Header menu**: Tap language icon → Dropdown with "English" / "Français"
+- **Persists to user preferences**: Syncs with `UserPreferences.language`
+
+**Touch Interactions:**
+- All buttons: 44px minimum touch target
+- Swipe down to dismiss full-screen search (optional enhancement)
+- Pull to refresh search results (optional)
+
+**Performance Targets:**
+- Autocomplete: < 200ms (same as desktop, indexed search)
+- Full search: < 500ms (with filters)
+- Image loading: Progressive (small thumbnail → full on tap)
+- Virtual scrolling: Smooth 60fps for 1000+ cards
+
+**Offline Behavior (Web):**
+- Requires internet (no offline mode on web initially)
+- Error message if offline: "No internet connection. Card search requires internet."
+- Future: Local IndexedDB cache for recent searches (optional enhancement)
+
+### Tablet (768-1023px)
+
+**3-column grid** for search results (between mobile 2-col and desktop 4-col)
+**Slide-over panel** for filters (not full-screen bottom sheet)
+**Side-by-side layout**: Search bar + filters in header (not full-screen)
+
+### Future Native Mobile
+
+**Offline Support:**
+- Full card database stored in SQLite (100k cards, ~200 MB)
+- Search works offline (prefix match, full-text search)
+- Background sync: Update card data daily (when on Wi-Fi)
+- Diff-based sync: Only download changed cards (not full database)
+
+**Platform Features:**
+- Faster search: SQLite full-text search (FTS5) is faster than web IndexedDB
+- Camera integration: Scan card name from photo (OCR, future feature)
+- Share card via system share sheet
+
+**Domain Logic Reuse:**
+- Search logic (prefix match, filter validation) in `packages/domain` works identically on web and native
+- No duplicate search algorithms
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Touch targets, progressive loading
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Two-tier filter strategy
+- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for cards
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — Card, CardPrint schemas

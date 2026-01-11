@@ -796,6 +796,54 @@ Decksmith Team
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Auth UI:**
+- **Full-screen forms**: Login/signup take full screen (not centered modal)
+- **OAuth buttons stack vertically**: Google, Discord, Magic (each 56px height, 44px minimum)
+- **Large touch targets**: All form inputs 44px height
+- **Password visibility toggle**: Eye icon button (44px touch target)
+- **Form validation**: Inline errors below inputs (not tooltips)
+
+**OAuth Redirect:**
+- **Mobile browser handling**: OAuth opens in same tab (not popup)
+- **Deep linking ready**: `decksmith.app/auth/callback` works for future native app
+
+**Biometric (Future):**
+- Not available on web (browser limitation)
+- Native app will support Face ID/Touch ID
+
+**Touch Interactions:**
+- All buttons: 44px minimum
+- Form inputs: 44px height (16px font prevents iOS zoom)
+- Tap "Forgot password?" → Full-screen reset form
+
+**Performance Targets:**
+- Login API: < 500ms
+- OAuth redirect: < 1s (external provider)
+- Session check: < 200ms (JWT validation)
+
+### Tablet (768-1023px)
+
+**Centered modal**: Auth forms in centered modal (not full-screen)
+
+### Future Native Mobile
+
+**Platform Features:**
+- **Face ID/Touch ID**: Optional biometric login
+- **Keychain integration**: iOS/Android auto-fill credentials
+- **OAuth deep linking**: Native OAuth flow (no browser redirect)
+- **Session persistence**: Secure token storage (Keychain/Keystore)
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Touch targets, form inputs
+- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for OAuth
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — User, UserPreferences schemas

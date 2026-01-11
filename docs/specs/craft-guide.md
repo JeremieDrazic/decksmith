@@ -389,6 +389,58 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Article Layout:**
+- **Scrollable content**: Full-screen article (no sidebar TOC)
+- **Collapsible TOC**: Tap "Table of Contents" button → Bottom sheet with sections
+- **Jump to section**: Tap section in TOC → Scrolls to section, closes sheet
+- **Sticky header**: Article title remains at top while scrolling
+
+**Images:**
+- **Full-width**: Article images expand to 320px
+- **Tap to zoom**: Tap image → Full-screen lightbox with pinch-zoom
+- **Lazy loading**: Images load as user scrolls
+
+**Code Blocks:**
+- **Horizontal scroll**: For wide code snippets (don't wrap)
+- **Copy button**: 44px touch target
+
+**Touch Interactions:**
+- All buttons: 44px minimum
+- Swipe down from top: Show TOC sheet
+- Pull to refresh: Reload article (check for updates)
+
+**Performance Targets:**
+- Article load: < 500ms (markdown rendered client-side)
+- Image loading: Progressive (thumbnails → full)
+- TOC generation: < 100ms (parse markdown headings)
+
+**Offline Behavior:**
+- Requires internet (articles fetched from API)
+- Error if offline: "No internet. Craft guides require connection."
+- Future: Cache recently viewed articles (IndexedDB)
+
+### Tablet (768-1023px)
+
+**Sidebar TOC**: Sticky table of contents in left sidebar (like desktop)
+
+### Future Native Mobile
+
+**Platform Features:**
+- **Offline articles**: Download guides for offline reading
+- **Bookmarks**: Save favorite guides
+- **Share via system sheet**: Share guide link
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Touch targets, image loading
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Collapsible TOC pattern
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — CraftGuideArticle schema

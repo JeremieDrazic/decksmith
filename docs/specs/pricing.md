@@ -394,6 +394,51 @@ CREATE TABLE price_history (
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Price Display:**
+- **Simplified price charts**: Show current price only (hide historical charts by default)
+- **"View History" button**: Tap to expand full 30-day chart
+- **Currency toggle**: Tap [USD] [EUR] buttons (44px touch targets)
+
+**Price Tracking:**
+- **Bottom sheet**: Tap "Track Price" → Sheet with notification settings
+- **Watchlist**: Card list view (not table)
+
+**Touch Interactions:**
+- All buttons: 44px minimum
+- Chart interactions: Tap data point → Show tooltip with exact price
+- Pull to refresh: Reload prices
+
+**Performance Targets:**
+- Price load: < 300ms (cached for 5 minutes)
+- Chart render: < 200ms (client-side calculation)
+
+**Offline Behavior:**
+- Requires internet (prices need API)
+- Error if offline: "No internet. Prices require connection."
+- Show "Last updated" timestamp with stale prices
+
+### Tablet (768-1023px)
+
+**Full charts**: Show historical price charts by default
+
+### Future Native Mobile
+
+**Platform Features:**
+- **Push notifications**: Price drop alerts
+- **Background sync**: Update prices daily (Wi-Fi only)
+- **Local cache**: Store recent prices for offline viewing
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Performance targets
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Simplified charts on mobile
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — CardPrint prices schema

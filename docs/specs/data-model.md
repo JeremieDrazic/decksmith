@@ -560,6 +560,74 @@ Summary:
 
 ---
 
+## Mobile Considerations
+
+### Offline-Ready Domain Logic
+
+**Design Philosophy:**
+The data model is designed to support future offline functionality (see [ADR-0008](../adr/0008-mobile-first-web-design-principles.md)):
+
+**Pure Domain Layer (`packages/domain`):**
+- All business logic operates on **DTOs from `packages/schema`** (not Prisma models)
+- Domain functions are **pure** (no I/O, no database calls, no API requests)
+- Example: `validateDeckFormat(deck: DeckDTO, format: FormatDTO): ValidationResult`
+  - Takes DTOs as input (can be loaded from SQLite, Prisma, or in-memory)
+  - Returns pure data (no side effects)
+  - Works identically on web and native mobile
+
+**Benefits:**
+- **Web (online-only)**: Domain logic runs in browser with API data
+- **Native mobile (offline)**: Domain logic runs with SQLite data (no changes needed)
+- **No duplication**: Same validation, calculations, and business rules across platforms
+
+**Examples of Offline-Ready Domain Functions:**
+```typescript
+// packages/domain/src/deck/validate.ts
+export function validateSingleton(cards: DeckCardDTO[]): ValidationError[] {
+  // Pure function, no database access
+  // Works offline if cards are provided
+}
+
+export function calculateManaCurve(cards: DeckCardDTO[]): ManaCurveDTO {
+  // Pure calculation, no API calls
+  // Works offline with cached card data
+}
+
+export function validateColorIdentity(
+  cards: DeckCardDTO[],
+  allowedColors: string[]
+): ValidationError[] {
+  // Pure validation, no external dependencies
+}
+```
+
+**NOT Offline-Ready (API Layer Only):**
+```typescript
+// apps/api/src/services/deck.service.ts (server-only)
+async function fetchDeckFromDatabase(deckId: string): Promise<Deck> {
+  // Uses Prisma (server-only, not offline-ready)
+  return await prisma.deck.findUnique({ where: { id: deckId } })
+}
+```
+
+**DTO Boundaries:**
+- `packages/schema` defines DTOs (Zod schemas)
+- `apps/api` converts Prisma models → DTOs at boundary
+- `packages/domain` only operates on DTOs (never Prisma models)
+- This enables `packages/domain` to work with SQLite (native), Prisma (server), or in-memory (tests)
+
+**Future Native Mobile:**
+- SQLite replaces Prisma (client-side)
+- Domain layer works unchanged (still uses DTOs)
+- Background sync resolves conflicts (last-write-wins or user-prompted)
+
+### Related ADRs
+
+- [ADR-0005: Package Boundaries and Dependency Graph](../adr/0005-package-boundaries-and-dependency-graph.md) — Domain layer design
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Offline strategy
+
+---
+
 ## Related Docs
 
 - [Collection Management](./collection.md)

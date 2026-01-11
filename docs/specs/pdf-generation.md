@@ -635,6 +635,91 @@ Happy playtesting!
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Print Job Creator (Text-Based):**
+- **No visual builder**: Visual drag-and-drop layout doesn't work well on 320px screens
+- **Simplified interface** (see [ADR-0009](../adr/0009-responsive-feature-strategy.md)):
+  1. **Select deck**: Dropdown to choose deck
+  2. **Select cards**: Checkboxes for which cards to include (all by default)
+  3. **Configure settings**: Paper size (A4/Letter), cards per page (9/12), quality (draft/standard/high/ultra)
+  4. **Text preview**: "4x Lightning Bolt, 4x Goblin Guide, 3x Mountain..." (not visual sheet)
+  5. **Generate button**: Large (44px height) → Triggers worker job
+
+**Configuration Presets:**
+- **Draft** (150 DPI, 3×3 grid, A4): Fast, low quality
+- **Standard** (300 DPI, 3×3 grid, A4): Balanced (default)
+- **High** (600 DPI, 3×3 grid, A4): Print-ready
+- **Ultra** (1200 DPI, custom grid, A4): Maximum quality
+- **Custom**: Advanced users can tap "Advanced Settings" → bottom sheet with full controls
+
+**Job Status:**
+- **Progress indicator**: "Generating PDF... (15-35 seconds)" with spinner
+- **Notification**: When job completes → "Your PDF is ready! Tap to download."
+- **Download button**: Opens PDF in browser (user saves or shares)
+
+**PDF Management:**
+- **View only**: List of generated PDFs (card list view)
+- **Download**: Tap PDF → Opens in browser → Save to Files/Downloads
+- **Delete**: Swipe left → Delete button
+- **No editing**: Can't edit PDF settings on mobile (must create new job)
+
+**Touch Interactions:**
+- All buttons: 44px minimum
+- Settings dropdowns: Large touch targets (56px row height)
+- Card checkboxes: 44px × 44px
+- Swipe-to-delete for PDF list
+
+**Performance Targets:**
+- Job submission: < 200ms (adds job to queue)
+- Job completion notification: < 2s after worker finishes
+- PDF download: Depends on file size (5-20 MB), show progress
+
+**Offline Behavior:**
+- Requires internet (job queue needs API connection)
+- Error if offline: "No internet. PDF generation requires connection."
+
+### Tablet (768-1023px)
+
+**Hybrid interface:**
+- **Simplified visual builder**: Grid preview (not full drag-and-drop)
+- **Side-by-side**: Settings panel + preview (not full-screen)
+- **Touch-optimized controls**: Larger buttons than desktop
+
+### Desktop (1024px+)
+
+**Full visual builder** (existing spec):
+- Drag cards to grid positions
+- Resize cards, adjust spacing
+- Real-time canvas preview
+- Advanced margin/spacing sliders
+
+### Future Native Mobile
+
+**Platform Features:**
+- **Visual builder with touch**: Pinch-zoom, drag cards with finger
+- **Share via system sheet**: Share PDF via WhatsApp, email, AirDrop
+- **Save to device**: Direct save to Files app (iOS) or Downloads (Android)
+- **Offline job queue**: Create print jobs offline, sync when online
+
+**Performance:**
+- Faster PDF generation: Native PDF rendering libraries (CoreGraphics on iOS, PdfDocument on Android)
+- Background processing: Generate PDFs in background (doesn't block UI)
+
+**Domain Logic Reuse:**
+- PDF layout calculations (`calculateCardPositions`, `validateMargins`) in `packages/domain` work on web and native
+- Worker uses `packages/pdf` (Node.js), native uses platform-specific rendering
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Online-only strategy
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Text-based creator on mobile
+- [ADR-0007: Job Queue with BullMQ and Redis](../adr/0007-job-queue-bullmq-redis.md) — Async PDF generation
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — Deck, DeckCard schemas

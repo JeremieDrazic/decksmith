@@ -727,6 +727,91 @@ COLLECTION (12 total copies, $850 total value)
 
 ---
 
+## Mobile Considerations
+
+### Mobile Web (320-767px)
+
+**Modal Behavior:**
+- **Full-screen modal**: Slides up from bottom (not centered overlay)
+- **Swipe-to-dismiss**: Swipe down to close modal (iOS/Android standard)
+- **Header**: Fixed at top with back button (arrow) and close button (X)
+
+**Layout (Single Column):**
+- **Card image**: Full-width (320px), centered
+- **Card name**: Large (24px font)
+- **Mana cost**: Icons below name (large, 32px)
+- **Oracle text**: Full-width, readable (16px font, 1.5 line-height)
+- **Sections scroll**: Scroll vertically through oracle text → legalities → prints → usage
+
+**Prints Gallery:**
+- **2-column grid** (not 4-column)
+- **Tap to select**: Tap print thumbnail → Expands to show details (set, price, foil/nonfoil)
+- **No hover**: No hover-to-preview (use tap instead)
+- **Large touch targets**: Each print card is 44px minimum height
+
+**Price History:**
+- **Simplified chart**: Line graph with 30-day history (horizontal scroll if needed)
+- **Touch interactions**: Tap data point → Show tooltip with exact price
+- **Currency toggle**: Tap [USD] [EUR] buttons (44px touch targets)
+
+**Quick Actions:**
+- **Bottom sheet**: "Add to Deck", "Add to Collection", "Share"
+- **Large buttons**: 56px height (easy to tap)
+- **Sheet slides up**: Tap action button → Sheet with options
+
+**Legalities:**
+- **Collapsible sections**: Tap "Show All Formats" → Expands full list
+- **Essential formats first**: Standard, Modern, Commander (others collapsed)
+
+**Touch Interactions:**
+- All buttons: 44px minimum
+- Swipe-to-dismiss modal: Standard gesture
+- Pull to refresh (optional): Refresh prices
+
+**Performance Targets:**
+- Card details load: < 300ms (oracle data cached)
+- Prints gallery load: < 500ms (lazy load images)
+- Price chart render: < 200ms (client-side calculation)
+
+**Offline Behavior:**
+- Requires internet (card data and prices need API)
+- Error if offline: "No internet. Card details require connection."
+
+### Tablet (768-1023px)
+
+**Slide-over modal** (not full-screen):
+- Modal takes 60% of screen width
+- Background content visible (dimmed)
+- Swipe or tap outside to close
+
+**Two-column layout**:
+- Left: Card image, mana cost, type
+- Right: Oracle text, legalities, actions
+
+### Future Native Mobile
+
+**Offline Support:**
+- Full card database in SQLite (oracle text, legalities)
+- Prices update when online (stale prices shown if offline)
+- "Last updated 2 days ago" indicator
+
+**Platform Features:**
+- **Share via system sheet**: Share card link (WhatsApp, Discord, etc.)
+- **Deep linking**: `decksmith://cards/:oracle_id` opens card in app
+- **3D card viewer**: ARKit (iOS) / ARCore (Android) for 3D rotation (future enhancement)
+
+**Domain Logic Reuse:**
+- Legality checks (`isLegalIn Format`, `isBanned`) in `packages/domain` work on web and native
+- Price calculations shared
+
+### Related ADRs
+
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Modal behavior, touch targets
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Full-screen modal pattern
+- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for cards
+
+---
+
 ## Related Specs
 
 - [Data Model](./data-model.md) — Card, CardPrint schemas
