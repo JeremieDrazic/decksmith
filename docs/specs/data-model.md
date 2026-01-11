@@ -77,6 +77,7 @@ Per-user settings for language, units, and UI customization.
 | `language` | Enum | `en` or `fr` |
 | `units` | Enum | `mm` (metric) or `inches` (imperial) |
 | `default_currency` | Enum | `usd` or `eur` |
+| `default_print_selection` | Enum | `latest` (default), `cheapest`, or `original` |
 | `theme` | Enum | `light`, `dark`, or `system` |
 | `collection_view_config` | JSONB | Visible columns, sort order, grid/table mode |
 | `notification_preferences` | JSONB | Email on PDF ready, feature announcements |

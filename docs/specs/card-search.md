@@ -340,22 +340,45 @@ GET /api/cards/autocomplete?q=lig&limit=10
 
 ### Print Selection
 
-**When adding card to collection/deck:**
+**Default Print Selection Strategy:**
+When adding a card to collection/deck, the system automatically selects a default print based on user preference to avoid disrupting the building flow:
+
+**User Preference (configurable in settings):**
+- **Latest edition** (default): Newest printing by release date
+- **Cheapest available**: Lowest price in user's preferred currency
+- **Original edition**: First printing of the card (Alpha/Beta for older cards)
+
+**Add to Deck/Collection Flow:**
 1. User searches "Lightning Bolt"
 2. Autocomplete shows "Lightning Bolt" (50+ prints)
-3. User clicks → Opens "Select Print" modal
-4. Modal shows all prints with:
+3. User clicks → **Instantly adds default print** (no modal interruption)
+4. Card appears in deck/collection with small set icon indicator
+5. User can click set icon to change print later if desired
+
+**Changing Print After Addition:**
+1. Click the small set icon next to the card (e.g., "M11" icon)
+2. Opens "Select Print" modal showing all available prints
+3. Modal displays:
    - Set icon + name
    - Collector number
    - Image thumbnail
    - Foil availability (✓ or ✗)
    - Prices (USD / EUR)
-5. User clicks print → Adds to collection/deck
+   - Current selection highlighted
+4. User clicks different print → Updates CardPrint reference
+5. Modal closes, card updates immediately
 
-**Sorting Options:**
+**Sorting Options in Modal:**
 - Newest first (by release date)
 - Cheapest first (by price)
 - Alphabetical (by set name)
+- Original edition first
+
+**Business Rules:**
+- Default print selection preference stored in `UserPreferences.default_print_selection` (enum: 'latest' | 'cheapest' | 'original')
+- If preferred print unavailable (e.g., no price data for "cheapest"), fallback to latest edition
+- Set icon is always visible and clickable (hover shows tooltip: "Change print")
+- Modal remembers last sort preference per user session
 
 ---
 

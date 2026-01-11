@@ -48,6 +48,16 @@ Decksmith stores card data in multiple languages locally (English + French) and 
 - Price displays in collection/decks
 - Collection valuation dashboard
 
+### Default Print Selection
+- **Latest edition:** Default to newest printing by release date (default)
+- **Cheapest available:** Default to lowest price in user's currency
+- **Original edition:** Default to first printing (Alpha/Beta for old cards)
+
+**Affects:**
+- Which print is automatically selected when adding a card to deck/collection
+- Avoids interrupting build flow with print selection modal
+- User can change print anytime by clicking set icon next to card
+
 ### Theme
 - **Light**
 - **Dark**
@@ -82,6 +92,7 @@ Stored in `UserPreferences.collection_view_config`:
    - `language: 'en'`
    - `units: 'mm'`
    - `default_currency: 'usd'`
+   - `default_print_selection: 'latest'`
    - `theme: 'system'`
 
 2. **Language affects API responses:**
@@ -131,6 +142,12 @@ Update preferences.
 │  ◉ English  ○ French         │
 │  ◉ Metric (mm)  ○ Imperial   │
 │  ◉ USD  ○ EUR                │
+│──────────────────────────────│
+│ Card Preferences             │
+│  Default Print Selection:    │
+│  ◉ Latest edition            │
+│  ○ Cheapest available        │
+│  ○ Original edition          │
 │──────────────────────────────│
 │ Display                      │
 │  Theme: [System ▾]           │
