@@ -1,4 +1,3 @@
-// @ts-check
 import globals from 'globals';
 
 import { createBaseConfig } from './base.js';

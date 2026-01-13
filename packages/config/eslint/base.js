@@ -1,5 +1,5 @@
-// @ts-check
 import eslint from '@eslint/js';
+import { defineConfig } from 'eslint/config';
 import prettierConfig from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
 import prettierPlugin from 'eslint-plugin-prettier';
@@ -8,7 +8,7 @@ import tseslint from 'typescript-eslint';
 
 /** @param {string} tsconfigRootDir */
 export function createBaseConfig(tsconfigRootDir) {
-  return tseslint.config(
+  return defineConfig(
     // Base ESLint
     eslint.configs.recommended,
 
