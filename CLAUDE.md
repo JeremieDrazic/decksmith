@@ -26,6 +26,7 @@ clarification instead of guessing.
 - PDF generation only in worker
 - TypeScript strict mode everywhere
 - No circular dependencies
+- JSDoc on exported functions (description + @param + @returns when non-obvious)
 
 If a suggestion violates these, flag it explicitly.
 
