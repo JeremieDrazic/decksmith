@@ -12,21 +12,34 @@
     "dev": "turbo run dev",
     "test": "turbo run test",
     "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,mdx}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,mdx}\"",
     "typecheck": "turbo run typecheck",
-    "clean": "turbo run clean && rm -rf node_modules .turbo"
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "@eslint/js": "^9.18.0",
     "@types/node": "^22.10.2",
     "eslint": "^9.18.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.19.1"
+    "typescript": "^5.7.3"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@9.15.4",
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,mdx,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
 }

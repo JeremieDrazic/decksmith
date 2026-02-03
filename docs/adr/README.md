@@ -17,6 +17,7 @@ evolution history.
 | [0004](./0004-code-quality-and-formatting-standards.md)   | Code Quality and Formatting Standards      | Active | 2026-01-08 |
 | [0005](./0005-package-boundaries-and-dependency-graph.md) | Package Boundaries and Dependency Graph    | Active | 2026-01-08 |
 | [0006](./0006-testing-strategy-with-vitest.md)            | Testing Strategy with Vitest and Storybook | Active | 2026-01-08 |
+| [0007](./0007-job-queue-bullmq-redis.md)                  | Job Queue with BullMQ and Redis            | Active | 2026-01-10 |
 
 ---
 
