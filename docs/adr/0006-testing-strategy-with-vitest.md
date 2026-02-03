@@ -57,7 +57,95 @@ We will use **Vitest + Storybook** with the following strategy:
 ### Shared Configuration
 
 - **Vitest**: Shared config in `packages/config/vitest.config.ts` (future)
-- **Storybook**: Shared config in `packages/config/.storybook/` (future)
+- **Storybook**: Global instance at repo root (see below)
+
+### Global Storybook Instance
+
+A single Storybook instance runs at the **repository root**, aggregating stories from all UI
+packages:
+
+**Location**: `/.storybook/` (repo root, not inside packages/config)
+
+**Configuration** (`/.storybook/main.ts`):
+
+```typescript
+const config: StorybookConfig = {
+  stories: [
+    '../packages/web-ui/src/**/*.stories.@(ts|tsx)',
+    '../packages/native-ui/src/**/*.stories.@(ts|tsx)',
+    '../packages/tokens/src/**/*.stories.@(ts|tsx)',
+  ],
+  framework: '@storybook/react-vite',
+  addons: ['@storybook/addon-essentials', '@storybook/addon-interactions'],
+};
+```
+
+**Why global instead of per-package:**
+
+- **Single component library view**: Browse all components in one place
+- **Consistent theming**: Global decorators apply design tokens to all stories
+- **Simpler CI**: One Storybook build, one visual regression run
+- **Cross-package stories**: Can compose components from different packages
+
+**Commands**:
+
+- `pnpm storybook` — Run global Storybook (development)
+- `pnpm build-storybook` — Build static Storybook (CI/deploy)
+- `pnpm test-storybook` — Run play functions as tests (CI)
+
+### Coverage Thresholds
+
+Code coverage thresholds are enforced per-package based on criticality:
+
+| Package               | Threshold | Rationale                                         |
+| --------------------- | --------- | ------------------------------------------------- |
+| `packages/domain`     | **90%**   | Pure business logic, must be thoroughly tested    |
+| `packages/schema`     | **80%**   | Data contracts, validation paths must be covered  |
+| `packages/api-client` | **80%**   | HTTP layer, error handling paths important        |
+| `apps/api`            | **60%**   | Orchestration layer, integration tests cover more |
+| `apps/worker`         | **60%**   | Background jobs, harder to unit test              |
+| `apps/web`            | **60%**   | UI app, component tests in Storybook instead      |
+
+**Vitest coverage configuration** (`packages/config/vitest.config.ts`):
+
+```typescript
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      // Thresholds configured per-package in their vitest.config.ts
+    },
+  },
+});
+```
+
+**Per-package threshold** (example: `packages/domain/vitest.config.ts`):
+
+```typescript
+import { defineConfig, mergeConfig } from 'vitest/config';
+import baseConfig from '@decksmith/config/vitest.config';
+
+export default mergeConfig(
+  baseConfig,
+  defineConfig({
+    test: {
+      coverage: {
+        thresholds: {
+          lines: 90,
+          functions: 90,
+          branches: 90,
+          statements: 90,
+        },
+      },
+    },
+  })
+);
+```
+
+**CI enforcement**: Coverage check runs on every PR. Fails if thresholds not met.
 
 ## Rationale
 
@@ -390,6 +478,12 @@ packages/web-ui/
   - **Mitigation**: Use Storybook's code splitting, lazy load stories
 
 ## Evolution History
+
+### 2026-02-03: Global Storybook and coverage thresholds
+
+- Decided on single global Storybook instance at repo root (aggregates all UI packages)
+- Added per-package coverage thresholds: 90% domain, 80% schema/api-client, 60% apps
+- Clarified Storybook configuration structure and commands
 
 ### 2026-01-08: Initial decision
 
