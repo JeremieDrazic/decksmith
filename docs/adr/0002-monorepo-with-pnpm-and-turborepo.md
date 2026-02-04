@@ -1,6 +1,6 @@
 # ADR-0002: Monorepo Structure with pnpm Workspaces and Turborepo
 
-**Last Updated:** 2026-01-08 **Status:** Active **Context:** Decksmith
+**Last Updated:** 2026-02-04 **Status:** Active **Context:** Decksmith
 
 ---
 
@@ -114,15 +114,57 @@ This would violate **"Minimal coupling"** by introducing npm as a dependency bou
 
 ## Evolution History
 
+### 2026-02-04: Added pnpm Catalog for shared dependency versions
+
+**Decision**: Use pnpm's catalog feature to centralize shared dependency versions.
+
+**What changed**:
+
+- Added `catalog:` section to `pnpm-workspace.yaml` defining shared versions
+- Packages reference shared dependencies with `"zod": "catalog:"` instead of explicit versions
+- Affects: `zod`, `typescript`, `eslint`, `@types/node`
+
+**Configuration** (`pnpm-workspace.yaml`):
+
+```yaml
+catalog:
+  zod: ^4.3.6
+  typescript: ^5.7.3
+  '@types/node': ^22.10.2
+  eslint: ^9.18.0
+```
+
+**Rationale**:
+
+- **Single source of truth**: All packages using the same dependency get the same version
+- **Easier upgrades**: Update one line in catalog, all packages follow
+- **Explicit per-package dependencies**: Each package still declares what it needs (better for
+  bundlers)
+- **No accidental drift**: Prevents different packages from accidentally using different versions
+
+**How it works**:
+
+- Catalog defines versions centrally in `pnpm-workspace.yaml`
+- Each package declares dependencies with `"dep": "catalog:"`
+- pnpm resolves `catalog:` → actual version at install time
+- Dependencies are still installed where declared (not hoisted to root)
+
+**Why not root `package.json` for all shared deps?**
+
+- Root is for workspace tooling (turbo, husky, prettier), not runtime deps
+- Each package should declare its own runtime dependencies explicitly
+- Better bundling: bundlers see exactly what each package needs
+
 ### 2026-01-08: Initial decision
 
 - Chosen pnpm + Turborepo for monorepo infrastructure
-- Defined apps/_ and packages/_ structure
+- Defined apps/\* and packages/\* structure
 - Enforced workspace protocol for local dependencies
 
 ## References
 
 - [pnpm Workspaces Documentation](https://pnpm.io/workspaces)
+- [pnpm Catalogs Documentation](https://pnpm.io/catalogs)
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [Monorepo.tools](https://monorepo.tools) - Comparison of monorepo tools
 - ADR-0005: Package Boundaries and Dependency Graph (defines rules for using this structure)
