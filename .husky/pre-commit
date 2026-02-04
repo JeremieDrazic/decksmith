@@ -1,1 +1,8 @@
+# Format staged files with prettier
 pnpm lint-staged
+
+# Auto-fix lint issues across the repo (turbo caching makes this fast)
+pnpm turbo run lint -- --fix
+
+# Re-stage any files that were auto-fixed
+git add -u
