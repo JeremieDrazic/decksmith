@@ -16,10 +16,11 @@
 
 import { z } from 'zod';
 
-import { RaritySchema } from '../primitives/enums.js';
 import { DateTimeSchema, UuidSchema } from '../primitives/common.js';
-import { PricesSchema } from './prices.js';
+import { RaritySchema } from '../primitives/enums.js';
+
 import { CardResponseSchema } from './card.js';
+import { PricesSchema } from './prices.js';
 
 // =============================================================================
 // IMAGE URIS

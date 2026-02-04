@@ -10,6 +10,7 @@
 
 import { z } from 'zod';
 
+import { DateTimeSchema, UuidSchema } from '../primitives/common.js';
 import {
   CurrencySchema,
   LanguageSchema,
@@ -17,7 +18,6 @@ import {
   ThemeSchema,
   UnitsSchema,
 } from '../primitives/enums.js';
-import { DateTimeSchema, UuidSchema } from '../primitives/common.js';
 
 // =============================================================================
 // COLLECTION VIEW CONFIG
@@ -149,7 +149,4 @@ export const DEFAULT_PREFERENCES = {
   notificationPreferences: {
     emailOnPdfReady: true,
   },
-} as const satisfies Omit<
-  UserPreferences,
-  'id' | 'userId' | 'createdAt' | 'updatedAt'
->;
+} as const satisfies Omit<UserPreferences, 'id' | 'userId' | 'createdAt' | 'updatedAt'>;

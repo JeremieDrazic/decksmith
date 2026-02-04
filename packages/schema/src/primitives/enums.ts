@@ -165,12 +165,7 @@ export type TagType = z.infer<typeof TagTypeSchema>;
 /**
  * Categories for Craft Guide articles.
  */
-export const ArticleCategorySchema = z.enum([
-  'equipment',
-  'tutorial',
-  'tips',
-  'review',
-]);
+export const ArticleCategorySchema = z.enum(['equipment', 'tutorial', 'tips', 'review']);
 export type ArticleCategory = z.infer<typeof ArticleCategorySchema>;
 
 // =============================================================================

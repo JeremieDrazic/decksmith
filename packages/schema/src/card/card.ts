@@ -13,8 +13,8 @@
 
 import { z } from 'zod';
 
-import { ColorSchema } from '../primitives/enums.js';
 import { DateTimeSchema, UuidSchema } from '../primitives/common.js';
+import { ColorSchema } from '../primitives/enums.js';
 
 // =============================================================================
 // LEGALITIES
@@ -28,12 +28,7 @@ import { DateTimeSchema, UuidSchema } from '../primitives/common.js';
  * - restricted: Only 1 copy allowed (Vintage)
  * - banned: Explicitly forbidden
  */
-export const LegalityStatusSchema = z.enum([
-  'legal',
-  'not_legal',
-  'restricted',
-  'banned',
-]);
+export const LegalityStatusSchema = z.enum(['legal', 'not_legal', 'restricted', 'banned']);
 export type LegalityStatus = z.infer<typeof LegalityStatusSchema>;
 
 /**
