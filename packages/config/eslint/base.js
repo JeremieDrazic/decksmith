@@ -24,7 +24,14 @@ export function createBaseConfig(tsconfigRootDir) {
 
     // Global ignores
     {
-      ignores: ['node_modules/**', 'dist/**', 'build/**', '.turbo/**', 'coverage/**'],
+      ignores: [
+        'node_modules/**',
+        'dist/**',
+        'build/**',
+        '.turbo/**',
+        'coverage/**',
+        'eslint.config.js',
+      ],
     },
 
     // Parser options for type-checked rules
