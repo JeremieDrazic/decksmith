@@ -7,6 +7,7 @@ Educational content teaching users how to create high-quality MTG proxies.
 ## Overview
 
 The Craft Guide is a **static content library** providing:
+
 - Equipment recommendations (printers, cardstock, cutters)
 - Step-by-step tutorials (printing, cutting, sleeving)
 - Print quality tips (color calibration, bleed handling)
@@ -21,6 +22,7 @@ The Craft Guide is a **static content library** providing:
 ### Equipment Guide
 
 **Recommended Printers:**
+
 1. **Epson EcoTank ET-2800** ($250)
    - Pros: Cheap ink (tank system), high quality, borderless printing
    - Cons: Slower than laser, ink smudging if not careful
@@ -37,6 +39,7 @@ The Craft Guide is a **static content library** providing:
    - Ideal for: High-volume printing, durability
 
 **Cardstock Recommendations:**
+
 - **330gsm Black Core** ($20/50 sheets, 11×17")
   - Industry standard, passes light test when sleeved
   - Thickness: ~0.3mm (matches real MTG cards)
@@ -47,6 +50,7 @@ The Craft Guide is a **static content library** providing:
   - Harder to source, higher quality feel
 
 **Cutting Tools:**
+
 - **Guillotine Paper Cutter** ($50-150)
   - Pros: Straight cuts, fast, handles stacks
   - Cons: Less precise for fine details
@@ -62,6 +66,7 @@ The Craft Guide is a **static content library** providing:
   - Makes proxies feel more authentic
 
 **Sleeves:**
+
 - **Dragon Shield Matte** (100 ct, $10)
   - Standard for proxies, hides imperfections
   - Opaque backs, shuffle well
@@ -77,6 +82,7 @@ The Craft Guide is a **static content library** providing:
 #### Tutorial 1: "How to Print High-Quality Proxies"
 
 **Steps:**
+
 1. **Prepare PDF:**
    - Export from Decksmith (300 DPI, A4, 3×3 grid)
    - Ensure cut lines enabled, bleed area included
@@ -106,6 +112,7 @@ The Craft Guide is a **static content library** providing:
 #### Tutorial 2: "Precision Cutting Techniques"
 
 **Steps:**
+
 1. **Mark Cut Lines:**
    - Use ruler + pencil to extend cut lines (if faint)
    - Align with cutting mat grid
@@ -135,6 +142,7 @@ The Craft Guide is a **static content library** providing:
 **Issue:** Printed cards look too dark/light/saturated.
 
 **Solution:**
+
 1. **Printer Color Profiles:**
    - Download Scryfall's color profile (if available)
    - Install in OS: macOS (ColorSync), Windows (Color Management)
@@ -156,31 +164,32 @@ The Craft Guide is a **static content library** providing:
 
 ### FAQ (Common Issues)
 
-**Q: My cards are curling after printing. How do I fix this?**
-A: Ink absorbed unevenly. Solutions:
+**Q: My cards are curling after printing. How do I fix this?** A: Ink absorbed unevenly. Solutions:
+
 - Let cards dry fully (24h) under weight (heavy book)
 - Use hairdryer on low heat to speed drying
 - Store in humidity-controlled environment (50-60% RH)
 
-**Q: Colors don't match Scryfall images. Why?**
-A: Monitor ≠ printer color space. Solutions:
+**Q: Colors don't match Scryfall images. Why?** A: Monitor ≠ printer color space. Solutions:
+
 - Calibrate monitor (use colorimeter)
 - Use printer color profiles
 - Adjust printer settings (see Tutorial 3)
 
-**Q: Cut lines are misaligned. What went wrong?**
-A: Printer scaling or paper shift. Solutions:
+**Q: Cut lines are misaligned. What went wrong?** A: Printer scaling or paper shift. Solutions:
+
 - Disable "Fit to Page" in print dialog (use Actual Size)
 - Check paper alignment in manual feed tray
 - Re-run PDF generation with adjusted margins
 
-**Q: Can I use regular printer paper?**
-A: No. Regular paper (80gsm) is too thin, cards feel fake. Use:
+**Q: Can I use regular printer paper?** A: No. Regular paper (80gsm) is too thin, cards feel fake.
+Use:
+
 - 330gsm cardstock (opaque, feels like real cards)
 - Minimum 250gsm if cardstock unavailable
 
-**Q: How do I make foil proxies?**
-A: Advanced technique:
+**Q: How do I make foil proxies?** A: Advanced technique:
+
 - Print on transparency film
 - Apply holographic foil laminate
 - Layer with cardstock backing
@@ -192,18 +201,19 @@ A: Advanced technique:
 
 ### Categories
 
-| Category | Description | Example Articles |
-|----------|-------------|------------------|
-| **Equipment** | Printer/cardstock reviews | "Best Printers for MTG Proxies (2026)" |
-| **Tutorials** | Step-by-step guides | "How to Print High-Quality Proxies" |
-| **Tips & Tricks** | Quick fixes, hacks | "Fixing Color Mismatch Issues" |
-| **Community Reviews** | User-submitted equipment feedback | "Review: Epson EcoTank ET-2800" |
+| Category              | Description                       | Example Articles                       |
+| --------------------- | --------------------------------- | -------------------------------------- |
+| **Equipment**         | Printer/cardstock reviews         | "Best Printers for MTG Proxies (2026)" |
+| **Tutorials**         | Step-by-step guides               | "How to Print High-Quality Proxies"    |
+| **Tips & Tricks**     | Quick fixes, hacks                | "Fixing Color Mismatch Issues"         |
+| **Community Reviews** | User-submitted equipment feedback | "Review: Epson EcoTank ET-2800"        |
 
 ---
 
 ### Article Schema
 
 **Database:**
+
 ```sql
 CREATE TABLE craft_guide_articles (
   id UUID PRIMARY KEY,
@@ -230,11 +240,13 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 ## 1. Epson EcoTank ET-2800 ($250)
 
 **Pros:**
+
 - Cheap ink (tank system, not cartridges)
 - High quality (4800×1200 DPI)
 - Borderless printing (A4, Letter)
 
 **Cons:**
+
 - Slower than laser (6 pages/min color)
 - Ink smudging if not careful
 
@@ -245,11 +257,13 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 ## 2. Canon PIXMA iX6820 ($200)
 
 **Pros:**
+
 - Wide format (13×19")
 - Excellent color accuracy
 - Affordable
 
 **Cons:**
+
 - No duplex (double-sided)
 - High ink cost
 
@@ -259,11 +273,11 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 
 ## Comparison Table
 
-| Printer | Price | DPI | Speed | Ink Cost |
-|---------|-------|-----|-------|----------|
-| Epson ET-2800 | $250 | 4800×1200 | 6 ppm | Low |
-| Canon iX6820 | $200 | 4800×1200 | 10 ppm | High |
-| HP M454dw | $400 | 600×600 | 28 ppm | Medium |
+| Printer       | Price | DPI       | Speed  | Ink Cost |
+| ------------- | ----- | --------- | ------ | -------- |
+| Epson ET-2800 | $250  | 4800×1200 | 6 ppm  | Low      |
+| Canon iX6820  | $200  | 4800×1200 | 10 ppm | High     |
+| HP M454dw     | $400  | 600×600   | 28 ppm | Medium   |
 
 ## Buying Guide
 
@@ -281,10 +295,12 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 **Description:** List all published articles.
 
 **Query Params:**
+
 - `category`: Filter by category
 - `search`: Keyword search (title + content)
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -308,6 +324,7 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 **Description:** Get article by slug.
 
 **Response:**
+
 ```json
 {
   "id": "uuid",
@@ -384,6 +401,7 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 ```
 
 **Sidebar (Sticky TOC):**
+
 - Auto-generated from `##` headers in markdown
 - Jump to section on click
 
@@ -394,31 +412,37 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 ### Mobile Web (320-767px)
 
 **Article Layout:**
+
 - **Scrollable content**: Full-screen article (no sidebar TOC)
 - **Collapsible TOC**: Tap "Table of Contents" button → Bottom sheet with sections
 - **Jump to section**: Tap section in TOC → Scrolls to section, closes sheet
 - **Sticky header**: Article title remains at top while scrolling
 
 **Images:**
+
 - **Full-width**: Article images expand to 320px
 - **Tap to zoom**: Tap image → Full-screen lightbox with pinch-zoom
 - **Lazy loading**: Images load as user scrolls
 
 **Code Blocks:**
+
 - **Horizontal scroll**: For wide code snippets (don't wrap)
 - **Copy button**: 44px touch target
 
 **Touch Interactions:**
+
 - All buttons: 44px minimum
 - Swipe down from top: Show TOC sheet
 - Pull to refresh: Reload article (check for updates)
 
 **Performance Targets:**
+
 - Article load: < 500ms (markdown rendered client-side)
 - Image loading: Progressive (thumbnails → full)
 - TOC generation: < 100ms (parse markdown headings)
 
 **Offline Behavior:**
+
 - Requires internet (articles fetched from API)
 - Error if offline: "No internet. Craft guides require connection."
 - Future: Cache recently viewed articles (IndexedDB)
@@ -430,14 +454,17 @@ Choosing the right printer is crucial for high-quality proxies. Here are our top
 ### Future Native Mobile
 
 **Platform Features:**
+
 - **Offline articles**: Download guides for offline reading
 - **Bookmarks**: Save favorite guides
 - **Share via system sheet**: Share guide link
 
 ### Related ADRs
 
-- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Touch targets, image loading
-- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Collapsible TOC pattern
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md)
+  — Touch targets, image loading
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Collapsible
+  TOC pattern
 
 ---
 
