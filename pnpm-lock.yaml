@@ -4,15 +4,30 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@types/node':
+      specifier: ^22.10.2
+      version: 22.19.3
+    eslint:
+      specifier: ^9.18.0
+      version: 9.39.2
+    typescript:
+      specifier: ^5.7.3
+      version: 5.9.3
+    zod:
+      specifier: ^4.3.6
+      version: 4.3.6
+
 importers:
 
   .:
     devDependencies:
       '@types/node':
-        specifier: ^22.10.2
+        specifier: 'catalog:'
         version: 22.19.3
       eslint:
-        specifier: ^9.18.0
+        specifier: 'catalog:'
         version: 9.39.2
       husky:
         specifier: ^9.1.7
@@ -27,7 +42,7 @@ importers:
         specifier: ^2.3.3
         version: 2.7.3
       typescript:
-        specifier: ^5.7.3
+        specifier: 'catalog:'
         version: 5.9.3
 
   packages/config:
@@ -36,7 +51,7 @@ importers:
         specifier: ^9.18.0
         version: 9.39.2
       eslint:
-        specifier: ^9.18.0
+        specifier: 'catalog:'
         version: 9.39.2
       eslint-config-prettier:
         specifier: ^9.1.0
@@ -69,14 +84,14 @@ importers:
   packages/schema:
     dependencies:
       zod:
-        specifier: ^4.3.6
+        specifier: 'catalog:'
         version: 4.3.6
     devDependencies:
       '@decksmith/config':
         specifier: workspace:*
         version: link:../config
       typescript:
-        specifier: ^5.7.3
+        specifier: 'catalog:'
         version: 5.9.3
 
 packages:

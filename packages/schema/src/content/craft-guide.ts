@@ -37,7 +37,7 @@ export const CraftGuideArticleResponseSchema = z.object({
   category: ArticleCategorySchema,
 
   /** Thumbnail image URL (optional) */
-  thumbnailUrl: z.string().url().nullable(),
+  thumbnailUrl: z.url().nullable(),
 
   /** Publication date (null = draft) */
   publishedAt: DateTimeSchema.nullable(),
@@ -84,7 +84,7 @@ export const CreateCraftGuideArticleInputSchema = z.object({
   category: ArticleCategorySchema,
 
   /** Thumbnail URL (optional) */
-  thumbnailUrl: z.string().url().optional(),
+  thumbnailUrl: z.url().optional(),
 
   /** Publish immediately (default: false = draft) */
   publish: z.boolean().optional().default(false),
@@ -108,7 +108,7 @@ export const UpdateCraftGuideArticleInputSchema = z.object({
   category: ArticleCategorySchema.optional(),
 
   /** New thumbnail URL (null to remove) */
-  thumbnailUrl: z.string().url().nullable().optional(),
+  thumbnailUrl: z.url().nullable().optional(),
 
   /** Publish or unpublish */
   publish: z.boolean().optional(),
