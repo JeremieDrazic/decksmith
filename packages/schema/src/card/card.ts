@@ -79,7 +79,7 @@ export const CardResponseSchema = z.object({
   legalities: LegalitiesSchema,
 
   /** Link to Scryfall card page */
-  scryfallUri: z.string().url(),
+  scryfallUri: z.url(),
 
   /** When this card was first synced */
   createdAt: DateTimeSchema,
@@ -107,6 +107,6 @@ export type CardSummary = z.infer<typeof CardSummarySchema>;
  */
 export const CardSearchResultSchema = CardSummarySchema.extend({
   /** Primary image URL for display in search results */
-  imageUrl: z.string().url().nullable(),
+  imageUrl: z.url().nullable(),
 });
 export type CardSearchResult = z.infer<typeof CardSearchResultSchema>;

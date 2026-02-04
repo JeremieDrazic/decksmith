@@ -26,10 +26,10 @@
     "./recommendation/feedback": "./src/recommendation/feedback.ts"
   },
   "dependencies": {
-    "zod": "^4.3.6"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
-    "typescript": "^5.7.3"
+    "typescript": "catalog:"
   }
 }

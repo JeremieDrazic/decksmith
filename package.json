@@ -20,15 +20,15 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@types/node": "^22.10.2",
-    "eslint": "^9.18.0",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "turbo": "^2.3.3",
-    "typescript": "^5.7.3"
+    "typescript": "catalog:"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.28.2",
   "lint-staged": {
     "*.{ts,tsx,js,jsx,json,md,mdx,yml,yaml}": [
       "prettier --write"

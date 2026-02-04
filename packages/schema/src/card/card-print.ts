@@ -33,22 +33,22 @@ import { PricesSchema } from './prices.js';
  */
 export const ImageUrisSchema = z.object({
   /** Small thumbnail (146x204) - for lists */
-  small: z.string().url(),
+  small: z.url(),
 
   /** Normal size (488x680) - for detail views */
-  normal: z.string().url(),
+  normal: z.url(),
 
   /** Large size (672x936) - for high-res display */
-  large: z.string().url(),
+  large: z.url(),
 
   /** Full PNG (745x1040) - for printing */
-  png: z.string().url(),
+  png: z.url(),
 
   /** Art crop - just the artwork, no frame */
-  artCrop: z.string().url(),
+  artCrop: z.url(),
 
   /** Border crop - full card, tight crop */
-  borderCrop: z.string().url(),
+  borderCrop: z.url(),
 });
 export type ImageUris = z.infer<typeof ImageUrisSchema>;
 
@@ -129,7 +129,7 @@ export const CardPrintSummarySchema = z.object({
   rarity: RaritySchema,
   language: z.string().length(2),
   /** Single image URL for display */
-  imageUrl: z.string().url().nullable(),
+  imageUrl: z.url().nullable(),
   /** Non-foil price in user's preferred currency */
   price: z.string().nullable(),
 });

@@ -27,7 +27,7 @@ import { z } from 'zod';
  * UuidSchema.parse('550e8400-e29b-41d4-a716-446655440000'); // ✅
  * UuidSchema.parse('not-a-uuid'); // ❌ ZodError
  */
-export const UuidSchema = z.string().uuid();
+export const UuidSchema = z.uuid();
 export type Uuid = z.infer<typeof UuidSchema>;
 
 // =============================================================================
@@ -44,7 +44,7 @@ export type Uuid = z.infer<typeof UuidSchema>;
  * DateTimeSchema.parse('2026-02-04T12:00:00.000Z'); // ✅
  * DateTimeSchema.parse('2026-02-04'); // ❌ ZodError (missing time)
  */
-export const DateTimeSchema = z.string().datetime();
+export const DateTimeSchema = z.iso.datetime();
 export type DateTime = z.infer<typeof DateTimeSchema>;
 
 /**
@@ -57,7 +57,7 @@ export type DateTime = z.infer<typeof DateTimeSchema>;
  * DateSchema.parse('2026-02-04'); // ✅
  * DateSchema.parse('2026-02-04T12:00:00Z'); // ❌ ZodError
  */
-export const DateSchema = z.string().date();
+export const DateSchema = z.iso.date();
 export type DateString = z.infer<typeof DateSchema>;
 
 // =============================================================================
@@ -112,7 +112,7 @@ export type PaginationMeta = z.infer<typeof PaginationMetaSchema>;
  * const PaginatedDecksSchema = createPaginatedSchema(DeckResponseSchema);
  * // { items: Deck[], meta: { page, limit, total, totalPages } }
  */
-export function createPaginatedSchema<T extends z.ZodTypeAny>(itemSchema: T) {
+export function createPaginatedSchema<T extends z.ZodType>(itemSchema: T) {
   return z.object({
     items: z.array(itemSchema),
     meta: PaginationMetaSchema,

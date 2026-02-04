@@ -47,7 +47,7 @@ export type DisplayName = z.infer<typeof DisplayNameSchema>;
  *
  * Can be a URL to an uploaded image or null for default avatar.
  */
-export const AvatarUrlSchema = z.string().url().nullable();
+export const AvatarUrlSchema = z.url().nullable();
 export type AvatarUrl = z.infer<typeof AvatarUrlSchema>;
 
 /**
@@ -61,7 +61,7 @@ export const UserResponseSchema = z.object({
   id: UuidSchema,
 
   /** User's email address */
-  email: z.string().email(),
+  email: z.email(),
 
   /** Unique username (for profile URLs, mentions) */
   username: UsernameSchema,
