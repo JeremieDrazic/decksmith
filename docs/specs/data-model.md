@@ -15,7 +15,8 @@ User (Supabase Auth)
   └─ 1:N → RecommendationFeedback
 
 Card (Scryfall Oracle)
-  └─ 1:N → CardPrint (now includes multi-language variants)
+  ├─ 1:N → CardPrint (now includes multi-language variants)
+  └─ N:N → Tag (via CardTag)
 
 CardPrint
   ├─ N:N → CollectionEntry
@@ -31,7 +32,8 @@ DeckSection
 
 Tag
   ├─ N:N → Deck (via DeckTag)
-  └─ N:N → CollectionEntry (via CollectionEntryTag)
+  ├─ N:N → CollectionEntry (via CollectionEntryTag)
+  └─ N:N → Card (via CardTag)
 
 DeckRecommendation
   └─ 1:N → RecommendationFeedback
@@ -318,15 +320,15 @@ Card in a specific deck section.
 
 ### 9. Tag
 
-User-managed tags for organizing decks and collection.
+User-managed tags for organizing decks, collection entries, and cards.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `id` | UUID (PK) | Unique tag ID |
 | `user_id` | UUID (FK) | References `User.id` |
-| `name` | String | Tag name (e.g., "Staples", "Budget") |
+| `name` | String | Tag name (e.g., "Staples", "Budget", "Wishlist") |
 | `color` | String | Hex color code (e.g., "#3B82F6") |
-| `type` | Enum | `deck` or `collection` |
+| `type` | Enum | `deck`, `collection`, or `card` |
 | `created_at` | Timestamp | Tag creation |
 | `updated_at` | Timestamp | Last modification |
 
@@ -334,14 +336,16 @@ User-managed tags for organizing decks and collection.
 - N:1 → `User`
 - N:N → `Deck` (via `DeckTag`)
 - N:N → `CollectionEntry` (via `CollectionEntryTag`)
+- N:N → `Card` (via `CardTag`)
 
 **Constraints:**
 - **Unique:** `(user_id, name, type)`
-  - Can have "Staples" tag for both decks and collection
+  - Can have "Staples" tag for decks, collection, and cards separately
 
 **Business Rules:**
 - Tags are scoped per user (not global)
-- Deleting tag removes associations but not decks/cards
+- Deleting tag removes associations but not decks/cards/collection entries
+- `card` type tags allow bookmarking cards you don't own (e.g., "Wishlist")
 
 ---
 
@@ -466,6 +470,24 @@ User feedback on recommendations for algorithm improvement.
 
 ---
 
+### CardTag
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `oracle_id` | UUID (FK) | References `Card.oracle_id` |
+| `tag_id` | UUID (FK) | References `Tag.id` |
+| `user_id` | UUID (FK) | References `User.id` |
+
+**Constraints:**
+- `(oracle_id, tag_id, user_id)` primary key
+
+**Business Rules:**
+- Card tags are user-scoped (each user has their own card tags)
+- Tags cards by Oracle ID (not CardPrint), so all editions are tagged together
+- Useful for wishlists, staples tracking, cards to research
+
+---
+
 ## Database Constraints Summary
 
 | Table | Unique Constraints | Foreign Keys |
@@ -478,6 +500,7 @@ User feedback on recommendations for algorithm improvement.
 | `DeckSection` | `(deck_id, position)` | `deck_id → Deck.id` |
 | `DeckCard` | `(section_id, position)` | `section_id → DeckSection.id`, `card_print_id → CardPrint.id` |
 | `Tag` | `(user_id, name, type)` | `user_id → User.id` |
+| `CardTag` | `(oracle_id, tag_id, user_id)` | `oracle_id → Card.oracle_id`, `tag_id → Tag.id`, `user_id → User.id` |
 | `CraftGuideArticle` | `slug` | - |
 | `DeckRecommendation` | - | `deck_id → Deck.id` |
 | `RecommendationFeedback` | - | `recommendation_id → DeckRecommendation.id`, `user_id → User.id` |
@@ -503,6 +526,9 @@ User feedback on recommendations for algorithm improvement.
 | `CardPrint` | `DeckCard` | RESTRICT |
 | `Tag` | `DeckTag` | CASCADE |
 | `Tag` | `CollectionEntryTag` | CASCADE |
+| `Tag` | `CardTag` | CASCADE |
+| `Card` | `CardTag` | CASCADE |
+| `User` | `CardTag` | CASCADE |
 
 ---
 
@@ -511,7 +537,7 @@ User feedback on recommendations for algorithm improvement.
 **See [user-auth.md](./user-auth.md) for full RLS policies.**
 
 Summary:
-- Users can only read/write their own `CollectionEntry`, `Deck`, `Tag`, `UserPreferences`, `DeckRecommendation`, `RecommendationFeedback`
+- Users can only read/write their own `CollectionEntry`, `Deck`, `Tag`, `CardTag`, `UserPreferences`, `DeckRecommendation`, `RecommendationFeedback`
 - Public decks are readable by anyone (via `public_slug`)
 - `Card`, `CardPrint`, `CraftGuideArticle` are globally readable
 - Scryfall sync worker has elevated permissions for bulk upserts

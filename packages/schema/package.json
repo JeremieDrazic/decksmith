@@ -1,0 +1,34 @@
+{
+  "name": "@decksmith/schema",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint --cache .",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./primitives/enums": "./src/primitives/enums.ts",
+    "./primitives/common": "./src/primitives/common.ts",
+    "./card/card": "./src/card/card.ts",
+    "./card/card-print": "./src/card/card-print.ts",
+    "./card/prices": "./src/card/prices.ts",
+    "./user/user": "./src/user/user.ts",
+    "./user/preferences": "./src/user/preferences.ts",
+    "./collection/collection-entry": "./src/collection/collection-entry.ts",
+    "./deck/deck": "./src/deck/deck.ts",
+    "./deck/section": "./src/deck/section.ts",
+    "./deck/deck-card": "./src/deck/deck-card.ts",
+    "./tag/tag": "./src/tag/tag.ts",
+    "./content/craft-guide": "./src/content/craft-guide.ts",
+    "./recommendation/recommendation": "./src/recommendation/recommendation.ts",
+    "./recommendation/feedback": "./src/recommendation/feedback.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "typescript": "^5.7.3"
+  }
+}
