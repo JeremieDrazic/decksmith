@@ -1,16 +1,16 @@
 # ADR-0007: Job Queue with BullMQ and Redis
 
-**Last Updated:** 2026-01-10
-**Status:** Active
-**Context:** Decksmith
+**Last Updated:** 2026-01-10 **Status:** Active **Context:** Decksmith
 
 ---
 
 ## Context
 
-Decksmith requires **asynchronous job processing** for operations that are too slow for synchronous HTTP requests:
+Decksmith requires **asynchronous job processing** for operations that are too slow for synchronous
+HTTP requests:
 
-1. **PDF Generation**: High-quality proxy sheets take 30-60+ seconds to generate (downloading images, rendering layouts, uploading to storage)
+1. **PDF Generation**: High-quality proxy sheets take 30-60+ seconds to generate (downloading
+   images, rendering layouts, uploading to storage)
 2. **Scryfall Bulk Data Sync**: Daily import of ~100k cards with pricing data (~150 MB JSON file)
 3. **Future Features**: Email notifications, collection import/export, batch operations
 
@@ -103,12 +103,12 @@ setInterval(async () => {
   const job = await prisma.job.findFirst({
     where: { status: 'pending' },
     orderBy: { created_at: 'asc' },
-  })
+  });
 
   if (job) {
-    await processJob(job)
+    await processJob(job);
   }
-}, 5000) // Poll every 5 seconds
+}, 5000); // Poll every 5 seconds
 ```
 
 **Benefits:**
@@ -141,18 +141,19 @@ We will use **BullMQ + Redis** for asynchronous job processing.
 **Infrastructure:**
 
 - **Development:** Redis in Docker Compose (local)
-- **Production:** Upstash Redis serverless (free tier: 10k commands/day, upgrade ~$5-10/month if needed)
+- **Production:** Upstash Redis serverless (free tier: 10k commands/day, upgrade ~$5-10/month if
+  needed)
 
 **Job Queue Configuration:**
 
 ```typescript
 // apps/worker/src/queue.ts
-import { Queue, Worker, QueueScheduler } from 'bullmq'
-import Redis from 'ioredis'
+import { Queue, Worker, QueueScheduler } from 'bullmq';
+import Redis from 'ioredis';
 
 const redisConnection = new Redis(process.env.REDIS_URL, {
   maxRetriesPerRequest: null, // Required for BullMQ
-})
+});
 
 // PDF Generation Queue
 export const pdfQueue = new Queue('pdf-generation', {
@@ -166,12 +167,12 @@ export const pdfQueue = new Queue('pdf-generation', {
     removeOnComplete: 100, // Keep last 100 successful jobs
     removeOnFail: 500, // Keep last 500 failed jobs (debugging)
   },
-})
+});
 
 // Scryfall Sync Queue (daily cron)
 export const scryfallSyncQueue = new Queue('scryfall-sync', {
   connection: redisConnection,
-})
+});
 
 // Schedule daily sync at 3 AM UTC
 await scryfallSyncQueue.add(
@@ -182,13 +183,13 @@ await scryfallSyncQueue.add(
     removeOnComplete: 10, // Keep last 10 successful syncs
     removeOnFail: 50, // Keep last 50 failures
   }
-)
+);
 
 // PDF Worker
 export const pdfWorker = new Worker(
   'pdf-generation',
   async (job) => {
-    const { deckId, userId, config } = job.data
+    const { deckId, userId, config } = job.data;
 
     // 1. Fetch deck cards from database
     // 2. Download high-res images from Scryfall
@@ -196,7 +197,7 @@ export const pdfWorker = new Worker(
     // 4. Upload to Supabase Storage
     // 5. Notify user (email or in-app)
 
-    return { pdfUrl: 'https://...' }
+    return { pdfUrl: 'https://...' };
   },
   {
     connection: redisConnection,
@@ -206,7 +207,7 @@ export const pdfWorker = new Worker(
       duration: 60000, // ...minute (rate limiting)
     },
   }
-)
+);
 
 // Scryfall Sync Worker
 export const scryfallWorker = new Worker(
@@ -221,84 +222,93 @@ export const scryfallWorker = new Worker(
     connection: redisConnection,
     concurrency: 1, // Only one sync at a time
   }
-)
+);
 ```
 
 **Job Creation (API):**
 
 ```typescript
 // apps/api/src/routes/pdf.ts
-import { pdfQueue } from '@decksmith/worker/queue'
+import { pdfQueue } from '@decksmith/worker/queue';
 
-fastify.post('/api/decks/:id/pdf', {
-  preHandler: [fastify.authenticate],
-}, async (req, reply) => {
-  const { id: deckId } = req.params
-  const userId = req.user.id
-  const config = req.body // PDF config (paper, grid, dpi, etc.)
+fastify.post(
+  '/api/decks/:id/pdf',
+  {
+    preHandler: [fastify.authenticate],
+  },
+  async (req, reply) => {
+    const { id: deckId } = req.params;
+    const userId = req.user.id;
+    const config = req.body; // PDF config (paper, grid, dpi, etc.)
 
-  // Add job to queue
-  const job = await pdfQueue.add('generate-pdf', {
-    deckId,
-    userId,
-    config,
-  }, {
-    priority: req.user.tier === 'pro' ? 1 : 10, // Pro users get priority
-  })
+    // Add job to queue
+    const job = await pdfQueue.add(
+      'generate-pdf',
+      {
+        deckId,
+        userId,
+        config,
+      },
+      {
+        priority: req.user.tier === 'pro' ? 1 : 10, // Pro users get priority
+      }
+    );
 
-  return {
-    jobId: job.id,
-    status: 'pending',
-    message: 'PDF generation started. You will be notified when ready.',
+    return {
+      jobId: job.id,
+      status: 'pending',
+      message: 'PDF generation started. You will be notified when ready.',
+    };
   }
-})
+);
 
 // Poll job status
-fastify.get('/api/jobs/:id', {
-  preHandler: [fastify.authenticate],
-}, async (req, reply) => {
-  const { id: jobId } = req.params
+fastify.get(
+  '/api/jobs/:id',
+  {
+    preHandler: [fastify.authenticate],
+  },
+  async (req, reply) => {
+    const { id: jobId } = req.params;
 
-  const job = await pdfQueue.getJob(jobId)
+    const job = await pdfQueue.getJob(jobId);
 
-  if (!job) {
-    return reply.code(404).send({ error: 'Job not found' })
+    if (!job) {
+      return reply.code(404).send({ error: 'Job not found' });
+    }
+
+    const state = await job.getState();
+    const progress = job.progress;
+
+    return {
+      jobId: job.id,
+      status: state, // 'waiting', 'active', 'completed', 'failed'
+      progress, // 0-100%
+      result: state === 'completed' ? await job.returnvalue : null,
+    };
   }
-
-  const state = await job.getState()
-  const progress = job.progress
-
-  return {
-    jobId: job.id,
-    status: state, // 'waiting', 'active', 'completed', 'failed'
-    progress, // 0-100%
-    result: state === 'completed' ? await job.returnvalue : null,
-  }
-})
+);
 ```
 
 **Bull Board Dashboard (Monitoring):**
 
 ```typescript
 // apps/api/src/plugins/bull-board.ts
-import { createBullBoard } from '@bull-board/api'
-import { BullMQAdapter } from '@bull-board/api/bullMQAdapter'
-import { FastifyAdapter } from '@bull-board/fastify'
+import { createBullBoard } from '@bull-board/api';
+import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
+import { FastifyAdapter } from '@bull-board/fastify';
 
-const serverAdapter = new FastifyAdapter()
+const serverAdapter = new FastifyAdapter();
 
 createBullBoard({
-  queues: [
-    new BullMQAdapter(pdfQueue),
-    new BullMQAdapter(scryfallSyncQueue),
-  ],
+  queues: [new BullMQAdapter(pdfQueue), new BullMQAdapter(scryfallSyncQueue)],
   serverAdapter,
-})
+});
 
-serverAdapter.setBasePath('/admin/queues')
+serverAdapter.setBasePath('/admin/queues');
 fastify.register(serverAdapter.registerPlugin(), {
   prefix: '/admin/queues',
-})
+});
 
 // Access dashboard at: http://localhost:3000/admin/queues
 ```
@@ -344,11 +354,13 @@ fastify.register(serverAdapter.registerPlugin(), {
 
 **Workarounds are too complex:**
 
-- Splitting job into chunks (download → render → upload as separate Edge Functions) adds orchestration complexity
+- Splitting job into chunks (download → render → upload as separate Edge Functions) adds
+  orchestration complexity
 - Custom retry logic requires database polling (reinventing BullMQ)
 - No monitoring dashboard (hard to debug failures)
 
-**Verdict:** Edge Functions are great for fast API endpoints (<30s), but not suitable for long-running jobs.
+**Verdict:** Edge Functions are great for fast API endpoints (<30s), but not suitable for
+long-running jobs.
 
 ### Why NOT Simple Database Polling
 
@@ -386,7 +398,8 @@ fastify.register(serverAdapter.registerPlugin(), {
 
 **Costs:**
 
-- **Additional infrastructure:** Requires Redis instance (Docker Compose dev, Upstash/Redis Cloud prod)
+- **Additional infrastructure:** Requires Redis instance (Docker Compose dev, Upstash/Redis Cloud
+  prod)
 - **Operational overhead:** Redis needs monitoring, backups (though Upstash handles this)
 - **Learning curve:** Developers must learn BullMQ API (minimal, well-documented)
 - **Cost:** ~$5-10/month for Upstash Redis in production (free tier may suffice for MVP)
@@ -427,5 +440,6 @@ fastify.register(serverAdapter.registerPlugin(), {
 - [Upstash Redis (Serverless)](https://upstash.com/)
 - [Redis Cloud Free Tier](https://redis.com/try-free/)
 - [Supabase Edge Functions Limits](https://supabase.com/docs/guides/functions/limits)
-- Related specs: [PDF Generation](../specs/pdf-generation.md), [Card Search](../specs/card-search.md) (Scryfall sync)
+- Related specs: [PDF Generation](../specs/pdf-generation.md),
+  [Card Search](../specs/card-search.md) (Scryfall sync)
 - Related ADRs: ADR-0005 (Package boundaries: worker package owns job processing)

@@ -1,27 +1,31 @@
 # ADR-0010: Link Sharing and Meta Tags
 
-**Last Updated:** 2026-01-11
-**Status:** Active
-**Context:** Decksmith
+**Last Updated:** 2026-01-11 **Status:** Active **Context:** Decksmith
 
 ---
 
 ## Context
 
-Users want to **share decks via social media and messaging apps** (WhatsApp, Discord, Twitter, etc.). When a deck link is shared, the preview should show **useful information** (deck name, card count, format) instead of a generic "Decksmith" preview.
+Users want to **share decks via social media and messaging apps** (WhatsApp, Discord, Twitter,
+etc.). When a deck link is shared, the preview should show **useful information** (deck name, card
+count, format) instead of a generic "Decksmith" preview.
 
 **Example use cases:**
 
-1. **Tournament sharing**: "Check out my Standard deck for FNM" → Friend clicks link → sees "Goblin Aggro (60 cards, Standard)"
-2. **Deck feedback**: Player posts link in Discord → Preview shows deck name + format → Others can quickly identify deck
+1. **Tournament sharing**: "Check out my Standard deck for FNM" → Friend clicks link → sees "Goblin
+   Aggro (60 cards, Standard)"
+2. **Deck feedback**: Player posts link in Discord → Preview shows deck name + format → Others can
+   quickly identify deck
 3. **Collection sharing**: "My collection is worth $5,000!" → Preview shows collection size + value
 
 **Key constraints:**
 
 1. **No community features** in Decksmith (no built-in social feed, comments, etc.)
 2. **Users share via external apps** (WhatsApp, Discord, Twitter)
-3. **No full SSR (Server-Side Rendering)**: Next.js is overkill, violates architecture (Vite SPA is simpler)
-4. **Deep linking for future native app**: `decksmith.app/decks/:id` should open native app if installed, web if not
+3. **No full SSR (Server-Side Rendering)**: Next.js is overkill, violates architecture (Vite SPA is
+   simpler)
+4. **Deep linking for future native app**: `decksmith.app/decks/:id` should open native app if
+   installed, web if not
 
 **Question:** How do we provide nice link previews without full SSR?
 
@@ -38,6 +42,7 @@ We implement a **hybrid meta tag strategy**:
 ### Architecture
 
 **Web app (Vite SPA):**
+
 ```html
 <!-- apps/web/index.html (static fallback) -->
 <!DOCTYPE html>
@@ -45,7 +50,10 @@ We implement a **hybrid meta tag strategy**:
   <head>
     <!-- Static fallback (used if JS loads before meta endpoint) -->
     <meta property="og:title" content="Decksmith" />
-    <meta property="og:description" content="Build, print, and share Magic: The Gathering proxy decks" />
+    <meta
+      property="og:description"
+      content="Build, print, and share Magic: The Gathering proxy decks"
+    />
     <meta property="og:image" content="https://decksmith.app/og-default.png" />
 
     <!-- Will be replaced by meta endpoint for shareable URLs -->
@@ -58,27 +66,28 @@ We implement a **hybrid meta tag strategy**:
 ```
 
 **API meta endpoint:**
+
 ```typescript
 // apps/api/src/routes/meta.ts
-import { FastifyInstance } from 'fastify'
-import { prisma } from '@decksmith/db'
+import { FastifyInstance } from 'fastify';
+import { prisma } from '@decksmith/db';
 
 export async function metaRoutes(fastify: FastifyInstance) {
   // Deck meta tags
   fastify.get('/api/decks/:id/meta', async (req, reply) => {
-    const { id } = req.params
+    const { id } = req.params;
 
     const deck = await prisma.deck.findUnique({
       where: { id },
       include: { cards: true },
-    })
+    });
 
     if (!deck) {
-      return reply.code(404).send(defaultMeta())
+      return reply.code(404).send(defaultMeta());
     }
 
-    const cardCount = deck.cards.length
-    const format = deck.format || 'Casual'
+    const cardCount = deck.cards.length;
+    const format = deck.format || 'Casual';
 
     return reply.type('text/html').send(`
       <!DOCTYPE html>
@@ -106,24 +115,24 @@ export async function metaRoutes(fastify: FastifyInstance) {
           <p>Redirecting to <a href="/decks/${id}">${deck.name}</a>...</p>
         </body>
       </html>
-    `)
-  })
+    `);
+  });
 
   // Collection meta tags
   fastify.get('/api/collections/:id/meta', async (req, reply) => {
-    const { id } = req.params
+    const { id } = req.params;
 
     const collection = await prisma.collection.findUnique({
       where: { id },
       include: { cards: true },
-    })
+    });
 
     if (!collection) {
-      return reply.code(404).send(defaultMeta())
+      return reply.code(404).send(defaultMeta());
     }
 
-    const cardCount = collection.cards.length
-    const totalValue = collection.cards.reduce((sum, card) => sum + (card.price || 0), 0)
+    const cardCount = collection.cards.length;
+    const totalValue = collection.cards.reduce((sum, card) => sum + (card.price || 0), 0);
 
     return reply.type('text/html').send(`
       <!DOCTYPE html>
@@ -140,8 +149,8 @@ export async function metaRoutes(fastify: FastifyInstance) {
           <p>Redirecting...</p>
         </body>
       </html>
-    `)
-  })
+    `);
+  });
 }
 
 function defaultMeta() {
@@ -156,13 +165,14 @@ function defaultMeta() {
       </head>
       <body><p>Redirecting...</p></body>
     </html>
-  `
+  `;
 }
 ```
 
 ### User Flow
 
 **1. User shares deck link:**
+
 ```
 User clicks "Share" button in app
   ↓
@@ -172,6 +182,7 @@ User pastes in WhatsApp
 ```
 
 **2. WhatsApp/Discord fetches meta tags:**
+
 ```
 WhatsApp bot fetches: https://decksmith.app/decks/abc123
   ↓
@@ -185,6 +196,7 @@ Shows preview: "Goblin Aggro • 60 cards • Standard"
 ```
 
 **3. User clicks link:**
+
 ```
 Browser fetches: https://decksmith.app/decks/abc123
   ↓
@@ -201,41 +213,43 @@ SPA loads and renders deck
 
 ```typescript
 // apps/api/src/plugins/meta-intercept.ts
-import { FastifyInstance } from 'fastify'
+import { FastifyInstance } from 'fastify';
 
 export async function metaInterceptPlugin(fastify: FastifyInstance) {
   fastify.addHook('onRequest', async (req, reply) => {
-    const url = req.url
+    const url = req.url;
 
     // Only intercept bot user agents (WhatsApp, Discord, Twitter, Facebook)
-    const userAgent = req.headers['user-agent'] || ''
-    const isBot = /WhatsApp|Discordbot|Twitterbot|facebookexternalhit/i.test(userAgent)
+    const userAgent = req.headers['user-agent'] || '';
+    const isBot = /WhatsApp|Discordbot|Twitterbot|facebookexternalhit/i.test(userAgent);
 
     if (!isBot) {
-      return // Let SPA handle it
+      return; // Let SPA handle it
     }
 
     // Intercept shareable URLs
     if (url.match(/^\/decks\/[a-z0-9-]+$/)) {
-      const id = url.split('/')[2]
-      return reply.redirect(`/api/decks/${id}/meta`)
+      const id = url.split('/')[2];
+      return reply.redirect(`/api/decks/${id}/meta`);
     }
 
     if (url.match(/^\/collections\/[a-z0-9-]+$/)) {
-      const id = url.split('/')[2]
-      return reply.redirect(`/api/collections/${id}/meta`)
+      const id = url.split('/')[2];
+      return reply.redirect(`/api/collections/${id}/meta`);
     }
-  })
+  });
 }
 ```
 
-**Rationale:** Social media bots fetch URLs to generate previews. We detect bots via User-Agent, redirect them to meta endpoint (with Open Graph tags). Regular browsers get the SPA (no redirect).
+**Rationale:** Social media bots fetch URLs to generate previews. We detect bots via User-Agent,
+redirect them to meta endpoint (with Open Graph tags). Regular browsers get the SPA (no redirect).
 
 ---
 
 ## Deep Linking for Native Mobile (Future)
 
-When the React Native mobile app is released, **deep linking** allows `decksmith.app/decks/:id` to open the native app (if installed) instead of the web browser.
+When the React Native mobile app is released, **deep linking** allows `decksmith.app/decks/:id` to
+open the native app (if installed) instead of the web browser.
 
 **Implementation (future):**
 
@@ -283,7 +297,8 @@ Opens browser (web app)
 SPA loads /decks/abc123
 ```
 
-**Rationale:** Universal links (iOS) and App Links (Android) provide seamless transition between web and native. Same URL works everywhere (align with **ADR-0008: Navigation & Routing**).
+**Rationale:** Universal links (iOS) and App Links (Android) provide seamless transition between web
+and native. Same URL works everywhere (align with **ADR-0008: Navigation & Routing**).
 
 ---
 
@@ -294,29 +309,34 @@ SPA loads /decks/abc123
 **Option 1: Full SSR with Next.js**
 
 **Benefits:**
+
 - Perfect SEO (Google indexes all content)
 - Fast initial load (server renders HTML)
 - Meta tags always correct (no fallback needed)
 
 **Costs:**
+
 - **Architecture violation:** Next.js is a framework, conflicts with Vite + TanStack Router
 - **Complexity:** Requires rewriting entire web app (Vite SPA → Next.js)
 - **Deployment:** Needs Node.js server (Vite can be static-hosted on CDN)
 - **Learning curve:** Team must learn Next.js (significant overhead)
 
-**Verdict:** ❌ Rejected. Too much complexity for link previews (align with **"Clarity over cleverness"**).
+**Verdict:** ❌ Rejected. Too much complexity for link previews (align with **"Clarity over
+cleverness"**).
 
 ---
 
 **Option 2: Minimal meta endpoint (chosen)**
 
 **Benefits:**
+
 - **Simple:** Single Fastify endpoint (20 lines of code)
 - **No SPA changes:** Vite app remains unchanged
 - **Good-enough SEO:** Google can still index (via SPA client-side rendering)
 - **Perfect for social previews:** Open Graph tags work for WhatsApp, Discord, Twitter
 
 **Costs:**
+
 - **Not perfect SEO:** Google must execute JS to index content (slower than SSR)
 - **Extra request:** Bots fetch meta endpoint, then redirect to SPA (minimal overhead)
 
@@ -327,13 +347,16 @@ SPA loads /decks/abc123
 **Option 3: No meta tags (generic fallback)**
 
 **Benefits:**
+
 - **Zero effort:** No code changes
 
 **Costs:**
+
 - **Poor UX:** Link previews show generic "Decksmith" (no deck name, card count)
 - **Missed opportunity:** Social sharing is less compelling (no context)
 
-**Verdict:** ❌ Rejected. Link previews are important for social sharing (align with **"Premium UX"**).
+**Verdict:** ❌ Rejected. Link previews are important for social sharing (align with **"Premium
+UX"**).
 
 ---
 
@@ -351,7 +374,8 @@ SPA loads /decks/abc123
 - **Pro:** Bots get meta tags, regular users get SPA (optimal for both)
 - **Con:** User-Agent detection is brittle (bots may change UA)
 
-**Verdict:** ✅ Chosen. User-Agent detection is standard practice (align with **"Clarity over cleverness"**).
+**Verdict:** ✅ Chosen. User-Agent detection is standard practice (align with **"Clarity over
+cleverness"**).
 
 ---
 
@@ -367,7 +391,8 @@ SPA loads /decks/abc123
 
 **Costs:**
 
-- **Extra request for bots:** Social media bots fetch meta endpoint, then redirect (adds ~50ms latency)
+- **Extra request for bots:** Social media bots fetch meta endpoint, then redirect (adds ~50ms
+  latency)
 - **User-Agent detection:** Brittle (bots may change UA, may need updates)
 - **Not perfect SEO:** Google must execute JS to index content (slower than SSR)
 - **Maintenance:** Must keep Open Graph images up-to-date (`og-deck.png`, `og-collection.png`)
@@ -398,7 +423,8 @@ SPA loads /decks/abc123
 ## References
 
 - [Open Graph Protocol](https://ogp.me/) - Meta tags for social media previews
-- [Twitter Cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards) - Twitter-specific meta tags
+- [Twitter Cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards) -
+  Twitter-specific meta tags
 - [WhatsApp Link Preview](https://faq.whatsapp.com/1434481323829682) - WhatsApp uses Open Graph
 - [Universal Links (iOS)](https://developer.apple.com/ios/universal-links/) - Deep linking for iOS
 - [App Links (Android)](https://developer.android.com/training/app-links) - Deep linking for Android

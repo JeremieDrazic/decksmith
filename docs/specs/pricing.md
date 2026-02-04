@@ -7,6 +7,7 @@ Track card prices, collection valuation, and deck costs using Scryfall's price d
 ## Overview
 
 Decksmith integrates **Scryfall price data** (TCGplayer USD, Cardmarket EUR) to provide:
+
 - Real-time card prices (synced daily)
 - Collection valuation (total value of owned cards)
 - Deck cost calculator (price to build with real cards)
@@ -21,23 +22,26 @@ Decksmith integrates **Scryfall price data** (TCGplayer USD, Cardmarket EUR) to 
 ### Price Data Sync
 
 **Daily Update:**
+
 - Prices synced with Scryfall bulk data (same job as card sync)
 - Stored in `CardPrint.prices` JSONB field:
   ```json
   {
-    "usd": "1.23",        // TCGplayer non-foil
-    "usd_foil": "4.56",   // TCGplayer foil
-    "eur": "1.10",        // Cardmarket non-foil
-    "eur_foil": "3.80"    // Cardmarket foil
+    "usd": "1.23", // TCGplayer non-foil
+    "usd_foil": "4.56", // TCGplayer foil
+    "eur": "1.10", // Cardmarket non-foil
+    "eur_foil": "3.80" // Cardmarket foil
   }
   ```
 - `prices_updated_at` timestamp tracks last update
 
 **Staleness Indicator:**
+
 - If `prices_updated_at` > 24h ago: Show warning
 - "Prices may be outdated. Last updated: 2 days ago"
 
 **Missing Prices:**
+
 - Not all cards have market data (e.g., promos, tokens)
 - Display "—" or "Price unavailable" if `null`
 
@@ -48,6 +52,7 @@ Decksmith integrates **Scryfall price data** (TCGplayer USD, Cardmarket EUR) to 
 **As a collector, I want to see my collection's total value so I can track appreciation.**
 
 **Calculation:**
+
 ```sql
 SELECT
   SUM(
@@ -74,6 +79,7 @@ WHERE ce.user_id = $user_id;
 ```
 
 **Business Rules:**
+
 - Use foil price if `is_foil = true`, else non-foil price
 - If foil price is `null`, fallback to non-foil price (approximation)
 - Cards with no price data are excluded from total
@@ -83,6 +89,7 @@ WHERE ce.user_id = $user_id;
 ### Collection Dashboard
 
 **Widget:**
+
 ```
 ┌─────────────────────────────────┐
 │ Collection Value                │
@@ -99,6 +106,7 @@ WHERE ce.user_id = $user_id;
 ```
 
 **Breakdown View (click widget):**
+
 - **By Set:** Pie chart (% of total value per set)
 - **By Rarity:** Bar chart (Common, Uncommon, Rare, Mythic)
 - **By Color:** Pie chart (W/U/B/R/G/C/Multicolor)
@@ -111,6 +119,7 @@ WHERE ce.user_id = $user_id;
 **As a budget player, I want to know how much it costs to build my deck with real cards.**
 
 **Calculation:**
+
 ```sql
 SELECT
   SUM(
@@ -125,25 +134,26 @@ WHERE dc.section_id IN (
 ```
 
 **Per-Section Breakdown:**
+
 ```json
 {
   "total_usd": 399.56,
-  "total_eur": 350.00,
+  "total_eur": 350.0,
   "sections": [
     {
       "section_name": "Command Zone",
-      "cost_usd": 120.00,
-      "cost_eur": 105.00
+      "cost_usd": 120.0,
+      "cost_eur": 105.0
     },
     {
       "section_name": "Mainboard",
       "cost_usd": 234.56,
-      "cost_eur": 210.00
+      "cost_eur": 210.0
     },
     {
       "section_name": "Sideboard",
-      "cost_usd": 45.00,
-      "cost_eur": 35.00
+      "cost_usd": 45.0,
+      "cost_eur": 35.0
     }
   ]
 }
@@ -156,6 +166,7 @@ WHERE dc.section_id IN (
 **As a player, I want to know how much it costs to complete my deck (cards I don't own).**
 
 **Calculation:**
+
 ```sql
 SELECT
   SUM(
@@ -174,11 +185,13 @@ WHERE dc.section_id IN (SELECT id FROM deck_sections WHERE deck_id = $deck_id);
 ```
 
 **Example:**
+
 - Deck has 4x Lightning Bolt ($1.50 each)
 - User owns 2x Lightning Bolt
 - Missing: 2x ($3.00 total)
 
 **UI Display:**
+
 ```
 ┌─────────────────────────────────┐
 │ Deck Cost: $399.56              │
@@ -200,10 +213,12 @@ WHERE dc.section_id IN (SELECT id FROM deck_sections WHERE deck_id = $deck_id);
 **As a European player, I want to see prices in EUR so I can budget accurately.**
 
 **User Preference:**
+
 - Stored in `UserPreferences.default_currency` (usd or eur)
 - Applies to all price displays (collection, deck cost)
 
 **Exchange Rate API:**
+
 - Use free API: `https://api.exchangerate-api.com/v4/latest/USD`
 - Cache exchange rate for 24 hours (daily update)
 - Example response:
@@ -217,22 +232,22 @@ WHERE dc.section_id IN (SELECT id FROM deck_sections WHERE deck_id = $deck_id);
   ```
 
 **Conversion Logic:**
+
 ```typescript
 export async function convertCurrency(
   amount: number,
   from: 'usd' | 'eur',
   to: 'usd' | 'eur'
 ): Promise<number> {
-  if (from === to) return amount
+  if (from === to) return amount;
 
-  const rate = await getExchangeRate()
-  return from === 'usd'
-    ? amount * rate.USD_to_EUR
-    : amount / rate.USD_to_EUR
+  const rate = await getExchangeRate();
+  return from === 'usd' ? amount * rate.USD_to_EUR : amount / rate.USD_to_EUR;
 }
 ```
 
 **Fallback:**
+
 - If Scryfall has only USD price, convert to EUR using exchange rate
 - If Scryfall has only EUR price, convert to USD
 
@@ -245,9 +260,11 @@ export async function convertCurrency(
 **Description:** Get total collection value.
 
 **Query Params:**
+
 - `currency`: "usd" or "eur" (default from user preferences)
 
 **Response:**
+
 ```json
 {
   "total": 12345.67,
@@ -282,9 +299,11 @@ export async function convertCurrency(
 **Description:** Calculate deck cost.
 
 **Query Params:**
+
 - `currency`: "usd" or "eur"
 
 **Response:**
+
 ```json
 {
   "total": 399.56,
@@ -295,7 +314,7 @@ export async function convertCurrency(
       "cost": 234.56
     }
   ],
-  "missing_cost": 180.00,
+  "missing_cost": 180.0,
   "coverage_percent": 70
 }
 ```
@@ -307,6 +326,7 @@ export async function convertCurrency(
 **Description:** Get current USD ↔ EUR exchange rate.
 
 **Response:**
+
 ```json
 {
   "usd_to_eur": 0.92,
@@ -332,11 +352,13 @@ export async function convertCurrency(
 ## Price Trends (Future Feature)
 
 **Track price history over time:**
+
 - Store daily snapshots in `price_history` table
 - Line chart showing price trends (7d, 30d, 90d, 1y)
 - Alert on significant price changes (e.g., card jumped 50%)
 
 **Schema:**
+
 ```sql
 CREATE TABLE price_history (
   id UUID PRIMARY KEY,
@@ -399,24 +421,29 @@ CREATE TABLE price_history (
 ### Mobile Web (320-767px)
 
 **Price Display:**
+
 - **Simplified price charts**: Show current price only (hide historical charts by default)
 - **"View History" button**: Tap to expand full 30-day chart
 - **Currency toggle**: Tap [USD] [EUR] buttons (44px touch targets)
 
 **Price Tracking:**
+
 - **Bottom sheet**: Tap "Track Price" → Sheet with notification settings
 - **Watchlist**: Card list view (not table)
 
 **Touch Interactions:**
+
 - All buttons: 44px minimum
 - Chart interactions: Tap data point → Show tooltip with exact price
 - Pull to refresh: Reload prices
 
 **Performance Targets:**
+
 - Price load: < 300ms (cached for 5 minutes)
 - Chart render: < 200ms (client-side calculation)
 
 **Offline Behavior:**
+
 - Requires internet (prices need API)
 - Error if offline: "No internet. Prices require connection."
 - Show "Last updated" timestamp with stale prices
@@ -428,14 +455,17 @@ CREATE TABLE price_history (
 ### Future Native Mobile
 
 **Platform Features:**
+
 - **Push notifications**: Price drop alerts
 - **Background sync**: Update prices daily (Wi-Fi only)
 - **Local cache**: Store recent prices for offline viewing
 
 ### Related ADRs
 
-- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Performance targets
-- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Simplified charts on mobile
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md)
+  — Performance targets
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Simplified
+  charts on mobile
 
 ---
 

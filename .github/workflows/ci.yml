@@ -1,0 +1,56 @@
+name: CI
+
+# When to run
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Cancel in-progress runs when new commit pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint, Type Check, Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clone the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Install pnpm (must match packageManager in package.json)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      # 3. Set up Node.js (must match engines in package.json)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      # 4. Install dependencies
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 5. Check formatting (fail if not formatted)
+      - name: Check formatting
+        run: pnpm format:check
+
+      # 6. Run linter
+      - name: Lint
+        run: pnpm lint
+
+      # 7. Type check
+      - name: Type check
+        run: pnpm typecheck
+
+      # 8. Run tests (when they exist)
+      # - name: Test
+      #   run: pnpm test

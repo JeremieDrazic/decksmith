@@ -1,6 +1,7 @@
 # Deck Management
 
-Build and validate Magic: The Gathering decks with configurable sections, format templates, and coverage tracking.
+Build and validate Magic: The Gathering decks with configurable sections, format templates, and
+coverage tracking.
 
 ---
 
@@ -20,7 +21,8 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 
 ### Creating a Deck
 
-**As a Commander player, I want to create a new deck with pre-configured sections so I can start building quickly.**
+**As a Commander player, I want to create a new deck with pre-configured sections so I can start
+building quickly.**
 
 1. Click "New Deck" button
 2. Enter deck name (e.g., "Atraxa Superfriends")
@@ -38,6 +40,7 @@ Build and validate Magic: The Gathering decks with configurable sections, format
    - **Casual:** Mainboard (0)
 
 **Default validation rules applied:**
+
 - Commander Mainboard: `{max_cards: 100, singleton: true, color_identity: ["W","U","B","G"]}`
 - Constructed Sideboard: `{max_cards: 15}`
 
@@ -45,9 +48,11 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 
 ### Configurable Sections
 
-**As a deck builder, I want to organize my deck into custom sections so I can categorize cards by role (Ramp, Removal, Win Cons).**
+**As a deck builder, I want to organize my deck into custom sections so I can categorize cards by
+role (Ramp, Removal, Win Cons).**
 
 **Section Management:**
+
 1. Click "+ Add Section" button
 2. Enter section name (e.g., "Ramp", "Card Draw", "Removal")
 3. Optionally set validation rules:
@@ -58,6 +63,7 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 5. Right-click section → Rename or Delete
 
 **Business Rules:**
+
 - User can delete ALL default sections (free-form mode)
 - Can't delete section if it contains cards (must move cards first)
 - Position auto-adjusts on delete (no gaps)
@@ -66,9 +72,11 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 
 ### Adding Cards to Deck
 
-**As a user, I want to add specific card prints to my deck so I can track exactly which versions I'm using.**
+**As a user, I want to add specific card prints to my deck so I can track exactly which versions I'm
+using.**
 
 **Add Card Flow:**
+
 1. Click "+ Add Card" in section
 2. Search autocomplete (min 2 chars, debounced)
 3. Select card from dropdown
@@ -79,11 +87,13 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 6. Card added to section at bottom position
 
 **Drag-and-Drop:**
+
 - Drag card between sections → Moves card
 - Drag card within section → Reorders position
 - Visual feedback: Ghost card follows cursor
 
 **Validation on Add:**
+
 - Check section rules (max_cards, singleton, color_identity)
 - If violation: Show error, prevent add
 - Example: "Cannot add Lightning Bolt (red) to this section (color_identity: [W,U])"
@@ -95,6 +105,7 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 **Format-Specific Rules:**
 
 #### Commander
+
 - **Mainboard:** Exactly 100 cards (singleton, except basic lands)
 - **Command Zone:** 1-2 cards (commander, partner, or companion)
 - **Color Identity:** All cards must match commander's color identity
@@ -103,18 +114,21 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 - **Banlist:** Check `card.legalities.commander` (warn if "banned")
 
 #### Constructed (60-card formats)
+
 - **Mainboard:** 60+ cards
 - **Sideboard:** 0-15 cards
 - **Max 4 copies** per card (except basic lands)
 - **Banlist:** Check `card.legalities.{standard|modern|pioneer}`
 
 #### Limited
+
 - **Mainboard:** 40+ cards
 - **Sideboard:** Unlimited
 - **No copy limit**
 - **No banlist**
 
 #### Casual
+
 - **No validation** (anything goes)
 
 ---
@@ -124,6 +138,7 @@ Build and validate Magic: The Gathering decks with configurable sections, format
 **As a player, I want to see which deck cards I own vs. need to proxy so I can plan purchases.**
 
 **Coverage Calculation:**
+
 ```sql
 SELECT
   dc.card_print_id,
@@ -138,6 +153,7 @@ GROUP BY dc.card_print_id, dc.quantity;
 ```
 
 **Coverage Percentage:**
+
 ```
 owned_cards = COUNT(DISTINCT card_print_id WHERE owned > 0)
 total_cards = COUNT(DISTINCT card_print_id)
@@ -145,11 +161,13 @@ coverage = (owned_cards / total_cards) * 100
 ```
 
 **Per-Card Indicators:**
+
 - ✓ (green): `owned >= needed` (fully owned)
 - ⚠ (yellow): `owned > 0 AND owned < needed` (partial, e.g., own 2/4 copies)
 - ✗ (red): `owned = 0` (missing, need to proxy)
 
 **UI Display:**
+
 ```
 ┌─────────────────────────────────┐
 │ Atraxa Superfriends             │
@@ -167,14 +185,17 @@ coverage = (owned_cards / total_cards) * 100
 ### Deck Statistics
 
 **Mana Curve:**
+
 - Bar chart: CMC (0-7+) vs. Card count
 - Helps identify mana distribution
 
 **Color Distribution:**
+
 - Pie chart: % of cards per color (W/U/B/R/G/C)
 - Breakdown: Colored mana symbols in costs
 
 **Card Types:**
+
 - Creatures: 25
 - Instants: 12
 - Sorceries: 8
@@ -184,6 +205,7 @@ coverage = (owned_cards / total_cards) * 100
 - Lands: 37
 
 **Average CMC:**
+
 - Total CMC / Total non-land cards
 - Example: "Average CMC: 3.2"
 
@@ -191,19 +213,21 @@ coverage = (owned_cards / total_cards) * 100
 
 ### Enhanced Deck Statistics
 
-**Overview:**
-Beyond basic mana curve and color distribution, Decksmith provides strategic deck analysis to help identify strengths and weaknesses. All statistics are calculated using oracle text pattern matching (no external APIs).
+**Overview:** Beyond basic mana curve and color distribution, Decksmith provides strategic deck
+analysis to help identify strengths and weaknesses. All statistics are calculated using oracle text
+pattern matching (no external APIs).
 
 #### Card Draw Analysis
 
 **Metrics:**
+
 - **Total draw sources**: Count of cards with draw effects
 - **Permanent draw engines**: Cards that repeatedly draw (Rhystic Study, Phyrexian Arena)
 - **One-shot draw**: Cards that draw once (Divination, Night's Whisper)
 - **Average draw per turn cycle**: Estimated cards drawn per full rotation (4 turns)
 
-**Pattern Detection:**
-Uses regex patterns to identify draw effects:
+**Pattern Detection:** Uses regex patterns to identify draw effects:
+
 ```typescript
 /draw (\d+) cards?/i        // "draw 2 cards"
 /draw a card/i               // "draw a card"
@@ -211,6 +235,7 @@ Uses regex patterns to identify draw effects:
 ```
 
 **Example Output:**
+
 ```json
 {
   "card_draw": {
@@ -228,12 +253,14 @@ Uses regex patterns to identify draw effects:
 #### Removal & Interaction Analysis
 
 **Categories:**
+
 - **Spot removal**: Single-target removal (Swords to Plowshares, Murder)
 - **Board wipes**: Mass removal (Wrath of God, Blasphemous Act)
 - **Counters**: Counterspells (Counterspell, Negate)
 - **Removal density**: Percentage of non-land cards that interact
 
 **Pattern Detection:**
+
 ```typescript
 /destroy target creature/i      // Spot removal (creature)
 /destroy target artifact/i       // Spot removal (artifact)
@@ -242,6 +269,7 @@ Uses regex patterns to identify draw effects:
 ```
 
 **Example Output:**
+
 ```json
 {
   "removal": {
@@ -249,12 +277,8 @@ Uses regex patterns to identify draw effects:
       { "card_name": "Swords to Plowshares", "category": "creature", "cmc": 1 },
       { "card_name": "Nature's Claim", "category": "artifact", "cmc": 1 }
     ],
-    "board_wipes": [
-      { "card_name": "Wrath of God", "category": "creature", "cmc": 4 }
-    ],
-    "counters": [
-      { "card_name": "Counterspell", "category": "counter", "cmc": 2 }
-    ],
+    "board_wipes": [{ "card_name": "Wrath of God", "category": "creature", "cmc": 4 }],
+    "counters": [{ "card_name": "Counterspell", "category": "counter", "cmc": 2 }],
     "total_interaction": 15,
     "removal_density": 25.5
   }
@@ -262,6 +286,7 @@ Uses regex patterns to identify draw effects:
 ```
 
 **Removal Density Calculation:**
+
 ```
 removal_density = (total_interaction / non_land_cards) × 100
 ```
@@ -271,6 +296,7 @@ Example: 15 interaction spells / 63 non-land cards = 23.8% density
 #### Ramp & Acceleration Analysis
 
 **Categories:**
+
 - **Mana rocks**: Artifacts that tap for mana (Sol Ring, Arcane Signet)
 - **Land ramp**: Spells that fetch lands (Rampant Growth, Cultivate)
 - **Mana dorks**: Creatures that tap for mana (Llanowar Elves, Birds of Paradise)
@@ -278,18 +304,20 @@ Example: 15 interaction spells / 63 non-land cards = 23.8% density
 - **Average ramp CMC**: When ramp comes online
 
 **Pattern Detection:**
+
 ```typescript
 // Mana dorks (creatures that tap for mana)
-typeLine.includes('creature') && oracleText.match(/\{t\}: add/i)
+typeLine.includes('creature') && oracleText.match(/\{t\}: add/i);
 
 // Land ramp
-oracleText.match(/search .* library .* land|put .* land .* onto the battlefield/i)
+oracleText.match(/search .* library .* land|put .* land .* onto the battlefield/i);
 
 // Mana rocks
-typeLine.includes('artifact') && oracleText.match(/\{t\}: add/i)
+typeLine.includes('artifact') && oracleText.match(/\{t\}: add/i);
 ```
 
 **Example Output:**
+
 ```json
 {
   "ramp": {
@@ -301,9 +329,7 @@ typeLine.includes('artifact') && oracleText.match(/\{t\}: add/i)
       { "card_name": "Rampant Growth", "cmc": 2, "ramp_amount": 1 },
       { "card_name": "Cultivate", "cmc": 3, "ramp_amount": 2 }
     ],
-    "mana_dorks": [
-      { "card_name": "Llanowar Elves", "cmc": 1, "ramp_amount": 1 }
-    ],
+    "mana_dorks": [{ "card_name": "Llanowar Elves", "cmc": 1, "ramp_amount": 1 }],
     "total_ramp": 12,
     "avg_ramp_cmc": 2.3,
     "ramp_curve": { "1": 5, "2": 4, "3": 3 }
@@ -312,6 +338,7 @@ typeLine.includes('artifact') && oracleText.match(/\{t\}: add/i)
 ```
 
 **Ramp Curve Visualization:**
+
 ```
 CMC 1: █████ (5 cards)
 CMC 2: ████  (4 cards)
@@ -321,24 +348,27 @@ CMC 3: ███   (3 cards)
 #### Win Condition Analysis
 
 **Categories:**
+
 - **Primary win cons**: Cards that instantly win or create overwhelming advantage
 - **Backup win cons**: High-power finishers (large creatures, planeswalkers)
 - **Combo pieces**: Cards that combo together for wins
 - **Redundancy score**: How many win conditions deck has (0-100%)
 
 **Pattern Detection:**
+
 ```typescript
 // Instant wins
-oracleText.match(/you win the game|target player loses the game/i)
+oracleText.match(/you win the game|target player loses the game/i);
 
 // High-power finishers
-typeLine.includes('Creature') && power >= 5
+typeLine.includes('Creature') && power >= 5;
 
 // Combo pieces (heuristic)
-oracleText.match(/when .* enters the battlefield|whenever .* deals damage/i)
+oracleText.match(/when .* enters the battlefield|whenever .* deals damage/i);
 ```
 
 **Example Output:**
+
 ```json
 {
   "win_conditions": {
@@ -350,23 +380,24 @@ oracleText.match(/when .* enters the battlefield|whenever .* deals damage/i)
       { "card_name": "Atraxa, Praetors' Voice", "type": "finisher", "cmc": 4 },
       { "card_name": "Craterhoof Behemoth", "type": "finisher", "cmc": 8 }
     ],
-    "combo_pieces": [
-      { "card_name": "Demonic Consultation", "type": "combo_piece", "cmc": 1 }
-    ],
+    "combo_pieces": [{ "card_name": "Demonic Consultation", "type": "combo_piece", "cmc": 1 }],
     "redundancy_score": 80
   }
 }
 ```
 
 **Redundancy Score Calculation:**
+
 ```
 redundancy_score = min((total_win_cons / 5) × 100, 100)
 ```
+
 - 0 win cons = 0% (no way to win)
 - 3 win cons = 60% (fragile)
 - 5+ win cons = 100% (redundant)
 
 **API Endpoint:**
+
 ```
 GET /api/decks/:id/stats/enhanced
 ```
@@ -374,6 +405,7 @@ GET /api/decks/:id/stats/enhanced
 Returns all four analyses in a single response.
 
 **Performance:**
+
 - Calculation time: < 500ms for 100-card deck
 - All pattern matching done in application layer (no database queries)
 - Results cached for 5 minutes (invalidated on deck edit)
@@ -382,8 +414,9 @@ Returns all four analyses in a single response.
 
 ### AI-Powered Card Recommendations
 
-**Overview:**
-Decksmith uses a **hybrid recommendation system** (rules-based algorithm + LLM refinement) to suggest cards that improve deck strategy. Recommendations are:
+**Overview:** Decksmith uses a **hybrid recommendation system** (rules-based algorithm + LLM
+refinement) to suggest cards that improve deck strategy. Recommendations are:
+
 - **Pricing-aware**: Prioritize cards in user's budget
 - **Collection-aware**: Highlight cards user already owns
 - **Format-aware**: Only suggest legal cards
@@ -391,18 +424,19 @@ Decksmith uses a **hybrid recommendation system** (rules-based algorithm + LLM r
 
 #### How It Works
 
-**Step 1: Deck Analysis**
-The system analyzes the deck using enhanced statistics (above) to identify gaps:
+**Step 1: Deck Analysis** The system analyzes the deck using enhanced statistics (above) to identify
+gaps:
+
 - Low ramp density (< target for format)
 - Insufficient card draw
 - Missing removal types (no board wipes)
 - Low win condition redundancy
 
-**Step 2: Rules-Based Suggestions**
-Algorithm generates candidate cards based on gaps:
+**Step 2: Rules-Based Suggestions** Algorithm generates candidate cards based on gaps:
+
 ```typescript
 function generateRuleBasedSuggestions(deck, gaps, userCollection) {
-  const suggestions = []
+  const suggestions = [];
 
   // Example: Ramp gap
   if (gaps.ramp === 'low') {
@@ -411,7 +445,7 @@ function generateRuleBasedSuggestions(deck, gaps, userCollection) {
       colors: deck.colorIdentity,
       cmc_max: 3,
       format: deck.format,
-    })
+    });
 
     for (const card of rampCards.slice(0, 5)) {
       suggestions.push({
@@ -422,23 +456,23 @@ function generateRuleBasedSuggestions(deck, gaps, userCollection) {
         reason: 'Low ramp density. This accelerates mana.',
         price_usd: card.prices?.usd,
         in_collection: userCollection.includes(card.oracle_id),
-      })
+      });
     }
   }
 
   // Sort: high priority → in collection → cheap
   return suggestions.sort((a, b) => {
-    if (a.priority !== b.priority) return a.priority === 'high' ? -1 : 1
-    if (a.in_collection !== b.in_collection) return a.in_collection ? -1 : 1
-    return (a.price_usd || 999) - (b.price_usd || 999)
-  })
+    if (a.priority !== b.priority) return a.priority === 'high' ? -1 : 1;
+    if (a.in_collection !== b.in_collection) return a.in_collection ? -1 : 1;
+    return (a.price_usd || 999) - (b.price_usd || 999);
+  });
 }
 ```
 
-**Step 3: LLM Refinement**
-Claude API refines suggestions with strategic reasoning:
+**Step 3: LLM Refinement** Claude API refines suggestions with strategic reasoning:
 
 **Prompt Template:**
+
 ```
 You are an expert MTG deck builder analyzing a Commander deck.
 
@@ -465,6 +499,7 @@ Output JSON:
 ```
 
 **LLM Response Example:**
+
 ```json
 {
   "summary": "Deck has strong card draw but lacks early ramp and board wipes. This makes it vulnerable to aggressive strategies and tribal decks. Adding 2-3 mana rocks and a mass removal spell improves consistency.",
@@ -491,37 +526,39 @@ Output JSON:
 
 #### Job Queue Integration
 
-Recommendations are generated asynchronously using BullMQ (see [ADR-0007](../adr/0007-job-queue-bullmq-redis.md)):
+Recommendations are generated asynchronously using BullMQ (see
+[ADR-0007](../adr/0007-job-queue-bullmq-redis.md)):
 
 **Queue Job:**
+
 ```typescript
 // apps/worker/src/jobs/deck-recommendations.ts
 export const recommendationsWorker = new Worker(
   'deck-recommendations',
   async (job) => {
-    const { deckId, userId } = job.data
+    const { deckId, userId } = job.data;
 
     // 1. Fetch deck + stats
-    const deck = await fetchDeckWithStats(deckId)
-    const userCollection = await fetchUserCollection(userId)
+    const deck = await fetchDeckWithStats(deckId);
+    const userCollection = await fetchUserCollection(userId);
 
     // 2. Run rules-based algorithm
-    const gaps = identifyDeckGaps(deck, deck.stats)
-    const ruleSuggestions = await generateRuleBasedSuggestions(deck, gaps, userCollection)
+    const gaps = identifyDeckGaps(deck, deck.stats);
+    const ruleSuggestions = await generateRuleBasedSuggestions(deck, gaps, userCollection);
 
     // 3. LLM refinement (Claude API)
-    const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY)
+    const claudeClient = new ClaudeClient(process.env.ANTHROPIC_API_KEY);
     const llmResult = await claudeClient.analyzeDeck({
       deck_name: deck.name,
       format: deck.format,
-      card_list: deck.cards.map(c => `${c.name} (${c.cmc})`),
+      card_list: deck.cards.map((c) => `${c.name} (${c.cmc})`),
       current_stats: deck.stats,
       identified_gaps: gaps,
       rule_suggestions: ruleSuggestions,
-    })
+    });
 
     // 4. Save to database
-    const costUsd = calculateLLMCost(llmResult.usage)
+    const costUsd = calculateLLMCost(llmResult.usage);
 
     await prisma.deckRecommendation.create({
       data: {
@@ -537,30 +574,33 @@ export const recommendationsWorker = new Worker(
         llm_summary: llmResult.summary,
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7-day TTL
       },
-    })
+    });
 
-    return { success: true, cost_usd: costUsd }
+    return { success: true, cost_usd: costUsd };
   },
   {
     connection: redisConnection,
     concurrency: 2,
     limiter: { max: 10, duration: 60000 }, // Anthropic rate limit protection
   }
-)
+);
 ```
 
 #### API Endpoints
 
 **Trigger Analysis:**
+
 ```
 POST /api/decks/:id/recommendations/analyze
 ```
 
 **Request:**
+
 - Authenticated user
 - Rate limit: 10 analyses per hour
 
 **Response:**
+
 ```json
 {
   "status": "pending" | "cached",
@@ -570,11 +610,13 @@ POST /api/decks/:id/recommendations/analyze
 ```
 
 **Get Recommendations:**
+
 ```
 GET /api/decks/:id/recommendations
 ```
 
 **Response:**
+
 ```json
 {
   "id": "recommendation_uuid",
@@ -598,11 +640,13 @@ GET /api/decks/:id/recommendations
 ```
 
 **Provide Feedback:**
+
 ```
 POST /api/recommendations/:id/feedback
 ```
 
 **Request Body:**
+
 ```json
 {
   "feedback": "helpful" | "not_helpful",
@@ -613,26 +657,26 @@ POST /api/recommendations/:id/feedback
 #### Cost & Performance
 
 **LLM API Costs:**
+
 - **Model**: Claude 3.5 Sonnet
 - **Pricing**: $0.003/1K input tokens, $0.015/1K output tokens
 - **Average analysis**: ~1500 input + 500 output ≈ **$0.012 per request**
 - **Monthly budget (1000 users × 5 decks × 1 analysis)**: ~$60/month
 
 **Rate Limiting:**
+
 - **Per user**: 10 analyses per hour
 - **Worker concurrency**: 2 requests at a time
 - **Anthropic rate limit**: 10 requests/minute
 
 **Caching Strategy:**
+
 - **TTL**: 7 days per recommendation
 - **Invalidation**: Re-analyze if deck changes significantly (> 10 cards modified)
 - **Storage**: JSONB fields in `DeckRecommendation` table
 
-**Performance Targets:**
-| Metric | Target | Notes |
-|--------|--------|-------|
-| Algorithm execution | < 2s | Pure JS pattern matching |
-| LLM API call | 10-30s | Depends on Anthropic load |
+**Performance Targets:** | Metric | Target | Notes | |--------|--------|-------| | Algorithm
+execution | < 2s | Pure JS pattern matching | | LLM API call | 10-30s | Depends on Anthropic load |
 | Total analysis time | 15-35s | Async job (non-blocking) |
 
 #### User Experience Flow
@@ -645,6 +689,7 @@ POST /api/recommendations/:id/feedback
 6. **User provides feedback** → "Was this helpful?" (thumbs up/down)
 
 **UI Mockup:**
+
 ```
 ┌─────────────────────────────────────────────────┐
 │ 🤖 AI Recommendations                           │
@@ -687,9 +732,11 @@ POST /api/recommendations/:id/feedback
 
 ### Deck Cost Calculator
 
-**As a budget player, I want to see how much it costs to build my deck with real cards so I can decide what to proxy.**
+**As a budget player, I want to see how much it costs to build my deck with real cards so I can
+decide what to proxy.**
 
 **Calculation:**
+
 ```
 deck_cost = SUM(
   card_quantity ×
@@ -702,16 +749,19 @@ deck_cost = SUM(
 ```
 
 **Per-Section Breakdown:**
+
 - Mainboard: $234.56
 - Sideboard: $45.00
 - Command Zone: $120.00
 - **Total:** $399.56
 
 **Missing Cards Cost:**
+
 - Calculate cost of cards NOT in collection
 - "You need $180 more to complete this deck"
 
 **Currency Toggle:**
+
 - USD (TCGplayer) or EUR (Cardmarket)
 - Respects `UserPreferences.default_currency`
 
@@ -722,18 +772,21 @@ deck_cost = SUM(
 **As an organizer, I want to tag decks by theme so I can filter my collection.**
 
 **Default Tag Suggestions:**
+
 - "Competitive" (red)
 - "Budget" (green)
 - "Casual" (blue)
 - "Needs Testing" (yellow)
 
 **Tag Application:**
+
 1. Click "Add Tag" on deck header
 2. Select existing tag or create new (name + color)
 3. Tags displayed as colored pills
 4. Filter deck list by tag (sidebar checkboxes)
 
 **Business Rules:**
+
 - Tag type = `deck` (separate from collection tags)
 - Unique per `(user_id, name, type)`
 
@@ -744,6 +797,7 @@ deck_cost = SUM(
 ### Format: Commander
 
 **Default Sections:**
+
 ```json
 [
   {
@@ -772,6 +826,7 @@ deck_cost = SUM(
 ```
 
 **Validation Logic:**
+
 1. Check total mainboard count = 100
 2. Check all mainboard cards are singleton (except basic lands)
 3. Check color identity matches commander
@@ -782,6 +837,7 @@ deck_cost = SUM(
 ### Format: Constructed (60)
 
 **Default Sections:**
+
 ```json
 [
   {
@@ -807,6 +863,7 @@ deck_cost = SUM(
 ```
 
 **Validation Logic:**
+
 1. Check mainboard ≥ 60 cards
 2. Check sideboard ≤ 15 cards
 3. Check max 4 copies per card (across mainboard + sideboard)
@@ -819,6 +876,7 @@ deck_cost = SUM(
 **No default sections** — User starts with empty deck and creates custom sections.
 
 **Use Cases:**
+
 - Theme decks (organize by "Ramp", "Removal", "Win Cons")
 - Cube drafting (organize by CMC or color)
 - Testing configurations
@@ -832,6 +890,7 @@ deck_cost = SUM(
 **Description:** List user's decks with filters/sort.
 
 **Query Params:**
+
 - `page`, `limit`: Pagination
 - `sort`: "name", "created_at", "updated_at"
 - `order`: "asc", "desc"
@@ -839,6 +898,7 @@ deck_cost = SUM(
 - `filter_format`: Format enum
 
 **Response:**
+
 ```json
 {
   "data": [
@@ -847,7 +907,7 @@ deck_cost = SUM(
       "name": "Atraxa Superfriends",
       "format": "commander",
       "is_public": false,
-      "tags": [{"name": "Competitive", "color": "#EF4444"}],
+      "tags": [{ "name": "Competitive", "color": "#EF4444" }],
       "card_count": 100,
       "coverage": 70,
       "total_cost": 399.56,
@@ -866,6 +926,7 @@ deck_cost = SUM(
 **Description:** Create new deck with format template.
 
 **Request Body:**
+
 ```json
 {
   "name": "Atraxa Superfriends",
@@ -883,6 +944,7 @@ deck_cost = SUM(
 **Description:** Get deck details with sections and cards.
 
 **Response:**
+
 ```json
 {
   "id": "uuid",
@@ -923,6 +985,7 @@ deck_cost = SUM(
 **Description:** Update deck metadata.
 
 **Request Body:**
+
 ```json
 {
   "name": "New Name",
@@ -947,11 +1010,12 @@ deck_cost = SUM(
 **Description:** Add custom section to deck.
 
 **Request Body:**
+
 ```json
 {
   "name": "Ramp",
   "position": 3,
-  "validation_rules": {"max_cards": 15}
+  "validation_rules": { "max_cards": 15 }
 }
 ```
 
@@ -976,6 +1040,7 @@ deck_cost = SUM(
 **Description:** Add card to section.
 
 **Request Body:**
+
 ```json
 {
   "card_print_id": "uuid",
@@ -984,6 +1049,7 @@ deck_cost = SUM(
 ```
 
 **Validation:**
+
 - Check section validation rules (max_cards, singleton, color_identity)
 - Return 400 Bad Request if violation
 
@@ -1006,6 +1072,7 @@ deck_cost = SUM(
 **Description:** Calculate deck coverage (owned vs. needed cards).
 
 **Response:**
+
 ```json
 {
   "total_cards": 60,
@@ -1038,19 +1105,21 @@ deck_cost = SUM(
 **Description:** Calculate deck cost (total + per-section breakdown).
 
 **Query Params:**
+
 - `currency`: "usd" or "eur"
 
 **Response:**
+
 ```json
 {
   "total": 399.56,
   "currency": "usd",
   "breakdown": {
-    "Command Zone": 120.00,
+    "Command Zone": 120.0,
     "Mainboard": 234.56,
-    "Sideboard": 45.00
+    "Sideboard": 45.0
   },
-  "missing_cost": 180.00
+  "missing_cost": 180.0
 }
 ```
 
@@ -1063,35 +1132,41 @@ deck_cost = SUM(
 ```typescript
 // packages/domain/src/validation/singleton.ts
 export function validateSingleton(cards: DeckCard[]): ValidationError[] {
-  const counts = new Map<string, number>()
+  const counts = new Map<string, number>();
 
   for (const card of cards) {
-    const oracleId = card.cardPrint.oracleId
-    const current = counts.get(oracleId) || 0
-    counts.set(oracleId, current + card.quantity)
+    const oracleId = card.cardPrint.oracleId;
+    const current = counts.get(oracleId) || 0;
+    counts.set(oracleId, current + card.quantity);
   }
 
-  const errors: ValidationError[] = []
+  const errors: ValidationError[] = [];
   for (const [oracleId, count] of counts.entries()) {
     if (count > 1 && !isBasicLand(oracleId)) {
       errors.push({
         type: 'singleton_violation',
         oracleId,
         count,
-        message: `${getCardName(oracleId)}: ${count} copies (max 1 allowed)`
-      })
+        message: `${getCardName(oracleId)}: ${count} copies (max 1 allowed)`,
+      });
     }
   }
 
-  return errors
+  return errors;
 }
 
 function isBasicLand(oracleId: string): boolean {
   const basicLands = [
-    'plains', 'island', 'swamp', 'mountain', 'forest',
-    'wastes', 'snow-covered plains', 'snow-covered island', // etc.
-  ]
-  return basicLands.includes(getCardName(oracleId).toLowerCase())
+    'plains',
+    'island',
+    'swamp',
+    'mountain',
+    'forest',
+    'wastes',
+    'snow-covered plains',
+    'snow-covered island', // etc.
+  ];
+  return basicLands.includes(getCardName(oracleId).toLowerCase());
 }
 ```
 
@@ -1105,23 +1180,23 @@ export function validateColorIdentity(
   cards: DeckCard[],
   allowedColors: string[]
 ): ValidationError[] {
-  const errors: ValidationError[] = []
+  const errors: ValidationError[] = [];
 
   for (const card of cards) {
-    const cardColors = card.cardPrint.card.colors || []
-    const invalidColors = cardColors.filter(c => !allowedColors.includes(c))
+    const cardColors = card.cardPrint.card.colors || [];
+    const invalidColors = cardColors.filter((c) => !allowedColors.includes(c));
 
     if (invalidColors.length > 0) {
       errors.push({
         type: 'color_identity_violation',
         cardName: card.cardPrint.card.name,
         invalidColors,
-        message: `${card.cardPrint.card.name} contains ${invalidColors.join(', ')} (not in commander's color identity)`
-      })
+        message: `${card.cardPrint.card.name} contains ${invalidColors.join(', ')} (not in commander's color identity)`,
+      });
     }
   }
 
-  return errors
+  return errors;
 }
 ```
 
@@ -1131,22 +1206,19 @@ export function validateColorIdentity(
 
 ```typescript
 // packages/domain/src/validation/banlist.ts
-export function validateBanlist(
-  cards: DeckCard[],
-  format: string
-): ValidationError[] {
-  const errors: ValidationError[] = []
+export function validateBanlist(cards: DeckCard[], format: string): ValidationError[] {
+  const errors: ValidationError[] = [];
 
   for (const card of cards) {
-    const legality = card.cardPrint.card.legalities[format]
+    const legality = card.cardPrint.card.legalities[format];
 
     if (legality === 'banned') {
       errors.push({
         type: 'banlist_violation',
         cardName: card.cardPrint.card.name,
         format,
-        message: `${card.cardPrint.card.name} is banned in ${format}`
-      })
+        message: `${card.cardPrint.card.name} is banned in ${format}`,
+      });
     }
 
     if (legality === 'restricted' && card.quantity > 1) {
@@ -1154,12 +1226,12 @@ export function validateBanlist(
         type: 'restricted_violation',
         cardName: card.cardPrint.card.name,
         format,
-        message: `${card.cardPrint.card.name} is restricted in ${format} (max 1 copy)`
-      })
+        message: `${card.cardPrint.card.name} is restricted in ${format} (max 1 copy)`,
+      });
     }
   }
 
-  return errors
+  return errors;
 }
 ```
 
@@ -1192,6 +1264,7 @@ export function validateBanlist(
 ```
 
 **Sidebar:**
+
 - Deck Stats (Mana Curve chart)
 - Color Distribution (Pie chart)
 - Card Types breakdown
@@ -1217,51 +1290,61 @@ export function validateBanlist(
 ### Mobile Web (320-767px)
 
 **Deck List View:**
+
 - **Layout**: Card list view (not table) with collapsible sections
 - **Each deck card shows**: Deck name, format badge, card count, coverage percentage
 - **Tap to open**: Full-screen deck editor
 - **Actions**: Swipe left to delete deck (with confirmation)
 
 **Deck Editor:**
+
 - **Full-screen layout** (no sidebar)
 - **Search cards**: Tap "+ Add Card" → Full-screen search overlay
-- **Add cards**: Tap card in search results → Bottom sheet with "Add to Deck" + quantity picker (+/- buttons, 44px touch targets)
+- **Add cards**: Tap card in search results → Bottom sheet with "Add to Deck" + quantity picker (+/-
+  buttons, 44px touch targets)
 - **Remove cards**: Swipe card left → Delete button appears
 - **Edit quantities**: Tap card in deck → Modal with +/- buttons (large touch targets)
 - **Sections**: Collapsible accordion (tap to expand/collapse)
 - **Reorder cards**: Long-press → drag handle appears (touch-friendly drag)
 
 **Deck Stats:**
+
 - **Essential stats only**: Card count, average CMC, coverage percentage
 - **Mana curve**: Simplified bar chart (horizontal scroll if needed)
 - **"View Full Stats" button**: Opens modal with complete analysis (scrollable)
 
 **Validation Errors:**
+
 - **Bottom banner**: "⚠ 3 validation errors" (tap to expand)
 - **Expanded view**: Sheet slides up with error list
 
 **Touch Interactions:**
+
 - All buttons/cards: 44px minimum touch target (WCAG AAA)
 - Swipe-to-delete: Standard iOS/Android pattern
 - Long-press to reorder: Visual feedback (card lifts up, drag handle appears)
 
 **Performance Targets:**
+
 - Deck list load: < 300ms for 50 decks (lazy load if more)
 - Deck editor load: < 500ms for 100-card deck
 - Add card: < 200ms (optimistic UI update)
 - Stats calculation: < 300ms (client-side calculation in `packages/domain`)
 
 **Filters Persistence:**
+
 - Deck list filters (format, tags) persist to localStorage
 - Restored on page load (user doesn't re-filter every session)
 
 ### Tablet (768-1023px)
 
 **Two-column layout:**
+
 - Left: Deck list (sticky)
 - Right: Deck editor (side-by-side when deck selected)
 
 **Hybrid interactions:**
+
 - Touch targets remain 44px (some tablets are touch-only)
 - Drag-and-drop enabled (if mouse/trackpad detected)
 - Bottom sheets become slide-over panels (not full-screen)
@@ -1269,26 +1352,34 @@ export function validateBanlist(
 ### Future Native Mobile
 
 **Offline Support:**
+
 - Full offline deck building (decks stored in SQLite)
 - Background sync when online (conflict resolution via last-write-wins)
 - Optimistic UI updates (add/remove cards instantly, sync later)
 
 **Platform-Specific Features:**
+
 - Share deck via system share sheet (WhatsApp, Discord, etc.)
 - Deep linking: `decksmith://decks/:id` opens deck in app
 - Biometric unlock for premium features (Pro users)
 - Camera integration: Scan cards to add to deck (OCR future feature)
 
 **Domain Logic Reuse:**
-- Validation functions (`validateSingleton`, `validateColorIdentity`, `validateBanlist`) in `packages/domain` work identically on web and native
-- Stats calculations (mana curve, color distribution, enhanced analysis) shared via `packages/domain`
+
+- Validation functions (`validateSingleton`, `validateColorIdentity`, `validateBanlist`) in
+  `packages/domain` work identically on web and native
+- Stats calculations (mana curve, color distribution, enhanced analysis) shared via
+  `packages/domain`
 - No business logic duplication (align with ADR-0008: Domain layer design)
 
 ### Related ADRs
 
-- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Breakpoints, touch targets, offline strategy
-- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Feature parity matrix, UX patterns
-- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for native app
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md)
+  — Breakpoints, touch targets, offline strategy
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Feature
+  parity matrix, UX patterns
+- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for
+  native app
 
 ---
 

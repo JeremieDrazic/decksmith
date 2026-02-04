@@ -6,7 +6,10 @@ Comprehensive card information view with prints gallery, price history, and quic
 
 ## Overview
 
-The card details page provides in-depth information about a Magic: The Gathering card, including oracle text, all available prints, price history, and usage across the user's decks and collection. The page supports both **modal overlay** (for deck building context) and **full page route** (for sharing and discovery).
+The card details page provides in-depth information about a Magic: The Gathering card, including
+oracle text, all available prints, price history, and usage across the user's decks and collection.
+The page supports both **modal overlay** (for deck building context) and **full page route** (for
+sharing and discovery).
 
 **Route:** `/cards/:oracle_id`
 
@@ -20,15 +23,16 @@ The card details page provides in-depth information about a Magic: The Gathering
 
 **Multi-trigger approach with context-aware behavior:**
 
-| Context | Trigger | Behavior |
-|---------|---------|----------|
-| **Deck builder** | Click card name or image | Modal overlay (preserves editing context) |
-| **Search results** | Click card name or image | Full page route (shareable URL) |
-| **Collection grid** | Click card image | Modal overlay |
-| **Autocomplete** | Click result | Adds card with default print (no details page) |
-| **Right-click menu** | "View Details" | Opens in modal or page based on context |
+| Context              | Trigger                  | Behavior                                       |
+| -------------------- | ------------------------ | ---------------------------------------------- |
+| **Deck builder**     | Click card name or image | Modal overlay (preserves editing context)      |
+| **Search results**   | Click card name or image | Full page route (shareable URL)                |
+| **Collection grid**  | Click card image         | Modal overlay                                  |
+| **Autocomplete**     | Click result             | Adds card with default print (no details page) |
+| **Right-click menu** | "View Details"           | Opens in modal or page based on context        |
 
 **Design rationale:**
+
 - Modal in deck builder avoids disrupting flow
 - Full page in search enables deep linking and sharing
 - Consistent with existing collection 3D viewer UX
@@ -161,6 +165,7 @@ STICKY BOTTOM BAR
 ### 1. Card Image & Basic Info (Left Sidebar)
 
 **Card Image:**
+
 - Source: Scryfall `image_uris.large` or `image_uris.png` (high-res)
 - Size: 300×420px on desktop, full width on mobile
 - Interaction: Click to open lightbox (zoom/pan)
@@ -168,16 +173,19 @@ STICKY BOTTOM BAR
 - Fallback: Placeholder if image unavailable
 
 **Mana Cost:**
+
 - Display: Rendered mana symbols (SVG icons)
 - Format: `{R}` → [Red mana symbol]
 - Source: `Card.mana_cost`
 
 **Type Line:**
+
 - Format: "Instant" or "Creature — Human Wizard"
 - Source: `Card.type_line`
 - Localized: Uses `CardPrint.localized_type` if language ≠ English
 
 **Set Information:**
+
 - Set icon + code (e.g., "[LEA]")
 - Rarity (Common, Uncommon, Rare, Mythic)
 - Release year
@@ -188,17 +196,20 @@ STICKY BOTTOM BAR
 ### 2. Oracle Text & Flavor (Main Column)
 
 **Oracle Text:**
+
 - Full card rules text
 - Source: `Card.oracle_text`
 - Localized: Uses `CardPrint.localized_text` if available
 - Formatting: Preserve line breaks, bold keywords (e.g., **Flying**, **Trample**)
 
 **Flavor Text:**
+
 - Italic, muted color (#666)
 - Source: `CardPrint.flavor_text` (print-specific)
 - Attribution: Include artist credit if available
 
 **Oracle ID:**
+
 - Display: Short code or full UUID (collapsible)
 - Purpose: Technical reference for advanced users
 
@@ -208,14 +219,15 @@ STICKY BOTTOM BAR
 
 **Format Legality Display:**
 
-| Format | Status | Visual |
-|--------|--------|--------|
-| Legal | Green checkmark | ✓ Commander: Legal |
-| Not Legal | Red X | ✗ Standard: Not Legal |
-| Restricted | Yellow warning | ⚠ Vintage: Restricted (max 1 copy) |
-| Banned | Red ban icon | 🚫 Legacy: Banned |
+| Format     | Status          | Visual                             |
+| ---------- | --------------- | ---------------------------------- |
+| Legal      | Green checkmark | ✓ Commander: Legal                 |
+| Not Legal  | Red X           | ✗ Standard: Not Legal              |
+| Restricted | Yellow warning  | ⚠ Vintage: Restricted (max 1 copy) |
+| Banned     | Red ban icon    | 🚫 Legacy: Banned                  |
 
 **Formats to Display (Default):**
+
 1. Commander (EDH)
 2. Modern
 3. Standard
@@ -224,6 +236,7 @@ STICKY BOTTOM BAR
 6. Legacy
 
 **Expandable Section:**
+
 - [Show All Formats ▾] button reveals 15+ formats
 - Includes: Pauper, Historic, Alchemy, Explorer, Brawl, etc.
 - Source: `Card.legalities` JSONB object
@@ -233,17 +246,20 @@ STICKY BOTTOM BAR
 ### 4. Price History Chart
 
 **Chart Visualization:**
+
 - Type: Line chart (time-series)
 - Library: Recharts or Chart.js (React-compatible)
 - Time ranges: 7d, 30d (default), 90d, 1y
 - Data source: Daily snapshots from Scryfall sync
 
 **Data Points:**
+
 - USD price (default)
 - EUR price (toggle)
 - Foil vs non-foil (separate lines or toggle)
 
 **Summary Stats:**
+
 - Min price (with date)
 - Max price (with date)
 - Average price
@@ -251,11 +267,13 @@ STICKY BOTTOM BAR
 - Volatility indicator (% change over period)
 
 **Interaction:**
+
 - Hover: Show exact price + date tooltip
 - Click data point: Jump to that print edition
 - Toggle currency: Switch between USD/EUR
 
 **Performance:**
+
 - Cache chart data (5-minute TTL)
 - Lazy load: Render only when scrolled into view
 - Responsive: Adjust chart size for mobile
@@ -265,6 +283,7 @@ STICKY BOTTOM BAR
 ### 5. Prints Gallery
 
 **Layout:**
+
 - **Grid view (default):** Uniform card grid, 4 columns on desktop, 2 on mobile
 - **List view:** Table with columns (Set, Rarity, Price, Foil, Actions)
 
@@ -286,6 +305,7 @@ STICKY BOTTOM BAR
 ```
 
 **Sort Options:**
+
 - Newest first (release date DESC)
 - Oldest first (release date ASC)
 - Price: Low to High
@@ -294,17 +314,20 @@ STICKY BOTTOM BAR
 - Rarity (Mythic → Common)
 
 **Filter Options:**
+
 - Foil availability (Foil only, Non-foil only, Both)
 - Rarity (Common, Uncommon, Rare, Mythic)
 - Set type (Core, Expansion, Masters, Promo)
 - Price range (slider: $0 - $max)
 
 **Interaction:**
+
 - Click card image: Preview full image
 - Click [SELECT]: Add to deck/collection with this print
 - Hover: Show price trend sparkline
 
 **Lazy Loading:**
+
 - Initial load: First 12 prints
 - Infinite scroll: Load 12 more on scroll
 - Performance: Virtualized scrolling for 100+ prints
@@ -314,6 +337,7 @@ STICKY BOTTOM BAR
 ### 6. Deck & Collection Usage
 
 **Purpose:**
+
 - Show user's ownership and usage context
 - Quick navigation to related decks/collection entries
 
@@ -327,6 +351,7 @@ DECKS (3)
 ```
 
 **Display:**
+
 - Deck name (clickable link to `/decks/:deckId`)
 - Quantity in deck
 - Section (Mainboard, Sideboard, Command Zone, Maybeboard)
@@ -343,6 +368,7 @@ COLLECTION (12 total copies, $850 total value)
 ```
 
 **Display:**
+
 - Set code + collector number
 - Condition (NM, LP, MP, HP, DMG)
 - Quantity
@@ -350,6 +376,7 @@ COLLECTION (12 total copies, $850 total value)
 - Total value across all copies
 
 **Empty State:**
+
 - "Not in your decks yet" → [+ Add to Deck] CTA
 - "Not in your collection yet" → [+ Add to Collection] CTA
 
@@ -359,14 +386,15 @@ COLLECTION (12 total copies, $850 total value)
 
 **Primary Actions (always visible):**
 
-| Action | Icon | Behavior |
-|--------|------|----------|
-| Add to Deck | `+` | Opens deck selector modal |
-| Add to Collection | `+` | Opens collection entry form |
-| Wishlist | `♥` | Toggle wishlist status (saves card for later) |
-| Share | `↗` | Copy shareable link to clipboard |
+| Action            | Icon | Behavior                                      |
+| ----------------- | ---- | --------------------------------------------- |
+| Add to Deck       | `+`  | Opens deck selector modal                     |
+| Add to Collection | `+`  | Opens collection entry form                   |
+| Wishlist          | `♥`  | Toggle wishlist status (saves card for later) |
+| Share             | `↗`  | Copy shareable link to clipboard              |
 
 **Secondary Actions (dropdown menu):**
+
 - Open in Scryfall (external link)
 - Open in TCGplayer (external link)
 - View on EDHREC (Commander stats)
@@ -426,6 +454,7 @@ COLLECTION (12 total copies, $850 total value)
 4. Toast notification: "Added 1× Lightning Bolt (LEA) to collection"
 
 **Share Link:**
+
 - Copies URL to clipboard: `https://decksmith.app/cards/:oracle_id`
 - Toast: "Link copied!"
 - Open Graph meta tags for social preview:
@@ -440,6 +469,7 @@ COLLECTION (12 total copies, $850 total value)
 ### 8. Keyboard Shortcuts
 
 **Navigation:**
+
 - `A` — Add to deck
 - `C` — Add to collection
 - `W` — Toggle wishlist
@@ -449,6 +479,7 @@ COLLECTION (12 total copies, $850 total value)
 - `↑/↓` — Scroll page
 
 **Accessibility:**
+
 - Focus indicators visible (blue outline)
 - Tab navigation works throughout page
 - Screen reader friendly (aria-labels on icons)
@@ -459,6 +490,7 @@ COLLECTION (12 total copies, $850 total value)
 ## Modal Mode (Deck Building Context)
 
 **Trigger:**
+
 - User clicks card name/image while in deck builder or collection view
 
 **Layout (Overlay):**
@@ -491,6 +523,7 @@ COLLECTION (12 total copies, $850 total value)
 ```
 
 **Features:**
+
 - Focused content (image + text + prints)
 - No price history chart (keeps modal lightweight)
 - No deck/collection usage (contextual redundancy)
@@ -498,6 +531,7 @@ COLLECTION (12 total copies, $850 total value)
 - Link to full page: [View Full Details →]
 
 **Interaction:**
+
 - `ESC` or click backdrop to close
 - Focus trap (tab cycles within modal)
 - Scroll within modal (body scroll disabled)
@@ -512,6 +546,7 @@ COLLECTION (12 total copies, $850 total value)
 **Description:** Get card details with all prints.
 
 **Response:**
+
 ```json
 {
   "oracle_id": "uuid",
@@ -576,7 +611,7 @@ COLLECTION (12 total copies, $850 total value)
     ],
     "collection": {
       "total_copies": 12,
-      "total_value_usd": 850.00,
+      "total_value_usd": 850.0,
       "entries": [
         {
           "set_code": "LEA",
@@ -597,24 +632,26 @@ COLLECTION (12 total copies, $850 total value)
 **Description:** Get historical price data for chart.
 
 **Query Params:**
+
 - `range`: "7d", "30d" (default), "90d", "1y"
 - `currency`: "usd" (default), "eur"
 
 **Response:**
+
 ```json
 {
   "oracle_id": "uuid",
   "range": "30d",
   "currency": "usd",
   "data": [
-    {"date": "2026-01-01", "price": 1150.00},
-    {"date": "2026-01-02", "price": 1175.00}
+    { "date": "2026-01-01", "price": 1150.0 },
+    { "date": "2026-01-02", "price": 1175.0 }
   ],
   "summary": {
-    "min": 150.00,
-    "max": 1200.00,
-    "avg": 450.00,
-    "current": 1200.00,
+    "min": 150.0,
+    "max": 1200.0,
+    "avg": 450.0,
+    "current": 1200.0,
     "volatility": 0.25
   }
 }
@@ -664,13 +701,13 @@ COLLECTION (12 total copies, $850 total value)
 
 ## Performance Targets
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| Initial page load | < 1.5s | Including card image |
-| Price chart render | < 300ms | Cached data, lightweight chart library |
-| Prints gallery scroll | 60 FPS | Virtualized scrolling for 100+ prints |
-| Modal open animation | < 200ms | Smooth fade-in transition |
-| Image lazy load | < 500ms | Per image on scroll |
+| Metric                | Target  | Notes                                  |
+| --------------------- | ------- | -------------------------------------- |
+| Initial page load     | < 1.5s  | Including card image                   |
+| Price chart render    | < 300ms | Cached data, lightweight chart library |
+| Prints gallery scroll | 60 FPS  | Virtualized scrolling for 100+ prints  |
+| Modal open animation  | < 200ms | Smooth fade-in transition              |
+| Image lazy load       | < 500ms | Per image on scroll                    |
 
 ---
 
@@ -732,11 +769,13 @@ COLLECTION (12 total copies, $850 total value)
 ### Mobile Web (320-767px)
 
 **Modal Behavior:**
+
 - **Full-screen modal**: Slides up from bottom (not centered overlay)
 - **Swipe-to-dismiss**: Swipe down to close modal (iOS/Android standard)
 - **Header**: Fixed at top with back button (arrow) and close button (X)
 
 **Layout (Single Column):**
+
 - **Card image**: Full-width (320px), centered
 - **Card name**: Large (24px font)
 - **Mana cost**: Icons below name (large, 32px)
@@ -744,71 +783,86 @@ COLLECTION (12 total copies, $850 total value)
 - **Sections scroll**: Scroll vertically through oracle text → legalities → prints → usage
 
 **Prints Gallery:**
+
 - **2-column grid** (not 4-column)
 - **Tap to select**: Tap print thumbnail → Expands to show details (set, price, foil/nonfoil)
 - **No hover**: No hover-to-preview (use tap instead)
 - **Large touch targets**: Each print card is 44px minimum height
 
 **Price History:**
+
 - **Simplified chart**: Line graph with 30-day history (horizontal scroll if needed)
 - **Touch interactions**: Tap data point → Show tooltip with exact price
 - **Currency toggle**: Tap [USD] [EUR] buttons (44px touch targets)
 
 **Quick Actions:**
+
 - **Bottom sheet**: "Add to Deck", "Add to Collection", "Share"
 - **Large buttons**: 56px height (easy to tap)
 - **Sheet slides up**: Tap action button → Sheet with options
 
 **Legalities:**
+
 - **Collapsible sections**: Tap "Show All Formats" → Expands full list
 - **Essential formats first**: Standard, Modern, Commander (others collapsed)
 
 **Touch Interactions:**
+
 - All buttons: 44px minimum
 - Swipe-to-dismiss modal: Standard gesture
 - Pull to refresh (optional): Refresh prices
 
 **Performance Targets:**
+
 - Card details load: < 300ms (oracle data cached)
 - Prints gallery load: < 500ms (lazy load images)
 - Price chart render: < 200ms (client-side calculation)
 
 **Offline Behavior:**
+
 - Requires internet (card data and prices need API)
 - Error if offline: "No internet. Card details require connection."
 
 ### Tablet (768-1023px)
 
 **Slide-over modal** (not full-screen):
+
 - Modal takes 60% of screen width
 - Background content visible (dimmed)
 - Swipe or tap outside to close
 
 **Two-column layout**:
+
 - Left: Card image, mana cost, type
 - Right: Oracle text, legalities, actions
 
 ### Future Native Mobile
 
 **Offline Support:**
+
 - Full card database in SQLite (oracle text, legalities)
 - Prices update when online (stale prices shown if offline)
 - "Last updated 2 days ago" indicator
 
 **Platform Features:**
+
 - **Share via system sheet**: Share card link (WhatsApp, Discord, etc.)
 - **Deep linking**: `decksmith://cards/:oracle_id` opens card in app
 - **3D card viewer**: ARKit (iOS) / ARCore (Android) for 3D rotation (future enhancement)
 
 **Domain Logic Reuse:**
+
 - Legality checks (`isLegalIn Format`, `isBanned`) in `packages/domain` work on web and native
 - Price calculations shared
 
 ### Related ADRs
 
-- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md) — Modal behavior, touch targets
-- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Full-screen modal pattern
-- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for cards
+- [ADR-0008: Mobile-First Web Design Principles](../adr/0008-mobile-first-web-design-principles.md)
+  — Modal behavior, touch targets
+- [ADR-0009: Responsive Feature Strategy](../adr/0009-responsive-feature-strategy.md) — Full-screen
+  modal pattern
+- [ADR-0010: Link Sharing & Meta Tags](../adr/0010-link-sharing-meta-tags.md) — Deep linking for
+  cards
 
 ---
 
