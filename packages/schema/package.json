@@ -15,6 +15,7 @@
     "./card/prices": "./src/card/prices.ts",
     "./user/user": "./src/user/user.ts",
     "./user/preferences": "./src/user/preferences.ts",
+    "./collection/folder": "./src/collection/folder.ts",
     "./collection/collection-entry": "./src/collection/collection-entry.ts",
     "./deck/deck": "./src/deck/deck.ts",
     "./deck/section": "./src/deck/section.ts",
