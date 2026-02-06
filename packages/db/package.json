@@ -1,0 +1,27 @@
+{
+  "name": "@decksmith/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:studio": "prisma studio",
+    "lint": "eslint --cache .",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.3.0",
+    "dotenv": "catalog:"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "prisma": "^7.3.0",
+    "typescript": "catalog:"
+  }
+}

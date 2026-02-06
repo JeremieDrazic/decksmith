@@ -5,6 +5,7 @@ packages:
 catalog:
   # Runtime dependencies
   zod: ^4.3.6
+  dotenv: ^17.2.4
 
   # Dev dependencies
   typescript: ^5.7.3
