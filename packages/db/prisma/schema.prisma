@@ -1,0 +1,388 @@
+// =============================================================================
+// PRISMA SCHEMA - Decksmith Database
+// =============================================================================
+// This file defines the database structure. Prisma reads this and:
+// 1. Creates SQL migrations
+// 2. Generates a type-safe TypeScript client
+//
+// Key conventions:
+// - Models use PascalCase (User, DeckCard)
+// - Fields use camelCase (userId, createdAt)
+// - Database uses snake_case via @map()
+// - Enums stored as strings (validated by Zod at API boundary)
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// DATASOURCE: Database provider (URL is in prisma.config.ts)
+// -----------------------------------------------------------------------------
+datasource db {
+  provider = "postgresql" // We use PostgreSQL (via Supabase)
+}
+
+// -----------------------------------------------------------------------------
+// GENERATOR: What code should Prisma create?
+// -----------------------------------------------------------------------------
+generator client {
+  provider = "prisma-client-js" // Generate TypeScript/JavaScript client
+}
+
+// =============================================================================
+// USER MODELS
+// =============================================================================
+
+/// User account. Primary identity synced with Supabase Auth.
+model User {
+  id          String  @id @default(uuid())
+  email       String  @unique
+  username    String  @unique
+  displayName String  @map("display_name")
+  avatarUrl   String? @map("avatar_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations (1:1 and 1:N)
+  preferences            UserPreferences?
+  decks                  Deck[]
+  collectionFolders      CollectionFolder[]
+  collectionEntries      CollectionEntry[]
+  tags                   Tag[]
+  cardTags               CardTag[]
+  recommendationFeedback RecommendationFeedback[]
+
+  @@map("users")
+}
+
+/// User preferences. 1:1 relationship with User.
+/// @unique on userId enforces the 1:1 constraint.
+model UserPreferences {
+  id     String @id @default(uuid())
+  userId String @unique @map("user_id") // UNIQUE = 1:1
+
+  language                String @default("en")
+  units                   String @default("mm")
+  defaultCurrency         String @default("eur") @map("default_currency")
+  defaultPrintSelection   String @default("latest") @map("default_print_selection")
+  theme                   String @default("system")
+  collectionViewConfig    Json   @default("{}") @map("collection_view_config")
+  notificationPreferences Json   @default("{}") @map("notification_preferences")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relation: when User is deleted, delete their preferences too
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+// =============================================================================
+// CARD MODELS
+// =============================================================================
+
+/// Card oracle data. Represents the canonical rules text (shared across all printings).
+/// The oracleId comes from Scryfall and is the primary identifier.
+model Card {
+  oracleId    String   @id @map("oracle_id")
+  name        String
+  manaCost    String?  @map("mana_cost")
+  typeLine    String   @map("type_line")
+  oracleText  String?  @map("oracle_text")
+  colors      String[] // Postgres array - stores ["W", "U"] etc.
+  cmc         Float
+  legalities  Json // { "commander": "legal", "standard": "not_legal", ... }
+  scryfallUri String   @map("scryfall_uri")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  prints   CardPrint[]
+  cardTags CardTag[]
+
+  @@map("cards")
+}
+
+/// Card print. A specific edition/variant of a card.
+/// Example: "Sol Ring" from Commander 2021 (foil, French)
+model CardPrint {
+  id              String    @id @default(uuid())
+  scryfallId      String    @unique @map("scryfall_id")
+  oracleId        String    @map("oracle_id")
+  setCode         String    @map("set_code")
+  collectorNumber String    @map("collector_number")
+  illustrationId  String?   @map("illustration_id")
+  imageUris       Json?     @map("image_uris")
+  rarity          String
+  foil            Boolean
+  nonfoil         Boolean
+  prices          Json // { "usd": "1.50", "usdFoil": "3.00", ... }
+  pricesUpdatedAt DateTime? @map("prices_updated_at")
+  language        String    @default("en")
+  localizedName   String?   @map("localized_name")
+  localizedType   String?   @map("localized_type")
+  localizedText   String?   @map("localized_text")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relation: Restrict = can't delete a Card if prints exist
+  card              Card              @relation(fields: [oracleId], references: [oracleId], onDelete: Restrict)
+  collectionEntries CollectionEntry[]
+  deckCards         DeckCard[]
+
+  // Composite unique: same card in same set with same number and language
+  @@unique([oracleId, setCode, collectorNumber, language])
+  @@map("card_prints")
+}
+
+// =============================================================================
+// DECK MODELS
+// =============================================================================
+
+/// A user's deck.
+model Deck {
+  id          String  @id @default(uuid())
+  userId      String  @map("user_id")
+  name        String
+  format      String // "commander", "standard", etc. (validated by Zod)
+  description String?
+  isPublic    Boolean @default(false) @map("is_public")
+  publicSlug  String? @unique @map("public_slug")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sections        DeckSection[]
+  tags            DeckTag[]
+  recommendations DeckRecommendation[]
+
+  @@index([userId]) // Index for "get all decks for user" queries
+  @@map("decks")
+}
+
+/// A section within a deck (Mainboard, Sideboard, Command Zone, etc.).
+model DeckSection {
+  id              String  @id @default(uuid())
+  deckId          String  @map("deck_id")
+  name            String
+  description     String?
+  position        Int
+  validationRules Json?   @map("validation_rules")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  deck  Deck       @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  cards DeckCard[]
+
+  @@unique([deckId, position]) // No two sections with same position
+  @@map("deck_sections")
+}
+
+/// A card in a deck section.
+model DeckCard {
+  id          String  @id @default(uuid())
+  sectionId   String  @map("section_id")
+  cardPrintId String  @map("card_print_id")
+  quantity    Int     @default(1)
+  position    Int
+  notes       String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  section   DeckSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  cardPrint CardPrint   @relation(fields: [cardPrintId], references: [id], onDelete: Restrict)
+
+  @@unique([sectionId, position])
+  @@map("deck_cards")
+}
+
+// =============================================================================
+// COLLECTION MODELS
+// =============================================================================
+
+/// A user-defined folder for organizing collection entries.
+model CollectionFolder {
+  id          String  @id @default(uuid())
+  userId      String  @map("user_id")
+  name        String
+  description String?
+  color       String  @default("#3B82F6")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user    User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entries CollectionEntry[]
+
+  @@unique([userId, name]) // No duplicate folder names per user
+  @@map("collection_folders")
+}
+
+/// A card owned by the user.
+model CollectionEntry {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  folderId     String?   @map("folder_id") // Nullable = can be unfiled
+  cardPrintId  String    @map("card_print_id")
+  quantity     Int       @default(1)
+  condition    String // "NM", "LP", "MP", "HP", "DMG"
+  isFoil       Boolean   @map("is_foil")
+  acquiredDate DateTime? @map("acquired_date") @db.Date
+  notes        String?
+  customFields Json?     @map("custom_fields")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  folder    CollectionFolder?    @relation(fields: [folderId], references: [id], onDelete: SetNull) // SetNull = entries become unfiled
+  cardPrint CardPrint            @relation(fields: [cardPrintId], references: [id], onDelete: Restrict)
+  tags      CollectionEntryTag[]
+
+  // Unique per user, card, foil status, and condition
+  @@unique([userId, cardPrintId, isFoil, condition])
+  @@index([userId, cardPrintId])
+  @@map("collection_entries")
+}
+
+// =============================================================================
+// TAG MODELS (simplified — no type, user does what they want)
+// =============================================================================
+
+/// A user-created tag. Can be applied to decks, collection entries, or cards.
+model Tag {
+  id          String  @id @default(uuid())
+  userId      String  @map("user_id")
+  name        String
+  description String?
+  color       String  @default("#6B7280")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  user                User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deckTags            DeckTag[]
+  collectionEntryTags CollectionEntryTag[]
+  cardTags            CardTag[]
+
+  @@unique([userId, name]) // Tag names unique per user
+  @@map("tags")
+}
+
+/// Junction table: Deck <-> Tag (N:N)
+model DeckTag {
+  deckId String @map("deck_id")
+  tagId  String @map("tag_id")
+
+  deck Deck @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([deckId, tagId]) // Composite primary key (no separate id field)
+  @@map("deck_tags")
+}
+
+/// Junction table: CollectionEntry <-> Tag (N:N)
+model CollectionEntryTag {
+  collectionEntryId String @map("collection_entry_id")
+  tagId             String @map("tag_id")
+
+  collectionEntry CollectionEntry @relation(fields: [collectionEntryId], references: [id], onDelete: Cascade)
+  tag             Tag             @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([collectionEntryId, tagId])
+  @@map("collection_entry_tags")
+}
+
+/// Junction table: Card <-> Tag with user scoping (N:N per user)
+/// This allows users to bookmark/tag cards without owning them.
+model CardTag {
+  oracleId String @map("oracle_id")
+  tagId    String @map("tag_id")
+  userId   String @map("user_id") // User who created this tag link
+
+  card Card @relation(fields: [oracleId], references: [oracleId], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([oracleId, tagId, userId])
+  @@map("card_tags")
+}
+
+// =============================================================================
+// CONTENT MODELS
+// =============================================================================
+
+/// Educational content article (admin-managed).
+model CraftGuideArticle {
+  id           String    @id @default(uuid())
+  slug         String    @unique
+  title        String
+  content      String
+  category     String // "equipment", "tutorial", "tips", "review"
+  thumbnailUrl String?   @map("thumbnail_url")
+  publishedAt  DateTime? @map("published_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("craft_guide_articles")
+}
+
+// =============================================================================
+// RECOMMENDATION MODELS
+// =============================================================================
+
+/// AI-generated deck improvement suggestions.
+model DeckRecommendation {
+  id                  String   @id @default(uuid())
+  deckId              String   @map("deck_id")
+  algorithmVersion    String   @map("algorithm_version")
+  identifiedGaps      Json     @map("identified_gaps")
+  ruleSuggestions     Json     @map("rule_suggestions")
+  llmModel            String?  @map("llm_model")
+  llmPromptTokens     Int?     @map("llm_prompt_tokens")
+  llmCompletionTokens Int?     @map("llm_completion_tokens")
+  llmCostUsd          Decimal? @map("llm_cost_usd") @db.Decimal(10, 6)
+  llmSuggestions      Json?    @map("llm_suggestions")
+  llmSummary          String?  @map("llm_summary")
+  userFeedback        String?  @map("user_feedback") // "helpful" | "not_helpful"
+
+  createdAt DateTime @default(now()) @map("created_at")
+  expiresAt DateTime @map("expires_at") // For TTL cleanup
+
+  // Relations
+  deck     Deck                     @relation(fields: [deckId], references: [id], onDelete: Cascade)
+  feedback RecommendationFeedback[]
+
+  @@index([deckId])
+  @@index([expiresAt]) // Index for cleanup job queries
+  @@map("deck_recommendations")
+}
+
+/// User feedback on a recommendation.
+model RecommendationFeedback {
+  id               String  @id @default(uuid())
+  recommendationId String  @map("recommendation_id")
+  userId           String  @map("user_id")
+  feedback         String // "helpful" | "not_helpful"
+  comment          String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  recommendation DeckRecommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([recommendationId, userId]) // One feedback per user per recommendation
+  @@map("recommendation_feedback")
+}
