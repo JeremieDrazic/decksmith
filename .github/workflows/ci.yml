@@ -39,18 +39,22 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # 5. Check formatting (fail if not formatted)
+      # 5. Generate Prisma client (needed for type-safe lint & typecheck)
+      - name: Generate Prisma client
+        run: pnpm --filter @decksmith/db db:generate
+
+      # 6. Check formatting (fail if not formatted)
       - name: Check formatting
         run: pnpm format:check
 
-      # 6. Run linter
+      # 7. Run linter
       - name: Lint
         run: pnpm lint
 
-      # 7. Type check
+      # 8. Type check
       - name: Type check
         run: pnpm typecheck
 
-      # 8. Run tests (when they exist)
+      # 9. Run tests (when they exist)
       # - name: Test
       #   run: pnpm test
