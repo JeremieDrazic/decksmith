@@ -1,6 +1,5 @@
 name: CI
 
-# When to run
 on:
   push:
     branches: [main]
@@ -13,51 +12,70 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
-    name: Lint, Type Check, Test
+  format:
+    name: Format
     runs-on: ubuntu-latest
-
     steps:
-      # 1. Clone the repository
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # 2. Install pnpm (must match packageManager in package.json)
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10.28.2
-
-      # 3. Set up Node.js (must match engines in package.json)
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
 
-      # 4. Install dependencies
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      # 5. Generate Prisma client (needed for type-safe lint & typecheck)
-      #    Uses a dummy URL because generate only reads the schema, no DB connection needed
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
       - name: Generate Prisma client
         run: pnpm --filter @decksmith/db db:generate
         env:
           DATABASE_URL: 'postgresql://localhost:5432/dummy'
+      - run: pnpm lint
 
-      # 6. Check formatting (fail if not formatted)
-      - name: Check formatting
-        run: pnpm format:check
+  typecheck:
+    name: Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm --filter @decksmith/db db:generate
+        env:
+          DATABASE_URL: 'postgresql://localhost:5432/dummy'
+      - run: pnpm typecheck
 
-      # 7. Run linter
-      - name: Lint
-        run: pnpm lint
-
-      # 8. Type check
-      - name: Type check
-        run: pnpm typecheck
-
-      # 9. Run tests (when they exist)
-      # - name: Test
-      #   run: pnpm test
+  # test:
+  #   name: Test
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: pnpm/action-setup@v4
+  #       with:
+  #         version: 10.28.2
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22
+  #         cache: 'pnpm'
+  #     - run: pnpm install --frozen-lockfile
+  #     - run: pnpm test
