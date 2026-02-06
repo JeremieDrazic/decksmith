@@ -18,6 +18,11 @@ evolution history.
 | [0005](./0005-package-boundaries-and-dependency-graph.md) | Package Boundaries and Dependency Graph    | Active | 2026-01-08 |
 | [0006](./0006-testing-strategy-with-vitest.md)            | Testing Strategy with Vitest and Storybook | Active | 2026-01-08 |
 | [0007](./0007-job-queue-bullmq-redis.md)                  | Job Queue with BullMQ and Redis            | Active | 2026-01-10 |
+| [0008](./0008-mobile-first-web-design-principles.md)      | Mobile-First Web Design Principles         | Active | 2026-02-04 |
+| [0009](./0009-responsive-feature-strategy.md)             | Responsive Feature Strategy                | Active | 2026-02-04 |
+| [0010](./0010-link-sharing-meta-tags.md)                  | Link Sharing Meta Tags                     | Active | 2026-02-04 |
+| [0011](./0011-file-folder-conventions.md)                 | File and Folder Conventions                | Active | 2026-02-03 |
+| [0012](./0012-prisma-database-package.md)                 | Prisma Database Package Configuration      | Active | 2026-02-06 |
 
 ---
 
