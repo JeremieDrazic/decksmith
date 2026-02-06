@@ -73,6 +73,7 @@ Do not suggest alternatives unless there's a strong technical reason.
 - Incremental, task-driven
 - ADR-style decisions documented
 - Code + docs written together
+- Always use latest stable versions when adding dependencies
 
 ---
 
