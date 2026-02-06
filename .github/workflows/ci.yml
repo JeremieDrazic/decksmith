@@ -40,8 +40,11 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # 5. Generate Prisma client (needed for type-safe lint & typecheck)
+      #    Uses a dummy URL because generate only reads the schema, no DB connection needed
       - name: Generate Prisma client
         run: pnpm --filter @decksmith/db db:generate
+        env:
+          DATABASE_URL: 'postgresql://localhost:5432/dummy'
 
       # 6. Check formatting (fail if not formatted)
       - name: Check formatting
