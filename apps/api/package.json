@@ -1,0 +1,29 @@
+{
+  "name": "@decksmith/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "lint": "eslint --cache .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@decksmith/db": "workspace:*",
+    "@decksmith/schema": "workspace:*",
+    "@fastify/cors": "catalog:",
+    "@fastify/sensible": "catalog:",
+    "dotenv": "catalog:",
+    "fastify": "catalog:",
+    "fastify-plugin": "catalog:",
+    "fastify-type-provider-zod": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "@types/node": "catalog:",
+    "pino-pretty": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

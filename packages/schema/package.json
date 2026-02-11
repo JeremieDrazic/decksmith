@@ -8,6 +8,7 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
+    "./errors/codes": "./src/errors/codes.ts",
     "./primitives/enums": "./src/primitives/enums.ts",
     "./primitives/common": "./src/primitives/common.ts",
     "./card/card": "./src/card/card.ts",
