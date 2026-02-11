@@ -81,6 +81,9 @@ export function createBaseConfig(tsconfigRootDir) {
           },
         ],
 
+        // Prefer type aliases over interfaces
+        '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+
         // Unicorn overrides
         'unicorn/prevent-abbreviations': 'off',
         'unicorn/no-null': 'off',

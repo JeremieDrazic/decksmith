@@ -16,6 +16,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "dotenv": "catalog:"
   },
