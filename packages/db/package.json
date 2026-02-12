@@ -8,6 +8,7 @@
     "db:push": "prisma db push",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "lint": "eslint --cache .",
     "typecheck": "tsc --noEmit"
@@ -22,7 +23,9 @@
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
+    "@faker-js/faker": "^10.3.0",
     "prisma": "^7.3.0",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   }
 }
