@@ -69,7 +69,7 @@ contexts.
 
 ### 5. Business Rules Match the Spec
 
-- If a relevant spec exists in `docs/specs/`, do the implemented rules match it?
+- If a relevant spec exists in `apps/docs/specs/`, do the implemented rules match it?
 - Are there business rules in the code that aren't in the spec? (flag for `/spec.sync`)
 
 ### 6. Testability

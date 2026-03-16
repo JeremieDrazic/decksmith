@@ -537,7 +537,7 @@ Routing**).
 
 - [ADR-0008: Mobile-First Web Design Principles](./0008-mobile-first-web-design-principles.md) -
   Breakpoints, touch targets, performance
-- [CLAUDE.md](../../CLAUDE.md) - Architectural values (Premium UX, Clarity over cleverness)
+- CLAUDE.md - Architectural values (Premium UX, Clarity over cleverness)
 - [iOS Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/) -
   Touch interaction patterns
 - [Material Design](https://m3.material.io/) - Bottom sheets, swipe gestures

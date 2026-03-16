@@ -12,11 +12,11 @@ Specs are aspirational documents. Code is the ground truth. This command aligns 
 
 Ask: "Which spec should we sync? (e.g., `collection`, `deck-management`, `user-auth`)"
 
-List available specs by reading `docs/specs/` if the user is unsure.
+List available specs by reading `apps/docs/specs/` if the user is unsure.
 
 ### Step 2: Read the spec
 
-Read `docs/specs/<name>.md` in full.
+Read `apps/docs/specs/<name>.md` in full.
 
 Extract:
 
@@ -102,7 +102,7 @@ You: "Which spec should we sync?"
 
 User: "collection"
 
-You: [reads docs/specs/collection.md, reads apps/api/src/modules/collection/,
+You: [reads apps/docs/specs/collection.md, reads apps/api/src/modules/collection/,
 packages/schema/src/collection/, packages/domain/]
 
 > ## Spec Sync: collection
@@ -131,7 +131,7 @@ packages/schema/src/collection/, packages/domain/]
 
 ### Spec doesn't exist yet
 
-If `docs/specs/<name>.md` doesn't exist:
+If `apps/docs/specs/<name>.md` doesn't exist:
 
 > "No spec found. Would you like to create one based on the existing implementation? This is called
 > a 'reverse spec' — useful when code was written spec-first mentally but never documented."

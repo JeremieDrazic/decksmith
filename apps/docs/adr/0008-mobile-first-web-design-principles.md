@@ -327,8 +327,7 @@ feedback demands it).
 
 ## References
 
-- [CLAUDE.md](../../CLAUDE.md) - Architectural values (Separation of concerns, Deterministic
-  behavior)
+- CLAUDE.md - Architectural values (Separation of concerns, Deterministic behavior)
 - [WCAG AAA Touch Target Guidelines](https://www.w3.org/WAI/WCAG21/Understanding/target-size.html) -
   44px minimum
 - [Responsive Web Design (Ethan Marcotte)](https://alistapart.com/article/responsive-web-design/) -

@@ -41,7 +41,8 @@ Non-negotiable Rules:
 
 ## File Locations
 
-ADR Template: docs/adr/template.md ADR Directory: docs/adr/ ADR Index: docs/adr/README.md
+ADR Template: apps/apps/docs/adr/template.md ADR Directory: apps/docs/adr/ ADR Index:
+apps/apps/docs/adr/index.md
 
 ADR Naming Convention: XXXX-short-kebab-case-title.md Examples:
 
@@ -55,7 +56,7 @@ ADR Naming Convention: XXXX-short-kebab-case-title.md Examples:
 
 ### Step 1: Find next ADR number
 
-1. Read the directory docs/adr/
+1. Read the directory apps/docs/adr/
 2. Look for existing ADR files (format: XXXX-\*.md)
 3. Find the highest number
 4. Use next sequential number (e.g., if 0002 exists, use 0003)
@@ -63,7 +64,7 @@ ADR Naming Convention: XXXX-short-kebab-case-title.md Examples:
 
 ### Step 2: Read the template
 
-Read docs/adr/template.md to understand the required structure.
+Read apps/apps/docs/adr/template.md to understand the required structure.
 
 The template has these sections:
 
@@ -128,12 +129,12 @@ Help the user articulate the alignment explicitly.
 
 1. Use today's date for "Last Updated" and "Evolution History"
 
-2. Create filename: docs/adr/XXXX-short-kebab-case-title.md
+2. Create filename: apps/docs/adr/XXXX-short-kebab-case-title.md
    - XXXX = the number you found in Step 1
    - short-kebab-case-title = descriptive title in kebab-case
-   - Example: docs/adr/0003-async-pdf-generation.md
+   - Example: apps/docs/adr/0003-async-pdf-generation.md
 
-3. Follow the structure from docs/adr/template.md EXACTLY
+3. Follow the structure from apps/apps/docs/adr/template.md EXACTLY
 
 4. Fill in all sections based on the answers from Steps 3-6:
    - Context: Use answer from Step 3, question 2
@@ -150,7 +151,7 @@ Help the user articulate the alignment explicitly.
 
 ### Step 8: Update the index
 
-1. Read docs/adr/README.md
+1. Read apps/apps/docs/adr/index.md
 
 2. Add a new row to the "Active ADRs" table with:
    - ADR number (with link to the file)
@@ -176,7 +177,7 @@ Before finalizing, check:
 - Decision is stated clearly and unambiguously
 - Trade-offs section has all three subsections (Benefits, Costs, Risks)
 - Evolution History has at least one entry with today's date
-- docs/adr/README.md has been updated
+- apps/apps/docs/adr/index.md has been updated
 
 ### Step 10: Show and confirm
 
@@ -192,9 +193,9 @@ Show the user:
 
 ## Example Complete ADR
 
-When you generate the ADR, it should look like this (following docs/adr/template.md):
+When you generate the ADR, it should look like this (following apps/apps/docs/adr/template.md):
 
-File: docs/adr/0001-use-fastify.md
+File: apps/docs/adr/0001-use-fastify.md
 
     # ADR-0001: Use Fastify for API Server
 
@@ -262,7 +263,7 @@ You respond:
 
 > I'll help you create an ADR for this decision. Let me first check what ADR number we should use.
 >
-> [Check docs/adr/ directory]
+> [Check apps/docs/adr/ directory]
 >
 > This will be ADR-0001.
 >
@@ -303,8 +304,8 @@ You respond:
 
 > Perfect! I'll now:
 >
-> 1. Create docs/adr/0001-use-fastify.md
-> 2. Update docs/adr/README.md
+> 1. Create apps/docs/adr/0001-use-fastify.md
+> 2. Update apps/apps/docs/adr/index.md
 >
 > [Generate files]
 >
@@ -317,10 +318,10 @@ You respond:
 
 ## Special Cases
 
-### If docs/adr/template.md doesn't exist
+### If apps/apps/docs/adr/template.md doesn't exist
 
-Tell the user: "I need to read docs/adr/template.md but it doesn't exist yet. Should I create the
-ADR structure first?"
+Tell the user: "I need to read apps/apps/docs/adr/template.md but it doesn't exist yet. Should I
+create the ADR structure first?"
 
 ### If user is unsure about alternatives
 
@@ -340,7 +341,7 @@ Make sure to mention them explicitly in the Context section.
 
 ### If related specs exist
 
-Ask: "Are there any specs (in docs/specs/) that relate to this decision?"
+Ask: "Are there any specs (in apps/docs/specs/) that relate to this decision?"
 
 Link them in the References section.
 
@@ -366,8 +367,8 @@ Ask the user:
 - Each amendment adds a new entry to Evolution History
 - ADRs describe HOW (architecture), not WHAT (features - those go in specs)
 - If a decision becomes obsolete, update Status to "Deprecated" and reference the superseding ADR
-- Always read docs/adr/template.md to ensure you're following the current format
-- Always update docs/adr/README.md when creating a new ADR
+- Always read apps/apps/docs/adr/template.md to ensure you're following the current format
+- Always update apps/apps/docs/adr/index.md when creating a new ADR
 - ADR numbers must be sequential with no gaps (0001, 0002, 0003, not 0001, 0003, 0005)
 
 ---

@@ -39,7 +39,7 @@ routes can be implemented.
 
 ### Step 4: Read the spec
 
-Read `docs/specs/<module-name>.md` if it exists.
+Read `apps/docs/specs/<module-name>.md` if it exists.
 
 Extract:
 
@@ -119,7 +119,8 @@ You: [reads user module, reads schema, reads spec, generates files, updates v1-r
 >
 > - apps/api/src/plugins/v1-routes.ts
 >
-> Schemas used: CollectionEntryDto, CreateCollectionEntryDto Spec read: docs/specs/collection.md ✅
+> Schemas used: CollectionEntryDto, CreateCollectionEntryDto Spec read:
+> apps/docs/specs/collection.md ✅
 >
 > Running api-reviewer...
 
@@ -129,7 +130,7 @@ You: [reads user module, reads schema, reads spec, generates files, updates v1-r
 
 ### No spec exists
 
-If `docs/specs/<name>.md` does not exist, warn:
+If `apps/docs/specs/<name>.md` does not exist, warn:
 
 > "No spec found for `<name>`. I'll scaffold based on the schema DTOs, but consider writing a spec
 > first to define the expected behavior."

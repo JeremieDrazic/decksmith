@@ -223,7 +223,7 @@ This aligns with **"Minimal coupling"** and **"Clarity over cleverness"**.
 
 ## References
 
-- [CLAUDE.md](../../CLAUDE.md) - Architectural rules (non-negotiable)
+- CLAUDE.md - Architectural rules (non-negotiable)
 - [Hexagonal Architecture](https://alistair.cockburn.us/hexagonal-architecture/) - Influence for
   domain/infrastructure separation
 - [@manypkg/cli](https://github.com/Thinkmill/manypkg) - Monorepo validation tool

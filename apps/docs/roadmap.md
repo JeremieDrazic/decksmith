@@ -24,11 +24,11 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ## Phase 1: Documentation & Context System
 
-- ✅ Create `docs/ROADMAP.md` (this file)
-- ✅ Create `docs/context/project-state.md`
-- ✅ Create `docs/context/decisions-log.md`
+- ✅ Create `apps/docs/roadmap.md` (this file)
+- ✅ Create `apps/docs/context/project-state.md`
+- ✅ Create `apps/docs/context/decisions-log.md`
 - ✅ Update `CLAUDE.md` with @import + learning contract + maintenance policy
-- ✅ Create `docs/skills-and-agents.md`
+- ✅ Create `apps/docs/skills-and-agents.md`
 - ✅ Create `.claude/WORKFLOW.md`
 - ✅ Create 5 skills: `session.start`, `session.end`, `roadmap.update`, `module.scaffold`,
   `spec.sync`
@@ -207,9 +207,8 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ## Phase 12: Documentation Site
 
-- ⬜ `apps/docs/` with VitePress
-- ⬜ Symlinks → `docs/` content
-- ⬜ GitHub Pages deployment via GitHub Actions
+- ✅ `apps/docs/` with VitePress (docs live here directly)
+- ✅ GitHub Pages deployment via `.github/workflows/docs.yml`
 
 ---
 
@@ -245,6 +244,6 @@ _Dependencies: Phase 5 + 6 stable on web_
 
 - ⬜ Write unit tests as each module is implemented
 - ⬜ Update ROADMAP per session (`/roadmap.update`)
-- ⬜ Update `docs/context/project-state.md` per session (`/session.end`)
+- ⬜ Update `apps/docs/context/project-state.md` per session (`/session.end`)
 - ⬜ Check dependency updates at session start (`/session.start`)
 - ⬜ Create ADRs for new architectural decisions

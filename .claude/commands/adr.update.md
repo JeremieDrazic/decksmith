@@ -19,7 +19,7 @@ Core Values:
 - Maintainability
 - Clarity over cleverness
 
-ADR Location: docs/adr/ ADR Format: Living documents with Evolution History
+ADR Location: apps/docs/adr/ ADR Format: Living documents with Evolution History
 
 ---
 
@@ -42,7 +42,7 @@ Examples:
 
 ### Step 2: Read the current ADR
 
-1. Find the file in docs/adr/
+1. Find the file in apps/docs/adr/
    - If user gave number: find XXXX-\*.md
    - If user gave title: search for matching title
    - If user gave filename: read directly

@@ -14,7 +14,7 @@ Wait for the user's answer. Use it to drive the rest of the steps.
 
 ### Step 2: Update ROADMAP checkboxes
 
-Read `docs/ROADMAP.md`.
+Read `apps/docs/roadmap.md`.
 
 For each item the user mentioned:
 
@@ -26,7 +26,7 @@ Write the updated file.
 
 ### Step 3: Update project-state.md
 
-Read `docs/context/project-state.md`.
+Read `apps/apps/docs/context/project-state.md`.
 
 Update:
 
@@ -48,7 +48,7 @@ Examples of things that belong here:
 - A config option set a certain way
 - A pattern adopted that isn't obvious from the code
 
-If yes: append to `docs/context/decisions-log.md` using this format:
+If yes: append to `apps/apps/docs/context/decisions-log.md` using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — [Short decision title]
