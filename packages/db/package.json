@@ -10,7 +10,7 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "lint": "eslint --cache .",
+    "lint": "oxlint .",
     "typecheck": "tsc --noEmit"
   },
   "exports": {

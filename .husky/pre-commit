@@ -1,4 +1,4 @@
-# Format staged files with prettier
+# Format staged files with oxfmt
 pnpm lint-staged
 
 # Auto-fix lint issues across the repo (turbo caching makes this fast)
