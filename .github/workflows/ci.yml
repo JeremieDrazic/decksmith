@@ -40,11 +40,8 @@ jobs:
           node-version: 22
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - name: Generate Prisma client
-        run: pnpm --filter @decksmith/db db:generate
-        env:
-          DATABASE_URL: 'postgresql://localhost:5432/dummy'
       - run: pnpm lint
+        # Uses oxlint (replaced ESLint - see ADR-0013). No Prisma generate needed.
 
   typecheck:
     name: Type Check
@@ -65,17 +62,17 @@ jobs:
           DATABASE_URL: 'postgresql://localhost:5432/dummy'
       - run: pnpm typecheck
 
-  # test:
-  #   name: Test
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: pnpm/action-setup@v4
-  #       with:
-  #         version: 10.28.2
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 22
-  #         cache: 'pnpm'
-  #     - run: pnpm install --frozen-lockfile
-  #     - run: pnpm test
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test

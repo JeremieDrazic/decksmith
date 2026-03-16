@@ -1,7 +1,6 @@
 {
   "extends": "@decksmith/config/tsconfig/node.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }

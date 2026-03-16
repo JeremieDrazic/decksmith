@@ -1,6 +1,6 @@
 # ADR-0004: Code Quality and Formatting Standards
 
-**Last Updated:** 2026-01-08 **Status:** Active **Context:** Decksmith
+**Last Updated:** 2026-03-15 **Status:** Active **Context:** Decksmith
 
 ---
 
@@ -30,13 +30,16 @@ We will use:
 
 ```json
 {
-  "semi": false,
+  "semi": true,
   "singleQuote": true,
   "trailingComma": "es5",
   "printWidth": 100,
   "tabWidth": 2,
+  "useTabs": false,
   "arrowParens": "always",
-  "endOfLine": "lf"
+  "endOfLine": "lf",
+  "bracketSpacing": true,
+  "proseWrap": "always"
 }
 ```
 
@@ -60,7 +63,8 @@ We will use:
 
 **Configuration choices**:
 
-- **`semi: false`**: Cleaner syntax, common in modern JS/TS (React, Vue, Svelte)
+- **`semi: true`**: Explicit statement terminators; avoids ASI (Automatic Semicolon Insertion) edge
+  cases
 - **`singleQuote: true`**: Consistent with most modern codebases
 - **`printWidth: 100`**: Balance between readability and horizontal space
 - **`trailingComma: "es5"`**: Safer git diffs (adding a line doesn't modify previous line)
@@ -153,6 +157,14 @@ strategy.
   - **Mitigation**: Run once in initial infrastructure PR (this PR)
 
 ## Evolution History
+
+### 2026-03-15: Corrected semi setting — documentation matched to actual config
+
+- ADR originally documented `semi: false` but `.prettierrc.json` was created with `semi: true`
+- Ground truth is the config file; this entry corrects the documentation
+- Additionally, the actual config includes `useTabs`, `bracketSpacing`, and `proseWrap` fields that
+  were not listed in the original ADR — those have been added to the documented config
+- No behaviour change: the codebase has always used semicolons
 
 ### 2026-01-08: Initial decision
 
