@@ -31,7 +31,7 @@ Accept any of:
 
 ### Step 2: Read the ROADMAP
 
-Read `docs/ROADMAP.md`.
+Read `apps/docs/roadmap.md`.
 
 Find all matching items. If unsure of a match, show the candidate and confirm before changing it.
 

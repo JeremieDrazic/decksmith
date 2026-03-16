@@ -106,13 +106,13 @@ Compare a spec document against the actual implementation.
 
 ### `/adr.create`
 
-Create a new Architecture Decision Record. See [adr/README.md](adr/README.md).
+Create a new Architecture Decision Record. See [adr/index.md](adr/index.md).
 
 ---
 
 ### `/adr.update`
 
-Update an existing ADR with new evolution. See [adr/README.md](adr/README.md).
+Update an existing ADR with new evolution. See [adr/index.md](adr/index.md).
 
 ---
 

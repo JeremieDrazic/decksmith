@@ -158,7 +158,7 @@ These features may be considered post-MVP based on user demand.
 
 ## Architecture Principles
 
-**See [CLAUDE.md](/CLAUDE.md) for detailed architectural rules.**
+**See CLAUDE.md for detailed architectural rules.**
 
 Key principles:
 
@@ -171,7 +171,7 @@ Key principles:
 
 ## Related Documentation
 
-- **Architecture Decision Records:** [docs/adr](/docs/adr)
+- **Architecture Decision Records:** [ADRs](/adr/)
 - **Data Model:** [data-model.md](./data-model.md)
 - **Feature Specs:**
   - [Collection Management](./collection.md)

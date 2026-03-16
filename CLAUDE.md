@@ -8,8 +8,8 @@ clarification instead of guessing.
 
 ## Context Imports
 
-@docs/ROADMAP.md
-@docs/context/project-state.md
+@apps/docs/roadmap.md
+@apps/docs/context/project-state.md
 
 ---
 
@@ -101,7 +101,7 @@ reasoning behind every architectural choice — not just the code.
 
 ## Documentation Maintenance
 
-Before implementing any feature: read the corresponding spec in `docs/specs/`. Confirm it aligns
+Before implementing any feature: read the corresponding spec in `apps/docs/specs/`. Confirm it aligns
 with the current Prisma schema and Zod schemas. Flag any divergence before writing code.
 
 After any session:
@@ -113,7 +113,7 @@ After any session:
 New dependency added:
 
 - Significant (Redis, BullMQ, Three.js, Expo) → create an ADR
-- Minor utility → log in `docs/context/decisions-log.md`
+- Minor utility → log in `apps/docs/context/decisions-log.md`
 
 Never add dependencies silently. Stale docs are worse than no docs.
 
@@ -136,7 +136,7 @@ dependencies compounds quickly and breaks things unexpectedly.
 ## Working Process
 
 - Incremental, task-driven
-- ADR-style decisions documented in `docs/adr/`
+- ADR-style decisions documented in `apps/docs/adr/`
 - Code + docs written together
 - Always use latest stable versions when adding dependencies
 - See `.claude/WORKFLOW.md` for the full session workflow

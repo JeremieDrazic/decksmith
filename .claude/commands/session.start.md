@@ -8,7 +8,7 @@ Orient for the current working session: where we are, what's next, any blockers,
 
 ### Step 1: Read ROADMAP
 
-Read `docs/ROADMAP.md`.
+Read `apps/docs/roadmap.md`.
 
 - Identify the last ✅ completed item
 - Identify any 🔄 in-progress items — these take priority over ⬜
@@ -16,7 +16,7 @@ Read `docs/ROADMAP.md`.
 
 ### Step 2: Read project state
 
-Read `docs/context/project-state.md`.
+Read `apps/apps/docs/context/project-state.md`.
 
 - Check environment status (DATABASE_URL, Supabase, Redis)
 - Check the blockers section
@@ -51,7 +51,7 @@ Outdated deps: [count, or "none"]
 
 ### Step 5: Ask about project-state
 
-Ask: "Does `docs/context/project-state.md` need any updates before we start?"
+Ask: "Does `apps/apps/docs/context/project-state.md` need any updates before we start?"
 
 If yes: update it now before proceeding.
 
@@ -71,5 +71,5 @@ If yes: update it now before proceeding.
 
 ## After Command
 
-- If deps were updated: log the updates in `docs/context/decisions-log.md` if significant
+- If deps were updated: log the updates in `apps/apps/docs/context/decisions-log.md` if significant
 - Continue to the planned work

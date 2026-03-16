@@ -21,7 +21,7 @@ it?"
 You hold the full architecture in your head:
 
 - The monorepo structure and its intended package boundaries
-- The tech stack decisions (and why they were made — see `docs/adr/`)
+- The tech stack decisions (and why they were made — see `apps/docs/adr/`)
 - The product roadmap and which features are coming
 - The developer's learning goals (this is both a product and a learning vehicle)
 
@@ -62,8 +62,8 @@ Ask clarifying questions if needed:
 
 ### Step 2: Research the decision
 
-Read the relevant ADRs from `docs/adr/` that relate to the decision domain. Read the relevant spec
-from `docs/specs/` if it exists.
+Read the relevant ADRs from `apps/docs/adr/` that relate to the decision domain. Read the relevant
+spec from `apps/docs/specs/` if it exists.
 
 ### Step 3: Evaluate
 
