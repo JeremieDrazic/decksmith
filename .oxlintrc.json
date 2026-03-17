@@ -368,7 +368,9 @@
     ".turbo/**",
     "coverage/**",
     "*.generated.ts",
-    "*.d.ts.map"
+    "*.d.ts.map",
+    "**/.vitepress/cache/**",
+    "**/.vitepress/dist/**"
   ],
   "overrides": [
     {
