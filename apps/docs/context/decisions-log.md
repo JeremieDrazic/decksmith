@@ -4,6 +4,22 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-03-17] — Added @supabase/supabase-js to packages/db
+
+**Context:** Phase 2.2 auth requires a server-side Supabase client to verify JWTs and perform admin
+auth operations.
+
+**Decision:** `@supabase/supabase-js` added to the pnpm catalog and as a dependency of
+`packages/db`. The client uses `SUPABASE_SERVICE_ROLE_KEY` (bypasses RLS — server-only) with
+`persistSession: false` and `autoRefreshToken: false` (server is stateless, sessions are managed
+per-request via cookies). Exported as `supabase` from `@decksmith/db`.
+
+**Why packages/db and not apps/api:** `packages/db` owns all infrastructure data concerns (Prisma +
+Supabase). `apps/worker` will also need this client later. Avoids duplication and keeps the swap
+surface isolated to one package (ADR-0005).
+
+---
+
 ## [2026-03-17] — Supabase direct connection deprecated, switched to Session Pooler
 
 **Context:** La connexion directe PostgreSQL (`db.<ref>.supabase.co:5432`) ne résout plus en DNS

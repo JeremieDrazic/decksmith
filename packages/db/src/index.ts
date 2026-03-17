@@ -1,4 +1,5 @@
 export { prisma } from './client.js';
+export { supabase } from './supabase.js';
 export { Prisma } from '@prisma/client';
 export type {
   PrismaClient,
