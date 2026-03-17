@@ -31,11 +31,12 @@ generator client {
 // =============================================================================
 
 /// User account. Primary identity synced with Supabase Auth.
+/// id is NOT auto-generated — it must always match the Supabase auth.users UUID.
 model User {
-  id          String  @id @default(uuid())
+  id          String  @id // Provided explicitly from Supabase Auth on user creation
   email       String  @unique
-  username    String  @unique
-  displayName String  @map("display_name")
+  username    String? @unique // Optional — not required at registration
+  displayName String? @map("display_name") // Optional — may come from OAuth provider later
   avatarUrl   String? @map("avatar_url")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -223,6 +224,7 @@ model CollectionFolder {
   entries CollectionEntry[]
 
   @@unique([userId, name]) // No duplicate folder names per user
+  @@index([userId])
   @@map("collection_folders")
 }
 
@@ -276,6 +278,7 @@ model Tag {
   cardTags            CardTag[]
 
   @@unique([userId, name]) // Tag names unique per user
+  @@index([userId])
   @@map("tags")
 }
 
@@ -310,7 +313,7 @@ model CardTag {
   tagId    String @map("tag_id")
   userId   String @map("user_id") // User who created this tag link
 
-  card Card @relation(fields: [oracleId], references: [oracleId], onDelete: Cascade)
+  card Card @relation(fields: [oracleId], references: [oracleId], onDelete: Restrict) // Card is shared data — sync job must remove tags before deleting a card
   tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -384,5 +387,6 @@ model RecommendationFeedback {
   user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([recommendationId, userId]) // One feedback per user per recommendation
+  @@index([userId])
   @@map("recommendation_feedback")
 }

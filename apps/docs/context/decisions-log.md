@@ -4,6 +4,47 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-03-17] — Supabase direct connection deprecated, switched to Session Pooler
+
+**Context:** La connexion directe PostgreSQL (`db.<ref>.supabase.co:5432`) ne résout plus en DNS
+pour ce projet Supabase. Supabase a migré vers une infrastructure pooler.
+
+**Decision:** `DATABASE_URL` pointe désormais vers le **Session Pooler** Supabase
+(`aws-[region].pooler.supabase.com:5432`). Le Session Pooler est compatible avec Prisma (connexions
+persistantes, contrairement au Transaction Pooler sur port 6543 qui n'est pas compatible avec les
+transactions Prisma).
+
+**Impact:** `.env` et `.env.example` mis à jour. Tout développeur qui clone le repo doit utiliser
+l'URL Session Pooler depuis le dashboard Supabase → Settings → Database.
+
+---
+
+## [2026-03-17] — `User.id` ne doit pas être auto-généré par Prisma
+
+**Context:** Le modèle `User` en Prisma avait `@default(uuid())` sur son `id`. Cette valeur par
+défaut a été ajoutée lors de l'écriture initiale du schéma, avant que Supabase Auth soit intégré. À
+ce stade, les users n'existaient que dans la table publique `users` — créés directement via le seed
+script (faker + Prisma), sans aucune couche d'authentification.
+
+**Problème:** Avec Supabase Auth, chaque utilisateur est d'abord créé dans `auth.users` (table
+interne de Supabase), qui génère un UUID. La table publique `users` est une table de profil qui
+**doit référencer ce même ID**. Si Prisma génère son propre UUID, les deux tables auront des IDs
+différents et les politiques RLS (`auth.uid() = user_id`) ne fonctionneront jamais.
+
+**Decision:** Retirer `@default(uuid())` sur `User.id`. L'ID de `User` sera toujours passé
+explicitement depuis l'ID Supabase Auth au moment de la création du profil utilisateur.
+
+**Impact:** `packages/db/prisma/schema.prisma` — migration nécessaire. Le seed script devra être mis
+à jour pour ne plus générer d'UUID arbitraires pour les users.
+
+---
+
+## [2026-03-17] — Auth API-proxied, pas Supabase direct depuis le frontend
+
+**Context:** Voir ADR-0014. Décision significative documentée en ADR.
+
+---
+
 ## [2026-03-16] — tsgolint alpha: disable `tsconfig-error` rule
 
 **Context:** Oxlint type-aware linting via `oxlint-tsgolint` triggered a false positive on `baseUrl`
