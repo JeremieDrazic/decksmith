@@ -48,10 +48,10 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 2.2 Auth (spec: `user-auth.md`)
 
-- 🔄 Enable Supabase Auth + OAuth providers (Google, GitHub)
-- 🔄 Auth plugin in `apps/api` (JWT verification middleware)
-- 🔄 Auth routes: register, login, logout, refresh, reset-password
-- 🔄 Zod schemas for auth DTOs in `packages/schema/src/auth/`
+- ⬜ Enable Supabase Auth + OAuth providers (Google, GitHub)
+- ⬜ Auth plugin in `apps/api` (JWT verification middleware)
+- ⬜ Auth routes: register, login, logout, refresh, reset-password
+- ✅ Zod schemas for auth DTOs in `packages/schema/src/auth/`
 - ⬜ RLS policies for user-owned tables
 - ⬜ Auto-create `UserPreferences` on signup
 
