@@ -63,11 +63,11 @@ export const UserResponseSchema = z.object({
   /** User's email address */
   email: z.email(),
 
-  /** Unique username (for profile URLs, mentions) */
-  username: UsernameSchema,
+  /** Unique username (for profile URLs, mentions). Null until user completes profile. */
+  username: UsernameSchema.nullable(),
 
-  /** Public display name */
-  displayName: DisplayNameSchema,
+  /** Public display name. Null until user completes profile. */
+  displayName: DisplayNameSchema.nullable(),
 
   /** Profile avatar URL (null = use default) */
   avatarUrl: AvatarUrlSchema,
