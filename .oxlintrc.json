@@ -401,6 +401,12 @@
       "rules": {
         "unicorn/no-useless-undefined": "off"
       }
+    },
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "@typescript-eslint/consistent-type-definitions": "off"
+      }
     }
   ]
 }

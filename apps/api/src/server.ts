@@ -6,6 +6,7 @@ import Fastify from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 
 import { config } from './config.js';
+import authPlugin from './plugins/auth.js';
 import errorHandler from './plugins/error-handler.js';
 import health from './plugins/health.js';
 import v1Routes from './plugins/v1-routes.js';
@@ -40,6 +41,7 @@ export async function buildServer() {
   });
   await app.register(sensible);
   await app.register(errorHandler);
+  await app.register(authPlugin);
 
   // Routes
   await app.register(health);

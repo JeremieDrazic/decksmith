@@ -6,3 +6,4 @@ export type {
   User as PrismaUser,
   UserPreferences as PrismaUserPreferences,
 } from '@prisma/client';
+export type { User as AuthUser } from '@supabase/supabase-js';
