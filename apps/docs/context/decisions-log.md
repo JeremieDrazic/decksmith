@@ -4,6 +4,36 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-03-19] — Fastify module augmentation in dedicated .d.ts file
+
+**Context:** The auth plugin needed to augment `FastifyInstance` and `FastifyRequest` with `authenticate` and `user`. Placing `declare module 'fastify'` directly in `auth.ts` mixed type declarations with business logic, and oxlint's `consistent-type-definitions` rule was flagging the required `interface` keyword.
+
+**Decision:** Extracted all Fastify type augmentations to `apps/api/src/types/fastify.d.ts`. Added a `*.d.ts` override in `.oxlintrc.json` to allow `interface` in declaration files. This is the standard TypeScript pattern for module augmentation.
+
+**Impact:** `apps/api/src/types/fastify.d.ts` (new), `apps/api/src/plugins/auth.ts` (cleaner), `.oxlintrc.json` (new override).
+
+---
+
+## [2026-03-19] — AuthUser type re-exported from @decksmith/db
+
+**Context:** `apps/api` needed the Supabase `User` type for `req.user` typing, but importing directly from `@supabase/supabase-js` in `apps/api` would create a direct coupling between the API layer and the auth infrastructure.
+
+**Decision:** Re-exported `User as AuthUser` from `packages/db/src/index.ts`. `apps/api` imports `AuthUser` from `@decksmith/db` only — it has no knowledge of `@supabase/supabase-js`. The name `AuthUser` is intentionally provider-agnostic.
+
+**Impact:** `packages/db/src/index.ts`, `apps/api/src/types/fastify.d.ts`.
+
+---
+
+## [2026-03-19] — lint-staged glob restricted to TS/JS files only
+
+**Context:** oxfmt was failing on `pnpm-lock.yaml` during commits because the lint-staged glob `*.{ts,tsx,js,jsx,json,md,mdx,yml,yaml}` matched YAML files, which oxfmt doesn't support.
+
+**Decision:** Restricted lint-staged glob to `*.{ts,tsx,js,jsx}` only. oxfmt only formats JavaScript/TypeScript — JSON, Markdown, and YAML files are not supported and should not be passed to it.
+
+**Impact:** Root `package.json` lint-staged config.
+
+---
+
 ## [2026-03-17] — Added @supabase/supabase-js to packages/db
 
 **Context:** Phase 2.2 auth requires a server-side Supabase client to verify JWTs and perform admin

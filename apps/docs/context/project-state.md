@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-03-18_
+_Updated: 2026-03-19_
 
 ---
 
@@ -57,11 +57,14 @@ Steps completed:
 - [x] `@supabase/supabase-js` added to `packages/db`, singleton client created + tested
 - [x] Auth Zod DTOs in `packages/schema/src/auth/` — all endpoints covered
 - [x] `UserResponseSchema.username` + `displayName` made nullable
+- [x] `@fastify/cookie`, `@fastify/cors`, `@fastify/rate-limit` installed + configured in `apps/api`
+- [x] Auth plugin `apps/api/src/plugins/auth.ts` — `fastify.authenticate` preHandler decorator
+- [x] `src/types/fastify.d.ts` — Fastify module augmentation (`req.user`, `authenticate`)
+- [x] `AuthUser` type re-exported from `@decksmith/db`
 
 Steps remaining (in order):
 
-- [ ] Step 4: Install `@fastify/cookie`, `@fastify/cors`, `@fastify/rate-limit` in `apps/api`
-- [ ] Step 5: Auth plugin `apps/api/src/plugins/auth.ts` (JWT middleware → `fastify.authenticate`)
+- [ ] Step 6: Auth routes (register, login, logout, refresh, forgot-password, reset-password)
 - [ ] Step 6: Auth module `apps/api/src/modules/auth/` (register, login, logout, refresh,
       forgot-password, reset-password)
 - [ ] Step 7: Enable OAuth providers in Supabase dashboard (Google, GitHub)
