@@ -17,4 +17,6 @@ export const config = {
   host: process.env['HOST'] ?? '0.0.0.0',
   nodeEnv: process.env['NODE_ENV'] ?? 'development',
   databaseUrl: required('DATABASE_URL'),
+  cookieSecret: required('COOKIE_SECRET'),
+  corsOrigin: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173',
 } as const;

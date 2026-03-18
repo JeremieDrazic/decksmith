@@ -1,4 +1,6 @@
+import cookie from '@fastify/cookie';
 import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
 import sensible from '@fastify/sensible';
 import Fastify from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
@@ -25,7 +27,17 @@ export async function buildServer() {
   app.setSerializerCompiler(serializerCompiler);
 
   // Plugins
-  await app.register(cors);
+  await app.register(cors, {
+    origin: config.corsOrigin,
+    credentials: true, // required for cookies to be sent cross-origin
+  });
+  await app.register(cookie, {
+    secret: config.cookieSecret, // signs cookies to prevent tampering
+  });
+  await app.register(rateLimit, {
+    max: 100,
+    timeWindow: '1 minute',
+  });
   await app.register(sensible);
   await app.register(errorHandler);
 

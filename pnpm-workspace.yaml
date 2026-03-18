@@ -3,9 +3,9 @@ packages:
   - packages/*
 
 catalog:
-  '@fastify/cors': ^11.2.0
-  '@supabase/supabase-js': ^2.99.2
+  '@fastify/cors': 'catalog:'
   '@fastify/sensible': ^6.0.4
+  '@supabase/supabase-js': ^2.99.2
   '@types/node': ^25.5.0
   dotenv: ^17.2.4
   fastify: ^5.7.4
