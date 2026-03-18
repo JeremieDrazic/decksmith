@@ -27,13 +27,13 @@
     "oxfmt": "^0.41.0",
     "oxlint": "^1.56.0",
     "oxlint-tsgolint": "^0.17.0",
-    "turbo": "^2.8.17",
+    "turbo": "^2.8.18",
     "typescript": "catalog:",
     "vitest": "^4.1.0"
   },
   "packageManager": "pnpm@10.28.2",
   "lint-staged": {
-    "*.{ts,tsx,js,jsx,json,md,mdx,yml,yaml}": [
+    "*.{ts,tsx,js,jsx}": [
       "oxfmt"
     ]
   },
