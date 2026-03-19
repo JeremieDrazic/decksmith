@@ -3,7 +3,7 @@ packages:
   - packages/*
 
 catalog:
-  '@fastify/cors': 'catalog:'
+  '@fastify/cors': ^11.2.0
   '@fastify/sensible': ^6.0.4
   '@supabase/supabase-js': ^2.99.2
   '@types/node': ^25.5.0
