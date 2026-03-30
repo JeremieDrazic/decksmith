@@ -99,6 +99,18 @@ reasoning behind every architectural choice — not just the code.
 
 ---
 
+## Pitfalls
+
+Before writing code in a given domain, check the relevant pitfall file for known mistakes to avoid:
+
+- Fastify routes/plugins → `apps/docs/context/pitfalls/fastify.md`
+- Supabase integration → `apps/docs/context/pitfalls/supabase.md`
+- TypeScript / tooling → `apps/docs/context/pitfalls/typescript.md`
+
+When a new mistake is caught and corrected during a session, add it to the relevant file immediately.
+
+---
+
 ## Documentation Maintenance
 
 Before implementing any feature: read the corresponding spec in `apps/docs/specs/`. Confirm it aligns
