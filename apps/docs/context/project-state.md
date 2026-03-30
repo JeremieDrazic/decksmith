@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-03-19_
+_Updated: 2026-03-30_
 
 ---
 
@@ -23,28 +23,32 @@ _Updated: 2026-03-19_
 
 - [x] API server: `pnpm --filter @decksmith/api dev` → `localhost:3000`
 - [x] User CRUD routes: `/api/v1/users` responding
+- [x] Auth routes: `/api/v1/auth/` — all 6 routes implemented (in `feat/auth` PR #14)
 - [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
-- [x] Format: `pnpm format:check` → oxfmt (0 errors)
+- [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
 - [x] Tests: `pnpm test` → 3/3 passing (`apps/api`)
 - [x] Typecheck: `pnpm typecheck` → 0 errors
 - [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
+- [x] CI: all checks passing on PR #14
 
 ---
 
 ## What's NOT Working / Blockers
 
 - `apps/web`, `apps/worker`, `apps/mobile` are empty shells
-- Auth not yet implemented (Phase 2.2 in progress — steps 4-6 remaining)
+- OAuth providers (Google, GitHub) not yet enabled in Supabase dashboard
+- RLS policies not yet applied to user-owned tables
 - DB seed is broken — `User.id` no longer has `@default(uuid())`, seed must be updated to create
   Supabase Auth users first before seeding profile rows
+- PR #14 (`feat/auth`) open but not yet merged to `main`
 
 ---
 
 ## Current Branch
 
-- Branch: `main`
-- In progress: Phase 2.2 — Auth
+- Branch: `feat/auth` — PR #14 open against `main`
+- In progress: Phase 2.2 — Auth (routes done, OAuth + RLS remaining)
 
 ## Phase 2.2 Auth — Implementation Progress
 
@@ -61,16 +65,19 @@ Steps completed:
 - [x] Auth plugin `apps/api/src/plugins/auth.ts` — `fastify.authenticate` preHandler decorator
 - [x] `src/types/fastify.d.ts` — Fastify module augmentation (`req.user`, `authenticate`)
 - [x] `AuthUser` type re-exported from `@decksmith/db`
+- [x] Auth routes: register, login, logout, refresh, forgot-password, reset-password
+- [x] Auth mapper: `toRegisterResponse` (AuthUser → RegisterResponse DTO)
+- [x] Pitfalls doc system: `apps/docs/context/pitfalls/` (fastify, supabase, typescript)
+- [x] `api-reviewer` run on auth module — all issues resolved
+- [x] `REGISTRATION_FAILED` + `PASSWORD_RESET_FAILED` added to `packages/schema/src/errors/codes.ts`
+- [x] CI fix: oxfmt now runs on `.md` files in lint-staged
 
-Steps remaining (in order):
+Steps remaining:
 
-- [ ] Step 6: Auth routes (register, login, logout, refresh, forgot-password, reset-password)
-- [ ] Step 6: Auth module `apps/api/src/modules/auth/` (register, login, logout, refresh,
-      forgot-password, reset-password)
-- [ ] Step 7: Enable OAuth providers in Supabase dashboard (Google, GitHub)
-- [ ] Step 8: RLS policies for user-owned tables
-- [ ] Step 9: Auto-create `UserPreferences` on signup
-- [ ] Step 10: `devops-reviewer` + `api-reviewer` + `test-writer`
+- [ ] Enable OAuth providers in Supabase dashboard (Google, GitHub)
+- [ ] RLS policies for user-owned tables
+- [ ] `test-writer` for auth routes
+- [ ] Merge PR #14
 
 ---
 
