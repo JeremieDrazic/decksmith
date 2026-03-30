@@ -9,6 +9,10 @@ build
 .turbo
 storybook-static
 
+# VitePress
+**/.vitepress/cache
+**/.vitepress/dist
+
 # Testing
 coverage
 *.lcov
