@@ -43,7 +43,7 @@ Decksmith uses **Supabase Auth** for complete authentication flows:
 **API Endpoint:**
 
 ```typescript
-POST /api/auth/register
+POST /api/v1/auth/register
 {
   "email": "user@example.com",
   "password": "SecurePass123",
@@ -122,7 +122,7 @@ async function register(req, reply) {
 **API Endpoint:**
 
 ```typescript
-POST /api/auth/login
+POST /api/v1/auth/login
 {
   "email": "user@example.com",
   "password": "SecurePass123"
@@ -209,10 +209,10 @@ async function login(req, reply) {
 **API Endpoint:**
 
 ```typescript
-GET /api/auth/oauth/google
+GET /api/v1/auth/oauth/google
 // Initiates OAuth flow, redirects to Google
 
-GET /api/auth/callback?code=...
+GET /api/v1/auth/callback?code=...
 // Supabase handles callback, exchanges code for session
 ```
 
@@ -295,7 +295,7 @@ async function oauthCallback(req, reply) {
 **API Endpoints:**
 
 ```typescript
-POST /api/auth/forgot-password
+POST /api/v1/auth/forgot-password
 {
   "email": "user@example.com"
 }
@@ -307,7 +307,7 @@ POST /api/auth/forgot-password
 
 ---
 
-POST /api/auth/reset-password
+POST /api/v1/auth/reset-password
 {
   "token": "reset_token_from_email",
   "new_password": "NewSecurePass456"
@@ -374,14 +374,14 @@ async function resetPassword(req, reply) {
 **Session Refresh Flow:**
 
 1. Client detects access token expiring soon (< 5 minutes remaining)
-2. Sends refresh token to `/api/auth/refresh`
+2. Sends refresh token to `/api/v1/auth/refresh`
 3. Supabase issues new access token (and optionally new refresh token)
 4. Client updates cookies
 
 **API Endpoint:**
 
 ```typescript
-POST /api/auth/refresh
+POST /api/v1/auth/refresh
 {
   "refresh_token": "jwt..."
 }
@@ -426,7 +426,7 @@ export function useSession() {
   return useQuery({
     queryKey: ['session'],
     queryFn: async () => {
-      const res = await fetch('/api/auth/session', {
+      const res = await fetch('/api/v1/auth/session', {
         credentials: 'include', // send cookies
       });
       return res.json();
@@ -454,7 +454,7 @@ export function useSession() {
 **API Endpoint:**
 
 ```typescript
-POST /api/auth/logout
+POST /api/v1/auth/logout
 
 // Response
 {
@@ -667,7 +667,7 @@ fastify.register(
     max: 5,
     timeWindow: '15 minutes',
   },
-  { prefix: '/api/auth/login' }
+  { prefix: '/api/v1/auth/login' }
 );
 ```
 

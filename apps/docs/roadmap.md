@@ -16,7 +16,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Fastify server + Zod type provider in `apps/api`
 - ✅ User CRUD routes (`/api/v1/users`)
 - ✅ Database seed script with faker.js
-- ✅ 13 ADRs + 10 feature specs
+- ✅ 14 ADRs + 10 feature specs
 - ✅ Vitest infrastructure (shared config + sample test)
 - ✅ `.env.example`
 
@@ -49,16 +49,16 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 ### 2.2 Auth (spec: `user-auth.md`)
 
 - ⬜ Enable Supabase Auth + OAuth providers (Google, GitHub)
-- ⬜ Auth plugin in `apps/api` (JWT verification middleware)
+- ✅ Auth plugin in `apps/api` (JWT verification middleware)
 - ⬜ Auth routes: register, login, logout, refresh, reset-password
-- ⬜ Zod schemas for auth DTOs in `packages/schema/src/auth/`
+- ✅ Zod schemas for auth DTOs in `packages/schema/src/auth/`
 - ⬜ RLS policies for user-owned tables
 - ⬜ Auto-create `UserPreferences` on signup
 
 ### 2.3 Rate Limiting & CORS
 
-- ⬜ `@fastify/rate-limit` with strict limits on auth endpoints
-- ⬜ `@fastify/cors` configured for dev + prod origins
+- 🔄 `@fastify/rate-limit` with strict limits on auth endpoints
+- ✅ `@fastify/cors` configured for dev + prod origins
 
 ---
 
@@ -117,15 +117,27 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 5: Collection Management (spec: `collection.md`)
+## Phase 5: Internationalisation (i18n)
 
-### 5.1 Collection API
+_Dependency: Phase 4.1 (apps/web initialized)_
+
+- ⬜ ADR: i18n strategy — Zod error codes vs hardcoded messages
+- ⬜ Replace hardcoded English strings in `packages/schema` Zod validators with error codes
+- ⬜ i18n library in `apps/web` (e.g. `react-i18next`) with locale files (EN + FR baseline)
+- ⬜ `Accept-Language` header support in `apps/api` (locale-aware error messages)
+- ⬜ i18n in `apps/mobile` (Expo Localization)
+
+---
+
+## Phase 6: Collection Management (spec: `collection.md`)
+
+### 6.1 Collection API
 
 - ⬜ CRUD for collection entries + folders
 - ⬜ Domain logic in `packages/domain`
 - ⬜ Tags CRUD + attach/detach
 
-### 5.2 Collection UI
+### 6.2 Collection UI
 
 - ⬜ Inventory page (grid/table/list views)
 - ⬜ Add card flow (search → print → quantity/condition)
@@ -133,9 +145,9 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 6: Deck Management (spec: `deck-management.md`)
+## Phase 7: Deck Management (spec: `deck-management.md`)
 
-### 6.1 Deck API
+### 7.1 Deck API
 
 - ⬜ CRUD for decks + sections + cards
 - ⬜ Format validation (singleton, color identity, banlists)
@@ -143,7 +155,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ⬜ Deck statistics (mana curve, colors, avg CMC)
 - ⬜ Public deck sharing
 
-### 6.2 Deck UI
+### 7.2 Deck UI
 
 - ⬜ Deck list + creation flow
 - ⬜ Deck builder (sections sidebar + card grid)
@@ -152,7 +164,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 7: Pricing (spec: `pricing.md`)
+## Phase 8: Pricing (spec: `pricing.md`)
 
 - ⬜ Extend Scryfall sync for prices (TCGplayer USD + Cardmarket EUR)
 - ⬜ `GET /api/v1/collection/valuation`
@@ -161,27 +173,27 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 8: PDF Generation (spec: `pdf-generation.md`)
+## Phase 9: PDF Generation (spec: `pdf-generation.md`)
 
-### 8.1 packages/pdf
+### 9.1 packages/pdf
 
 - ⬜ Deterministic PDF layout engine
 - ⬜ Paper formats, grid config, margins, cut lines, DPI, double-sided
 - ⬜ Unit tests for layout math
 
-### 8.2 Worker Infrastructure
+### 9.2 Worker Infrastructure
 
 - ⬜ Redis (Docker for dev, Upstash for production)
 - ⬜ BullMQ PDF job
 
-### 8.3 PDF API + UI
+### 9.3 PDF API + UI
 
 - ⬜ `POST /api/v1/pdf` (enqueue) + GET status + GET download
 - ⬜ Preview panel, config form, job status polling
 
 ---
 
-## Phase 9: 3D Card Viewer (spec: `card-details.md`)
+## Phase 10: 3D Card Viewer (spec: `card-details.md`)
 
 - ⬜ Three.js card component in `packages/web-ui`
 - ⬜ Rotation, zoom, animated foil shader
@@ -189,7 +201,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 10: Craft Guide (spec: `craft-guide.md`)
+## Phase 11: Craft Guide (spec: `craft-guide.md`)
 
 - ⬜ `CraftGuideArticle` seed data
 - ⬜ `GET /api/v1/craft-guide` (list + single)
@@ -197,7 +209,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 11: Recommendations
+## Phase 12: Recommendations
 
 - ⬜ Recommendation engine in `packages/domain`
 - ⬜ API routes + feedback endpoints
@@ -205,18 +217,18 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
-## Phase 12: Documentation Site
+## Phase 13: Documentation Site
 
 - ✅ `apps/docs/` with VitePress (docs live here directly)
 - ✅ GitHub Pages deployment via `.github/workflows/docs.yml`
 
 ---
 
-## Phase 13: Mobile App (apps/mobile)
+## Phase 14: Mobile App (apps/mobile)
 
-_Dependencies: Phase 5 + 6 stable on web_
+_Dependencies: Phase 6 + 7 stable on web_
 
-### 13.1 Setup
+### 14.1 Setup
 
 - ⬜ Initialize Expo + React Native in `apps/mobile`
 - ⬜ Configure `packages/native-ui` (React Native components)
@@ -224,7 +236,7 @@ _Dependencies: Phase 5 + 6 stable on web_
 - ⬜ Navigation: Expo Router
 - ⬜ Shared: `packages/api-client`, `packages/schema`, `packages/domain` (reused as-is)
 
-### 13.2 Core Features
+### 14.2 Core Features
 
 - ⬜ Auth flow (login, register, session)
 - ⬜ Card search (camera barcode scan → card lookup)
@@ -232,7 +244,7 @@ _Dependencies: Phase 5 + 6 stable on web_
 - ⬜ Deck list + view (read-only, edit later)
 - ⬜ PDF generation trigger + download
 
-### 13.3 Mobile-Specific
+### 14.3 Mobile-Specific
 
 - ⬜ Push notifications (Expo Notifications) for price alerts, PDF ready
 - ⬜ Offline mode for collection browsing

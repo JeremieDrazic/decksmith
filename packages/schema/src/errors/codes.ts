@@ -23,6 +23,28 @@ export const REQUEST_ERROR = 'REQUEST_ERROR';
 export const INTERNAL_ERROR = 'INTERNAL_ERROR';
 
 // =============================================================================
+// AUTH
+// =============================================================================
+
+/** Invalid email or password (intentionally generic — never reveal which). */
+export const INVALID_CREDENTIALS = 'INVALID_CREDENTIALS';
+
+/** No active session found — user must log in. */
+export const UNAUTHORIZED = 'UNAUTHORIZED';
+
+/** The email address is already registered. */
+export const EMAIL_ALREADY_TAKEN = 'EMAIL_ALREADY_TAKEN';
+
+/** The session has expired — user must log in again. */
+export const SESSION_EXPIRED = 'SESSION_EXPIRED';
+
+/** Account creation failed (e.g. third-party auth error). */
+export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
+
+/** Password reset failed (e.g. third-party auth error). */
+export const PASSWORD_RESET_FAILED = 'PASSWORD_RESET_FAILED';
+
+// =============================================================================
 // USER
 // =============================================================================
 

@@ -24,6 +24,7 @@ evolution history.
 | [0011](./0011-file-folder-conventions.md)                 | File and Folder Conventions                | Active | 2026-02-03 |
 | [0012](./0012-prisma-database-package.md)                 | Prisma Database Package Configuration      | Active | 2026-02-06 |
 | [0013](./0013-migrate-to-oxlint-and-oxfmt.md)             | Migrate to Oxlint and Oxfmt                | Active | 2026-03-15 |
+| [0014](./0014-auth-api-proxied.md)                        | API-Proxied Auth                           | Active | 2026-03-17 |
 
 ---
 
