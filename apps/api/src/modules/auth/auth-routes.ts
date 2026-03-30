@@ -2,6 +2,8 @@ import { prisma, supabase, SUPABASE_USER_ALREADY_EXISTS } from '@decksmith/db';
 import {
   EMAIL_ALREADY_TAKEN,
   INVALID_CREDENTIALS,
+  PASSWORD_RESET_FAILED,
+  REGISTRATION_FAILED,
   SESSION_EXPIRED,
   UNAUTHORIZED,
 } from '@decksmith/schema/errors/codes';
@@ -93,11 +95,11 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
         if (error.code === SUPABASE_USER_ALREADY_EXISTS) {
           throw createHttpError(EMAIL_ALREADY_TAKEN, 'Email is already registered', 409);
         }
-        throw createHttpError('REGISTRATION_ERROR', error.message, 400);
+        throw createHttpError(REGISTRATION_FAILED, 'Registration failed. Please try again.', 400);
       }
 
       if (!data.user) {
-        throw createHttpError('REGISTRATION_ERROR', 'Failed to create user', 500);
+        throw createHttpError(REGISTRATION_FAILED, 'Registration failed. Please try again.', 500);
       }
 
       // id must equal the Supabase auth.users UUID — it is the bridge between
@@ -151,15 +153,16 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
         throw createHttpError(INVALID_CREDENTIALS, 'Invalid email or password', 401);
       }
 
-      reply.setCookie('access_token', data.session.access_token, ACCESS_COOKIE);
-      reply.setCookie('refresh_token', data.session.refresh_token, REFRESH_COOKIE);
-
-      // Look up the Prisma User to return the full application profile
+      // Look up the Prisma User before issuing cookies — if the DB call fails,
+      // we must not leave the client with valid auth cookies but no profile data
       const user = await prisma.user.findUnique({ where: { id: data.user.id } });
 
       if (!user) {
         throw createHttpError(UNAUTHORIZED, 'User profile not found', 401);
       }
+
+      reply.setCookie('access_token', data.session.access_token, ACCESS_COOKIE);
+      reply.setCookie('refresh_token', data.session.refresh_token, REFRESH_COOKIE);
 
       return reply.send({ user: toUserResponse(user) });
     }
@@ -277,7 +280,11 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
       });
 
       if (error) {
-        throw createHttpError('RESET_ERROR', 'Failed to reset password.', 400);
+        throw createHttpError(
+          PASSWORD_RESET_FAILED,
+          'Failed to reset password. Please try again.',
+          400
+        );
       }
 
       return reply.send({ message: 'Password updated successfully.' });
