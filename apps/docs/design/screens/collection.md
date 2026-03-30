@@ -1,0 +1,108 @@
+# Collection
+
+_Spec: `apps/docs/specs/collection.md`_
+
+---
+
+## Desktop — Vue grille
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│ ◈ Decksmith            🔍 Rechercher...                      [J ▼]  │
+├──────┬──────────────────────────────────────────────────────────────┤
+│  ⊞   │                                                              │
+│      │  Ma collection                      [Valeur totale: 847 €]  │
+│  🃏  │                                                              │
+│      │  🔍 Filtrer ma collection...  [Set ▼]  [Rareté ▼]  [⊞] [☰] │
+│  📦  │  [Condition ▼]  [Foil ▼]                           [↓ Export]│
+│      │  ────────────────────────────────────────────────────────    │
+│  🔍  │                                                              │
+│      │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐        │
+│  ─   │  │ [carte] │  │ [carte] │  │ [carte] │  │ [carte] │        │
+│  ⚙   │  │         │  │         │  │         │  │ ✦ foil  │        │
+│      │  │   ×4    │  │   ×1    │  │   ×2    │  │   ×1    │        │
+│      │  │  NM     │  │  LP     │  │  NM     │  │  NM     │        │
+│      │  │  2,40 € │  │  1,80 € │  │  8,50 € │  │ 42,00 € │        │
+│      │  └─────────┘  └─────────┘  └─────────┘  └─────────┘        │
+│      │  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐        │
+│      │  │ ...     │  │ ...     │  │ ...     │  │ ...     │        │
+│      │  └─────────┘  └─────────┘  └─────────┘  └─────────┘        │
+└──────┴──────────────────────────────────────────────────────────────┘
+```
+
+**Notes :**
+
+- `✦` = indicateur foil (légère animation shimmer en CSS sur le thumbnail)
+- Overlay bas de chaque carte : quantité + condition + prix
+- Hover → boutons rapides : `+` quantité, voir détail, ajouter à un deck
+- 4 colonnes desktop, grille dense
+
+---
+
+## Desktop — Vue tableau
+
+```
+│  ┌──────────────────────────────────────────────────────────────────┐│
+│  │  Nom ↕        Set ↕   Qté  Cond  Foil   Prix      Tags      ···  ││
+│  │  ──────────────────────────────────────────────────────────────  ││
+│  │  Cultivate    IKO     4    NM    Non    2,40 €    —          ≡  ││
+│  │  Cultivate    M21     1    LP    Non    1,80 €    —          ≡  ││
+│  │  Tarmogoyf   MMA     2    NM    Non    8,50 €    [Vintage]   ≡  ││
+│  │  Tarmogoyf   FUT     1    NM    Oui   42,00 €    [Vintage]   ≡  ││
+│  └──────────────────────────────────────────────────────────────────┘│
+```
+
+**Notes :**
+
+- Colonnes triables (↕)
+- `···` = menu contextuel par ligne
+- Tags cliquables pour filtrer
+
+---
+
+## Mobile
+
+```
+┌─────────────────────────────────┐
+│ ◈ Decksmith              [🔍]  │
+├─────────────────────────────────┤
+│  Ma collection      [847 €]     │
+│  🔍 Filtrer...  [⊞][☰]  [↓]   │
+│  ──────────────────────────     │
+│                                 │
+│  ┌─────────┐  ┌─────────┐      │
+│  │ [carte] │  │ [carte] │      │
+│  │   ×4    │  │ ×1  ✦   │      │
+│  │  NM     │  │  NM     │      │
+│  │  2,40€  │  │ 42,00€  │      │
+│  └─────────┘  └─────────┘      │
+│  ┌─────────┐  ┌─────────┐      │
+│  │ [carte] │  │ [carte] │      │
+│  │   ×2    │  │   ×1    │      │
+│  │  NM     │  │  LP     │      │
+│  │  8,50€  │  │  1,80€  │      │
+│  └─────────┘  └─────────┘      │
+│                                 │
+├─────────────────────────────────┤
+│  ⊞     🃏     📦     🔍     ⚙  │
+└─────────────────────────────────┘
+```
+
+**Notes mobile :**
+
+- 2 colonnes (pas 4)
+- Filtres → bottom sheet
+- Tap sur une carte → bottom sheet (modifier quantité/condition, voir détail)
+- Vue tableau disponible via `[☰]` mais simplifiée (colonnes réduites)
+
+---
+
+## Interactions clés
+
+- `[+ Ajouter]` (FAB ou bouton) → modal : rechercher une carte → choisir l'édition → quantité +
+  condition + foil
+- Hover (desktop) → boutons rapides `+1` / `voir` / `deck`
+- Tap (mobile) → bottom sheet avec les actions
+- `[↓ Export]` → téléchargement CSV
+- Filtre instantané côté client pour les filtres simples (condition, foil)
+- Tags → badge coloré, clic pour filtrer par tag
