@@ -33,7 +33,7 @@
   },
   "packageManager": "pnpm@10.28.2",
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
+    "*.{ts,tsx,js,jsx,md}": [
       "oxfmt"
     ]
   },
