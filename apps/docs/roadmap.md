@@ -50,14 +50,14 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 - ⬜ Enable Supabase Auth + OAuth providers (Google, GitHub)
 - ✅ Auth plugin in `apps/api` (JWT verification middleware)
-- ⬜ Auth routes: register, login, logout, refresh, reset-password
+- ✅ Auth routes: register, login, logout, refresh, forgot-password, reset-password
 - ✅ Zod schemas for auth DTOs in `packages/schema/src/auth/`
 - ⬜ RLS policies for user-owned tables
-- ⬜ Auto-create `UserPreferences` on signup
+- ✅ Auto-create `UserPreferences` on signup (nested Prisma write in register route)
 
 ### 2.3 Rate Limiting & CORS
 
-- 🔄 `@fastify/rate-limit` with strict limits on auth endpoints
+- ✅ `@fastify/rate-limit` with strict limits on auth endpoints
 - ✅ `@fastify/cors` configured for dev + prod origins
 
 ---
