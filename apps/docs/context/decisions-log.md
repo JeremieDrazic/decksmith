@@ -4,6 +4,53 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-03-30] — lint-staged glob extended to include .md files
+
+**Context:** CI was failing on `pnpm format:check` because three markdown files in
+`apps/docs/context/` had formatting issues that were never caught locally. The lint-staged glob had
+been restricted to `*.{ts,tsx,js,jsx}` to fix a YAML issue — but markdown was incorrectly dropped in
+the same change. oxfmt supports markdown fine.
+
+**Decision:** Extended lint-staged glob to `*.{ts,tsx,js,jsx,md}`. YAML/JSON remain excluded (oxfmt
+doesn't support them). The earlier decision log entry was wrong about markdown.
+
+**Impact:** Root `package.json` lint-staged config. CI will no longer fail on markdown formatting.
+
+---
+
+## [2026-03-30] — Supabase error codes live in packages/db, not packages/schema
+
+**Context:** During auth implementation, the Supabase SDK error code `user_already_exists` was
+initially placed in `packages/schema/src/errors/codes.ts` alongside public API error codes. The
+`api-reviewer` flagged this as a layering violation.
+
+**Decision:** Supabase SDK error codes go in `packages/db/src/supabase-error-codes.ts`. The
+distinction: `packages/schema` is the public API contract shared with the frontend — codes there are
+i18n keys the client will `switch` on. Supabase codes are internal infrastructure strings used only
+server-side to map SDK errors to public codes. Mixing them would expose implementation details and
+pollute the frontend contract.
+
+**Impact:** `packages/db/src/supabase-error-codes.ts` (new), `packages/schema/src/errors/codes.ts`
+(Supabase codes removed), `apps/api/src/modules/auth/auth-routes.ts` (imports from correct package).
+
+---
+
+## [2026-03-30] — FastifyPluginCallbackZod over AsyncZod for auth routes
+
+**Context:** The auth routes plugin was initially written as `FastifyPluginAsyncZod`. Oxlint's
+`no-floating-promises` rule flagged the top-level `async` function as a floating promise. An
+`eslint-disable` comment was added, but Oxlint ignores ESLint-style disable comments.
+
+**Decision:** Switched to `FastifyPluginCallbackZod` (synchronous callback + `done()`). The
+`async/await` syntax inside individual route handlers is unaffected — only the plugin wrapper
+changes. This satisfies Oxlint without suppression and is the correct pattern for plugins that have
+no top-level `await` outside route registrations.
+
+**Impact:** `apps/api/src/modules/auth/auth-routes.ts`. Pattern to follow for future route files
+that trigger the same lint rule.
+
+---
+
 ## [2026-03-19] — Fastify module augmentation in dedicated .d.ts file
 
 **Context:** The auth plugin needed to augment `FastifyInstance` and `FastifyRequest` with
