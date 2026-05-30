@@ -642,21 +642,37 @@ const scryfallSyncWorker = new Worker(
 
 ## UI Patterns
 
-### Search Bar (Header)
+### Search Bar (Header) — Global Search
+
+The header search bar is a **global search** — it searches across cards, decks, and collection
+entries simultaneously. Results are grouped by type in the autocomplete dropdown.
 
 ```
 ┌────────────────────────────────────────┐
-│ 🔍 Search cards...                     │
+│ 🔍 Rechercher...                       │
 └────────────────────────────────────────┘
        ↓ (user types "lig")
 ┌────────────────────────────────────────┐
-│ Lightning Bolt         {R}  Instant    │
-│ 󰀃 LEA #162                    $1,200   │
-│ ───────────────────────────────────    │
-│ Lightning Helix       {R}{W}  Instant  │
-│ 󰀃 RAV #227                      $2.50  │
+│  CARTES                                │
+│  Lightning Bolt    {R}  Instant  $1.20 │
+│  Lightning Helix  {R}{W} Instant  $2.50│
+│  ──────────────────────────────────    │
+│  DECKS                                 │
+│  Lightning Control  Modern  {U}{R}     │
+│  ──────────────────────────────────    │
+│  COLLECTION                            │
+│  Lightning Bolt ×4  NM  LEA            │
 └────────────────────────────────────────┘
 ```
+
+**Scope des résultats :**
+
+- **Cartes MTG** — par nom (oracle name), toutes éditions confondues
+- **Decks de l'utilisateur** — par nom de deck
+- **Collection** — par nom de carte
+
+**Recherche locale :** Chaque page (deck list, collection) dispose d'un filtre local distinct pour
+filtrer les éléments affichés — indépendant de la recherche globale.
 
 ---
 
