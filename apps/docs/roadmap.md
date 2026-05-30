@@ -94,7 +94,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ ASCII mocks for all screens (desktop + mobile)
 - ✅ `apps/docs/design/` — README, identity, decisions, 7 screen files
 - ✅ Search patterns documented (global popover, `/search` page, deck builder slide-over)
-- ⬜ ADR-0015: Design System Architecture
+- ✅ ADR-0015: Design System Architecture
 
 ### 4.1 apps/web Setup
 

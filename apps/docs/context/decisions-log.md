@@ -4,6 +4,55 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-05-30] — DESIGN.md as @importable domain quick-reference convention
+
+**Context:** Before starting Phase 4 (frontend), Claude needs design context loaded in every session
+without reading the full `identity.md`, `decisions.md`, and all 7 screen mocks. The `CLAUDE.md`
+context-import mechanism (used for roadmap + project-state) can serve the same purpose for design.
+
+**Decision:** `apps/docs/design/DESIGN.md` is the canonical quick-reference for the design system —
+key token values, non-negotiable rules, search patterns, nav patterns, and links to full docs. It is
+@imported in `CLAUDE.md` alongside roadmap and project-state. This establishes a pattern: any domain
+complex enough to have its own package or doc folder should have a corresponding `DOMAIN.md`
+quick-reference that can be @imported.
+
+**Impact:** `apps/docs/design/DESIGN.md` (new), `CLAUDE.md` (new @import + Design Rules section).
+
+---
+
+## [2026-05-30] — Design Rules section in CLAUDE.md (non-negotiable)
+
+**Context:** Architectural Rules in `CLAUDE.md` prevent code-level violations (e.g., Prisma in wrong
+packages). Design decisions have the same risk: future sessions could inadvertently use hardcoded
+hex values, `dark:` Tailwind variants, or coloured circles for mana symbols — all explicitly
+rejected decisions.
+
+**Decision:** Added a Design Rules section to `CLAUDE.md` at the same level as Architectural Rules
+(5 rules, non-negotiable). Rules are flagged the same way: if a suggestion violates them, Claude
+must call it out before proceeding.
+
+**Impact:** `CLAUDE.md` (new Design Rules section). Pattern: when a domain has established
+non-negotiable constraints, they belong in `CLAUDE.md`, not only in docs files that may not be read.
+
+---
+
+## [2026-05-30] — Global search scope: cards + decks + collection
+
+**Context:** The original `card-search.md` spec treated the header search as card-only search with
+autocomplete. During design mockup work, the question arose: should search also cover the user's
+decks and collection entries?
+
+**Decision:** The header search bar is a **global search** — it searches MTG cards, user decks, and
+collection entries simultaneously. Results are grouped by type (CARTES / DECKS / COLLECTION) in the
+autocomplete dropdown. Each page (deck list, collection) keeps a separate local filter for filtering
+items on the current page — distinct from global search.
+
+**Impact:** `apps/docs/specs/card-search.md` (updated: "Search Bar" → "Global Search", grouped
+results mock added), `apps/docs/design/screens/card-search.md` (Popover mock reflects 3 groups),
+`apps/docs/design/decisions.md` (decision logged).
+
+---
+
 ## [2026-03-30] — lint-staged glob extended to include .md files
 
 **Context:** CI was failing on `pnpm format:check` because three markdown files in
