@@ -12,6 +12,7 @@ export default defineConfig({
       { text: 'Roadmap', link: '/roadmap' },
       { text: 'ADRs', link: '/adr/' },
       { text: 'Specs', link: '/specs/' },
+      { text: 'Design', link: '/design/DESIGN' },
       { text: 'Skills & Agents', link: '/skills-and-agents' },
     ],
 
@@ -23,6 +24,28 @@ export default defineConfig({
           { text: 'Project State', link: '/context/project-state' },
           { text: 'Decisions Log', link: '/context/decisions-log' },
           { text: 'Skills & Agents', link: '/skills-and-agents' },
+        ],
+      },
+      {
+        text: 'Design System',
+        collapsed: false,
+        items: [
+          { text: 'Quick Reference', link: '/design/DESIGN' },
+          { text: 'Visual Identity', link: '/design/identity' },
+          { text: 'Decisions', link: '/design/decisions' },
+          {
+            text: 'Screens',
+            collapsed: true,
+            items: [
+              { text: 'Auth', link: '/design/screens/auth' },
+              { text: 'Deck List', link: '/design/screens/deck-list' },
+              { text: 'Deck Builder', link: '/design/screens/deck-builder' },
+              { text: 'Collection', link: '/design/screens/collection' },
+              { text: 'Card Search', link: '/design/screens/card-search' },
+              { text: 'Card Detail', link: '/design/screens/card-detail' },
+              { text: 'Settings', link: '/design/screens/settings' },
+            ],
+          },
         ],
       },
       {
@@ -78,6 +101,14 @@ export default defineConfig({
           {
             text: 'ADR-0013: Oxlint + Oxfmt',
             link: '/adr/0013-migrate-to-oxlint-and-oxfmt',
+          },
+          {
+            text: 'ADR-0014: API-Proxied Auth',
+            link: '/adr/0014-auth-api-proxied',
+          },
+          {
+            text: 'ADR-0015: Design System Architecture',
+            link: '/adr/0015-design-system-architecture',
           },
         ],
       },

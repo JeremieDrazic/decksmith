@@ -10,6 +10,7 @@ clarification instead of guessing.
 
 @apps/docs/roadmap.md
 @apps/docs/context/project-state.md
+@apps/docs/design/DESIGN.md
 
 ---
 
@@ -21,6 +22,19 @@ clarification instead of guessing.
 - Small, understandable blocks
 - Minimal magic, minimal coupling
 - **Clarity over cleverness**
+
+---
+
+## Design Rules (non-negotiable)
+
+- Semantic tokens only — never hardcoded hex values in components (`bg-surface`, not `#1a1827`)
+- Mana symbols via Keyrune SVG (`{W}` `{U}` `{B}` `{R}` `{G}`) — never coloured circles
+- Theme switching via `.dark` class on `<html>` — never Tailwind `dark:` variant in JSX
+- MTG colour tokens (`mtg-red`, `mtg-blue`) are separate from semantic tokens — `mtg-red` ≠ `error`
+- All tokens originate in `packages/tokens` — never duplicated in app-level config
+
+Design decisions will evolve during implementation. Before building UI, read `DESIGN.md` quick
+reference and flag any conflicts with current token values or patterns.
 
 ---
 

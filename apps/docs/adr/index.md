@@ -25,6 +25,7 @@ evolution history.
 | [0012](./0012-prisma-database-package.md)                 | Prisma Database Package Configuration      | Active | 2026-02-06 |
 | [0013](./0013-migrate-to-oxlint-and-oxfmt.md)             | Migrate to Oxlint and Oxfmt                | Active | 2026-03-15 |
 | [0014](./0014-auth-api-proxied.md)                        | API-Proxied Auth                           | Active | 2026-03-17 |
+| [0015](./0015-design-system-architecture.md)              | Design System Architecture                 | Active | 2026-05-30 |
 
 ---
 

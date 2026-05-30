@@ -27,10 +27,13 @@ _Updated: 2026-05-30_
 - [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
 - [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
 - [x] Tests: `pnpm test` → 3/3 passing (`apps/api`)
-- [x] Typecheck: `pnpm typecheck` → 0 errors (verified on TypeScript 6.0.3)
+- [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 6.0.3)
 - [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
-- [x] Design system docs: `apps/docs/design/` — identity, decisions, 7 screen mocks (PR #16 open)
+- [x] Design system docs: `apps/docs/design/` — identity, decisions, 7 screen mocks, DESIGN.md
+- [x] ADR-0015: Design System Architecture documented
+- [x] `CLAUDE.md`: `@apps/docs/design/DESIGN.md` imported + Design Rules section added
+- [x] VitePress docs site: Design System section in sidebar and nav
 
 ---
 
@@ -48,17 +51,18 @@ _Updated: 2026-05-30_
 
 ## Open PRs
 
-| PR  | Branch               | Description                         | Status |
-| --- | -------------------- | ----------------------------------- | ------ |
-| #16 | `docs/design-system` | Design system documentation         | Open   |
-| #17 | `chore/update-deps`  | Dependency updates (TypeScript 6.0) | Open   |
+| PR  | Branch               | Description                            | Status |
+| --- | -------------------- | -------------------------------------- | ------ |
+| #16 | `docs/design-system` | Design system documentation + ADR-0015 | Open   |
+| #17 | `chore/update-deps`  | Dependency updates (TypeScript 6.0)    | Open   |
 
 ---
 
 ## Current Branch
 
-- Branch: `chore/update-deps`
-- In progress: dependency updates + project-state sync
+- Branch: `docs/design-system` — PR #16 open against `main`
+
+---
 
 ## Dependency Versions (as of 2026-05-30)
 
@@ -114,8 +118,11 @@ Steps remaining:
 - [x] ASCII mocks for all 7 screens (desktop + mobile): auth, deck list, deck builder, collection,
       card search, card detail, settings
 - [x] Search patterns documented: global popover, `/search` page, deck builder slide-over
-- [x] PR #16 open against `main`
-- [ ] ADR-0015: Design System Architecture
+- [x] `apps/docs/specs/card-search.md` updated: global search covers cards + decks + collection
+- [x] ADR-0015: Design System Architecture (tokens, CSS vars, Keyrune, no-Figma)
+- [x] `apps/docs/design/DESIGN.md`: quick reference card @imported in `CLAUDE.md`
+- [x] `CLAUDE.md`: Design Rules section added (5 non-negotiable rules)
+- [x] VitePress config: Design System section in sidebar + nav; ADR-0014/0015 in ADR list
 
 ---
 
@@ -123,5 +130,5 @@ Steps remaining:
 
 - Profile completion state: what happens when a user has no `username`/`displayName` yet? A redirect
   to an onboarding screen is needed but not yet specced.
-- ADR-0015: Design System Architecture — covers tokens strategy, CSS custom properties, Tailwind
-  preset, Keyrune for mana icons, no-Figma workflow.
+- ADR-0015 note: specific token values (hex, spacing, type scale) documented as "current best
+  thinking" — will be finalised during Phase 4.1 (`packages/tokens` scaffold).
