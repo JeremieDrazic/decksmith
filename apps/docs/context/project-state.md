@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-05-30_
+_Updated: 2026-05-31_
 
 ---
 
@@ -34,6 +34,10 @@ _Updated: 2026-05-30_
 - [x] ADR-0015: Design System Architecture documented
 - [x] `CLAUDE.md`: `@apps/docs/design/DESIGN.md` imported + Design Rules section added
 - [x] VitePress docs site: Design System section in sidebar and nav
+- [x] ADR-0016: TanStack Start adoption decision documented (SSR/CSR hybrid, no backend in apps/web)
+- [x] ADR-0010 updated: hybrid meta endpoint superseded by SSR
+- [x] ADR-0005 updated: loader constraint (apps/web loaders → fetch → apps/api only)
+- [x] `CLAUDE.md`: TanStack Start in tech stack + 2 new architectural rules
 
 ---
 
@@ -51,16 +55,16 @@ _Updated: 2026-05-30_
 
 ## Open PRs
 
-| PR  | Branch               | Description                            | Status |
-| --- | -------------------- | -------------------------------------- | ------ |
-| #16 | `docs/design-system` | Design system documentation + ADR-0015 | Open   |
-| #17 | `chore/update-deps`  | Dependency updates (TypeScript 6.0)    | Open   |
+| PR  | Branch               | Description                                | Status |
+| --- | -------------------- | ------------------------------------------ | ------ |
+| #17 | `docs/design-system` | Session-end docs + ADR-0016 TanStack Start | Open   |
+| #18 | `chore/update-deps`  | Dependency updates (TypeScript 6.0)        | Open   |
 
 ---
 
 ## Current Branch
 
-- Branch: `docs/design-system` — PR #16 open against `main`
+- Branch: `docs/design-system` — PR #17 open against `main`
 
 ---
 
@@ -123,6 +127,17 @@ Steps remaining:
 - [x] `apps/docs/design/DESIGN.md`: quick reference card @imported in `CLAUDE.md`
 - [x] `CLAUDE.md`: Design Rules section added (5 non-negotiable rules)
 - [x] VitePress config: Design System section in sidebar + nav; ADR-0014/0015 in ADR list
+
+---
+
+## Phase 4.1 Decision — TanStack Start
+
+- [x] ADR-0016: TanStack Start v1.0 adopted for `apps/web`
+  - SSR routes: `/`, `/cards/:id`, `/craft-guide/:slug`, `/decks/:id` (public)
+  - CSR routes: all authenticated/interactive routes (dashboard, builder, collection, settings)
+  - No server functions — loaders fetch from `apps/api` via HTTP only
+  - `apps/api` remains the sole backend (mobile-compatible)
+- [ ] TanStack Start scaffold in `apps/web`
 
 ---
 
