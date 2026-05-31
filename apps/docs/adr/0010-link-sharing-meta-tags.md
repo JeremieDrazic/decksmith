@@ -1,6 +1,8 @@
 # ADR-0010: Link Sharing and Meta Tags
 
-**Last Updated:** 2026-01-11 **Status:** Active **Context:** Decksmith
+**Last Updated:** 2026-05-31  
+**Status:** Partially superseded (see Evolution History)  
+**Context:** Decksmith
 
 ---
 
@@ -409,6 +411,16 @@ cleverness"**).
 ---
 
 ## Evolution History
+
+### 2026-05-31: Superseded by TanStack Start SSR (ADR-0016)
+
+- `apps/web` adopts TanStack Start (ADR-0016), which provides native SSR for public routes
+- Public deck pages (`/decks/:id`), card detail pages, and craft guide articles are now SSR
+- The hybrid meta endpoint (`/api/decks/:id/meta`) and bot-detection middleware are **no longer
+  needed** — SSR renders correct Open Graph tags in the initial HTML response
+- Deep linking (Universal Links / App Links) for native mobile remains relevant and unchanged
+- Status of this ADR: the hybrid meta endpoint strategy is superseded for link previews. The deep
+  linking section remains active and applies when `apps/mobile` is built.
 
 ### 2026-01-11: Initial decision
 

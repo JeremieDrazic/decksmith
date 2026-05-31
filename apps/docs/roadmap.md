@@ -98,10 +98,11 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 4.1 apps/web Setup
 
-- ⬜ Vite + React initialized
-- ⬜ TanStack Router + TanStack Query
+- ✅ ADR-0016: TanStack Start adoption (SSR/CSR hybrid, no backend code in apps/web)
+- ⬜ TanStack Start initialized (replaces plain Vite + TanStack Router)
+- ⬜ TanStack Query configured
 - ⬜ Tailwind + shadcn/ui
-- ⬜ Base routes: `/`, `/login`, `/register`, `/dashboard`
+- ⬜ Base routes: `/` (SSR), `/login`, `/register`, `/dashboard`
 
 ### 4.2 packages/api-client
 

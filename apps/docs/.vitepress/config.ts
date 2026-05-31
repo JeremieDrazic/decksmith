@@ -110,6 +110,10 @@ export default defineConfig({
             text: 'ADR-0015: Design System Architecture',
             link: '/adr/0015-design-system-architecture',
           },
+          {
+            text: 'ADR-0016: TanStack Start',
+            link: '/adr/0016-tanstack-start',
+          },
         ],
       },
       {

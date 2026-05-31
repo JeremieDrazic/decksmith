@@ -1,6 +1,8 @@
 # ADR-0005: Package Boundaries and Dependency Graph
 
-**Last Updated:** 2026-01-08 **Status:** Active **Context:** Decksmith
+**Last Updated:** 2026-05-31  
+**Status:** Active  
+**Context:** Decksmith
 
 ---
 
@@ -57,9 +59,12 @@ We enforce **unidirectional dependency flow** with explicit package boundaries:
 
 ### Application Dependency Rules
 
-- **`apps/web`**: Web SPA
+- **`apps/web`**: Web app (TanStack Start — SSR + SPA hybrid, ADR-0016)
   - Can use: `schema`, `api-client`, `query`, `web-ui`, `tokens`
   - **Cannot use**: `db`, `domain`, `scryfall`, `pdf`, `native-ui`
+  - **Route loaders** (server-side code in `apps/web`) are subject to the same restrictions — they
+    may only call `apps/api` via HTTP. Direct imports of `packages/db` or `packages/domain` in
+    loaders are forbidden even though loaders run server-side.
 
 - **`apps/mobile`**: Mobile app (future)
   - Can use: `schema`, `api-client`, `query`, `native-ui`, `tokens`
@@ -214,6 +219,12 @@ This aligns with **"Minimal coupling"** and **"Clarity over cleverness"**.
     boundaries
 
 ## Evolution History
+
+### 2026-05-31: Route loader constraint added (TanStack Start — ADR-0016)
+
+- `apps/web` adopts TanStack Start, which allows server-side code in route loaders
+- Clarified that loaders in `apps/web` are subject to the same package restrictions as client code
+  in `apps/web` — loaders may only call `apps/api` via HTTP, never import `packages/db` directly
 
 ### 2026-01-08: Initial decision
 

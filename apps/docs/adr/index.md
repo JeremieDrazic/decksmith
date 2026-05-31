@@ -26,6 +26,7 @@ evolution history.
 | [0013](./0013-migrate-to-oxlint-and-oxfmt.md)             | Migrate to Oxlint and Oxfmt                | Active | 2026-03-15 |
 | [0014](./0014-auth-api-proxied.md)                        | API-Proxied Auth                           | Active | 2026-03-17 |
 | [0015](./0015-design-system-architecture.md)              | Design System Architecture                 | Active | 2026-05-30 |
+| [0016](./0016-tanstack-start.md)                          | TanStack Start for apps/web                | Active | 2026-05-31 |
 
 ---
 

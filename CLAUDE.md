@@ -48,6 +48,9 @@ reference and flag any conflicts with current token values or patterns.
 - TypeScript strict mode everywhere
 - No circular dependencies
 - JSDoc on exported functions (description + @param + @returns when non-obvious)
+- `apps/web` route loaders → `fetch` → `apps/api` only. Never import `packages/db` or
+  `packages/domain` in `apps/web`, even in server-side loaders (ADR-0016)
+- No server functions or API routes in `apps/web` — `apps/api` is the sole backend
 
 If a suggestion violates these, flag it explicitly.
 
@@ -55,7 +58,7 @@ If a suggestion violates these, flag it explicitly.
 
 ## Tech Stack (decided)
 
-**Frontend:** React, Vite, TanStack Router/Query, Tailwind, shadcn/ui
+**Frontend:** React, TanStack Start (SSR + SPA hybrid), TanStack Query, Tailwind, shadcn/ui
 **Backend:** Fastify, Zod, Prisma
 **Data:** Supabase (Postgres, Auth, Storage)
 **Tooling:** pnpm, Turborepo, Vitest, Oxlint, Oxfmt
