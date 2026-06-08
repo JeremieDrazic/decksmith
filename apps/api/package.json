@@ -28,6 +28,6 @@
     "pino-pretty": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.8"
   }
 }

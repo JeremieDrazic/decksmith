@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-05-31_
+_Updated: 2026-06-08_
 
 ---
 
@@ -38,6 +38,10 @@ _Updated: 2026-05-31_
 - [x] ADR-0010 updated: hybrid meta endpoint superseded by SSR
 - [x] ADR-0005 updated: loader constraint (apps/web loaders → fetch → apps/api only)
 - [x] `CLAUDE.md`: TanStack Start in tech stack + 2 new architectural rules
+- [x] Phase 4.0.5 complete: Sessions A–D done → ADR-0017, ADR-0018, ADR-0019, test-strategy.md
+- [x] Token system complete: all semantic tokens locked including status triplets
+      (error/success/warning/info) + interactive states (surface-hover, border-focus)
+- [x] `CLAUDE.md`: `packages/utils` and `apps/storybook` added to monorepo structure
 
 ---
 
@@ -55,32 +59,29 @@ _Updated: 2026-05-31_
 
 ## Open PRs
 
-| PR  | Branch               | Description                                | Status |
-| --- | -------------------- | ------------------------------------------ | ------ |
-| #17 | `docs/design-system` | Session-end docs + ADR-0016 TanStack Start | Open   |
-| #18 | `chore/update-deps`  | Dependency updates (TypeScript 6.0)        | Open   |
+| PR  | Branch                                 | Description                                        | Status |
+| --- | -------------------------------------- | -------------------------------------------------- | ------ |
+| TBD | `docs/phase-4-0-5-foundation-sessions` | Phase 4.0.5 foundation sessions A–D + token system | Open   |
 
 ---
 
 ## Current Branch
 
-- Branch: `docs/design-system` — PR #17 open against `main`
+- Branch: `docs/phase-4-0-5-foundation-sessions` — PR open against `main`
 
 ---
 
-## Dependency Versions (as of 2026-05-30)
+## Dependency Versions (as of 2026-06-08)
 
 | Package         | Version |
 | --------------- | ------- |
 | TypeScript      | 6.0.3   |
 | Vitest          | 4.1.7   |
 | Oxlint          | 1.67.0  |
-| Oxfmt           | 0.52.0  |
+| Oxfmt           | 0.53.0  |
 | Turbo           | 2.9.16  |
 | lint-staged     | 17.0.6  |
 | oxlint-tsgolint | 0.23.0  |
-
-TypeScript 6.0.3 upgrade: no breaking changes observed — typecheck passes on all packages.
 
 ---
 
@@ -141,9 +142,17 @@ Steps remaining:
 
 ---
 
+## Phase 4.0.5 Sessions — Complete
+
+- [x] Session A: `packages/tokens` architecture locked → ADR-0017, token-preview.html, DESIGN.md
+      updated
+- [x] Session B: frontend library stack validated → ADR-0018
+- [x] Session C: `packages/web-ui` component architecture + definition of done → ADR-0019
+- [x] Session D: global testing strategy → `apps/docs/context/test-strategy.md` + ADR-0006 updated
+
+---
+
 ## Open Decisions (not yet ADR'd)
 
 - Profile completion state: what happens when a user has no `username`/`displayName` yet? A redirect
   to an onboarding screen is needed but not yet specced.
-- ADR-0015 note: specific token values (hex, spacing, type scale) documented as "current best
-  thinking" — will be finalised during Phase 4.1 (`packages/tokens` scaffold).

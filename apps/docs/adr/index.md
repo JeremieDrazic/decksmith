@@ -9,24 +9,27 @@ evolution history.
 
 ## Active ADRs
 
-| ID                                                        | Title                                      | Status | Date       |
-| --------------------------------------------------------- | ------------------------------------------ | ------ | ---------- |
-| [0001](./0001-use-fastify-as-web-framework.md)            | Use Fastify as Web Framework               | Active | 2026-01-03 |
-| [0002](./0002-monorepo-with-pnpm-and-turborepo.md)        | Monorepo Structure with pnpm and Turborepo | Active | 2026-01-08 |
-| [0003](./0003-typescript-strict-configuration.md)         | TypeScript Strict Mode Configuration       | Active | 2026-01-08 |
-| [0004](./0004-code-quality-and-formatting-standards.md)   | Code Quality and Formatting Standards      | Active | 2026-01-08 |
-| [0005](./0005-package-boundaries-and-dependency-graph.md) | Package Boundaries and Dependency Graph    | Active | 2026-01-08 |
-| [0006](./0006-testing-strategy-with-vitest.md)            | Testing Strategy with Vitest and Storybook | Active | 2026-01-08 |
-| [0007](./0007-job-queue-bullmq-redis.md)                  | Job Queue with BullMQ and Redis            | Active | 2026-01-10 |
-| [0008](./0008-mobile-first-web-design-principles.md)      | Mobile-First Web Design Principles         | Active | 2026-02-04 |
-| [0009](./0009-responsive-feature-strategy.md)             | Responsive Feature Strategy                | Active | 2026-02-04 |
-| [0010](./0010-link-sharing-meta-tags.md)                  | Link Sharing Meta Tags                     | Active | 2026-02-04 |
-| [0011](./0011-file-folder-conventions.md)                 | File and Folder Conventions                | Active | 2026-02-03 |
-| [0012](./0012-prisma-database-package.md)                 | Prisma Database Package Configuration      | Active | 2026-02-06 |
-| [0013](./0013-migrate-to-oxlint-and-oxfmt.md)             | Migrate to Oxlint and Oxfmt                | Active | 2026-03-15 |
-| [0014](./0014-auth-api-proxied.md)                        | API-Proxied Auth                           | Active | 2026-03-17 |
-| [0015](./0015-design-system-architecture.md)              | Design System Architecture                 | Active | 2026-05-30 |
-| [0016](./0016-tanstack-start.md)                          | TanStack Start for apps/web                | Active | 2026-05-31 |
+| ID                                                        | Title                                         | Status | Date       |
+| --------------------------------------------------------- | --------------------------------------------- | ------ | ---------- |
+| [0001](./0001-use-fastify-as-web-framework.md)            | Use Fastify as Web Framework                  | Active | 2026-01-03 |
+| [0002](./0002-monorepo-with-pnpm-and-turborepo.md)        | Monorepo Structure with pnpm and Turborepo    | Active | 2026-01-08 |
+| [0003](./0003-typescript-strict-configuration.md)         | TypeScript Strict Mode Configuration          | Active | 2026-01-08 |
+| [0004](./0004-code-quality-and-formatting-standards.md)   | Code Quality and Formatting Standards         | Active | 2026-01-08 |
+| [0005](./0005-package-boundaries-and-dependency-graph.md) | Package Boundaries and Dependency Graph       | Active | 2026-01-08 |
+| [0006](./0006-testing-strategy-with-vitest.md)            | Testing Strategy with Vitest and Storybook    | Active | 2026-01-08 |
+| [0007](./0007-job-queue-bullmq-redis.md)                  | Job Queue with BullMQ and Redis               | Active | 2026-01-10 |
+| [0008](./0008-mobile-first-web-design-principles.md)      | Mobile-First Web Design Principles            | Active | 2026-02-04 |
+| [0009](./0009-responsive-feature-strategy.md)             | Responsive Feature Strategy                   | Active | 2026-02-04 |
+| [0010](./0010-link-sharing-meta-tags.md)                  | Link Sharing Meta Tags                        | Active | 2026-02-04 |
+| [0011](./0011-file-folder-conventions.md)                 | File and Folder Conventions                   | Active | 2026-02-03 |
+| [0012](./0012-prisma-database-package.md)                 | Prisma Database Package Configuration         | Active | 2026-02-06 |
+| [0013](./0013-migrate-to-oxlint-and-oxfmt.md)             | Migrate to Oxlint and Oxfmt                   | Active | 2026-03-15 |
+| [0014](./0014-auth-api-proxied.md)                        | API-Proxied Auth                              | Active | 2026-03-17 |
+| [0015](./0015-design-system-architecture.md)              | Design System Architecture                    | Active | 2026-05-30 |
+| [0016](./0016-tanstack-start.md)                          | TanStack Start for apps/web                   | Active | 2026-05-31 |
+| [0017](./0017-packages-tokens-architecture.md)            | `packages/tokens` Implementation Architecture | Active | 2026-06-08 |
+| [0018](./0018-frontend-library-stack.md)                  | Frontend Library Stack                        | Active | 2026-06-08 |
+| [0019](./0019-web-ui-component-architecture.md)           | `packages/web-ui` Component Architecture      | Active | 2026-06-08 |
 
 ---
 

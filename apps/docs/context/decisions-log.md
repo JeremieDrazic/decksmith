@@ -4,6 +4,136 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-08] — Token system: interactive states and status triplets added
+
+**Context:** Post-Session-A review caught missing tokens that will be needed from the first
+component: interactive hover state, focus ring, and full status color triplets.
+
+**Decisions:**
+
+- `surface-hover` (`#2a2840` / `#ede9d8`) — subtle lift for hoverable surfaces (cards, list items)
+- `border-focus` (= `accent`) — named separately from `accent` to signal accessibility intent
+- Full triplets for all 4 status states: `{state}` (solid color) + `{state}-subtle` (tinted bg)
+  - `{state}-text` (WCAG AA compliant on both bg colors)
+- `warning` (`#f59e0b`) is orange-amber, distinct from `accent` (`#e8b84b` golden) — both
+  amber-family but different purposes, must not be substituted
+- `info` is a neutral UI blue (`#5b9cf6` / `#2563eb`) — never substitute `mtg-blue` (MTG color
+  identity ≠ UI state)
+- All light-mode `*-text` variants verified WCAG AA: error-text 9.4:1, success-text 7.0:1,
+  warning-text 10.4:1, info-text 6.4:1
+
+**Impact:** ADR-0017 updated (table + contrast section + evolution entry), DESIGN.md token list
+updated, token-preview.html updated (new section + all color chips)
+
+---
+
+## [2026-06-08] — Session D: global test strategy validated (Phase 4.0.5)
+
+**Context:** Conversational session to align on the full testing strategy before scaffolding
+`apps/web`, `packages/web-ui`, and `packages/utils`. Decisions are documented in
+`apps/docs/context/test-strategy.md` and ADR-0006 (evolution entry).
+
+**Key decisions:**
+
+- **`apps/storybook` as a separate app** — aggregates stories from `packages/web-ui` and
+  `apps/web/src/components`. Stories remain colocated with their components.
+- **`packages/utils`** — new package for pure cross-domain utilities (array, formatting). Test
+  mental: "could this be used outside Decksmith?" Yes → `packages/utils`, No → `packages/domain`.
+- **TDD on pure layers** — `packages/domain` and `packages/utils` use Red → Green → Refactor. All
+  other layers use test-close (same session, before merge).
+- **Real PostgreSQL for `apps/api`** — Docker service in CI, `beforeEach` truncate. Prisma is never
+  mocked. Only Supabase Auth SDK HTTP calls mocked via `vi.mock`.
+- **MSW for frontend tests** — network-level interception in Storybook (addon) and Vitest. TanStack
+  Query hooks are never mocked directly.
+- **Factory pattern** — colocated factories with sensible defaults and overrides. Seeds are for
+  development data, not tests.
+- **No coverage thresholds** — value criterion only: catches costly bugs, documents non-obvious
+  behaviour, enables refactoring.
+- **CI split** — unit + integration on every PR (< 3 min), E2E (Playwright) on `main` only.
+
+**Impact:** `apps/docs/context/test-strategy.md` created, ADR-0006 evolution entry added
+
+---
+
+## [2026-06-08] — Session C : définition de "composant prêt à l'emploi" validée (Phase 4.0.5)
+
+**Context:** Avant de scaffolder `packages/web-ui`, on a aligné sur ce que signifie "fini" pour un
+composant et comment le package doit être structuré.
+
+**Décisions clés :**
+
+- **Structure `packages/web-ui`** : `ui/` (shadcn-generated), `components/` (custom Decksmith),
+  `typography/` (`<Heading>`, `<Body>`, `<Label>`), `icons/` (SVG animés custom)
+- **Frontière `packages/web-ui` vs `apps/web`** : test mental "ce composant peut-il être utilisé
+  dans une autre appli React sans modification ?" Oui → `packages/web-ui`, Non →
+  `apps/web/src/components/`
+- **Interdit dans `packages/web-ui`** : imports TanStack Router, TanStack Query hooks, Zustand,
+  `packages/api-client` — aucun couplage à l'app
+- **Deux niveaux de "done"** : v1 (utilisable — 7 critères) et Complet (stable — tous les critères
+  v1 + play functions, MDX, a11y-reviewer, tokens motion). La v1 débloque l'usage; le niveau complet
+  est gagné par l'usage.
+- **Règle des 3** : ne pas créer de composant par anticipation — extraire quand un pattern se répète
+  dans 3 contextes différents
+- **MDX anatomy** : chaque composant stable a un `.mdx` avec schéma d'anatomie, table API,
+  dos/don'ts, notes a11y. `<Anatomy>` est un utilitaire Storybook uniquement.
+- **Commentaires** : JSDoc requis sur les exports; commentaires inline uniquement pour les
+  contraintes non-évidentes (le _pourquoi_, jamais le _quoi_)
+
+**Impact:** ADR-0019 créé
+
+---
+
+## [2026-06-08] — Session B : stack frontend validée (Phase 4.0.5)
+
+**Context:** Revue conversationnelle de tous les aspects techniques du frontend avant de scaffolder
+`apps/web` et `packages/web-ui`. Toutes les décisions sont documentées dans ADR-0018.
+
+**Décisions clés et corrections :**
+
+- **shadcn/ui + Base UI** (pas Radix) — first-class depuis janvier 2026, par les auteurs de Radix
+- **PDFKit** (pas @react-pdf/renderer) — les cartes sont des images, précision pixel/mm requise
+- **Zustand ajouté** — l'état UI partagé (sidebar, search, nav) croise les frontières de composants
+- **Lucide** (pas Phosphor) — système d'icônes natif shadcn/ui, cohérence visuelle garantie
+- **Animations d'icônes** — composants SVG custom avec Motion, pas de Lottie ni de Lordicon
+- **TanStack Virtual + Table** — oubliés dans la stack initiale, indispensables (listes longues,
+  collection)
+- **@dnd-kit** — drag & drop deck builder (Phase 7)
+- **tinykeys** — raccourcis clavier avec support chord sequences
+- **Intl natif** pour les dates — date-fns uniquement si besoin prouvé
+- **Règle i18n dès Phase 4** — aucune string hardcodée, `t('key')` partout dès le début
+
+**Impact:** ADR-0018 créé
+
+---
+
+## [2026-06-08] — Session A : architecture `packages/tokens` validée (Phase 4.0.5)
+
+**Context:** Avant de scaffolder `packages/tokens`, on a conduit une session conversationnelle pour
+valider l'architecture complète du système de tokens avec visualisation dans un fichier HTML de
+preview (`apps/docs/design/token-preview.html`).
+
+**Decisions:**
+
+- **Hiérarchie 2 couches** : primitifs → sémantiques. Tokens composants ajoutés à la demande (règle
+  des 3 répétitions), pas en avance.
+- **Dual output** : `web/tokens.css` (`@theme` Tailwind v4, CSS vars) + `native/index.ts` (objets JS
+  plats pour React Native). Style Dictionary reporté à Phase 14.
+- **Accent revu** : `#f59e0b` (orange Tailwind) remplacé par `#e8b84b` (doré chaud). Deux nouveaux
+  tokens : `on-accent` (`#0f0e17` — texte sur bouton amber) et `accent-text` (`#8a6a0c` en light —
+  doré assez sombre pour passer WCAG AA sur fond clair).
+- **Contraste WCAG AA** : toutes paires critiques vérifiées et documentées dans ADR-0017.
+  `text-faint` accepté décoratif uniquement (2.5:1 — jamais pour contenu essentiel).
+- **Motion** : Direction A (micro 50–200ms, ease-out) + Direction B (moments clés 300–500ms,
+  ease-spring). Séparation explicite : feedback immédiat vs narration expressive.
+- **Typo fluide** : `clamp()` via Utopia confirmé — pas de breakpoints fixes pour la typo. Valeurs
+  générées lors du scaffold Phase 4.1. Fonts self-hosted, `font-display: optional`.
+- **Storybook** : section Design System requise dans Storybook — palette, typo, spacing, motion,
+  shadows, z-index — vivant et toujours synchronisé avec les tokens réels.
+
+**Impact:** ADR-0017 créé · ADR-0015 mis à jour · token-preview.html créé dans `apps/docs/design/`
+
+---
+
 ## [2026-05-30] — DESIGN.md as @importable domain quick-reference convention
 
 **Context:** Before starting Phase 4 (frontend), Claude needs design context loaded in every session

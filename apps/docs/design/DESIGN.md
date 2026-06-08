@@ -3,44 +3,86 @@
 _This file is @imported in CLAUDE.md as session context. Keep it short. Full details in the files
 linked below._
 
-> **Status:** Phase 4.0 documentation complete. `packages/tokens` and `packages/web-ui` not yet
-> built. Specific values (exact colours, spacing scale, component APIs) will be refined during Phase
-> 4.1 implementation — treat this as current best thinking, not locked spec.
+> **Status:** Phase 4.0.5 Session A complete. Token values, architecture, and motion system are
+> **locked** (ADR-0017). `packages/tokens` and `packages/web-ui` not yet scaffolded — Phase 4.1.
+> Type scale will use CSS `clamp()` values generated via Utopia during Phase 4.1 scaffold.
 
 ---
 
 ## Key Values
 
-| Token        | Dark mode | Light mode | Notes                          |
-| ------------ | --------- | ---------- | ------------------------------ |
-| Background   | `#0f0e17` | `#faf9f4`  | Warm purple-black / parchment  |
-| Surface      | `#1a1827` | `#ffffff`  |                                |
-| Accent       | `#f59e0b` | `#d97706`  | Amber — buttons, active states |
-| Accent hover | `#d97706` | `#b45309`  |                                |
+| Token          | Dark mode | Light mode | Notes                                                         |
+| -------------- | --------- | ---------- | ------------------------------------------------------------- |
+| Background     | `#0f0e17` | `#faf9f4`  | Warm purple-black / parchment                                 |
+| Surface        | `#1a1827` | `#ffffff`  |                                                               |
+| Surface raised | `#232135` | `#f2f0e6`  |                                                               |
+| Accent         | `#e8b84b` | `#c49a1a`  | Doré chaud — boutons, états actifs                            |
+| Accent hover   | `#c49a1a` | `#9e7b10`  |                                                               |
+| Accent text    | `#e8b84b` | `#8a6a0c`  | Amber comme couleur de texte — passe WCAG AA                  |
+| On accent      | `#0f0e17` | `#0f0e17`  | Texte SUR bouton amber — jamais blanc                         |
+| Text           | `#f0eef8` | `#0f0e17`  |                                                               |
+| Text muted     | `#a8a2cc` | `#524d80`  |                                                               |
+| Text faint     | `#524d80` | `#7b75a8`  | Décoratif uniquement — ne pas utiliser pour contenu essentiel |
 
-**Typography:** Outfit (body + display) · JetBrains Mono (numbers, prices, stats, card counts)
+**Typography:** Outfit 400/500/600/700/800 (display + body) · JetBrains Mono 400/500/600 (nombres,
+prix, stats) · Self-hosted, `font-display: optional`
 
 ---
 
 ## Semantic Token Names (`packages/tokens`)
 
 ```
-bg · surface · surface-raised · border · text · text-muted · text-faint
-accent · accent-hover · accent-subtle · accent-border
+bg · surface · surface-raised · surface-hover · border · border-subtle · border-focus
+text · text-muted · text-faint
+accent · accent-hover · accent-subtle · accent-border · accent-text · on-accent
 mtg-white · mtg-blue · mtg-black · mtg-red · mtg-green · mtg-colorless · mtg-multi
+error · error-subtle · error-text
+success · success-subtle · success-text
+warning · warning-subtle · warning-text
+info · info-subtle · info-text
+shadow-sm · shadow-md · shadow-lg · shadow-accent
+z-base · z-raised · z-dropdown · z-sticky · z-overlay · z-modal · z-toast · z-tooltip
 ```
+
+> `info` ≠ `mtg-blue` — neutral UI state vs MTG color identity, never substitute one for the other.
+
+---
+
+## Token Architecture (`packages/tokens`)
+
+```
+primitives/  → constantes TS (hex, px, ms)
+semantic/    → rôles (bg, surface, accent…)
+web/         → tokens.css avec @theme { … } pour Tailwind v4
+native/      → objets JS plats pour React Native (Phase 14)
+```
+
+Tailwind v4 lit `@theme` et génère les classes utilitaires automatiquement — pas de preset JS.
+
+---
+
+## Motion System
+
+| Mode             | Durée     | Easing        | Usage                                            |
+| ---------------- | --------- | ------------- | ------------------------------------------------ |
+| Micro (A)        | 50–200ms  | `ease-out`    | hover, focus, toggle, click feedback             |
+| Moments clés (B) | 300–500ms | `ease-spring` | modal, drawer, ajout de carte, ouverture builder |
+| Navigation       | 300ms     | `ease-in-out` | transitions de route                             |
 
 ---
 
 ## Non-Negotiable Rules
 
-| Rule                                                       | Why                                                |
-| ---------------------------------------------------------- | -------------------------------------------------- |
-| Semantic tokens only — never hardcoded hex                 | Theming, consistency, single source of truth       |
-| Mana symbols via Keyrune SVG (`{W}{U}{B}{R}{G}`)           | Canonical MTG icons — every player recognises them |
-| Theme via `.dark` on `<html>`, not `dark:` variant         | Runtime switching, no class proliferation in JSX   |
-| MTG tokens separate from semantic tokens                   | `mtg-red` ≠ `error` — different semantic meaning   |
-| Tailwind consumes `decksmithPreset` from `packages/tokens` | Single token source for web + mobile               |
+| Rule                                                   | Why                                                |
+| ------------------------------------------------------ | -------------------------------------------------- |
+| Semantic tokens only — never hardcoded hex             | Theming, consistency, single source of truth       |
+| Mana symbols via Keyrune SVG (`{W}{U}{B}{R}{G}`)       | Canonical MTG icons — every player recognises them |
+| Theme via `.dark` on `<html>`, not `dark:` variant     | Runtime switching, no class proliferation in JSX   |
+| MTG tokens separate from semantic tokens               | `mtg-red` ≠ `error` — different semantic meaning   |
+| `on-accent` (`#0f0e17`) on amber buttons — never white | White on `#e8b84b` = 1.8:1 contrast — fails WCAG   |
+| `text-faint` for decoration only                       | 2.5:1 ratio — fails AA for readable content        |
+| Raw Tailwind type classes never in feature JSX         | Encapsulated in `<Heading>`, `<Body>`, `<Label>`   |
+| Design system section required in Storybook            | Living style guide, always in sync with tokens     |
 
 ---
 
@@ -65,7 +107,10 @@ mtg-white · mtg-blue · mtg-black · mtg-red · mtg-green · mtg-colorless · m
 
 - [identity.md](./identity.md) — full palette, typography scale, MTG touches
 - [decisions.md](./decisions.md) — all design decisions with rationale
+- [token-preview.html](./token-preview.html) — preview visuel des tokens (ouvrir dans le navigateur)
 - [screens/](./screens/) — ASCII mocks: auth, deck-list, deck-builder, collection, card-search,
   card-detail, settings
 - [ADR-0015](../adr/0015-design-system-architecture.md) — architectural decisions (tokens, theming,
   Keyrune, no-Figma)
+- [ADR-0017](../adr/0017-packages-tokens-architecture.md) — implémentation de `packages/tokens`
+  (valeurs finales, hiérarchie, motion, contraste)
