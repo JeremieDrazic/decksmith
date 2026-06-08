@@ -479,6 +479,32 @@ packages/web-ui/
 
 ## Evolution History
 
+### 2026-06-08: Full test strategy validated — Session D
+
+- **`apps/storybook` replaces `/.storybook/` at repo root.** Storybook becomes a dedicated app
+  (`apps/storybook`) that aggregates stories from `packages/web-ui` and `apps/web`. Stories remain
+  colocated with their components.
+- **TDD on pure layers.** `packages/domain` and `packages/utils` use Red → Green → Refactor. All
+  other layers use "test-close" (tests written in the same session, before the feature is done).
+- **Real PostgreSQL for `apps/api` tests.** No Prisma mocks. Docker service in CI, `beforeEach`
+  truncate for isolation. Only Supabase Auth SDK HTTP calls are mocked.
+- **MSW for frontend tests.** Network-level interception in Storybook (addon) and Vitest. Never mock
+  TanStack Query hooks directly.
+- **Factory pattern for test data.** Colocated factories with sensible defaults and overrides. Seeds
+  are for development, not tests.
+- **Coverage thresholds removed.** Replaced by a value criterion: a test has value if it catches
+  costly bugs, documents non-obvious behaviour, or enables refactoring. No numeric targets.
+- **CI split:** unit + integration tests on every PR (< 3 min). E2E (Playwright) on `main` only.
+- **Full strategy document:** `apps/docs/context/test-strategy.md`
+
+### 2026-06-08: Design System section in Storybook required
+
+- `packages/tokens/src/**/*.stories` was already in the stories glob.
+- Formalised as a requirement (ADR-0017): the tokens package must ship a dedicated Design System
+  section in Storybook — colour palette with contrast ratios, type scale, spacing, motion catalog,
+  shadows, z-index. This section is the living style guide, replacing any need for a separate design
+  tool.
+
 ### 2026-02-03: Global Storybook and coverage thresholds
 
 - Decided on single global Storybook instance at repo root (aggregates all UI packages)

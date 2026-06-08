@@ -74,12 +74,14 @@ Do not suggest alternatives unless there's a strong technical reason.
 - `apps/web` — Web SPA
 - `apps/api` — HTTP API
 - `apps/worker` — Background jobs
+- `apps/storybook` — Storybook (aggregates stories from `packages/web-ui` + `apps/web`)
 - `apps/mobile` — Mobile (later)
 
 ### Packages
 
 - `packages/schema` — Zod DTOs (shared contracts)
 - `packages/domain` — Pure domain logic
+- `packages/utils` — Pure cross-domain utilities (no MTG knowledge — array, formatting, etc.)
 - `packages/db` — Prisma (server-only)
 - `packages/api-client` — Typed HTTP client
 - `packages/query` — TanStack Query hooks

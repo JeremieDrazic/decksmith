@@ -96,6 +96,17 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Search patterns documented (global popover, `/search` page, deck builder slide-over)
 - ✅ ADR-0015: Design System Architecture
 
+### 4.0.5 Fondations — sessions conversationnelles (avant implémentation)
+
+- ✅ Session A — Architecture `packages/tokens` (hiérarchie, couleurs, typo, spacing, motion) →
+  decisions-log + ADR-0017
+- ✅ Session B — Revue des libs front (routing, data, forms, animation, state, i18n, icons…) →
+  decisions-log + ADR-0018
+- ✅ Session C — Définition "composant prêt à l'emploi" (checklist, structure `packages/web-ui`) →
+  decisions-log + ADR-0019
+- ✅ Session D — Stratégie de test globale (philosophie, outillage par couche, mocks, CI) →
+  `test-strategy.md` + ADR-0006 updated
+
 ### 4.1 apps/web Setup
 
 - ✅ ADR-0016: TanStack Start adoption (SSR/CSR hybrid, no backend code in apps/web)
@@ -236,6 +247,13 @@ _Dependency: Phase 4.1 (apps/web initialized)_
 ## Phase 14: Mobile App (apps/mobile)
 
 _Dependencies: Phase 6 + 7 stable on web_
+
+### 14.0 Token strategy — conversation préalable
+
+- ⬜ Rediscuter l'architecture de `packages/tokens` pour le mobile : migrer vers Style Dictionary
+  (source unique → sorties CSS vars pour web + objets JS pour RN) ou valider que l'export dual
+  manuel (`native/`) est suffisant. Décision prise en Session A (Phase 4.0.5) : export dual manuel
+  pour l'instant, à réévaluer ici.
 
 ### 14.1 Setup
 

@@ -193,6 +193,18 @@ like `{W/U}`, colourless `{C}`, `{X}`, tap `{T}`) that a custom icon set would n
 
 ## Evolution History
 
+### 2026-06-08: Token values finalised — Session A (Phase 4.0.5)
+
+- Accent colour shifted from Tailwind amber-500 (`#f59e0b`) to golden `#e8b84b` — less orange, more
+  "doré chaud". Light mode accent-text set to `#8a6a0c` for WCAG AA compliance on light bg.
+- New tokens: `on-accent` (text on amber button — always `#0f0e17`), `accent-text` (accent-hued text
+  that passes contrast).
+- Tailwind v4 `@theme` CSS confirmed as the web output format — no JS preset object needed.
+- Implementation details (layer structure, output format, motion system, Storybook requirements)
+  documented in ADR-0017.
+- This ADR remains the source of truth for strategic decisions (where, how, why); ADR-0017 owns the
+  concrete implementation.
+
 ### 2026-05-30: Initial decision
 
 - Decided after completing Phase 4.0 design documentation (PR #16)
