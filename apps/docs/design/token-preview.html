@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr" class="dark">
   <head>
     <meta charset="UTF-8" />
@@ -171,8 +171,8 @@
          TYPOGRAPHY
       ═══════════════════════════════ */
       :root {
-        --font-display: "Outfit", sans-serif;
-        --font-mono: "JetBrains Mono", monospace;
+        --font-display: 'Outfit', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
 
         --text-xs: 0.75rem;
         --text-sm: 0.875rem;
@@ -227,21 +227,21 @@
       ═══════════════════════════════ */
       :root {
         /* Micro (Direction A — rapide, immédiat) */
-        --duration-instant: 50ms;   /* click ripple, indicateur actif */
-        --duration-fast: 100ms;     /* hover, focus ring, toggle */
+        --duration-instant: 50ms; /* click ripple, indicateur actif */
+        --duration-fast: 100ms; /* hover, focus ring, toggle */
 
         /* UI + Transitions (entre les deux) */
-        --duration-normal: 200ms;   /* dropdown, tooltip */
+        --duration-normal: 200ms; /* dropdown, tooltip */
 
         /* Moments clés (Direction B — expressif, élégant) */
-        --duration-slow: 350ms;     /* modal, drawer, popover */
-        --duration-page: 300ms;     /* navigation entre routes */
-        --duration-story: 500ms;    /* ajout de carte, ouverture builder */
+        --duration-slow: 350ms; /* modal, drawer, popover */
+        --duration-page: 300ms; /* navigation entre routes */
+        --duration-story: 500ms; /* ajout de carte, ouverture builder */
 
         /* Easings */
-        --ease-out: cubic-bezier(0, 0, 0.2, 1);          /* micro */
-        --ease-in: cubic-bezier(0.4, 0, 1, 1);           /* sorties */
-        --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);     /* transitions de page */
+        --ease-out: cubic-bezier(0, 0, 0.2, 1); /* micro */
+        --ease-in: cubic-bezier(0.4, 0, 1, 1); /* sorties */
+        --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1); /* transitions de page */
         --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* moments clés B */
       }
 
@@ -664,9 +664,15 @@
         color: var(--color-text);
       }
 
-      .pass { color: var(--color-success); }
-      .warn { color: var(--amber-400); }
-      .fail { color: var(--color-error); }
+      .pass {
+        color: var(--color-success);
+      }
+      .warn {
+        color: var(--amber-400);
+      }
+      .fail {
+        color: var(--color-error);
+      }
 
       .usage-note {
         color: var(--color-text-faint);
@@ -772,7 +778,8 @@
         padding: var(--space-3) var(--space-4);
         color: var(--color-text);
         outline: none;
-        transition: border-color var(--duration-fast) var(--ease-out),
+        transition:
+          border-color var(--duration-fast) var(--ease-out),
           box-shadow var(--duration-fast) var(--ease-out);
       }
 
@@ -852,8 +859,9 @@
         border-radius: var(--radius-lg);
         padding: var(--space-4);
         cursor: pointer;
-        transition: background var(--duration-fast) var(--ease-out),
-                    border-color var(--duration-fast) var(--ease-out);
+        transition:
+          background var(--duration-fast) var(--ease-out),
+          border-color var(--duration-fast) var(--ease-out);
         font-size: var(--text-sm);
         color: var(--color-text-muted);
       }
@@ -895,9 +903,7 @@
         <div class="header-right">
           <span class="badge">packages/tokens</span>
           <div class="theme-toggle">
-            <button class="theme-btn active" id="btn-dark" onclick="setTheme('dark')">
-              Dark
-            </button>
+            <button class="theme-btn active" id="btn-dark" onclick="setTheme('dark')">Dark</button>
             <button class="theme-btn" id="btn-light" onclick="setTheme('light')">Light</button>
           </div>
         </div>
@@ -929,10 +935,7 @@
             </div>
           </div>
           <div class="color-chip">
-            <div
-              class="color-swatch"
-              style="background: var(--color-border); border: none"
-            ></div>
+            <div class="color-swatch" style="background: var(--color-border); border: none"></div>
             <div class="color-info">
               <span class="color-name">border</span>
               <span class="color-value">#2e2b47 / #d5d0be</span>
@@ -1007,10 +1010,7 @@
           <div class="color-chip">
             <div
               class="color-swatch"
-              style="
-                background: var(--color-surface);
-                border: 2px solid var(--color-accent-border);
-              "
+              style="background: var(--color-surface); border: 2px solid var(--color-accent-border)"
             ></div>
             <div class="color-info">
               <span class="color-name">accent-border</span>
@@ -1025,7 +1025,10 @@
             </div>
           </div>
           <div class="color-chip">
-            <div class="color-swatch" style="background: var(--color-error-subtle); border: none"></div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-error-subtle); border: none"
+            ></div>
             <div class="color-info">
               <span class="color-name">error-subtle</span>
               <span class="color-value">rgba(ef4444, 12%)</span>
@@ -1046,7 +1049,10 @@
             </div>
           </div>
           <div class="color-chip">
-            <div class="color-swatch" style="background: var(--color-success-subtle); border: none"></div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-success-subtle); border: none"
+            ></div>
             <div class="color-info">
               <span class="color-name">success-subtle</span>
               <span class="color-value">rgba(22c55e, 12%)</span>
@@ -1067,7 +1073,10 @@
             </div>
           </div>
           <div class="color-chip">
-            <div class="color-swatch" style="background: var(--color-warning-subtle); border: none"></div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-warning-subtle); border: none"
+            ></div>
             <div class="color-info">
               <span class="color-name">warning-subtle</span>
               <span class="color-value">rgba(f59e0b, 12%)</span>
@@ -1088,7 +1097,10 @@
             </div>
           </div>
           <div class="color-chip">
-            <div class="color-swatch" style="background: var(--color-info-subtle); border: none"></div>
+            <div
+              class="color-swatch"
+              style="background: var(--color-info-subtle); border: none"
+            ></div>
             <div class="color-info">
               <span class="color-name">info-subtle</span>
               <span class="color-value">rgba(5b9cf6, 12%)</span>
@@ -1165,18 +1177,71 @@
         <div class="section-title">Semantic — Interactive States</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8)">
           <div>
-            <div style="font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono)">surface-hover — hover to see</div>
+            <div
+              style="
+                font-size: var(--text-xs);
+                color: var(--color-text-muted);
+                margin-bottom: var(--space-3);
+                font-family: var(--font-mono);
+              "
+            >
+              surface-hover — hover to see
+            </div>
             <div class="surface-hover-demo">
-              <div class="hover-card">Hover me<br><span style="font-size:10px; color:var(--color-text-faint); font-family:var(--font-mono)">surface → surface-hover</span></div>
-              <div class="hover-card">List item<br><span style="font-size:10px; color:var(--color-text-faint); font-family:var(--font-mono)">border → border-focus</span></div>
+              <div class="hover-card">
+                Hover me<br /><span
+                  style="
+                    font-size: 10px;
+                    color: var(--color-text-faint);
+                    font-family: var(--font-mono);
+                  "
+                  >surface → surface-hover</span
+                >
+              </div>
+              <div class="hover-card">
+                List item<br /><span
+                  style="
+                    font-size: 10px;
+                    color: var(--color-text-faint);
+                    font-family: var(--font-mono);
+                  "
+                  >border → border-focus</span
+                >
+              </div>
             </div>
           </div>
           <div>
-            <div style="font-size: var(--text-xs); color: var(--color-text-muted); margin-bottom: var(--space-3); font-family: var(--font-mono)">border-focus — click to focus</div>
-            <div class="focus-demo">
-              <input class="input-demo" placeholder="Click to focus — border-focus ring" style="transition: border-color var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);" />
+            <div
+              style="
+                font-size: var(--text-xs);
+                color: var(--color-text-muted);
+                margin-bottom: var(--space-3);
+                font-family: var(--font-mono);
+              "
+            >
+              border-focus — click to focus
             </div>
-            <div style="margin-top: var(--space-3); font-size: 10px; font-family: var(--font-mono); color: var(--color-text-faint)">border-focus = accent — same value, different intent</div>
+            <div class="focus-demo">
+              <input
+                class="input-demo"
+                placeholder="Click to focus — border-focus ring"
+                style="
+                  transition:
+                    border-color var(--duration-fast) var(--ease-out),
+                    box-shadow var(--duration-fast) var(--ease-out);
+                "
+              />
+            </div>
+            <div
+              style="
+                margin-top: var(--space-3);
+                font-size: 10px;
+                font-family: var(--font-mono);
+                color: var(--color-text-faint);
+              "
+            >
+              border-focus = accent — same value, different intent
+            </div>
           </div>
         </div>
       </section>
@@ -1185,51 +1250,65 @@
       <section class="section">
         <div class="section-title">Semantic — Status Colors</div>
         <div class="status-grid">
-
           <div class="status-card">
             <div class="status-banner" style="background: var(--color-error-subtle)">
               <div class="status-dot" style="background: var(--color-error)"></div>
-              <span class="status-msg" style="color: var(--color-error-text)">Format validation failed</span>
+              <span class="status-msg" style="color: var(--color-error-text)"
+                >Format validation failed</span
+              >
             </div>
             <div class="status-chips">
               <span class="status-token">error · error-subtle · error-text</span>
-              <span class="status-token" style="color: var(--color-text-faint)">#ef4444 / #b91c1c (light)</span>
+              <span class="status-token" style="color: var(--color-text-faint)"
+                >#ef4444 / #b91c1c (light)</span
+              >
             </div>
           </div>
 
           <div class="status-card">
             <div class="status-banner" style="background: var(--color-success-subtle)">
               <div class="status-dot" style="background: var(--color-success)"></div>
-              <span class="status-msg" style="color: var(--color-success-text)">Deck saved successfully</span>
+              <span class="status-msg" style="color: var(--color-success-text)"
+                >Deck saved successfully</span
+              >
             </div>
             <div class="status-chips">
               <span class="status-token">success · success-subtle · success-text</span>
-              <span class="status-token" style="color: var(--color-text-faint)">#22c55e / #15803d (light)</span>
+              <span class="status-token" style="color: var(--color-text-faint)"
+                >#22c55e / #15803d (light)</span
+              >
             </div>
           </div>
 
           <div class="status-card">
             <div class="status-banner" style="background: var(--color-warning-subtle)">
               <div class="status-dot" style="background: var(--color-warning)"></div>
-              <span class="status-msg" style="color: var(--color-warning-text)">Lightning Bolt is banned in Legacy</span>
+              <span class="status-msg" style="color: var(--color-warning-text)"
+                >Lightning Bolt is banned in Legacy</span
+              >
             </div>
             <div class="status-chips">
               <span class="status-token">warning · warning-subtle · warning-text</span>
-              <span class="status-token" style="color: var(--color-text-faint)">#f59e0b dark / #92400e light — ≠ accent</span>
+              <span class="status-token" style="color: var(--color-text-faint)"
+                >#f59e0b dark / #92400e light — ≠ accent</span
+              >
             </div>
           </div>
 
           <div class="status-card">
             <div class="status-banner" style="background: var(--color-info-subtle)">
               <div class="status-dot" style="background: var(--color-info)"></div>
-              <span class="status-msg" style="color: var(--color-info-text)">Syncing card data from Scryfall…</span>
+              <span class="status-msg" style="color: var(--color-info-text)"
+                >Syncing card data from Scryfall…</span
+              >
             </div>
             <div class="status-chips">
               <span class="status-token">info · info-subtle · info-text</span>
-              <span class="status-token" style="color: var(--color-text-faint)">#5b9cf6 dark / #1d4ed8 light — ≠ mtg-blue</span>
+              <span class="status-token" style="color: var(--color-text-faint)"
+                >#5b9cf6 dark / #1d4ed8 light — ≠ mtg-blue</span
+              >
             </div>
           </div>
-
         </div>
       </section>
 
@@ -1288,11 +1367,7 @@
               <span class="type-size">1rem · 16px</span>
             </div>
             <div
-              style="
-                font-size: var(--text-base);
-                font-weight: 400;
-                color: var(--color-text-muted);
-              "
+              style="font-size: var(--text-base); font-weight: 400; color: var(--color-text-muted)"
             >
               Add cards from your collection or search Scryfall to build your deck.
             </div>
@@ -1519,10 +1594,7 @@
             <span class="radius-val">24px</span>
           </div>
           <div class="radius-chip">
-            <div
-              class="radius-box"
-              style="border-radius: var(--radius-full); width: 64px"
-            ></div>
+            <div class="radius-box" style="border-radius: var(--radius-full); width: 64px"></div>
             <span class="radius-token">radius-full</span>
             <span class="radius-val">9999px</span>
           </div>
@@ -1562,14 +1634,32 @@
             <span class="motion-desc">Interactions, menus, modals</span>
           </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:var(--space-2)">
-          <div style="font-size:var(--text-xs); color:var(--color-text-faint); text-transform:uppercase; letter-spacing:var(--tracking-wider)">Direction A — micro</div>
-          <div class="duration-chips" style="margin-bottom:var(--space-2)">
+        <div style="display: flex; flex-direction: column; gap: var(--space-2)">
+          <div
+            style="
+              font-size: var(--text-xs);
+              color: var(--color-text-faint);
+              text-transform: uppercase;
+              letter-spacing: var(--tracking-wider);
+            "
+          >
+            Direction A — micro
+          </div>
+          <div class="duration-chips" style="margin-bottom: var(--space-2)">
             <span class="badge">instant · 50ms</span>
             <span class="badge">fast · 100ms · hover/focus</span>
             <span class="badge">normal · 200ms · dropdown</span>
           </div>
-          <div style="font-size:var(--text-xs); color:var(--color-text-faint); text-transform:uppercase; letter-spacing:var(--tracking-wider)">Direction B — expressif</div>
+          <div
+            style="
+              font-size: var(--text-xs);
+              color: var(--color-text-faint);
+              text-transform: uppercase;
+              letter-spacing: var(--tracking-wider);
+            "
+          >
+            Direction B — expressif
+          </div>
           <div class="duration-chips">
             <span class="badge">page · 300ms · ease-in-out</span>
             <span class="badge">slow · 350ms · modal/drawer · spring</span>
@@ -1594,10 +1684,10 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background:#f0eef8"></div>
+                  <div class="swatch-sm" style="background: #f0eef8"></div>
                   <span>text</span>
-                  <span style="color:var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background:#0f0e17"></div>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #0f0e17"></div>
                   <span>bg</span>
                 </div>
               </td>
@@ -1608,10 +1698,10 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background:#a8a2cc"></div>
+                  <div class="swatch-sm" style="background: #a8a2cc"></div>
                   <span>text-muted</span>
-                  <span style="color:var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background:#1a1827"></div>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #1a1827"></div>
                   <span>surface</span>
                 </div>
               </td>
@@ -1622,10 +1712,13 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background:#0f0e17; border:1px solid #2e2b47"></div>
+                  <div
+                    class="swatch-sm"
+                    style="background: #0f0e17; border: 1px solid #2e2b47"
+                  ></div>
                   <span>on-accent</span>
-                  <span style="color:var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background:#e8b84b"></div>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #e8b84b"></div>
                   <span>accent</span>
                 </div>
               </td>
@@ -1636,10 +1729,10 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background:#e8b84b"></div>
+                  <div class="swatch-sm" style="background: #e8b84b"></div>
                   <span>accent-text</span>
-                  <span style="color:var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background:#0f0e17"></div>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #0f0e17"></div>
                   <span>bg dark</span>
                 </div>
               </td>
@@ -1650,10 +1743,10 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background:#8a6a0c"></div>
+                  <div class="swatch-sm" style="background: #8a6a0c"></div>
                   <span>accent-text</span>
-                  <span style="color:var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background:#faf9f4"></div>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #faf9f4"></div>
                   <span>bg light</span>
                 </div>
               </td>
@@ -1664,10 +1757,10 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background:#524d80"></div>
+                  <div class="swatch-sm" style="background: #524d80"></div>
                   <span>text-faint</span>
-                  <span style="color:var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background:#0f0e17"></div>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #0f0e17"></div>
                   <span>bg</span>
                 </div>
               </td>
@@ -1678,11 +1771,47 @@
           </tbody>
         </table>
 
-        <div style="margin-top: var(--space-6); display: flex; gap: var(--space-4); flex-wrap: wrap; align-items: center">
-          <div style="font-size: var(--text-xs); color: var(--color-text-muted)">Exemple accent-text :</div>
-          <div style="font-family: var(--font-mono); font-size: var(--text-xl); font-weight: 600; color: var(--color-accent-text)">€124.50</div>
-          <div style="font-family: var(--font-mono); font-size: var(--text-base); color: var(--color-accent-text)">4x Opt</div>
-          <a href="#" style="font-size: var(--text-sm); color: var(--color-accent-text); text-decoration: underline; text-underline-offset: 3px">Voir toutes les cartes</a>
+        <div
+          style="
+            margin-top: var(--space-6);
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+            align-items: center;
+          "
+        >
+          <div style="font-size: var(--text-xs); color: var(--color-text-muted)">
+            Exemple accent-text :
+          </div>
+          <div
+            style="
+              font-family: var(--font-mono);
+              font-size: var(--text-xl);
+              font-weight: 600;
+              color: var(--color-accent-text);
+            "
+          >
+            €124.50
+          </div>
+          <div
+            style="
+              font-family: var(--font-mono);
+              font-size: var(--text-base);
+              color: var(--color-accent-text);
+            "
+          >
+            4x Opt
+          </div>
+          <a
+            href="#"
+            style="
+              font-size: var(--text-sm);
+              color: var(--color-accent-text);
+              text-decoration: underline;
+              text-underline-offset: 3px;
+            "
+            >Voir toutes les cartes</a
+          >
         </div>
       </section>
 
@@ -1727,14 +1856,14 @@
     <script>
       function setTheme(theme) {
         const html = document.documentElement;
-        if (theme === "dark") {
-          html.classList.add("dark");
-          document.getElementById("btn-dark").classList.add("active");
-          document.getElementById("btn-light").classList.remove("active");
+        if (theme === 'dark') {
+          html.classList.add('dark');
+          document.getElementById('btn-dark').classList.add('active');
+          document.getElementById('btn-light').classList.remove('active');
         } else {
-          html.classList.remove("dark");
-          document.getElementById("btn-light").classList.add("active");
-          document.getElementById("btn-dark").classList.remove("active");
+          html.classList.remove('dark');
+          document.getElementById('btn-light').classList.add('active');
+          document.getElementById('btn-dark').classList.remove('active');
         }
       }
     </script>
