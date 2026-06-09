@@ -1,0 +1,35 @@
+{
+  "name": "@decksmith/query",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "oxlint .",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@decksmith/api-client": "workspace:*",
+    "@decksmith/schema": "workspace:^"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "@decksmith/test-utils": "workspace:^",
+    "@tanstack/react-query": "^5.101.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.1.8",
+    "@vitest/coverage-v8": "^4.1.8",
+    "jsdom": "^29.1.1",
+    "msw": "^2.14.6",
+    "react": "^19.2.7",
+    "typescript": "catalog:",
+    "vitest": "^4.1.8"
+  }
+}
