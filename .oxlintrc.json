@@ -65,6 +65,7 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
+    "no-use-before-define": "error",
     "no-useless-backreference": "error",
     "no-useless-catch": "error",
     "no-useless-escape": "error",
@@ -287,7 +288,28 @@
     "unicorn/throw-new-error": "error",
     "import/no-duplicates": "error",
     "import/no-cycle": "error",
-    "import/no-self-import": "error"
+    "import/no-self-import": "error",
+    "react/rules-of-hooks": "error",
+    "react/jsx-key": "error",
+    "react/button-has-type": "error",
+    "react/no-unknown-property": "error",
+    "react/jsx-no-target-blank": "error",
+    "react/no-unstable-nested-components": "error",
+    "react/no-danger": "error",
+    "react/jsx-pascal-case": "error",
+    "react/self-closing-comp": "error",
+    "react/no-array-index-key": "error",
+    "react/jsx-no-useless-fragment": "error",
+    "react/no-children-prop": "error",
+    "jsx-a11y/alt-text": "error",
+    "jsx-a11y/anchor-is-valid": "error",
+    "jsx-a11y/anchor-has-content": "error",
+    "jsx-a11y/heading-has-content": "error",
+    "jsx-a11y/aria-role": "error",
+    "jsx-a11y/aria-props": "error",
+    "jsx-a11y/aria-proptypes": "error",
+    "jsx-a11y/label-has-associated-control": "error",
+    "jsx-a11y/no-redundant-roles": "error"
   },
   "globals": {
     "__dirname": "readonly",
@@ -368,6 +390,7 @@
     ".turbo/**",
     "coverage/**",
     "*.generated.ts",
+    "*.gen.ts",
     "*.d.ts.map",
     "**/.vitepress/cache/**",
     "**/.vitepress/dist/**"

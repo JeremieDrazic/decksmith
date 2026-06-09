@@ -23,6 +23,7 @@ export default defineConfig({
           { text: 'Roadmap', link: '/roadmap' },
           { text: 'Project State', link: '/context/project-state' },
           { text: 'Decisions Log', link: '/context/decisions-log' },
+          { text: 'Test Strategy', link: '/context/test-strategy' },
           { text: 'Skills & Agents', link: '/skills-and-agents' },
         ],
       },
@@ -113,6 +114,18 @@ export default defineConfig({
           {
             text: 'ADR-0016: TanStack Start',
             link: '/adr/0016-tanstack-start',
+          },
+          {
+            text: 'ADR-0017: packages/tokens Architecture',
+            link: '/adr/0017-packages-tokens-architecture',
+          },
+          {
+            text: 'ADR-0018: Frontend Library Stack',
+            link: '/adr/0018-frontend-library-stack',
+          },
+          {
+            text: 'ADR-0019: web-ui Component Architecture',
+            link: '/adr/0019-web-ui-component-architecture',
           },
         ],
       },
