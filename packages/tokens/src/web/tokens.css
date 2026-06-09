@@ -1,0 +1,217 @@
+/*
+ * Decksmith Design Tokens — Tailwind v4 CSS-first
+ *
+ * Architecture:
+ *   :root     → light mode defaults (absence of .dark = light)
+ *   .dark     → dark mode overrides (added to <html> at runtime)
+ *   @theme inline → generates utility classes from runtime CSS vars (bg-bg, text-accent…)
+ *   @theme    → generates utility classes from static values (motion, shadows, MTG colors…)
+ */
+
+/* ─── Theme-aware color variables ─────────────────────────────────────────── */
+
+:root {
+  /* Backgrounds */
+  --bg: #faf9f4;
+  --surface: #ffffff;
+  --surface-raised: #f2f0e6;
+  --surface-hover: #ede9d8;
+
+  /* Borders */
+  --border: #d5d0be;
+  --border-subtle: #e8e5d8;
+  --border-focus: #c49a1a;
+
+  /* Text */
+  --text: #0f0e17;
+  --text-muted: #524d80;
+  --text-faint: #7b75a8;
+
+  /* Accent (amber doré) */
+  --accent: #c49a1a;
+  --accent-hover: #9e7b10;
+  --accent-subtle: rgba(196, 154, 26, 0.08);
+  --accent-border: rgba(196, 154, 26, 0.25);
+  --accent-text: #8a6a0c;
+  --on-accent: #0f0e17;
+
+  /* Status — error */
+  --error: #ef4444;
+  --error-subtle: rgba(239, 68, 68, 0.08);
+  --error-text: #b91c1c;
+
+  /* Status — success */
+  --success: #22c55e;
+  --success-subtle: rgba(34, 197, 94, 0.08);
+  --success-text: #15803d;
+
+  /* Status — warning */
+  --warning: #d97706;
+  --warning-subtle: rgba(217, 119, 6, 0.08);
+  --warning-text: #92400e;
+
+  /* Status — info */
+  --info: #2563eb;
+  --info-subtle: rgba(37, 99, 235, 0.08);
+  --info-text: #1d4ed8;
+
+  /* MTG White (only WUBRG color with a light/dark variant) */
+  --mtg-white: #c8b96e;
+}
+
+.dark {
+  /* Backgrounds */
+  --bg: #0f0e17;
+  --surface: #1a1827;
+  --surface-raised: #232135;
+  --surface-hover: #2a2840;
+
+  /* Borders */
+  --border: #2e2b47;
+  --border-subtle: #232135;
+  --border-focus: #e8b84b;
+
+  /* Text */
+  --text: #f0eef8;
+  --text-muted: #a8a2cc;
+  --text-faint: #524d80;
+
+  /* Accent */
+  --accent: #e8b84b;
+  --accent-hover: #c49a1a;
+  --accent-subtle: rgba(232, 184, 75, 0.12);
+  --accent-border: rgba(232, 184, 75, 0.3);
+  --accent-text: #e8b84b;
+  --on-accent: #0f0e17;
+
+  /* Status — error */
+  --error: #ef4444;
+  --error-subtle: rgba(239, 68, 68, 0.12);
+  --error-text: #ef4444;
+
+  /* Status — success */
+  --success: #22c55e;
+  --success-subtle: rgba(34, 197, 94, 0.12);
+  --success-text: #22c55e;
+
+  /* Status — warning */
+  --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.12);
+  --warning-text: #f59e0b;
+
+  /* Status — info */
+  --info: #5b9cf6;
+  --info-subtle: rgba(91, 156, 246, 0.12);
+  --info-text: #5b9cf6;
+
+  /* MTG White */
+  --mtg-white: #f5f0d8;
+}
+
+/* ─── Tailwind v4 inline theme ─────────────────────────────────────────────
+ * @theme inline generates utility classes (bg-*, text-*, border-*) that
+ * resolve at runtime via var(). This is what makes dark mode switching work
+ * without rebuilding CSS — Tailwind generates `color: var(--text)` and the
+ * CSS var flips when .dark is toggled on <html>.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-border: var(--accent-border);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --color-error: var(--error);
+  --color-error-subtle: var(--error-subtle);
+  --color-error-text: var(--error-text);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-text: var(--warning-text);
+  --color-info: var(--info);
+  --color-info-subtle: var(--info-subtle);
+  --color-info-text: var(--info-text);
+  --color-mtg-white: var(--mtg-white);
+}
+
+/* ─── Tailwind v4 static theme ─────────────────────────────────────────────
+ * @theme (without inline) bakes values at build time. Used for tokens that
+ * never change between themes: MTG stable colors, motion, shadows, z-index.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* MTG WUBRG — stable, no dark/light variant */
+  --color-mtg-blue: #1a6eb5;
+  --color-mtg-black: #160d22;
+  --color-mtg-red: #cc2222;
+  --color-mtg-green: #006e3c;
+  --color-mtg-colorless: #8fa3b0;
+  --color-mtg-multi: #c9a84c;
+
+  /* Typography — font families */
+  --font-display: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Fluid type scale — generated via Utopia formula (320px → 1280px)
+   * Each step: clamp(min-size, intercept + slope*vw, max-size)
+   * Generates: text-xs, text-sm, text-base, text-lg… utility classes */
+  --text-xs: clamp(0.6875rem, 0.6667rem + 0.1042vw, 0.75rem);
+  --text-sm: clamp(0.8125rem, 0.7917rem + 0.1042vw, 0.875rem);
+  --text-base: clamp(0.9375rem, 0.8958rem + 0.2083vw, 1.0625rem);
+  --text-lg: clamp(1.0625rem, 1rem + 0.3125vw, 1.25rem);
+  --text-xl: clamp(1.1875rem, 1.125rem + 0.3125vw, 1.375rem);
+  --text-2xl: clamp(1.375rem, 1.2917rem + 0.4167vw, 1.625rem);
+  --text-3xl: clamp(1.625rem, 1.5rem + 0.625vw, 2rem);
+  --text-4xl: clamp(1.875rem, 1.6667rem + 1.0417vw, 2.5rem);
+  --text-5xl: clamp(2.375rem, 2.0833rem + 1.4583vw, 3.25rem);
+  --text-6xl: clamp(3rem, 2.5833rem + 2.0833vw, 4.25rem);
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
+  --shadow-accent: 0 0 16px rgba(232, 184, 75, 0.2);
+
+  /* Z-index */
+  --z-index-base: 0;
+  --z-index-raised: 10;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-overlay: 300;
+  --z-index-modal: 400;
+  --z-index-toast: 500;
+  --z-index-tooltip: 600;
+
+  /* Motion — durations */
+  --duration-instant: 50ms;
+  --duration-fast: 100ms;
+  --duration-normal: 200ms;
+  --duration-slow: 350ms;
+  --duration-page: 300ms;
+  --duration-story: 500ms;
+
+  /* Motion — easings */
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}

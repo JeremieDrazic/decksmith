@@ -125,6 +125,7 @@ Before writing code in a given domain, check the relevant pitfall file for known
 - Fastify routes/plugins → `apps/docs/context/pitfalls/fastify.md`
 - Supabase integration → `apps/docs/context/pitfalls/supabase.md`
 - TypeScript / tooling → `apps/docs/context/pitfalls/typescript.md`
+- React / TanStack / frontend → `apps/docs/context/pitfalls/frontend.md`
 
 When a new mistake is caught and corrected during a session, add it to the relevant file immediately.
 

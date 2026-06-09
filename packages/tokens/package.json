@@ -1,0 +1,17 @@
+{
+  "name": "@decksmith/tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./web/tokens.css": "./src/web/tokens.css"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

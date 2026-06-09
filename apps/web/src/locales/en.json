@@ -1,0 +1,16 @@
+{
+  "home": {
+    "title": "Decksmith"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in"
+    },
+    "register": {
+      "title": "Create your account"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  }
+}
