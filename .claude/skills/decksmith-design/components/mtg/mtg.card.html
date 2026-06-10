@@ -1,0 +1,94 @@
+<!-- @dsCard group="Components" viewport="700x600" name="MTG — mana, decks & data" subtitle="Mana · ManaCost · ColorIdentity · FormatBadge · Rarity · Coverage · DeckCard · CardThumb · ManaCurve · StatRow" -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  #root { padding: 24px 26px; }
+  .sec { margin-bottom: 24px; }
+  .h { font: 600 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 12px; }
+  .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const NS = window.DecksmithDesignSystem_0a9b95;
+  const { Mana, ManaCost, ColorIdentity, FormatBadge, RarityDot, CoverageStamp, DeckCard, CardThumb, ManaCurve, StatRow } = NS;
+
+  function Demo() {
+    const curve = [
+      { cmc: '0', count: 4, color: 'c' }, { cmc: '1', count: 9, color: 'u' },
+      { cmc: '2', count: 14, color: 'b' }, { cmc: '3', count: 12, color: 'g' },
+      { cmc: '4', count: 8, color: 'r' }, { cmc: '5', count: 5, color: 'w' },
+      { cmc: '6+', count: 6, color: 'multi' },
+    ];
+    return (
+      <div>
+        <div className="sec">
+          <p className="h">Mana &amp; color identity</p>
+          <div className="row">
+            <ManaCost cost="{3}{W}{U}{B}{R}{G}" size="md" />
+            <span style={{color:'var(--text-faint)'}}>·</span>
+            <ColorIdentity colors="wubrg" size="md" />
+            <ColorIdentity colors="bg" size="md" />
+            <ColorIdentity colors="gu" size="md" />
+          </div>
+        </div>
+
+        <div className="sec">
+          <p className="h">Stamps &amp; markers</p>
+          <div className="row">
+            <FormatBadge format="Commander" tone="accent" />
+            <FormatBadge format="Modern" />
+            <FormatBadge format="Standard" />
+            <CoverageStamp percent={87} />
+            <CoverageStamp percent={72} />
+            <CoverageStamp percent={41} />
+            <RarityDot rarity="rare" showLabel />
+            <RarityDot rarity="mythic" showLabel />
+          </div>
+        </div>
+
+        <div className="sec">
+          <p className="h">Deck cards</p>
+          <div className="row" style={{alignItems:'stretch'}}>
+            <DeckCard style={{width:230}} name="The Ur-Dragon" commander="The Ur-Dragon" colors="wubrg" count={100} coverage={87} price="142 €" updated="2d ago" />
+            <DeckCard style={{width:230}} name="Yawgmoth" commander="Yawgmoth, Thran Physician" colors="bg" count={100} coverage={72} price="89 €" updated="5d ago" />
+          </div>
+        </div>
+
+        <div className="sec">
+          <p className="h">Card thumbnails</p>
+          <div className="row" style={{alignItems:'stretch'}}>
+            <CardThumb width={118} name="Sol Ring" cost="{1}" colors="c" rarity="uncommon" owned={2} />
+            <CardThumb width={118} name="Cyclonic Rift" cost="{6}{U}" colors="u" rarity="rare" owned={1} />
+            <CardThumb width={118} name="Sheoldred" cost="{2}{B}{B}" colors="b" rarity="mythic" owned={0} />
+            <CardThumb width={118} name="Llanowar Elves" cost="{G}" colors="g" rarity="common" owned={4} />
+          </div>
+        </div>
+
+        <div className="sec" style={{marginBottom:0}}>
+          <p className="h">Data — mana curve &amp; stats</p>
+          <div className="row" style={{alignItems:'flex-end', gap:32}}>
+            <div style={{flex:1, minWidth:280}}><ManaCurve data={curve} /></div>
+            <div style={{width:200, display:'flex', flexDirection:'column', gap:8}}>
+              <StatRow label="Cards" value="100" />
+              <StatRow label="Avg CMC" value="3.2" />
+              <StatRow label="Value" value="$142.00" accent />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!-- @dsCard group="Colors" viewport="700x180" name="MTG color identity (WUBRG)" subtitle="Game color identity — separate from semantic tokens. Mana glyphs via mana-font." -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--font-body); background: var(--bg); color: var(--text); }
+  .pane { padding: 22px 24px; }
+  .row { display: flex; gap: 12px; }
+  .col { flex: 1; text-align: center; }
+  .sw { height: 40px; border-radius: var(--radius-surface); display: flex; align-items: center; justify-content: center; }
+  .sw .ms { font-size: 20px; }
+  .name { font: 600 12px var(--font-body); margin-top: 8px; }
+  .tok { font: 500 10px var(--font-mono); color: var(--text-muted); margin-top: 3px; }
+  .pips { margin-top: 16px; display: flex; align-items: center; gap: 6px; font-size: 22px; }
+  .cap { font: 500 11px var(--font-mono); color: var(--text-muted); margin-left: 10px; }
+</style>
+</head>
+<body>
+<div class="pane">
+  <div class="row">
+    <div class="col"><div class="sw" style="background:var(--mtg-white)"><i class="ms ms-w" style="color:#0f0e17"></i></div><div class="name">White</div><div class="tok">mtg-white</div></div>
+    <div class="col"><div class="sw" style="background:var(--mtg-blue)"><i class="ms ms-u" style="color:#fff"></i></div><div class="name">Blue</div><div class="tok">mtg-blue</div></div>
+    <div class="col"><div class="sw" style="background:var(--mtg-black)"><i class="ms ms-b" style="color:#fff"></i></div><div class="name">Black</div><div class="tok">mtg-black</div></div>
+    <div class="col"><div class="sw" style="background:var(--mtg-red)"><i class="ms ms-r" style="color:#fff"></i></div><div class="name">Red</div><div class="tok">mtg-red</div></div>
+    <div class="col"><div class="sw" style="background:var(--mtg-green)"><i class="ms ms-g" style="color:#fff"></i></div><div class="name">Green</div><div class="tok">mtg-green</div></div>
+    <div class="col"><div class="sw" style="background:var(--mtg-colorless)"><i class="ms ms-c" style="color:#0f0e17"></i></div><div class="name">Colorless</div><div class="tok">mtg-colorless</div></div>
+    <div class="col"><div class="sw" style="background:var(--mtg-multi)"><i class="ms ms-multicolor" style="color:#0f0e17"></i></div><div class="name">Multi</div><div class="tok">mtg-multi</div></div>
+  </div>
+  <div class="pips">
+    <i class="ms ms-2 ms-cost"></i><i class="ms ms-u ms-cost"></i><i class="ms ms-b ms-cost"></i>
+    <span class="cap">mana cost · ms-cost pips {2}{U}{B}</span>
+  </div>
+</div>
+</body>
+</html>

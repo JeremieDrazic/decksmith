@@ -393,7 +393,8 @@
     "*.gen.ts",
     "*.d.ts.map",
     "**/.vitepress/cache/**",
-    "**/.vitepress/dist/**"
+    "**/.vitepress/dist/**",
+    ".claude/**"
   ],
   "overrides": [
     {

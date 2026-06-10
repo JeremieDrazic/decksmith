@@ -147,10 +147,26 @@ WUBRG tokens represent MTG colour identity — not UI states. `mtg-red` ≠ `err
 
 #### Typography
 
-- **Display + body:** Outfit — weights 400, 500, 600, 700, 800
-- **Numbers, prices, stats:** JetBrains Mono — weights 400, 500, 600
-- **Scale:** Tailwind default (xs → 6xl), values converted to `clamp()` via Utopia during Phase 4.1
-  scaffold for fluid scaling without breakpoints
+- **Display + body:** Outfit — weights 400, 500, 600, 700, 800 (`--font-display`, `--font-body`)
+- **Numbers, prices, stats:** JetBrains Mono — weights 400, 500, 600 (`--font-mono`)
+- **Scale:** fluid clamp() via Utopia formula (320px → 1280px), xs → 6xl. `Heading` exposes xl →
+  4xl; 5xl/6xl are tokens-only for exceptional cases (hero sections) via `className` override.
+- **Line heights:** paired with type scale — tighten as size increases (display text needs less
+  breathing room than body copy)
+
+| Size | Leading |
+| ---- | ------- |
+| xs   | 1.5     |
+| sm   | 1.5     |
+| base | 1.6     |
+| lg   | 1.5     |
+| xl   | 1.4     |
+| 2xl  | 1.3     |
+| 3xl  | 1.2     |
+| 4xl  | 1.1     |
+
+- **Letter spacing:** `--tracking-tight: -0.02em` (headings) · `--tracking-normal: 0em` ·
+  `--tracking-wide: 0.04em` (labels, overlines)
 - **Loading:** self-hosted from `apps/web/public/fonts/`, `font-display: optional` (no FOUT)
 - **Rule:** raw Tailwind type classes never appear in feature JSX — encapsulated in semantic
   components (`<Heading>`, `<Body>`, `<Label>`) — finalized in Session C (Phase 4.0.5)

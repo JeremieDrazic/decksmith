@@ -4,6 +4,36 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-10] — Typography tokens completed: leading, tracking, font-body
+
+**Context:** `packages/tokens` was missing line heights and letter spacing, causing browser defaults
+to apply. Discovered when implementing `Heading` and cross-referencing the decksmith-design skill.
+
+**Decision:** Added to `@theme` static block in `tokens.css`:
+
+- `--leading-xs` through `--leading-4xl` — paired with type scale, tighten as size grows (4xl: 1.1)
+- `--tracking-tight: -0.02em` / `--tracking-normal: 0em` / `--tracking-wide: 0.04em`
+- `--font-body` — same as `--font-display` (Outfit), semantically distinct for future flexibility
+
+**Impact:** `Heading` CVA now pairs each `size` with its `leading-*` class and applies
+`tracking-tight` by default. `Heading` size range capped at 4xl (aligned with decksmith-design
+skill); 5xl/6xl remain in tokens as escape hatch via `className`.
+
+---
+
+## [2026-06-10] — `cva` + `clsx` + `tailwind-merge` added to `packages/web-ui`
+
+**Decision:** Three standard utilities for component authoring in `packages/web-ui`:
+
+- `class-variance-authority` (CVA) — type-safe variant definitions; replaces ad-hoc ternaries in
+  `className`
+- `clsx` — conditional class joining
+- `tailwind-merge` — resolves Tailwind class conflicts when consumers pass `className` overrides
+
+`cn(...inputs)` helper lives in `packages/web-ui/src/lib/cn.ts` and is used by every component.
+
+---
+
 ## [2026-06-10] — `errorCode` on hook return instead of `isApiError` in components
 
 **Context:** TanStack Query hooks return `error: Error | null`. Consumers need to branch on the

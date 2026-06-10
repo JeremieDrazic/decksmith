@@ -1,0 +1,40 @@
+<!-- @dsCard group="Colors" viewport="700x250" name="Surfaces & borders" subtitle="Warm purple-black / parchment — bg, surface, raised, hover, borders" -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--font-body); }
+  .wrap { display: grid; grid-template-columns: 1fr 1fr; }
+  .pane { background: var(--bg); color: var(--text); padding: 22px 24px; }
+  .mode { font: 600 11px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 14px; }
+  .row { display: flex; gap: 10px; }
+  .chip { flex: 1; }
+  .sw { height: 46px; border-radius: var(--radius-surface); border: 1px solid var(--border); }
+  .nm { font: 500 11px var(--font-mono); color: var(--text-muted); margin-top: 7px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pane">
+    <p class="mode">Light · parchment</p>
+    <div class="row">
+      <div class="chip"><div class="sw" style="background:var(--bg)"></div><div class="nm">bg</div></div>
+      <div class="chip"><div class="sw" style="background:var(--surface)"></div><div class="nm">surface</div></div>
+      <div class="chip"><div class="sw" style="background:var(--surface-raised)"></div><div class="nm">raised</div></div>
+      <div class="chip"><div class="sw" style="background:var(--surface-hover)"></div><div class="nm">hover</div></div>
+    </div>
+  </div>
+  <div class="pane dark">
+    <p class="mode">Dark · purple-black</p>
+    <div class="row">
+      <div class="chip"><div class="sw" style="background:var(--bg)"></div><div class="nm">bg</div></div>
+      <div class="chip"><div class="sw" style="background:var(--surface)"></div><div class="nm">surface</div></div>
+      <div class="chip"><div class="sw" style="background:var(--surface-raised)"></div><div class="nm">raised</div></div>
+      <div class="chip"><div class="sw" style="background:var(--surface-hover)"></div><div class="nm">hover</div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

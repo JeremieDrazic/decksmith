@@ -1,0 +1,26 @@
+<!-- @dsCard group="Spacing" viewport="700x200" name="Radius roles" subtitle="Semantic radius — interactive 8 · surface 12 · modal 16 · badge full · stamp 4" -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  .pane { padding: 24px 26px; display: flex; gap: 20px; }
+  .item { text-align: center; }
+  .box { width: 92px; height: 64px; background: var(--surface-raised); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+  .glow { box-shadow: var(--shadow-md); }
+  .tok { font: 600 12px var(--font-body); margin-top: 10px; }
+  .px { font: 500 10px var(--font-mono); color: var(--text-muted); margin-top: 3px; }
+</style>
+</head>
+<body>
+<div class="pane">
+  <div class="item"><div class="box" style="border-radius:var(--radius-interactive)"></div><div class="tok">interactive</div><div class="px">8px · buttons, inputs</div></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-surface)"></div><div class="tok">surface</div><div class="px">12px · cards, panels</div></div>
+  <div class="item"><div class="box glow" style="border-radius:var(--radius-modal)"></div><div class="tok">modal</div><div class="px">16px · dialogs</div></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-badge);width:64px"></div><div class="tok">badge</div><div class="px">full · pills, dots</div></div>
+  <div class="item"><div class="box" style="border-radius:var(--radius-sm);width:64px;background:var(--accent-subtle);border-color:var(--accent-border)"></div><div class="tok">stamp</div><div class="px">4px · format/rarity</div></div>
+</div>
+</body>
+</html>

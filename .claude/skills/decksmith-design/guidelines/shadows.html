@@ -1,0 +1,23 @@
+<!-- @dsCard group="Spacing" viewport="700x180" name="Elevation & shadow" subtitle="sm / md / lg + accent glow — tuned for the warm-dark canvas" -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  .pane { padding: 30px 26px; display: flex; gap: 26px; }
+  .item { text-align: center; }
+  .box { width: 120px; height: 70px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-surface); }
+  .tok { font: 500 11px var(--font-mono); color: var(--text-muted); margin-top: 12px; }
+</style>
+</head>
+<body>
+<div class="pane">
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-sm)"></div><div class="tok">shadow-sm</div></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-md)"></div><div class="tok">shadow-md</div></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-lg)"></div><div class="tok">shadow-lg</div></div>
+  <div class="item"><div class="box" style="box-shadow:var(--shadow-accent);border-color:var(--accent-border)"></div><div class="tok">shadow-accent</div></div>
+</div>
+</body>
+</html>

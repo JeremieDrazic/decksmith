@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-label="Decksmith mark">
+  <path d="M16 1.5 30.5 16 16 30.5 1.5 16 16 1.5Z" fill="currentColor" opacity="0.16"></path>
+  <path d="M16 1.5 30.5 16 16 30.5 1.5 16 16 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path>
+  <path d="M16 8.5 23.5 16 16 23.5 8.5 16 16 8.5Z" fill="currentColor"></path>
+  <path d="M16 13 19 16 16 19 13 16 16 13Z" fill="var(--bg, #0f0e17)" opacity="0.85"></path>
+</svg>

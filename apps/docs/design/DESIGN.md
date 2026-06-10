@@ -24,8 +24,14 @@ linked below._
 | Text muted     | `#a8a2cc` | `#524d80`  |                                                               |
 | Text faint     | `#524d80` | `#7b75a8`  | Décoratif uniquement — ne pas utiliser pour contenu essentiel |
 
-**Typography:** Outfit 400/500/600/700/800 (display + body) · JetBrains Mono 400/500/600 (nombres,
-prix, stats) · Self-hosted, `font-display: optional`
+**Typography:** Outfit 400/500/600/700/800 (`font-display` + `font-body`) · JetBrains Mono
+400/500/600 (`font-mono`) · Self-hosted, `font-display: optional`
+
+**Line heights:** paired to type scale — xs/sm/lg `1.5` · base `1.6` · xl `1.4` · 2xl `1.3` · 3xl
+`1.2` · 4xl `1.1`
+
+**Letter spacing:** `tracking-tight` `-0.02em` (headings) · `tracking-normal` `0` · `tracking-wide`
+`0.04em` (labels)
 
 ---
 

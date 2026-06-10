@@ -1,0 +1,97 @@
+<!-- @dsCard group="Components" viewport="700x540" name="Core — buttons, forms, surfaces" subtitle="Button · IconButton · Input · Select · Badge · Switch · Checkbox · Avatar · Card" -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
+  #root { padding: 24px 26px; }
+  .sec { margin-bottom: 22px; }
+  .h { font: 600 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 12px; }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const { Button, IconButton, Input, Select, Badge, Switch, Checkbox, Avatar, Card, Heading, Body, Label } = window.DecksmithDesignSystem_0a9b95;
+  const Search = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>;
+  const Plus = () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>;
+
+  function Demo() {
+    const [sw, setSw] = React.useState(true);
+    const [cb, setCb] = React.useState(true);
+    return (
+      <div>
+        <div className="sec">
+          <p className="h">Buttons</p>
+          <div className="row" style={{marginBottom:10}}>
+            <Button iconLeft={<Plus/>}>New deck</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="destructive">Delete</Button>
+            <Button disabled>Disabled</Button>
+          </div>
+          <div className="row">
+            <Button size="sm">Small</Button>
+            <Button size="md">Medium</Button>
+            <Button size="lg">Large</Button>
+            <IconButton aria-label="search" variant="secondary"><Search/></IconButton>
+            <IconButton aria-label="add" variant="primary"><Plus/></IconButton>
+          </div>
+        </div>
+
+        <div className="sec">
+          <p className="h">Forms</p>
+          <div className="row" style={{alignItems:'flex-start'}}>
+            <Input label="Email" placeholder="you@example.com" iconLeft={<Search/>} containerStyle={{width:200}}/>
+            <Input label="Deck name" error="Name already taken" defaultValue="Ur-Dragon" containerStyle={{width:200}}/>
+            <Select label="Format" options={['Commander','Modern','Standard','Pioneer']} containerStyle={{width:160}}/>
+          </div>
+        </div>
+
+        <div className="sec">
+          <p className="h">Badges &amp; toggles</p>
+          <div className="row">
+            <Badge>100 cards</Badge>
+            <Badge tone="accent" dot>Active</Badge>
+            <Badge tone="success" dot>Owned</Badge>
+            <Badge tone="warning" dot>Partial</Badge>
+            <Badge tone="error" dot>Missing</Badge>
+            <Badge tone="info" dot>Info</Badge>
+            <Switch checked={sw} onChange={setSw} label="Foil only"/>
+            <Checkbox checked={cb} onChange={setCb} label="In collection"/>
+          </div>
+        </div>
+
+        <div className="sec" style={{marginBottom:0}}>
+          <p className="h">Surface &amp; avatar</p>
+          <div className="row" style={{alignItems:'stretch'}}>
+            <Card interactive style={{width:260}}>
+              <div style={{display:'flex',alignItems:'center',gap:12}}>
+                <Avatar name="Jeremie D" />
+                <div>
+                  <Heading level={4} size="lg">Recent activity</Heading>
+                  <Body size="sm" tone="muted">Hover for the lift + glow</Body>
+                </div>
+              </div>
+            </Card>
+            <div className="row">
+              <Avatar name="A B" size="sm"/>
+              <Avatar name="Jeremie Drazic" size="md"/>
+              <Avatar name="C" size="lg"/>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
+</script>
+</body>
+</html>
