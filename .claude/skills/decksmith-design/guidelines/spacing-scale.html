@@ -1,0 +1,75 @@
+<!-- @dsCard group="Spacing" viewport="700x230" name="Spacing scale" subtitle="4px base grid — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64" -->
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+      .pane {
+        padding: 22px 26px;
+      }
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 4px 0;
+      }
+      .bar {
+        height: 14px;
+        background: var(--accent);
+        border-radius: 3px;
+      }
+      .tok {
+        width: 72px;
+        font: 500 11px var(--font-mono);
+        color: var(--text-muted);
+      }
+      .px {
+        font: 500 11px var(--font-mono);
+        color: var(--text-faint);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pane">
+      <div class="row">
+        <span class="tok">space-1</span><span class="bar" style="width: var(--space-1)"></span
+        ><span class="px">4px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-2</span><span class="bar" style="width: var(--space-2)"></span
+        ><span class="px">8px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-3</span><span class="bar" style="width: var(--space-3)"></span
+        ><span class="px">12px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-4</span><span class="bar" style="width: var(--space-4)"></span
+        ><span class="px">16px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-6</span><span class="bar" style="width: var(--space-6)"></span
+        ><span class="px">24px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-8</span><span class="bar" style="width: var(--space-8)"></span
+        ><span class="px">32px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-12</span><span class="bar" style="width: var(--space-12)"></span
+        ><span class="px">48px</span>
+      </div>
+      <div class="row">
+        <span class="tok">space-16</span><span class="bar" style="width: var(--space-16)"></span
+        ><span class="px">64px</span>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!-- @dsCard group="Spacing" viewport="700x280" name="Elevation & shadow" subtitle="semantic roles: popover · card · overlay · accent glow — use roles in components, not scale" -->
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+      .section {
+        padding: 20px 26px 0;
+      }
+      .label {
+        font: 600 9px var(--font-mono);
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .pane {
+        display: flex;
+        gap: 20px;
+        padding-bottom: 20px;
+      }
+      .item {
+        text-align: center;
+      }
+      .box {
+        width: 100px;
+        height: 60px;
+        background: var(--surface);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-surface);
+      }
+      .tok {
+        font: 500 10px var(--font-mono);
+        color: var(--text-muted);
+        margin-top: 10px;
+      }
+      .role {
+        font: 600 10px var(--font-mono);
+        color: var(--accent-text);
+        margin-top: 4px;
+      }
+      .divider {
+        height: 1px;
+        background: var(--border-subtle);
+        margin: 0 26px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="section">
+      <div class="label">Semantic roles — use these in components</div>
+      <div class="pane">
+        <div class="item">
+          <div class="box" style="box-shadow: var(--shadow-popover)"></div>
+          <div class="role">shadow-popover</div>
+          <div class="tok">tooltips · dropdowns</div>
+        </div>
+        <div class="item">
+          <div class="box" style="box-shadow: var(--shadow-card)"></div>
+          <div class="role">shadow-card</div>
+          <div class="tok">cards · panels · menus</div>
+        </div>
+        <div class="item">
+          <div class="box" style="box-shadow: var(--shadow-overlay)"></div>
+          <div class="role">shadow-overlay</div>
+          <div class="tok">modals · drawers</div>
+        </div>
+        <div class="item">
+          <div
+            class="box"
+            style="box-shadow: var(--shadow-accent); border-color: var(--accent-border)"
+          ></div>
+          <div class="role">shadow-accent</div>
+          <div class="tok">hover · focus glow</div>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      <div class="label">Scale — reference only</div>
+      <div class="pane">
+        <div class="item">
+          <div class="box" style="box-shadow: var(--shadow-sm)"></div>
+          <div class="tok">shadow-sm</div>
+        </div>
+        <div class="item">
+          <div class="box" style="box-shadow: var(--shadow-md)"></div>
+          <div class="tok">shadow-md</div>
+        </div>
+        <div class="item">
+          <div class="box" style="box-shadow: var(--shadow-lg)"></div>
+          <div class="tok">shadow-lg</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

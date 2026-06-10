@@ -1,0 +1,94 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Brand amber" subtitle="Decorative only — logo, ornaments, dividers. Fails AA for text in light mode." -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+      }
+      .wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .pane {
+        background: var(--bg);
+        color: var(--text);
+        padding: 20px 24px;
+      }
+      .mode {
+        font: 600 11px var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 12px;
+      }
+      .lock {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .mark {
+        width: 28px;
+        height: 28px;
+        color: var(--brand);
+      }
+      .word {
+        font: 700 20px var(--font-display);
+        letter-spacing: -0.01em;
+      }
+      .sep {
+        margin: 14px 0 10px;
+        color: var(--brand);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .sep::before,
+      .sep::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+      .warn {
+        font: 500 11px var(--font-mono);
+        color: var(--warning-text);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="pane">
+        <p class="mode">Light · brand #c49a1a</p>
+        <div class="lock">
+          <div class="mark">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 1.5 30.5 16 16 30.5 1.5 16Z" stroke="currentColor" stroke-width="1.4" />
+              <path d="M16 8.5 23.5 16 16 23.5 8.5 16Z" fill="currentColor" />
+            </svg>
+          </div>
+          <span class="word">Decksmith</span>
+        </div>
+        <div class="sep">◈</div>
+        <p class="warn">⚠ decorative only — fails AA on parchment</p>
+      </div>
+      <div class="pane dark">
+        <p class="mode">Dark · brand #e8b84b</p>
+        <div class="lock">
+          <div class="mark">
+            <svg viewBox="0 0 32 32" fill="none">
+              <path d="M16 1.5 30.5 16 16 30.5 1.5 16Z" stroke="currentColor" stroke-width="1.4" />
+              <path d="M16 8.5 23.5 16 16 23.5 8.5 16Z" fill="currentColor" />
+            </svg>
+          </div>
+          <span class="word">Decksmith</span>
+        </div>
+        <div class="sep">◈</div>
+        <p class="warn">9.8:1 on dark — safe, still reserved decorative</p>
+      </div>
+    </div>
+  </body>
+</html>

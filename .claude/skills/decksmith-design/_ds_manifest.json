@@ -1,0 +1,944 @@
+{
+  "namespace": "DecksmithDesignSystem_0a9b95",
+  "components": [
+    { "name": "Avatar", "sourcePath": "components/core/Avatar.jsx" },
+    { "name": "Badge", "sourcePath": "components/core/Badge.jsx" },
+    { "name": "Body", "sourcePath": "components/core/Body.jsx" },
+    { "name": "Button", "sourcePath": "components/core/Button.jsx" },
+    { "name": "Card", "sourcePath": "components/core/Card.jsx" },
+    { "name": "Checkbox", "sourcePath": "components/core/Checkbox.jsx" },
+    { "name": "Heading", "sourcePath": "components/core/Heading.jsx" },
+    { "name": "IconButton", "sourcePath": "components/core/IconButton.jsx" },
+    { "name": "Input", "sourcePath": "components/core/Input.jsx" },
+    { "name": "Label", "sourcePath": "components/core/Label.jsx" },
+    { "name": "Select", "sourcePath": "components/core/Select.jsx" },
+    { "name": "Switch", "sourcePath": "components/core/Switch.jsx" },
+    { "name": "Dialog", "sourcePath": "components/feedback/Dialog.jsx" },
+    { "name": "Toast", "sourcePath": "components/feedback/Toast.jsx" },
+    { "name": "Tooltip", "sourcePath": "components/feedback/Tooltip.jsx" },
+    { "name": "CardThumb", "sourcePath": "components/mtg/CardThumb.jsx" },
+    { "name": "ColorIdentity", "sourcePath": "components/mtg/ColorIdentity.jsx" },
+    { "name": "CoverageStamp", "sourcePath": "components/mtg/CoverageStamp.jsx" },
+    { "name": "DeckCard", "sourcePath": "components/mtg/DeckCard.jsx" },
+    { "name": "FormatBadge", "sourcePath": "components/mtg/FormatBadge.jsx" },
+    { "name": "Mana", "sourcePath": "components/mtg/Mana.jsx" },
+    { "name": "ManaCost", "sourcePath": "components/mtg/ManaCost.jsx" },
+    { "name": "ManaCurve", "sourcePath": "components/mtg/ManaCurve.jsx" },
+    { "name": "RarityDot", "sourcePath": "components/mtg/RarityDot.jsx" },
+    { "name": "StatRow", "sourcePath": "components/mtg/StatRow.jsx" }
+  ],
+  "startingPoints": [
+    {
+      "name": "decksmith-web",
+      "path": "ui_kits/decksmith-web/index.html",
+      "previewPath": "ui_kits/decksmith-web/index.html",
+      "kind": "screen",
+      "section": "Decksmith Web",
+      "subtitle": "Full app shell — sidebar, top bar, routed screens",
+      "viewport": "1280x800"
+    }
+  ],
+  "cards": [
+    {
+      "path": "guidelines/brand-logo.html",
+      "group": "Brand",
+      "viewport": "700x200",
+      "subtitle": "Amber ◈ diamond mark + Outfit wordmark — mark, lockup, reversed",
+      "name": "Logo & lockup"
+    },
+    {
+      "path": "guidelines/brand-mtg-touches.html",
+      "group": "Brand",
+      "viewport": "700x230",
+      "subtitle": "Mana cost · color identity pips · format stamp · rarity dots · coverage",
+      "name": "MTG touches"
+    },
+    {
+      "path": "guidelines/brand-separator.html",
+      "group": "Brand",
+      "viewport": "700x160",
+      "subtitle": "─────◈───── ornamental divider in brand amber",
+      "name": "Section separator"
+    },
+    {
+      "path": "guidelines/colors-brand.html",
+      "group": "Colors",
+      "viewport": "700x150",
+      "subtitle": "Decorative only — logo, ornaments, dividers. Fails AA for text in light mode.",
+      "name": "Brand amber"
+    },
+    {
+      "path": "guidelines/colors-mtg.html",
+      "group": "Colors",
+      "viewport": "700x180",
+      "subtitle": "Game color identity — separate from semantic tokens. Mana glyphs via mana-font.",
+      "name": "MTG color identity (WUBRG)"
+    },
+    {
+      "path": "guidelines/colors-status.html",
+      "group": "Colors",
+      "viewport": "700x150",
+      "subtitle": "success / warning / error / info — each with subtle bg + accessible text",
+      "name": "Status colors"
+    },
+    {
+      "path": "guidelines/colors-surfaces.html",
+      "group": "Colors",
+      "viewport": "700x250",
+      "subtitle": "Warm purple-black / parchment — bg, surface, raised, hover, borders",
+      "name": "Surfaces & borders"
+    },
+    {
+      "path": "guidelines/colors-text-accent.html",
+      "group": "Colors",
+      "viewport": "700x170",
+      "subtitle": "Primary / muted / faint text and the mode-specific interactive accent",
+      "name": "Text & accent"
+    },
+    {
+      "path": "components/core/core.card.html",
+      "group": "Components",
+      "viewport": "700x540",
+      "subtitle": "Button · IconButton · Input · Select · Badge · Switch · Checkbox · Avatar · Card",
+      "name": "Core — buttons, forms, surfaces"
+    },
+    {
+      "path": "components/feedback/feedback.card.html",
+      "group": "Components",
+      "viewport": "700x380",
+      "subtitle": "Dialog · Toast (5 tones) · Tooltip",
+      "name": "Feedback — dialog, toast, tooltip"
+    },
+    {
+      "path": "components/mtg/mtg.card.html",
+      "group": "Components",
+      "viewport": "700x600",
+      "subtitle": "Mana · ManaCost · ColorIdentity · FormatBadge · Rarity · Coverage · DeckCard · CardThumb · ManaCurve · StatRow",
+      "name": "MTG — mana, decks & data"
+    },
+    {
+      "path": "ui_kits/decksmith-web/index.html",
+      "group": "Decksmith Web",
+      "viewport": "1280x800",
+      "subtitle": "Interactive: login → dashboard, decks, builder, collection, search",
+      "name": "Decksmith Web — full app"
+    },
+    {
+      "path": "guidelines/radius-roles.html",
+      "group": "Spacing",
+      "viewport": "700x200",
+      "subtitle": "Semantic radius — interactive 8 · surface 12 · modal 16 · badge full · stamp 4",
+      "name": "Radius roles"
+    },
+    {
+      "path": "guidelines/shadows.html",
+      "group": "Spacing",
+      "viewport": "700x180",
+      "subtitle": "sm / md / lg + accent glow — tuned for the warm-dark canvas",
+      "name": "Elevation & shadow"
+    },
+    {
+      "path": "guidelines/spacing-scale.html",
+      "group": "Spacing",
+      "viewport": "700x230",
+      "subtitle": "4px base grid — 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64",
+      "name": "Spacing scale"
+    },
+    {
+      "path": "guidelines/type-mono.html",
+      "group": "Type",
+      "viewport": "700x200",
+      "subtitle": "JetBrains Mono for card counts, prices, mana cost text",
+      "name": "Mono — stats & prices"
+    },
+    {
+      "path": "guidelines/type-scale.html",
+      "group": "Type",
+      "viewport": "700x340",
+      "subtitle": "Outfit display — xs 12 → 4xl 36, paired line-heights",
+      "name": "Type scale"
+    }
+  ],
+  "globalCssPaths": [
+    "tokens/fonts.css",
+    "tokens/colors.css",
+    "tokens/typography.css",
+    "tokens/spacing.css",
+    "tokens/radius.css",
+    "tokens/motion.css",
+    "tokens/base.css",
+    "styles.css"
+  ],
+  "tokens": [
+    { "name": "--bg", "value": "#faf9f4", "kind": "color", "definedIn": "tokens/colors.css" },
+    { "name": "--surface", "value": "#ffffff", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--surface-raised",
+      "value": "#f2f0e6",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--surface-hover",
+      "value": "#ede9d8",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--border", "value": "#d5d0be", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--border-subtle",
+      "value": "#e8e5d8",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--border-focus",
+      "value": "#5b4fcf",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--text", "value": "#0f0e17", "kind": "font", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--text-muted",
+      "value": "#524d80",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--text-faint",
+      "value": "#7b75a8",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--accent", "value": "#5b4fcf", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--accent-hover",
+      "value": "#4a3db0",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--accent-subtle",
+      "value": "rgba(91, 79, 207, 0.08)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--accent-border",
+      "value": "rgba(91, 79, 207, 0.25)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--accent-text",
+      "value": "#3d319a",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--on-accent",
+      "value": "#ffffff",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--brand", "value": "#c49a1a", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--shadow-accent",
+      "value": "0 0 16px rgba(91, 79, 207, 0.2)",
+      "kind": "shadow",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--error", "value": "#ef4444", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--error-subtle",
+      "value": "rgba(239, 68, 68, 0.08)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--error-text",
+      "value": "#b91c1c",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--success", "value": "#22c55e", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--success-subtle",
+      "value": "rgba(34, 197, 94, 0.08)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--success-text",
+      "value": "#15803d",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--warning", "value": "#d97706", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--warning-subtle",
+      "value": "rgba(217, 119, 6, 0.08)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--warning-text",
+      "value": "#92400e",
+      "kind": "font",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--info", "value": "#2563eb", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--info-subtle",
+      "value": "rgba(37, 99, 235, 0.08)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--info-text", "value": "#1d4ed8", "kind": "font", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--mtg-white",
+      "value": "#c8b96e",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--mtg-blue", "value": "#1a6eb5", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--mtg-black",
+      "value": "#160d22",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    { "name": "--mtg-red", "value": "#cc2222", "kind": "color", "definedIn": "tokens/colors.css" },
+    {
+      "name": "--mtg-green",
+      "value": "#006e3c",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--mtg-colorless",
+      "value": "#8fa3b0",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--mtg-multi",
+      "value": "#c9a84c",
+      "kind": "color",
+      "definedIn": "tokens/colors.css"
+    },
+    {
+      "name": "--bg",
+      "value": "#0f0e17",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--surface",
+      "value": "#1a1827",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--surface-raised",
+      "value": "#232135",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--surface-hover",
+      "value": "#2a2840",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--border",
+      "value": "#2e2b47",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--border-subtle",
+      "value": "#232135",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--border-focus",
+      "value": "#e8b84b",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--text",
+      "value": "#f0eef8",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--text-muted",
+      "value": "#a8a2cc",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--text-faint",
+      "value": "#524d80",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--accent",
+      "value": "#e8b84b",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--accent-hover",
+      "value": "#c49a1a",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--accent-subtle",
+      "value": "rgba(232, 184, 75, 0.12)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--accent-border",
+      "value": "rgba(232, 184, 75, 0.3)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--accent-text",
+      "value": "#e8b84b",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--on-accent",
+      "value": "#0f0e17",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--brand",
+      "value": "#e8b84b",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--shadow-accent",
+      "value": "0 0 16px rgba(232, 184, 75, 0.2)",
+      "kind": "shadow",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--error",
+      "value": "#ef4444",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--error-subtle",
+      "value": "rgba(239, 68, 68, 0.12)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--error-text",
+      "value": "#ef4444",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--success",
+      "value": "#22c55e",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--success-subtle",
+      "value": "rgba(34, 197, 94, 0.12)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--success-text",
+      "value": "#22c55e",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--warning",
+      "value": "#f59e0b",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--warning-subtle",
+      "value": "rgba(245, 158, 11, 0.12)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--warning-text",
+      "value": "#f59e0b",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--info",
+      "value": "#5b9cf6",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--info-subtle",
+      "value": "rgba(91, 156, 246, 0.12)",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--info-text",
+      "value": "#5b9cf6",
+      "kind": "font",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-white",
+      "value": "#f5f0d8",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-blue",
+      "value": "#1a6eb5",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-black",
+      "value": "#160d22",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-red",
+      "value": "#cc2222",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-green",
+      "value": "#006e3c",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-colorless",
+      "value": "#8fa3b0",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--mtg-multi",
+      "value": "#c9a84c",
+      "kind": "color",
+      "definedIn": "tokens/colors.css",
+      "scope": ".dark"
+    },
+    {
+      "name": "--font-display",
+      "value": "'Outfit', system-ui, -apple-system, sans-serif",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--font-body",
+      "value": "'Outfit', system-ui, -apple-system, sans-serif",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--font-mono",
+      "value": "'JetBrains Mono', ui-monospace, 'SF Mono', monospace",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-regular",
+      "value": "400",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-medium",
+      "value": "500",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-semibold",
+      "value": "600",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-bold",
+      "value": "700",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--weight-black",
+      "value": "800",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    { "name": "--text-xs", "value": "12px", "kind": "font", "definedIn": "tokens/typography.css" },
+    { "name": "--text-sm", "value": "14px", "kind": "font", "definedIn": "tokens/typography.css" },
+    {
+      "name": "--text-base",
+      "value": "16px",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    { "name": "--text-lg", "value": "18px", "kind": "font", "definedIn": "tokens/typography.css" },
+    { "name": "--text-xl", "value": "20px", "kind": "font", "definedIn": "tokens/typography.css" },
+    { "name": "--text-2xl", "value": "24px", "kind": "font", "definedIn": "tokens/typography.css" },
+    { "name": "--text-3xl", "value": "30px", "kind": "font", "definedIn": "tokens/typography.css" },
+    { "name": "--text-4xl", "value": "36px", "kind": "font", "definedIn": "tokens/typography.css" },
+    {
+      "name": "--leading-xs",
+      "value": "1.5",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-sm",
+      "value": "1.5",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-base",
+      "value": "1.6",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-lg",
+      "value": "1.5",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-xl",
+      "value": "1.4",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-2xl",
+      "value": "1.3",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-3xl",
+      "value": "1.2",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--leading-4xl",
+      "value": "1.1",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--tracking-tight",
+      "value": "-0.02em",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--tracking-normal",
+      "value": "0",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    {
+      "name": "--tracking-wide",
+      "value": "0.04em",
+      "kind": "font",
+      "definedIn": "tokens/typography.css"
+    },
+    { "name": "--space-1", "value": "4px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-2", "value": "8px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-3", "value": "12px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-4", "value": "16px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-5", "value": "20px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-6", "value": "24px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-8", "value": "32px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-10", "value": "40px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-12", "value": "48px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-16", "value": "64px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-20", "value": "80px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    { "name": "--space-24", "value": "96px", "kind": "spacing", "definedIn": "tokens/spacing.css" },
+    {
+      "name": "--space-32",
+      "value": "128px",
+      "kind": "spacing",
+      "definedIn": "tokens/spacing.css"
+    },
+    { "name": "--radius-sm", "value": "4px", "kind": "radius", "definedIn": "tokens/radius.css" },
+    { "name": "--radius-md", "value": "8px", "kind": "radius", "definedIn": "tokens/radius.css" },
+    { "name": "--radius-lg", "value": "12px", "kind": "radius", "definedIn": "tokens/radius.css" },
+    { "name": "--radius-xl", "value": "16px", "kind": "radius", "definedIn": "tokens/radius.css" },
+    { "name": "--radius-2xl", "value": "24px", "kind": "radius", "definedIn": "tokens/radius.css" },
+    {
+      "name": "--radius-full",
+      "value": "9999px",
+      "kind": "radius",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--radius-interactive",
+      "value": "8px",
+      "kind": "radius",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--radius-surface",
+      "value": "12px",
+      "kind": "radius",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--radius-modal",
+      "value": "16px",
+      "kind": "radius",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--radius-badge",
+      "value": "9999px",
+      "kind": "radius",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--shadow-sm",
+      "value": "0 1px 3px rgba(0, 0, 0, 0.4)",
+      "kind": "shadow",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--shadow-md",
+      "value": "0 4px 12px rgba(0, 0, 0, 0.5)",
+      "kind": "shadow",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--shadow-lg",
+      "value": "0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04)",
+      "kind": "shadow",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--shadow-inset",
+      "value": "inset 0 1px 0 rgba(255, 255, 255, 0.03)",
+      "kind": "shadow",
+      "definedIn": "tokens/radius.css"
+    },
+    {
+      "name": "--z-base",
+      "value": "0",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-raised",
+      "value": "10",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-dropdown",
+      "value": "100",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-sticky",
+      "value": "200",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-overlay",
+      "value": "300",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-modal",
+      "value": "400",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-toast",
+      "value": "500",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--z-tooltip",
+      "value": "600",
+      "kind": "other",
+      "definedIn": "tokens/radius.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--duration-instant",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--duration-fast",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--duration-normal",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--duration-slow",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--duration-page",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--duration-story",
+      "value": "0ms",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--ease-out",
+      "value": "cubic-bezier(0, 0, 0.2, 1)",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--ease-in",
+      "value": "cubic-bezier(0.4, 0, 1, 1)",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--ease-in-out",
+      "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--ease-spring",
+      "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      "kind": "other",
+      "definedIn": "tokens/motion.css",
+      "annotation": "other"
+    },
+    {
+      "name": "--ds-grain",
+      "value": "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E\")",
+      "kind": "other",
+      "definedIn": "tokens/base.css",
+      "annotation": "other"
+    }
+  ],
+  "themes": [{ "selector": ".dark", "label": "Dark" }],
+  "fonts": [],
+  "brandFonts": [
+    {
+      "family": "Outfit",
+      "status": "ok",
+      "tokens": ["--font-display", "--font-body"],
+      "path": "tokens/typography.css"
+    },
+    {
+      "family": "JetBrains Mono",
+      "status": "ok",
+      "tokens": ["--font-mono"],
+      "path": "tokens/typography.css"
+    }
+  ],
+  "source": "spa"
+}

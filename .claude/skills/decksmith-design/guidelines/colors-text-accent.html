@@ -1,0 +1,96 @@
+<!-- @dsCard group="Colors" viewport="700x170" name="Text & accent" subtitle="Primary / muted / faint text and the mode-specific interactive accent" -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+      }
+      .wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+      .pane {
+        background: var(--bg);
+        color: var(--text);
+        padding: 20px 24px;
+      }
+      .mode {
+        font: 600 11px var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 12px;
+      }
+      .txt {
+        margin: 0 0 4px;
+        font-size: 17px;
+      }
+      .lbl {
+        font: 500 11px var(--font-mono);
+        opacity: 0.85;
+      }
+      .acc {
+        margin-top: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn {
+        padding: 8px 16px;
+        border-radius: var(--radius-interactive);
+        background: var(--accent);
+        color: var(--on-accent);
+        font: 600 13px var(--font-body);
+        border: none;
+      }
+      .acctext {
+        color: var(--accent-text);
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .accsub {
+        width: 30px;
+        height: 30px;
+        border-radius: var(--radius-badge);
+        background: var(--accent-subtle);
+        border: 1px solid var(--accent-border);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="pane">
+        <p class="mode">Light · violet accent</p>
+        <p class="txt" style="color: var(--text)">Primary text <span class="lbl">text</span></p>
+        <p class="txt" style="color: var(--text-muted)">
+          Muted secondary <span class="lbl">text-muted</span>
+        </p>
+        <p class="txt" style="color: var(--text-faint)">
+          Faint decorative <span class="lbl">text-faint</span>
+        </p>
+        <div class="acc">
+          <button class="btn">Button</button><span class="acctext">accent-text</span
+          ><span class="accsub"></span>
+        </div>
+      </div>
+      <div class="pane dark">
+        <p class="mode">Dark · amber accent</p>
+        <p class="txt" style="color: var(--text)">Primary text <span class="lbl">text</span></p>
+        <p class="txt" style="color: var(--text-muted)">
+          Muted secondary <span class="lbl">text-muted</span>
+        </p>
+        <p class="txt" style="color: var(--text-faint)">
+          Faint decorative <span class="lbl">text-faint</span>
+        </p>
+        <div class="acc">
+          <button class="btn">Button</button><span class="acctext">accent-text</span
+          ><span class="accsub"></span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

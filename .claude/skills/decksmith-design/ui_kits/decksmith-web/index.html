@@ -1,0 +1,63 @@
+<!-- @dsCard group="Decksmith Web" viewport="1280x800" name="Decksmith Web — full app" subtitle="Interactive: login → dashboard, decks, builder, collection, search" -->
+<!-- @startingPoint section="Decksmith Web" subtitle="Full app shell — sidebar, top bar, routed screens" viewport="1280x800" -->
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decksmith</title>
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+      }
+      #app {
+        overflow: hidden;
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 6px;
+        border: 2px solid var(--bg);
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+    </style>
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../_ds_bundle.js"></script>
+    <script src="data.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel" src="icons.jsx"></script>
+    <script type="text/babel" src="shell.jsx"></script>
+    <script type="text/babel" src="dashboard.jsx"></script>
+    <script type="text/babel" src="decks.jsx"></script>
+    <script type="text/babel" src="collection.jsx"></script>
+    <script type="text/babel" src="app.jsx"></script>
+  </body>
+</html>

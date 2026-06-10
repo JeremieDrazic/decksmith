@@ -24,8 +24,14 @@ linked below._
 | Text muted     | `#a8a2cc` | `#524d80`  |                                                               |
 | Text faint     | `#524d80` | `#7b75a8`  | Décoratif uniquement — ne pas utiliser pour contenu essentiel |
 
-**Typography:** Outfit 400/500/600/700/800 (display + body) · JetBrains Mono 400/500/600 (nombres,
-prix, stats) · Self-hosted, `font-display: optional`
+**Typography:** Outfit 400/500/600/700/800 (`font-display` + `font-body`) · JetBrains Mono
+400/500/600 (`font-mono`) · Self-hosted, `font-display: optional`
+
+**Line heights:** paired to type scale — xs/sm/lg `1.5` · base `1.6` · xl `1.4` · 2xl `1.3` · 3xl
+`1.2` · 4xl `1.1`
+
+**Letter spacing:** `tracking-tight` `-0.02em` (headings) · `tracking-normal` `0` · `tracking-wide`
+`0.04em` (labels)
 
 ---
 
@@ -40,7 +46,8 @@ error · error-subtle · error-text
 success · success-subtle · success-text
 warning · warning-subtle · warning-text
 info · info-subtle · info-text
-shadow-sm · shadow-md · shadow-lg · shadow-accent
+shadow-popover · shadow-card · shadow-overlay · shadow-accent
+shadow-sm · shadow-md · shadow-lg (scale — reference only)
 z-base · z-raised · z-dropdown · z-sticky · z-overlay · z-modal · z-toast · z-tooltip
 radius-interactive · radius-surface · radius-modal · radius-badge
 ```
