@@ -3,9 +3,8 @@
 _This file is @imported in CLAUDE.md as session context. Keep it short. Full details in the files
 linked below._
 
-> **Status:** Phase 4.0.5 Session A complete. Token values, architecture, and motion system are
-> **locked** (ADR-0017). `packages/tokens` and `packages/web-ui` not yet scaffolded — Phase 4.1.
-> Type scale will use CSS `clamp()` values generated via Utopia during Phase 4.1 scaffold.
+> **Status:** `packages/tokens` complete — Session A values + violet/brand additions (ADR-0017).
+> `packages/web-ui` not yet scaffolded — Phase 4.5.
 
 ---
 
@@ -16,10 +15,11 @@ linked below._
 | Background     | `#0f0e17` | `#faf9f4`  | Warm purple-black / parchment                                 |
 | Surface        | `#1a1827` | `#ffffff`  |                                                               |
 | Surface raised | `#232135` | `#f2f0e6`  |                                                               |
-| Accent         | `#e8b84b` | `#c49a1a`  | Doré chaud — boutons, états actifs                            |
-| Accent hover   | `#c49a1a` | `#9e7b10`  |                                                               |
-| Accent text    | `#e8b84b` | `#8a6a0c`  | Amber comme couleur de texte — passe WCAG AA                  |
-| On accent      | `#0f0e17` | `#0f0e17`  | Texte SUR bouton amber — jamais blanc                         |
+| Accent         | `#e8b84b` | `#5b4fcf`  | Amber (dark) / Violet (light) — buttons, active states        |
+| Accent hover   | `#c49a1a` | `#4a3db0`  |                                                               |
+| Accent text    | `#e8b84b` | `#3d319a`  | Colored text — passes WCAG AA in both modes                   |
+| On accent      | `#0f0e17` | `#ffffff`  | Text ON accent button — dark on amber, white on violet        |
+| Brand          | `#e8b84b` | `#c49a1a`  | Amber — decorative only (logo, ornaments, dividers)           |
 | Text           | `#f0eef8` | `#0f0e17`  |                                                               |
 | Text muted     | `#a8a2cc` | `#524d80`  |                                                               |
 | Text faint     | `#524d80` | `#7b75a8`  | Décoratif uniquement — ne pas utiliser pour contenu essentiel |
@@ -34,7 +34,7 @@ prix, stats) · Self-hosted, `font-display: optional`
 ```
 bg · surface · surface-raised · surface-hover · border · border-subtle · border-focus
 text · text-muted · text-faint
-accent · accent-hover · accent-subtle · accent-border · accent-text · on-accent
+accent · accent-hover · accent-subtle · accent-border · accent-text · on-accent · brand
 mtg-white · mtg-blue · mtg-black · mtg-red · mtg-green · mtg-colorless · mtg-multi
 error · error-subtle · error-text
 success · success-subtle · success-text
@@ -42,6 +42,7 @@ warning · warning-subtle · warning-text
 info · info-subtle · info-text
 shadow-sm · shadow-md · shadow-lg · shadow-accent
 z-base · z-raised · z-dropdown · z-sticky · z-overlay · z-modal · z-toast · z-tooltip
+radius-interactive · radius-surface · radius-modal · radius-badge
 ```
 
 > `info` ≠ `mtg-blue` — neutral UI state vs MTG color identity, never substitute one for the other.
@@ -73,16 +74,20 @@ Tailwind v4 lit `@theme` et génère les classes utilitaires automatiquement —
 
 ## Non-Negotiable Rules
 
-| Rule                                                   | Why                                                |
-| ------------------------------------------------------ | -------------------------------------------------- |
-| Semantic tokens only — never hardcoded hex             | Theming, consistency, single source of truth       |
-| Mana symbols via Keyrune SVG (`{W}{U}{B}{R}{G}`)       | Canonical MTG icons — every player recognises them |
-| Theme via `.dark` on `<html>`, not `dark:` variant     | Runtime switching, no class proliferation in JSX   |
-| MTG tokens separate from semantic tokens               | `mtg-red` ≠ `error` — different semantic meaning   |
-| `on-accent` (`#0f0e17`) on amber buttons — never white | White on `#e8b84b` = 1.8:1 contrast — fails WCAG   |
-| `text-faint` for decoration only                       | 2.5:1 ratio — fails AA for readable content        |
-| Raw Tailwind type classes never in feature JSX         | Encapsulated in `<Heading>`, `<Body>`, `<Label>`   |
-| Design system section required in Storybook            | Living style guide, always in sync with tokens     |
+| Rule                                                                 | Why                                                                                                        |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Semantic tokens only — never hardcoded hex                           | Theming, consistency, single source of truth                                                               |
+| Mana symbols via Keyrune SVG (`{W}{U}{B}{R}{G}`)                     | Canonical MTG icons — every player recognises them                                                         |
+| Theme via `.dark` on `<html>`, not `dark:` variant                   | Runtime switching, no class proliferation in JSX                                                           |
+| MTG tokens separate from semantic tokens                             | `mtg-red` ≠ `error` — different semantic meaning                                                           |
+| `on-accent` is mode-specific — dark on amber, white on violet        | Contrast-driven: white on `#e8b84b` = 1.8:1 (fails); dark on `#5b4fcf` = 1.1:1 (fails)                     |
+| `brand` (amber) is decorative only in light mode                     | Interactive accent is violet — amber reserved for ornamental use                                           |
+| `brand` text fails AA in light mode (`#c49a1a` on `#faf9f4` ≈ 2.9:1) | Dark mode is fine (9.8:1) but light mode fails — treat like `text-faint`, never for readable content       |
+| `text-faint` for decoration only                                     | 2.5:1 ratio — fails AA for readable content                                                                |
+| Raw Tailwind type classes never in feature JSX                       | Encapsulated in `<Heading>`, `<Body>`, `<Label>`                                                           |
+| Semantic radius tokens in components — never scale tokens directly   | `radius-interactive` / `radius-surface` / `radius-modal` / `radius-badge` — one rule per context, no drift |
+| Exception: `radius-sm` for stamp/seal elements only                  | MTG format badges, rarity chips — requires inline comment                                                  |
+| Design system section required in Storybook                          | Living style guide, always in sync with tokens                                                             |
 
 ---
 

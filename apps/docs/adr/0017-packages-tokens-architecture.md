@@ -1,6 +1,6 @@
 # ADR-0017: `packages/tokens` — Implementation Architecture
 
-**Last Updated:** 2026-06-08 **Status:** Active **Context:** Decksmith
+**Last Updated:** 2026-06-10 **Status:** Active **Context:** Decksmith
 
 ---
 
@@ -92,41 +92,44 @@ be created then). The export-dual approach is sufficient for phases 4–13.
 
 #### Colours — Semantic (dark / light)
 
-| Token            | Dark                     | Light                    |
-| ---------------- | ------------------------ | ------------------------ | --------------------------------------------------------------- |
-| `bg`             | `#0f0e17`                | `#faf9f4`                |
-| `surface`        | `#1a1827`                | `#ffffff`                |
-| `surface-raised` | `#232135`                | `#f2f0e6`                |
-| `border`         | `#2e2b47`                | `#d5d0be`                |
-| `border-subtle`  | `#232135`                | `#e8e5d8`                |
-| `text`           | `#f0eef8`                | `#0f0e17`                |
-| `text-muted`     | `#a8a2cc`                | `#524d80`                |
-| `text-faint`     | `#524d80`                | `#7b75a8`                |
-| `accent`         | `#e8b84b`                | `#c49a1a`                |
-| `accent-hover`   | `#c49a1a`                | `#9e7b10`                |
-| `accent-subtle`  | `rgba(232,184,75, 0.12)` | `rgba(196,154,26, 0.08)` |
-| `accent-border`  | `rgba(232,184,75, 0.3)`  | `rgba(196,154,26, 0.25)` |
-| `accent-text`    | `#e8b84b`                | `#8a6a0c`                |
-| `on-accent`      | `#0f0e17`                | `#0f0e17`                |
-| `surface-hover`  | `#2a2840`                | `#ede9d8`                | Interactive surface on hover                                    |
-| `border-focus`   | `#e8b84b`                | `#c49a1a`                | Focus ring — same as `accent`                                   |
-| `error`          | `#ef4444`                | `#ef4444`                |                                                                 |
-| `error-subtle`   | `rgba(239,68,68,0.12)`   | `rgba(239,68,68,0.08)`   | Error field background                                          |
-| `error-text`     | `#ef4444`                | `#b91c1c`                | Error message text — WCAG AA ✅                                 |
-| `success`        | `#22c55e`                | `#22c55e`                |                                                                 |
-| `success-subtle` | `rgba(34,197,94,0.12)`   | `rgba(34,197,94,0.08)`   |                                                                 |
-| `success-text`   | `#22c55e`                | `#15803d`                | WCAG AA ✅                                                      |
-| `warning`        | `#f59e0b`                | `#d97706`                | Distinct from `accent` (`#e8b84b` golden — `warning` is orange) |
-| `warning-subtle` | `rgba(245,158,11,0.12)`  | `rgba(217,119,6,0.08)`   |                                                                 |
-| `warning-text`   | `#f59e0b`                | `#92400e`                | WCAG AA ✅                                                      |
-| `info`           | `#5b9cf6`                | `#2563eb`                | **Never substitute `mtg-blue` — different semantic meaning**    |
-| `info-subtle`    | `rgba(91,156,246,0.12)`  | `rgba(37,99,235,0.08)`   |                                                                 |
-| `info-text`      | `#5b9cf6`                | `#1d4ed8`                | WCAG AA ✅                                                      |
+| Token            | Dark                     | Light                   |
+| ---------------- | ------------------------ | ----------------------- | --------------------------------------------------------------- |
+| `bg`             | `#0f0e17`                | `#faf9f4`               |
+| `surface`        | `#1a1827`                | `#ffffff`               |
+| `surface-raised` | `#232135`                | `#f2f0e6`               |
+| `border`         | `#2e2b47`                | `#d5d0be`               |
+| `border-subtle`  | `#232135`                | `#e8e5d8`               |
+| `text`           | `#f0eef8`                | `#0f0e17`               |
+| `text-muted`     | `#a8a2cc`                | `#524d80`               |
+| `text-faint`     | `#524d80`                | `#7b75a8`               |
+| `accent`         | `#e8b84b`                | `#5b4fcf`               | Dark: amber · Light: violet                                     |
+| `accent-hover`   | `#c49a1a`                | `#4a3db0`               |                                                                 |
+| `accent-subtle`  | `rgba(232,184,75, 0.12)` | `rgba(91,79,207, 0.08)` |                                                                 |
+| `accent-border`  | `rgba(232,184,75, 0.3)`  | `rgba(91,79,207, 0.25)` |                                                                 |
+| `accent-text`    | `#e8b84b`                | `#3d319a`               | Darker in light mode — WCAG AA ✅                               |
+| `on-accent`      | `#0f0e17`                | `#ffffff`               | Mode-specific: dark on amber, white on violet                   |
+| `brand`          | `#e8b84b`                | `#c49a1a`               | Decorative only — logo, ornaments, separators                   |
+| `surface-hover`  | `#2a2840`                | `#ede9d8`               | Interactive surface on hover                                    |
+| `border-focus`   | `#e8b84b`                | `#5b4fcf`               | Focus ring — matches accent per mode                            |
+| `error`          | `#ef4444`                | `#ef4444`               |                                                                 |
+| `error-subtle`   | `rgba(239,68,68,0.12)`   | `rgba(239,68,68,0.08)`  | Error field background                                          |
+| `error-text`     | `#ef4444`                | `#b91c1c`               | Error message text — WCAG AA ✅                                 |
+| `success`        | `#22c55e`                | `#22c55e`               |                                                                 |
+| `success-subtle` | `rgba(34,197,94,0.12)`   | `rgba(34,197,94,0.08)`  |                                                                 |
+| `success-text`   | `#22c55e`                | `#15803d`               | WCAG AA ✅                                                      |
+| `warning`        | `#f59e0b`                | `#d97706`               | Distinct from `accent` (`#e8b84b` golden — `warning` is orange) |
+| `warning-subtle` | `rgba(245,158,11,0.12)`  | `rgba(217,119,6,0.08)`  |                                                                 |
+| `warning-text`   | `#f59e0b`                | `#92400e`               | WCAG AA ✅                                                      |
+| `info`           | `#5b9cf6`                | `#2563eb`               | **Never substitute `mtg-blue` — different semantic meaning**    |
+| `info-subtle`    | `rgba(91,156,246,0.12)`  | `rgba(37,99,235,0.08)`  |                                                                 |
+| `info-text`      | `#5b9cf6`                | `#1d4ed8`               | WCAG AA ✅                                                      |
 
-`accent-text` is darker in light mode to pass WCAG AA on parchment backgrounds. `on-accent` is
-always near-black — never white — because `#e8b84b` has luminance ~0.52. `warning` (`#f59e0b`) and
-`accent` (`#e8b84b`) are both amber-family but serve different purposes and must remain distinct.
-`info` is a neutral UI blue — never use `mtg-blue` in its place.
+`accent-text` is darker in light mode (`#3d319a`) to pass WCAG AA on parchment. `on-accent` is
+mode-specific: dark text on amber button (luminance ~0.52, white would fail at 1.8:1), white text on
+violet button (violet has luminance ~0.072, white passes at 5.4:1). `warning` (`#f59e0b`) and
+`accent` dark (`#e8b84b`) are both amber-family but serve different purposes. `info` is a neutral UI
+blue — never use `mtg-blue` in its place. `brand` is amber in both modes — decorative only, no
+interactive role; in light mode it fails AA for text use (3.75:1).
 
 #### Colours — WUBRG
 
@@ -159,8 +162,21 @@ Standard Tailwind scale: `space-1` (4px) → `space-24` (96px). Gaps: 1, 2, 3, 4
 
 #### Border Radius
 
-`radius-sm` (4px) · `radius-md` (8px) · `radius-lg` (12px) · `radius-xl` (16px) · `radius-2xl`
-(24px) · `radius-full` (9999px)
+**Scale (reference):** `radius-sm` (4px) · `radius-md` (8px) · `radius-lg` (12px) · `radius-xl`
+(16px) · `radius-2xl` (24px) · `radius-full` (9999px)
+
+**Semantic roles (use in components):**
+
+| Token                | Value  | Use cases                               |
+| -------------------- | ------ | --------------------------------------- |
+| `radius-interactive` | 8px    | Buttons, inputs, selects, toggles       |
+| `radius-surface`     | 12px   | Cards, panels, popovers, dropdowns      |
+| `radius-modal`       | 16px   | Modals, dialogs, drawers, bottom sheets |
+| `radius-badge`       | 9999px | Pills, tags, avatars, mana indicators   |
+
+**Rule:** Components always use a semantic role, never a scale token directly. Exception:
+`radius-sm` (4px) for stamp/seal elements (MTG format badges, rarity chips) with an inline comment —
+these intentionally feel printed/crisp.
 
 #### Motion — Two-Mode Philosophy
 
@@ -209,25 +225,30 @@ Standard Tailwind scale: `space-1` (4px) → `space-24` (96px). Gaps: 1, 2, 3, 4
 
 Critical pairings verified:
 
-| Pair                                     | Ratio   | Status | Rule                     |
-| ---------------------------------------- | ------- | ------ | ------------------------ |
-| `text` on `bg`                           | 16.7:1  | ✅     | Corps, titres            |
-| `text-muted` on `surface`                | 7.2:1   | ✅     | Descriptions             |
-| `on-accent` on `accent` button           | 10.4:1  | ✅     | Primary button text      |
-| `accent-text` on `bg` dark               | ~9.8:1  | ✅     | Prices, links (dark)     |
-| `accent-text` (`#8a6a0c`) on `bg` light  | 4.8:1   | ✅     | Prices, links (light)    |
-| `error-text` (`#b91c1c`) on `bg` light   | ~9.4:1  | ✅     | Error messages (light)   |
-| `success-text` (`#15803d`) on `bg` light | ~7.0:1  | ✅     | Success messages (light) |
-| `warning-text` (`#92400e`) on `bg` light | ~10.4:1 | ✅     | Warning messages (light) |
-| `info-text` (`#5b9cf6`) on `bg` dark     | ~7.5:1  | ✅     | Info messages (dark)     |
-| `info-text` (`#1d4ed8`) on `bg` light    | ~6.4:1  | ✅     | Info messages (light)    |
-| `text-faint` on `bg`                     | 2.5:1   | ❌     | Decorative only          |
+| Pair                                                  | Ratio   | Status | Rule                     |
+| ----------------------------------------------------- | ------- | ------ | ------------------------ |
+| `text` on `bg`                                        | 16.7:1  | ✅     | Corps, titres            |
+| `text-muted` on `surface`                             | 7.2:1   | ✅     | Descriptions             |
+| `on-accent` (`#0f0e17`) on `accent` dark (`#e8b84b`)  | 10.4:1  | ✅     | Button text (dark)       |
+| `on-accent` (`#ffffff`) on `accent` light (`#5b4fcf`) | 5.4:1   | ✅     | Button text (light)      |
+| `accent-text` (`#e8b84b`) on `bg` dark                | ~9.8:1  | ✅     | Links, prices (dark)     |
+| `accent-text` (`#3d319a`) on `bg` light               | ~8.7:1  | ✅     | Links, prices (light)    |
+| `error-text` (`#b91c1c`) on `bg` light                | ~9.4:1  | ✅     | Error messages (light)   |
+| `success-text` (`#15803d`) on `bg` light              | ~7.0:1  | ✅     | Success messages (light) |
+| `warning-text` (`#92400e`) on `bg` light              | ~10.4:1 | ✅     | Warning messages (light) |
+| `info-text` (`#5b9cf6`) on `bg` dark                  | ~7.5:1  | ✅     | Info messages (dark)     |
+| `info-text` (`#1d4ed8`) on `bg` light                 | ~6.4:1  | ✅     | Info messages (light)    |
+| `text-faint` on `bg`                                  | 2.5:1   | ❌     | Decorative only          |
 
 **Rule:** `text-faint` must never be used for essential readable content — overlines, separators,
 and decorative section labels only. Any content the user must be able to read uses `text-muted` or
 `text` minimum.
 
-**Rule:** The primary button always uses `on-accent` (`#0f0e17`) as text color — never white.
+**Rule:** `brand` in light mode (`#c49a1a` on `#faf9f4` ≈ 2.9:1) fails AA for text — decorative
+only, same restriction as `text-faint`. Dark mode is fine (9.8:1 on `#0f0e17`).
+
+**Rule:** `on-accent` is mode-specific — `#0f0e17` on amber (dark), `#ffffff` on violet (light).
+Never use white text on the amber button.
 
 ### 5. Design System Section in Storybook
 
@@ -303,6 +324,55 @@ No visual instability.
 ---
 
 ## Evolution History
+
+### 2026-06-10: Semantic radius roles added
+
+Four semantic radius roles added to `@theme` in `tokens.css`:
+
+- `radius-interactive` (8px / 0.5rem) — buttons, inputs, selects, toggles
+- `radius-surface` (12px / 0.75rem) — cards, panels, popovers, dropdowns
+- `radius-modal` (16px / 1rem) — modals, dialogs, drawers
+- `radius-badge` (9999px) — pills, tags, avatars, mana indicators
+
+Rule: components use semantic roles, never scale tokens directly. Exception: `radius-sm` (4px) for
+stamp/seal elements (MTG format badges, rarity chips) with an inline comment.
+
+Scale tokens (`radius-sm` through `radius-full`) remain in `@theme` as reference values — they
+define the scale but are not intended for direct use in components.
+
+### 2026-06-10: Violet as light mode accent + brand token + primitive renaming
+
+- **Light mode accent changed**: `accent` light is now violet (`#5b4fcf`), not amber. Reason: amber
+  (`#c49a1a`) on parchment (`#faf9f4`) = 3.75:1 — fails WCAG AA for interactive elements. Violet is
+  from the same purple family as existing muted text, more saturated. New contrast: `#5b4fcf` on
+  `#faf9f4` = 5.2:1 (AA ✓), white `on-accent` on violet = 5.4:1 (AA ✓).
+
+- **`brand` token added**: amber is preserved as a decorative-only token (`brand`). Light:
+  `#c49a1a`, dark: `#e8b84b`. Fails AA in light mode for text (3.75:1) — decorative use only (logo,
+  ornaments, `─────◈─────` separators). Dark mode is AAA (9.8:1).
+
+- **`on-accent` split**: was a single `#0f0e17`. Now mode-specific: `#ffffff` on violet (light),
+  `#0f0e17` on amber (dark). Both pass AA.
+
+- **`shadow-accent` made dynamic**: moved from static `@theme` (hardcoded amber glow) to
+  `:root`/`.dark` blocks — violet glow in light, amber glow in dark.
+
+- **`color-scheme` added**: `:root { color-scheme: light }` and `.dark { color-scheme: dark }` —
+  ensures native browser UI elements (scrollbars, form controls) respect the active theme.
+
+- **`prefers-reduced-motion` added**: `@media (prefers-reduced-motion: reduce)` block resets all
+  `--duration-*` tokens to `0ms`. Components read duration tokens — no per-component override
+  needed.
+
+- **Primitive naming refactored**: removed all `dark*` / `light*` mode-prefix naming from
+  primitives. New naming scheme uses pure color descriptors:
+  - `ink*` scale (950→50) for dark purple backgrounds, surfaces, text
+  - `cream*` scale (0→400) for warm light backgrounds
+  - `amber400`/`amber500`/`amber600`/`amber700` for the amber family
+  - `violet500`/`violet600`/`violet700` for the violet family
+  - `mtgWhiteCream` / `mtgWhiteGold` replacing `mtgWhiteDark` / `mtgWhiteLight`
+  - Status alphas as `error12`/`error08` etc. (opacity-named, not mode-named) The semantic layer
+    still carries the mode distinction — primitives are pure color values.
 
 ### 2026-06-08: Interactive and status tokens added
 

@@ -193,6 +193,14 @@ like `{W/U}`, colourless `{C}`, `{X}`, tap `{T}`) that a custom icon set would n
 
 ## Evolution History
 
+### 2026-06-10: Web output format updated — Tailwind v4 CSS-first confirmed
+
+The ADR-0015 section on tokens referenced a Tailwind v3 JS preset approach (`decksmithPreset` in
+`tailwind.config.ts`). The actual implementation (Phase 4.1) uses the Tailwind v4 CSS-first
+architecture: `packages/tokens/src/web/tokens.css` uses `@import 'tailwindcss'` with `@theme inline`
+(for dynamic theme-aware tokens) and `@theme` (for static tokens). No `tailwind.config.ts` or JS
+preset object exists. Details in ADR-0017.
+
 ### 2026-06-08: Token values finalised — Session A (Phase 4.0.5)
 
 - Accent colour shifted from Tailwind amber-500 (`#f59e0b`) to golden `#e8b84b` — less orange, more

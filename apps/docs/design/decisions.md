@@ -5,6 +5,36 @@ technical/architectural decisions, see `apps/docs/context/decisions-log.md`._
 
 ---
 
+## 2026-06-10
+
+### Violet as light mode interactive accent — amber demoted to `brand` (decorative)
+
+**Decision:** In light mode, the interactive accent (`accent`, `border-focus`, button background)
+switches from amber to violet (`#5b4fcf`). Amber becomes a `brand` token — decorative only (logo,
+ornaments, dividers, section separators).
+
+**Why:** Amber (`#c49a1a`) on parchment (`#faf9f4`) = 3.75:1 — fails WCAG AA for interactive
+elements. There's also low visual differentiation between two warm tones on a warm background.
+Violet is from the same purple family as existing muted text (`#524d80`) but more saturated.
+Contrast: `#5b4fcf` on `#faf9f4` = 5.2:1 (AA ✓); white on `#5b4fcf` = 5.4:1 (AA ✓).
+
+**Impact on the "amber as brand" decision above:** Amber remains the brand identity color — it
+appears in the logo, ornamental dividers (`─────◈─────`), and decorative highlights. It is no longer
+the interactive accent in light mode. Dark mode is unchanged (amber accent stays).
+
+**`on-accent` split:** Was a single value (`#0f0e17`). Is now mode-specific: `#ffffff` (white on
+violet) in light, `#0f0e17` (dark on amber) in dark.
+
+**`brand` contrast warning:** `brand` (`#c49a1a`) on `#faf9f4` ≈ 2.9:1 — fails AA. Like
+`text-faint`, it is decorative-only in light mode. In dark mode (`#e8b84b` on `#0f0e17`) it passes
+AAA (9.8:1), so the constraint is light mode only.
+
+**Primitive naming:** Same session, all primitives renamed to pure color descriptors (no mode
+prefix): `ink*` scale for dark purple backgrounds/text, `cream*` scale for light backgrounds,
+`amber*` / `violet*` for accent families.
+
+---
+
 ## 2026-03-30
 
 ### No Figma — Design-in-code workflow
