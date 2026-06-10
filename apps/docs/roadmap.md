@@ -117,12 +117,15 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 4.2 packages/api-client
 
-- ⬜ Typed fetch client wrapping all API endpoints
-- ⬜ Error handling with typed error codes from `packages/schema`
+- ✅ Typed fetch client wrapping all API endpoints
+- ✅ Error handling with typed error codes from `packages/schema`
+- ✅ `packages/test-utils` — MSW server lifecycle, `createQueryWrapper`, user + preferences
+  factories
 
 ### 4.3 packages/query
 
-- ⬜ TanStack Query hooks: `useUser`, `useUserPreferences`, `useCardSearch`
+- ✅ TanStack Query hooks: `useUser`, `useUserPreferences`
+- ⬜ `useCardSearch` (deferred — depends on Phase 3 Scryfall integration)
 
 ### 4.4 Auth UI
 

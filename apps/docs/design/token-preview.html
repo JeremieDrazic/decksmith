@@ -1,3 +1,16 @@
+<!--
+  Decksmith — Token Preview (standalone HTML mirror of packages/tokens/src/web/tokens.css)
+
+  SYNC CHECKLIST — when changing tokens.css, update matching values here:
+  • Accent block in :root:not(.dark)   → --color-accent, --color-accent-hover, --color-accent-text,
+                                          --color-on-accent, --color-border-focus
+  • Accent block in .dark              → same properties (amber values)
+  • brand token                        → --color-brand in both :root:not(.dark) and .dark
+  • shadow-accent                      → in both :root:not(.dark) and .dark
+  • Status triplets                    → error/success/warning/info + subtle + text in both modes
+  • MTG White                          → --color-mtg-white in both modes
+  • Contrast table rows                → verify ratios when any pair changes
+-->
 <!doctype html>
 <html lang="fr" class="dark">
   <head>
@@ -42,6 +55,11 @@
         --amber-700: #9e7b10;
         --amber-800: #7a5e0a;
 
+        /* Violet scale (light mode interactive accent) */
+        --violet-500: #5b4fcf;
+        --violet-600: #4a3db0;
+        --violet-700: #3d319a;
+
         /* WUBRG */
         --wubrg-white: #f5f0d8;
         --wubrg-white-bg: #c8b96e;
@@ -66,6 +84,8 @@
          SEMANTIC — DARK
       ═══════════════════════════════ */
       .dark {
+        color-scheme: dark;
+
         --color-bg: var(--purple-950);
         --color-surface: var(--purple-900);
         --color-surface-raised: var(--purple-800);
@@ -85,6 +105,7 @@
         --color-accent-text: var(--amber-500);
 
         --color-on-accent: var(--purple-950);
+        --color-brand: var(--amber-500);
 
         --color-mtg-white: var(--wubrg-white);
         --color-mtg-blue: var(--wubrg-blue);
@@ -119,6 +140,8 @@
          SEMANTIC — LIGHT
       ═══════════════════════════════ */
       :root:not(.dark) {
+        color-scheme: light;
+
         --color-bg: var(--parchment-50);
         --color-surface: var(--white);
         --color-surface-raised: var(--parchment-100);
@@ -129,14 +152,14 @@
         --color-text-muted: var(--purple-500);
         --color-text-faint: var(--purple-400);
 
-        --color-accent: var(--amber-600);
-        --color-accent-hover: var(--amber-700);
-        --color-accent-subtle: rgba(196, 154, 26, 0.08);
-        --color-accent-border: rgba(196, 154, 26, 0.25);
-        /* accent-text: assombri pour passer 4.5:1 sur fond clair ✅ */
-        --color-accent-text: #8a6a0c;
-
-        --color-on-accent: var(--purple-950);
+        --color-accent: var(--violet-500);
+        --color-accent-hover: var(--violet-600);
+        --color-accent-subtle: rgba(91, 79, 207, 0.08);
+        --color-accent-border: rgba(91, 79, 207, 0.25);
+        --color-accent-text: var(--violet-700);
+        --color-on-accent: var(--white);
+        --color-brand: var(--amber-600);
+        --color-border-focus: var(--violet-500);
 
         --color-mtg-white: var(--wubrg-white-bg);
         --color-mtg-blue: var(--wubrg-blue);
@@ -164,7 +187,6 @@
         --color-info-text: #1d4ed8;
 
         --color-surface-hover: #ede9d8;
-        --color-border-focus: var(--amber-600);
       }
 
       /* ═══════════════════════════════
@@ -214,12 +236,19 @@
         --space-20: 5rem;
         --space-24: 6rem;
 
+        /* Border radius — scale */
         --radius-sm: 0.25rem;
         --radius-md: 0.5rem;
         --radius-lg: 0.75rem;
         --radius-xl: 1rem;
         --radius-2xl: 1.5rem;
         --radius-full: 9999px;
+
+        /* Border radius — semantic roles */
+        --radius-interactive: 0.5rem;
+        --radius-surface: 0.75rem;
+        --radius-modal: 1rem;
+        --radius-badge: 9999px;
       }
 
       /* ═══════════════════════════════
@@ -350,7 +379,7 @@
 
       .theme-btn.active {
         background: var(--color-accent);
-        color: var(--white);
+        color: var(--color-on-accent);
       }
 
       /* ═══════════════════════════════
@@ -504,6 +533,20 @@
       /* ═══════════════════════════════
          RADIUS
       ═══════════════════════════════ */
+      .radius-subsection {
+        margin-bottom: var(--space-8);
+      }
+
+      .radius-subsection-title {
+        font-size: var(--text-xs);
+        font-weight: 600;
+        font-family: var(--font-mono);
+        color: var(--color-text-faint);
+        text-transform: uppercase;
+        letter-spacing: var(--tracking-wider);
+        margin-bottom: var(--space-5);
+      }
+
       .radius-grid {
         display: flex;
         gap: var(--space-8);
@@ -534,6 +577,54 @@
       .radius-val {
         font-size: 10px;
         color: var(--color-text-faint);
+      }
+
+      /* Semantic radius demos */
+      .radius-roles-grid {
+        display: flex;
+        gap: var(--space-6);
+        flex-wrap: wrap;
+        align-items: flex-start;
+      }
+
+      .radius-role-chip {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-3);
+      }
+
+      .radius-role-demo {
+        background: var(--color-surface);
+        border: 2px solid var(--color-accent-border);
+      }
+
+      .radius-role-token {
+        font-size: var(--text-xs);
+        font-family: var(--font-mono);
+        color: var(--color-accent);
+        font-weight: 500;
+      }
+
+      .radius-role-meta {
+        font-size: 10px;
+        color: var(--color-text-faint);
+        line-height: 1.5;
+      }
+
+      .radius-badge-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        font-family: var(--font-display);
+        padding: 6px 14px;
+        background: var(--color-accent-subtle);
+        border: 1.5px solid var(--color-accent-border);
+        color: var(--color-accent-text);
+        white-space: nowrap;
+        border-radius: var(--radius-badge);
       }
 
       /* ═══════════════════════════════
@@ -878,7 +969,7 @@
 
       .focus-demo input:focus {
         border-color: var(--color-border-focus);
-        box-shadow: 0 0 0 3px rgba(232, 184, 75, 0.2);
+        box-shadow: 0 0 0 3px var(--color-accent-subtle);
         outline: none;
       }
     </style>
@@ -897,7 +988,7 @@
               font-family: var(--font-mono);
             "
           >
-            Token Preview · Session A + status tokens
+            Token Preview · violet accent (light) + brand token
           </div>
         </div>
         <div class="header-right">
@@ -987,14 +1078,21 @@
             <div class="color-swatch" style="background: var(--color-accent)"></div>
             <div class="color-info">
               <span class="color-name">accent</span>
-              <span class="color-value">#e8b84b / #c49a1a</span>
+              <span class="color-value">#e8b84b / #5b4fcf</span>
             </div>
           </div>
           <div class="color-chip">
             <div class="color-swatch" style="background: var(--color-accent-hover)"></div>
             <div class="color-info">
               <span class="color-name">accent-hover</span>
-              <span class="color-value">#c49a1a / #9e7b10</span>
+              <span class="color-value">#c49a1a / #4a3db0</span>
+            </div>
+          </div>
+          <div class="color-chip">
+            <div class="color-swatch" style="background: var(--color-brand)"></div>
+            <div class="color-info">
+              <span class="color-name">brand</span>
+              <span class="color-value">#e8b84b / #c49a1a · decorative</span>
             </div>
           </div>
           <div class="color-chip">
@@ -1130,7 +1228,7 @@
           <div class="wubrg-chip">
             <div class="wubrg-swatch" style="background: var(--color-mtg-blue)"></div>
             <div class="wubrg-info">
-              <span class="wubrg-sym" style="color: white">{U}</span>
+              <span class="wubrg-sym" style="color: var(--color-text)">{U}</span>
               <span class="wubrg-name">Blue</span>
             </div>
           </div>
@@ -1144,14 +1242,14 @@
           <div class="wubrg-chip">
             <div class="wubrg-swatch" style="background: var(--color-mtg-red)"></div>
             <div class="wubrg-info">
-              <span class="wubrg-sym" style="color: white">{R}</span>
+              <span class="wubrg-sym" style="color: var(--color-text)">{R}</span>
               <span class="wubrg-name">Red</span>
             </div>
           </div>
           <div class="wubrg-chip">
             <div class="wubrg-swatch" style="background: var(--color-mtg-green)"></div>
             <div class="wubrg-info">
-              <span class="wubrg-sym" style="color: white">{G}</span>
+              <span class="wubrg-sym" style="color: var(--color-text)">{G}</span>
               <span class="wubrg-name">Green</span>
             </div>
           </div>
@@ -1567,36 +1665,83 @@
       <!-- ── Radius ── -->
       <section class="section">
         <div class="section-title">Border Radius</div>
-        <div class="radius-grid">
-          <div class="radius-chip">
-            <div class="radius-box" style="border-radius: var(--radius-sm)"></div>
-            <span class="radius-token">radius-sm</span>
-            <span class="radius-val">4px</span>
+
+        <!-- Semantic roles — use these in components -->
+        <div class="radius-subsection">
+          <div class="radius-subsection-title">Semantic roles — use in components</div>
+          <div class="radius-roles-grid">
+            <div class="radius-role-chip">
+              <div
+                class="radius-role-demo"
+                style="width: 180px; height: 40px; border-radius: var(--radius-interactive)"
+              ></div>
+              <span class="radius-role-token">radius-interactive</span>
+              <span class="radius-role-meta">8px — buttons, inputs,<br />selects, toggles</span>
+            </div>
+            <div class="radius-role-chip">
+              <div
+                class="radius-role-demo"
+                style="width: 180px; height: 80px; border-radius: var(--radius-surface)"
+              ></div>
+              <span class="radius-role-token">radius-surface</span>
+              <span class="radius-role-meta">12px — cards, panels,<br />popovers, dropdowns</span>
+            </div>
+            <div class="radius-role-chip">
+              <div
+                class="radius-role-demo"
+                style="width: 220px; height: 60px; border-radius: var(--radius-modal)"
+              ></div>
+              <span class="radius-role-token">radius-modal</span>
+              <span class="radius-role-meta"
+                >16px — modals, dialogs,<br />drawers, bottom sheets</span
+              >
+            </div>
+            <div class="radius-role-chip">
+              <div style="height: 60px; display: flex; align-items: center">
+                <span class="radius-badge-pill">Commander</span>
+              </div>
+              <span class="radius-role-token">radius-badge</span>
+              <span class="radius-role-meta"
+                >9999px — pills, tags,<br />avatars, mana indicators</span
+              >
+            </div>
           </div>
-          <div class="radius-chip">
-            <div class="radius-box" style="border-radius: var(--radius-md)"></div>
-            <span class="radius-token">radius-md</span>
-            <span class="radius-val">8px</span>
-          </div>
-          <div class="radius-chip">
-            <div class="radius-box" style="border-radius: var(--radius-lg)"></div>
-            <span class="radius-token">radius-lg</span>
-            <span class="radius-val">12px</span>
-          </div>
-          <div class="radius-chip">
-            <div class="radius-box" style="border-radius: var(--radius-xl)"></div>
-            <span class="radius-token">radius-xl</span>
-            <span class="radius-val">16px</span>
-          </div>
-          <div class="radius-chip">
-            <div class="radius-box" style="border-radius: var(--radius-2xl)"></div>
-            <span class="radius-token">radius-2xl</span>
-            <span class="radius-val">24px</span>
-          </div>
-          <div class="radius-chip">
-            <div class="radius-box" style="border-radius: var(--radius-full); width: 64px"></div>
-            <span class="radius-token">radius-full</span>
-            <span class="radius-val">9999px</span>
+        </div>
+
+        <!-- Scale — reference only -->
+        <div class="radius-subsection">
+          <div class="radius-subsection-title">Scale — reference only (do not use directly)</div>
+          <div class="radius-grid">
+            <div class="radius-chip">
+              <div class="radius-box" style="border-radius: var(--radius-sm)"></div>
+              <span class="radius-token">radius-sm</span>
+              <span class="radius-val">4px · stamp/seal</span>
+            </div>
+            <div class="radius-chip">
+              <div class="radius-box" style="border-radius: var(--radius-md)"></div>
+              <span class="radius-token">radius-md</span>
+              <span class="radius-val">8px</span>
+            </div>
+            <div class="radius-chip">
+              <div class="radius-box" style="border-radius: var(--radius-lg)"></div>
+              <span class="radius-token">radius-lg</span>
+              <span class="radius-val">12px</span>
+            </div>
+            <div class="radius-chip">
+              <div class="radius-box" style="border-radius: var(--radius-xl)"></div>
+              <span class="radius-token">radius-xl</span>
+              <span class="radius-val">16px</span>
+            </div>
+            <div class="radius-chip">
+              <div class="radius-box" style="border-radius: var(--radius-2xl)"></div>
+              <span class="radius-token">radius-2xl</span>
+              <span class="radius-val">24px</span>
+            </div>
+            <div class="radius-chip">
+              <div class="radius-box" style="border-radius: var(--radius-full); width: 64px"></div>
+              <span class="radius-token">radius-full</span>
+              <span class="radius-val">9999px</span>
+            </div>
           </div>
         </div>
       </section>
@@ -1681,6 +1826,24 @@
             </tr>
           </thead>
           <tbody>
+            <!-- ── Dark mode ── -->
+            <tr>
+              <td
+                colspan="4"
+                style="
+                  background: var(--color-surface-raised);
+                  padding: 5px 12px;
+                  font-size: 0.7rem;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 0.09em;
+                  color: var(--color-text-muted);
+                  border-bottom: 1px solid var(--color-border);
+                "
+              >
+                Mode sombre
+              </td>
+            </tr>
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
@@ -1712,6 +1875,20 @@
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
+                  <div class="swatch-sm" style="background: #a8a2cc"></div>
+                  <span>text-muted</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #0f0e17"></div>
+                  <span>bg</span>
+                </div>
+              </td>
+              <td><span class="ratio">~8.0:1</span></td>
+              <td><span class="pass">✅ AA</span></td>
+              <td class="usage-note">Sous-titres sur fond page</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
                   <div
                     class="swatch-sm"
                     style="background: #0f0e17; border: 1px solid #2e2b47"
@@ -1724,7 +1901,7 @@
               </td>
               <td><span class="ratio">10.4:1</span></td>
               <td><span class="pass">✅ AA</span></td>
-              <td class="usage-note">Texte dans bouton primary</td>
+              <td class="usage-note">Texte sur bouton amber</td>
             </tr>
             <tr>
               <td>
@@ -1733,26 +1910,137 @@
                   <span>accent-text</span>
                   <span style="color: var(--color-text-faint)">sur</span>
                   <div class="swatch-sm" style="background: #0f0e17"></div>
-                  <span>bg dark</span>
+                  <span>bg</span>
                 </div>
               </td>
               <td><span class="ratio">~9.8:1</span></td>
               <td><span class="pass">✅ AA</span></td>
-              <td class="usage-note">Prix, stats, liens (dark)</td>
+              <td class="usage-note">Prix, stats, liens</td>
+            </tr>
+
+            <!-- ── Light mode ── -->
+            <tr>
+              <td
+                colspan="4"
+                style="
+                  background: #e8e5d8;
+                  padding: 5px 12px;
+                  font-size: 0.7rem;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 0.09em;
+                  color: #524d80;
+                  border-bottom: 1px solid #d5d0be;
+                  border-top: 2px solid var(--color-border);
+                "
+              >
+                Mode clair
+              </td>
             </tr>
             <tr>
               <td>
                 <div class="contrast-swatch-pair">
-                  <div class="swatch-sm" style="background: #8a6a0c"></div>
-                  <span>accent-text</span>
+                  <div class="swatch-sm" style="background: #0f0e17"></div>
+                  <span>text</span>
                   <span style="color: var(--color-text-faint)">sur</span>
-                  <div class="swatch-sm" style="background: #faf9f4"></div>
-                  <span>bg light</span>
+                  <div
+                    class="swatch-sm"
+                    style="background: #faf9f4; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>bg</span>
                 </div>
               </td>
-              <td><span class="ratio">4.8:1</span></td>
+              <td><span class="ratio">16.7:1</span></td>
               <td><span class="pass">✅ AA</span></td>
-              <td class="usage-note">Prix, stats, liens (light)</td>
+              <td class="usage-note">Corps, titres, tout contenu</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
+                  <div class="swatch-sm" style="background: #524d80"></div>
+                  <span>text-muted</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div
+                    class="swatch-sm"
+                    style="background: #ffffff; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>surface</span>
+                </div>
+              </td>
+              <td><span class="ratio">~7.7:1</span></td>
+              <td><span class="pass">✅ AA</span></td>
+              <td class="usage-note">Sous-titres, descriptions</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
+                  <div class="swatch-sm" style="background: #524d80"></div>
+                  <span>text-muted</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div
+                    class="swatch-sm"
+                    style="background: #faf9f4; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>bg</span>
+                </div>
+              </td>
+              <td><span class="ratio">~7.3:1</span></td>
+              <td><span class="pass">✅ AA</span></td>
+              <td class="usage-note">Sous-titres sur fond page</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
+                  <div
+                    class="swatch-sm"
+                    style="background: #ffffff; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>on-accent</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div class="swatch-sm" style="background: #5b4fcf"></div>
+                  <span>accent</span>
+                </div>
+              </td>
+              <td><span class="ratio">5.4:1</span></td>
+              <td><span class="pass">✅ AA</span></td>
+              <td class="usage-note">Texte sur bouton violet</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
+                  <div class="swatch-sm" style="background: #3d319a"></div>
+                  <span>accent-text</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div
+                    class="swatch-sm"
+                    style="background: #faf9f4; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>bg</span>
+                </div>
+              </td>
+              <td><span class="ratio">~7.1:1</span></td>
+              <td><span class="pass">✅ AA</span></td>
+              <td class="usage-note">Prix, stats, liens</td>
+            </tr>
+
+            <!-- ── Decorative (fails AA) ── -->
+            <tr>
+              <td
+                colspan="4"
+                style="
+                  background: rgba(239, 68, 68, 0.06);
+                  padding: 5px 12px;
+                  font-size: 0.7rem;
+                  font-weight: 700;
+                  text-transform: uppercase;
+                  letter-spacing: 0.09em;
+                  color: #b91c1c;
+                  border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+                  border-top: 2px solid var(--color-border);
+                "
+              >
+                Décoration uniquement (fails AA)
+              </td>
             </tr>
             <tr>
               <td>
@@ -1761,12 +2049,46 @@
                   <span>text-faint</span>
                   <span style="color: var(--color-text-faint)">sur</span>
                   <div class="swatch-sm" style="background: #0f0e17"></div>
-                  <span>bg</span>
+                  <span>bg dark</span>
                 </div>
               </td>
               <td><span class="ratio">2.5:1</span></td>
               <td><span class="fail">❌ Déco</span></td>
-              <td class="usage-note">Overlines, séparateurs — jamais texte essentiel</td>
+              <td class="usage-note">Overlines, séparateurs sombres</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
+                  <div class="swatch-sm" style="background: #7b75a8"></div>
+                  <span>text-faint</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div
+                    class="swatch-sm"
+                    style="background: #faf9f4; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>bg light</span>
+                </div>
+              </td>
+              <td><span class="ratio">~4.0:1</span></td>
+              <td><span class="fail">❌ Déco</span></td>
+              <td class="usage-note">Overlines, séparateurs clairs</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="contrast-swatch-pair">
+                  <div class="swatch-sm" style="background: #c49a1a"></div>
+                  <span>brand</span>
+                  <span style="color: var(--color-text-faint)">sur</span>
+                  <div
+                    class="swatch-sm"
+                    style="background: #faf9f4; border: 1px solid #d5d0be"
+                  ></div>
+                  <span>bg light</span>
+                </div>
+              </td>
+              <td><span class="ratio">2.9:1</span></td>
+              <td><span class="fail">❌ Déco</span></td>
+              <td class="usage-note">Logo, ornements — jamais texte interactif</td>
             </tr>
           </tbody>
         </table>

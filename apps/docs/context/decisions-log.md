@@ -4,6 +4,78 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-10] — `errorCode` on hook return instead of `isApiError` in components
+
+**Context:** TanStack Query hooks return `error: Error | null`. Consumers need to branch on the
+error type to show the right message.
+
+**Decision:** Each hook spreads `UseQueryResult` and adds `errorCode: ErrorCode | null`. The hook
+does the `isApiError` narrowing once internally; components receive a plain string or null.
+
+**Impact:** `useUser`, `useUserPreferences` — and all future hooks follow the same pattern. No
+`isApiError` import needed in feature components.
+
+---
+
+## [2026-06-10] — `packages/test-utils` created to share test infrastructure
+
+**Context:** Both `packages/api-client` and `packages/query` need MSW server lifecycle + factory
+helpers. Duplicating them would diverge quickly.
+
+**Decision:** New `packages/test-utils` package with three exports: `./server` (MSW lifecycle),
+`./query-wrapper` (`createQueryWrapper` with `QueryClientProvider` only), and per-entity
+`./factories/*`. Critically, `test-utils` does NOT include `ApiClientProvider` — that would create a
+circular dependency (`test-utils → packages/query → test-utils`). Each consuming package wraps
+`QueryWrapper` with its own providers locally.
+
+**Impact:** New `packages/test-utils/` in the monorepo. `packages/query` and `packages/api-client`
+both depend on it as a devDependency.
+
+---
+
+## [2026-06-10] — React Context pattern for `ApiClient` distribution in `packages/query`
+
+**Context:** Hooks in `packages/query` need access to an `ApiClient` instance. Three options were
+considered: (1) `configure(client)` module-level singleton, (2) factory `createUseUser(client)`, (3)
+React Context with `ApiClientProvider`.
+
+**Decision:** React Context (`ApiClientProvider` + `useApiClient`). The client is immutable so there
+is no re-render risk. It follows the same pattern as `QueryClientProvider` which consumers already
+understand, and it doesn't require every hook to accept a `client` parameter.
+
+**Impact:** `packages/query/src/context/context.tsx`. `apps/web` will mount `<ApiClientProvider>`
+near the root alongside `<QueryClientProvider>`.
+
+---
+
+## [2026-06-10] — `ErrorCode` union derived from schema constants via `typeof`
+
+**Context:** `packages/schema/src/errors/codes.ts` exports string constants
+(`const VALIDATION_ERROR = 'VALIDATION_ERROR'`). `packages/api-client` needs a typed `ErrorCode`
+union without duplicating the string values.
+
+**Decision:** `import type { VALIDATION_ERROR, ... }` (named imports of the constants) and build the
+union as `typeof VALIDATION_ERROR | typeof VALIDATION_ERROR | ...`. TypeScript infers the literal
+type from each constant. `import type *` + `ErrorCodes[keyof ErrorCodes]` was rejected — it produces
+a wide `string` union and requires a namespace, which oxlint flags.
+
+**Impact:** `packages/api-client/src/errors/errors.ts`.
+
+---
+
+## [2026-06-10] — `credentials: 'include'` on every fetch in `createFetcher`
+
+**Context:** Auth tokens are stored in httpOnly cookies (ADR-0014). Every API request must send
+them; `fetch` does not include cookies cross-origin by default.
+
+**Decision:** `credentials: 'include'` hardcoded in `createFetcher` — not optional per call. SSR
+route loaders (TanStack Start server-side) must not use this client; they forward cookies manually
+via raw `fetch` with the request's `Cookie` header.
+
+**Impact:** `packages/api-client/src/fetcher/fetcher.ts`. Documented in project-state.md.
+
+---
+
 ## [2026-06-09] — Oxlint rules hardened: React, jsx-a11y, no-use-before-define
 
 **Context:** `apps/web` scaffolded — first real React code in the repo. Default oxlint config had

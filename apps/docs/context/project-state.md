@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-09 (session 3)_
+_Updated: 2026-06-10 (session 4)_
 
 ---
 
@@ -45,6 +45,12 @@ _Updated: 2026-06-09 (session 3)_
 - [x] Oxlint rules hardened: `no-use-before-define`, React critical rules, jsx-a11y baseline
 - [x] `*.gen.ts` excluded from both oxlint and oxfmt (generated files)
 - [x] `apps/web` dev server confirmed working: `pnpm --filter @decksmith/web dev` → `localhost:5173`
+- [x] `packages/api-client` scaffolded: `createFetcher`, `createAuthModule`, `createUsersModule`,
+      `createApiClient` — 15 tests (MSW) — PR #23
+- [x] `packages/test-utils` scaffolded: MSW server lifecycle, `createQueryWrapper`, `buildUser`,
+      `buildUserPreferences` factories
+- [x] `packages/query` scaffolded: `ApiClientProvider`, `useUser`, `useUserPreferences` — 8 tests —
+      PR #23
 
 ---
 
@@ -59,7 +65,8 @@ _Updated: 2026-06-09 (session 3)_
   (`pnpm --filter @decksmith/db db:generate`)
 - `routeTree.gen.ts` must be regenerated after adding/changing routes
   (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
-- `packages/api-client`, `packages/query`, `packages/web-ui` not yet scaffolded
+- `packages/web-ui` not yet scaffolded
+- `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
 
 ---
 
@@ -71,7 +78,7 @@ _None — `main` is clean._
 
 ## Current Branch
 
-- Branch: `main` (clean)
+- Branch: `main` (clean, PR #23 merged)
 
 ---
 
@@ -144,6 +151,39 @@ Steps remaining:
 - [x] Session B: frontend library stack validated → ADR-0018
 - [x] Session C: `packages/web-ui` component architecture + definition of done → ADR-0019
 - [x] Session D: global testing strategy → `apps/docs/context/test-strategy.md` + ADR-0006 updated
+
+---
+
+## Phase 4.2 packages/api-client — Complete
+
+- [x] `createFetcher(baseUrl)` — internal partial application, `credentials: 'include'` on every
+      request
+- [x] `ApiError` class + `isApiError` guard + `ErrorCode` union in `errors/errors.ts`
+- [x] `ErrorCode` derived via `import type { X }` + `typeof X` (no string duplication from
+      `packages/schema`)
+- [x] `createAuthModule(fetcher)` — 6 methods (register, login, logout, refresh, forgotPassword,
+      resetPassword)
+- [x] `createUsersModule(fetcher)` — 4 methods (getUser, updateUser, getUserPreferences,
+      updateUserPreferences)
+- [x] `createApiClient(baseUrl)` factory + `ApiClient` inferred type in `index.ts`
+- [x] Two exports only: `"."` and `"./errors"` — fetcher + modules are internal
+- [x] 15 tests with MSW (happy path + error + network failure per module)
+
+## packages/test-utils — Complete (new package)
+
+- [x] MSW `setupServer()` + Vitest lifecycle (`beforeAll`, `afterEach`, `afterAll`) in `server.ts`
+- [x] `createQueryWrapper()` — fresh `QueryClient({ retry: false })` per test suite
+- [x] `buildUser(overrides?)` factory
+- [x] `buildUserPreferences(overrides?)` factory
+- [x] Three exports: `"./server"`, `"./query-wrapper"`, `"./factories/user"`,
+      `"./factories/preferences"`
+
+## Phase 4.3 packages/query — Complete
+
+- [x] `ApiClientProvider` + `useApiClient` React Context in `context/context.tsx`
+- [x] `useUser(id)` — TanStack Query hook, `enabled: !!id`, `errorCode` on return
+- [x] `useUserPreferences(id)` — same pattern, key nested under `['user', id, 'preferences']`
+- [x] 8 tests (2 context + 3 per hook) with MSW + `createQueryWrapper` + `ApiClientProvider`
 
 ---
 

@@ -1,6 +1,6 @@
 # Visual Identity
 
-_Updated: 2026-03-30_
+_Updated: 2026-06-10_
 
 ---
 
@@ -20,7 +20,9 @@ no blue primary CTA.
 
 1. **Warm-dark background** — purple-black tint (`#0f0e17`), not the cool grey of GitHub or the pure
    black of Linear
-2. **Amber accent** — `#f59e0b`, used by no major MTG tool (Moxfield, Archidekt = blue/purple)
+2. **Amber brand + violet accent** — amber (`#e8b84b`) is the brand identity color (logo, ornaments,
+   dark mode buttons). Violet (`#5b4fcf`) is the light mode interactive accent. No major MTG tool
+   uses either combination
 3. **Cards with depth** — subtle inner shadow + amber border glow on hover
 4. **Deck cards use commander artwork** as blurred background with dark gradient overlay (MTG Arena
    style)
@@ -35,49 +37,69 @@ no blue primary CTA.
 
 ### Semantic Tokens
 
-| Token            | Dark (`.dark`) | Light (`:root`) | Usage                |
-| ---------------- | -------------- | --------------- | -------------------- |
-| `bg`             | `#0f0e17`      | `#faf9f4`       | Page background      |
-| `bg-subtle`      | `#161523`      | `#f0efe8`       | Alternate background |
-| `surface`        | `#1c1b2e`      | `#ffffff`       | Cards, panels        |
-| `surface-raised` | `#252338`      | `#f5f4ed`       | Elevated surfaces    |
-| `border`         | `#2e2c42`      | `#e2e0d8`       | Borders              |
-| `border-subtle`  | `#242234`      | `#eceae2`       | Dividers             |
-| `text`           | `#e8e6f0`      | `#1a1826`       | Primary text         |
-| `text-muted`     | `#7a7890`      | `#6b6880`       | Secondary text       |
-| `text-faint`     | `#4a4860`      | `#9896a8`       | Placeholders, hints  |
+| Token            | Dark (`.dark`) | Light (`:root`) | Usage                               |
+| ---------------- | -------------- | --------------- | ----------------------------------- |
+| `bg`             | `#0f0e17`      | `#faf9f4`       | Page background                     |
+| `surface`        | `#1a1827`      | `#ffffff`       | Cards, panels                       |
+| `surface-raised` | `#232135`      | `#f2f0e6`       | Elevated surfaces                   |
+| `surface-hover`  | `#2a2840`      | `#ede9d8`       | Hover state on interactive surfaces |
+| `border`         | `#2e2b47`      | `#d5d0be`       | Borders                             |
+| `border-subtle`  | `#232135`      | `#e8e5d8`       | Dividers                            |
+| `border-focus`   | `#e8b84b`      | `#5b4fcf`       | Focus ring                          |
+| `text`           | `#f0eef8`      | `#0f0e17`       | Primary text                        |
+| `text-muted`     | `#a8a2cc`      | `#524d80`       | Secondary text                      |
+| `text-faint`     | `#524d80`      | `#7b75a8`       | Decorative only — fails AA          |
 
-### Brand Accent — Amber
+### Interactive Accent
 
-| Token           | Value       | Usage                            |
-| --------------- | ----------- | -------------------------------- |
-| `accent`        | `#f59e0b`   | Primary buttons, active states   |
-| `accent-hover`  | `#d97706`   | Button hover                     |
-| `accent-subtle` | `#f59e0b18` | Subtle background tint           |
-| `accent-border` | `#f59e0b40` | Focused borders, card hover glow |
+Mode-specific. Dark mode: amber (warm, crafted feel). Light mode: violet (contrast on parchment).
 
-### Semantic Colours
+| Token           | Dark        | Light        | Usage                             |
+| --------------- | ----------- | ------------ | --------------------------------- |
+| `accent`        | `#e8b84b`   | `#5b4fcf`    | Primary buttons, active states    |
+| `accent-hover`  | `#c49a1a`   | `#4a3db0`    | Button hover                      |
+| `accent-subtle` | amber @ 12% | violet @ 8%  | Subtle tint, selected backgrounds |
+| `accent-border` | amber @ 30% | violet @ 25% | Focused borders, hover glow       |
+| `accent-text`   | `#e8b84b`   | `#3d319a`    | Accent-colored text (WCAG AA ✓)   |
+| `on-accent`     | `#0f0e17`   | `#ffffff`    | Text ON accent button             |
 
-| Token     | Value     | Usage                 |
-| --------- | --------- | --------------------- |
-| `success` | `#22c55e` | Owned cards, coverage |
-| `warning` | `#f59e0b` | Partial coverage      |
-| `error`   | `#ef4444` | Missing, errors       |
-| `info`    | `#3b82f6` | Informational         |
+### Brand Amber (decorative only)
+
+| Token   | Dark      | Light     | Usage                                          |
+| ------- | --------- | --------- | ---------------------------------------------- |
+| `brand` | `#e8b84b` | `#c49a1a` | Logo mark, ornaments, `─────◈─────` separators |
+
+**Warning:** `brand` in light mode (`#c49a1a` on `#faf9f4`) = 3.75:1 — fails AA. Never use for
+readable text. Decorative and ornamental use only (same rule as `text-faint`).
+
+### Status Colours
+
+| Token     | Dark      | Light     | Usage                 |
+| --------- | --------- | --------- | --------------------- |
+| `success` | `#22c55e` | `#22c55e` | Owned cards, coverage |
+| `warning` | `#f59e0b` | `#d97706` | Partial coverage      |
+| `error`   | `#ef4444` | `#ef4444` | Missing, errors       |
+| `info`    | `#5b9cf6` | `#2563eb` | Informational         |
+
+Each has a `-subtle` (tinted background) and `-text` (accessible text color) variant. See
+`packages/tokens/src/semantic/colors.ts` for exact values. `info` ≠ `mtg-blue` — different semantic
+meaning, never substitute one for the other.
 
 ### MTG Colour Identity (WUBRG)
 
 Used for: deck colour indicators, mana cost symbols, colour distribution charts, filter dots.
 
-| Colour         | Token           | Value     | Tinted bg   |
-| -------------- | --------------- | --------- | ----------- |
-| White (Plains) | `mtg-white`     | `#f5e6c8` | `#f5e6c812` |
-| Blue (Island)  | `mtg-blue`      | `#3b82f6` | `#3b82f612` |
-| Black (Swamp)  | `mtg-black`     | `#a855f7` | `#a855f712` |
-| Red (Mountain) | `mtg-red`       | `#ef4444` | `#ef444412` |
-| Green (Forest) | `mtg-green`     | `#22c55e` | `#22c55e12` |
-| Colorless      | `mtg-colorless` | `#94a3b8` | `#94a3b812` |
-| Multicolour    | `mtg-multi`     | `#f59e0b` | `#f59e0b12` |
+| Colour         | Token           | Value                                |
+| -------------- | --------------- | ------------------------------------ |
+| White (Plains) | `mtg-white`     | `#f5f0d8` (dark) / `#c8b96e` (light) |
+| Blue (Island)  | `mtg-blue`      | `#1a6eb5`                            |
+| Black (Swamp)  | `mtg-black`     | `#160d22`                            |
+| Red (Mountain) | `mtg-red`       | `#cc2222`                            |
+| Green (Forest) | `mtg-green`     | `#006e3c`                            |
+| Colorless      | `mtg-colorless` | `#8fa3b0`                            |
+| Multicolour    | `mtg-multi`     | `#c9a84c`                            |
+
+MTG colours represent the game's colour identity system — not UI states. `mtg-red` ≠ `error`.
 
 ---
 
@@ -91,7 +113,7 @@ Used for: deck colour indicators, mana cost symbols, colour distribution charts,
 | `font-body`    | Outfit         | Body text (same family, consistent feel) |
 | `font-mono`    | JetBrains Mono | Stats, card counts, prices, mana costs   |
 
-Both fonts are served via Google Fonts.
+Both fonts are self-hosted from `apps/web/public/fonts/`, `font-display: optional` (no FOUT).
 
 ### Type Scale
 
@@ -116,25 +138,49 @@ Both fonts are served via Google Fonts.
 
 ## Border Radius
 
-| Token  | Value  | Usage                  |
-| ------ | ------ | ---------------------- |
-| `sm`   | 4px    | Badges, small elements |
-| `md`   | 8px    | Buttons, inputs        |
-| `lg`   | 12px   | Cards                  |
-| `xl`   | 16px   | Large cards, panels    |
-| `full` | 9999px | Pills, avatars         |
+### Semantic roles — use these in components
+
+| Token                | Value  | Use cases                                           |
+| -------------------- | ------ | --------------------------------------------------- |
+| `radius-interactive` | 8px    | Buttons, inputs, selects, toggles, checkboxes       |
+| `radius-surface`     | 12px   | Cards, panels, popovers, tooltips, dropdowns        |
+| `radius-modal`       | 16px   | Modals, dialogs, drawers, bottom sheets             |
+| `radius-badge`       | 9999px | Pills, tags, avatars, mana symbol backgrounds, dots |
+
+**Rule:** components always use a semantic role, never a scale token directly. **Exception:**
+`radius-sm` (4px) for stamp/seal elements — MTG format badges, rarity chips — with an inline
+comment. These intentionally look crisp/printed, not rounded.
+
+### Scale — reference only
+
+| Token         | Value  |
+| ------------- | ------ |
+| `radius-sm`   | 4px    |
+| `radius-md`   | 8px    |
+| `radius-lg`   | 12px   |
+| `radius-xl`   | 16px   |
+| `radius-2xl`  | 24px   |
+| `radius-full` | 9999px |
 
 ---
 
 ## Animation
 
-| Token           | Value                             |
-| --------------- | --------------------------------- |
-| `duration-fast` | 100ms                             |
-| `duration-base` | 200ms                             |
-| `duration-slow` | 350ms                             |
-| `ease-out`      | ease-out                          |
-| `ease-spring`   | cubic-bezier(0.34, 1.56, 0.64, 1) |
+Two-mode motion system. Direction A (micro interactions): 50–200ms, ease-out. Direction B (moments
+clés): 300–500ms, ease-spring or ease-in-out.
+
+| Token              | Value                             |
+| ------------------ | --------------------------------- |
+| `duration-instant` | 50ms                              |
+| `duration-fast`    | 100ms                             |
+| `duration-normal`  | 200ms                             |
+| `duration-slow`    | 350ms                             |
+| `duration-page`    | 300ms                             |
+| `duration-story`   | 500ms                             |
+| `ease-out`         | cubic-bezier(0, 0, 0.2, 1)        |
+| `ease-spring`      | cubic-bezier(0.34, 1.56, 0.64, 1) |
+
+`prefers-reduced-motion: reduce` resets all durations to 0ms via a media query in `tokens.css`.
 
 ---
 
