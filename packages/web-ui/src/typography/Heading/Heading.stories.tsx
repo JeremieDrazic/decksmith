@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Heading } from './Heading';
 
 const meta = {
-  title: 'Design System/Typography/Heading',
+  title: 'Components/Typography/Heading',
   component: Heading,
   parameters: { layout: 'padded' },
   args: {

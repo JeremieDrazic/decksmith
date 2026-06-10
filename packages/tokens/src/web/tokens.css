@@ -41,6 +41,15 @@
   --brand: #c49a1a;
   --shadow-accent: 0 0 16px rgba(91, 79, 207, 0.2);
 
+  /* Shadows — scale (reference only) — violet-tinted using accent #5b4fcf */
+  --shadow-sm: 0 1px 6px rgba(91, 79, 207, 0.22);
+  --shadow-md: 0 4px 18px rgba(91, 79, 207, 0.3);
+  --shadow-lg: 0 8px 32px rgba(91, 79, 207, 0.38), 0 0 0 1px rgba(91, 79, 207, 0.1);
+  /* Shadows — semantic roles (use these in components) */
+  --shadow-popover: var(--shadow-sm);
+  --shadow-card: var(--shadow-md);
+  --shadow-overlay: var(--shadow-lg);
+
   /* Status — error */
   --error: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.08);
@@ -94,7 +103,14 @@
 
   /* Brand amber — decorative only (same as accent in dark, kept separate for semantic clarity) */
   --brand: #e8b84b;
-  --shadow-accent: 0 0 16px rgba(232, 184, 75, 0.2);
+  --shadow-accent: 0 0 20px rgba(168, 162, 204, 0.22);
+
+  /* Shadows — scale (reference only)
+   * Dark mode: bg is max-dark, drop shadows are invisible. Use rim-light instead:
+   * a visible violet rim (0 0 0 1px) + soft outer glow. Push opacity high enough to see it. */
+  --shadow-sm: 0 0 0 1px rgba(168, 162, 204, 0.45), inset 0 1px 0 rgba(168, 162, 204, 0.1);
+  --shadow-md: 0 4px 24px rgba(168, 162, 204, 0.18), 0 0 0 1px rgba(168, 162, 204, 0.55), inset 0 1px 0 rgba(168, 162, 204, 0.12);
+  --shadow-lg: 0 8px 36px rgba(168, 162, 204, 0.22), 0 0 0 1px rgba(168, 162, 204, 0.6), inset 0 1px 0 rgba(168, 162, 204, 0.14);
 
   /* Status — error */
   --error: #ef4444;
@@ -145,6 +161,12 @@
   --color-on-accent: var(--on-accent);
   --color-brand: var(--brand);
   --shadow-accent: var(--shadow-accent);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-card: var(--shadow-card);
+  --shadow-overlay: var(--shadow-overlay);
   --color-error: var(--error);
   --color-error-subtle: var(--error-subtle);
   --color-error-text: var(--error-text);
@@ -221,10 +243,6 @@
   --radius-modal: 1rem; /* modals, dialogs, drawers */
   --radius-badge: 9999px; /* pills, tags, avatars, mana indicators */
 
-  /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.04);
   /* Z-index */
   --z-index-base: 0;
   --z-index-raised: 10;

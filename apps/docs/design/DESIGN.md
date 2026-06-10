@@ -46,7 +46,8 @@ error · error-subtle · error-text
 success · success-subtle · success-text
 warning · warning-subtle · warning-text
 info · info-subtle · info-text
-shadow-sm · shadow-md · shadow-lg · shadow-accent
+shadow-popover · shadow-card · shadow-overlay · shadow-accent
+shadow-sm · shadow-md · shadow-lg (scale — reference only)
 z-base · z-raised · z-dropdown · z-sticky · z-overlay · z-modal · z-toast · z-tooltip
 radius-interactive · radius-surface · radius-modal · radius-badge
 ```

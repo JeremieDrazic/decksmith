@@ -38,7 +38,7 @@ export function Dialog({ open, onClose, title, footer, width = 440, children, st
           background: 'var(--surface)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-modal)',
-          boxShadow: 'var(--shadow-lg)',
+          boxShadow: 'var(--shadow-overlay)',
           animation: 'dsPop var(--duration-story) var(--ease-spring)',
           overflow: 'hidden',
           ...style,

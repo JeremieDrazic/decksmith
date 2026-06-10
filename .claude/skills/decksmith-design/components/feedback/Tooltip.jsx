@@ -33,7 +33,7 @@ export function Tooltip({ label, side = 'top', children, style }) {
             color: 'var(--text)',
             border: '1px solid var(--border)',
             borderRadius: 'var(--radius-surface)',
-            boxShadow: 'var(--shadow-md)',
+            boxShadow: 'var(--shadow-popover)',
             fontFamily: 'var(--font-body)',
             fontSize: 'var(--text-xs)',
             whiteSpace: 'nowrap',

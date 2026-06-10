@@ -205,7 +205,7 @@
           width: open ? 340 : 0,
           background: 'var(--surface)',
           borderLeft: open ? '1px solid var(--border)' : 'none',
-          boxShadow: open ? 'var(--shadow-lg)' : 'none',
+          boxShadow: open ? 'var(--shadow-overlay)' : 'none',
           transition: 'width var(--duration-slow) var(--ease-spring)',
           overflow: 'hidden',
           zIndex: 5,

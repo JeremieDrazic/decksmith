@@ -25,7 +25,7 @@ export function Toast({ tone = 'default', title, children, onClose, style, ...re
         background: 'var(--surface-raised)',
         border: '1px solid var(--border)',
         borderRadius: 'var(--radius-surface)',
-        boxShadow: 'var(--shadow-lg)',
+        boxShadow: 'var(--shadow-overlay)',
         overflow: 'hidden',
         ...style,
       }}

@@ -25,8 +25,8 @@ export function Card({
         borderRadius: 'var(--radius-surface)',
         padding,
         boxShadow: lift
-          ? 'var(--shadow-md), var(--shadow-accent), var(--shadow-inset)'
-          : 'var(--shadow-sm), var(--shadow-inset)',
+          ? 'var(--shadow-card), var(--shadow-accent), var(--shadow-inset)'
+          : 'var(--shadow-card), var(--shadow-inset)',
         transform: lift ? 'translateY(-2px)' : 'none',
         transition:
           'transform var(--duration-normal) var(--ease-out), box-shadow var(--duration-normal) var(--ease-out), border-color var(--duration-normal) var(--ease-out)',

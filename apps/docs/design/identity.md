@@ -164,6 +164,34 @@ comment. These intentionally look crisp/printed, not rounded.
 
 ---
 
+## Shadows
+
+### Semantic roles — use these in components
+
+| Token            | Value (= scale alias) | Use cases                                |
+| ---------------- | --------------------- | ---------------------------------------- |
+| `shadow-popover` | = shadow-sm           | Tooltips, small dropdowns, hints         |
+| `shadow-card`    | = shadow-md           | Cards, panels, menus                     |
+| `shadow-overlay` | = shadow-lg           | Modals, dialogs, drawers                 |
+| `shadow-accent`  | mode-specific glow    | Hover/focus glow on interactive surfaces |
+
+**Rule:** components always use a semantic role — `shadow-card`, not `shadow-md`. Combining
+`shadow-card + shadow-accent` is the standard card hover state.
+
+### Scale — reference only
+
+Violet-tinted in both modes. Light uses the accent color (`#5b4fcf`). Dark uses rim-light
+(`rgba(168,162,204,X)`) — drop shadows are invisible on the near-black background, so elevation is
+expressed via a colored rim + soft outer glow instead.
+
+| Token       | Light                                                             | Dark                                                                                                        |
+| ----------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `shadow-sm` | `0 1px 6px rgba(91,79,207,0.22)`                                  | `0 0 0 1px rgba(168,162,204,0.45), inset 0 1px 0 rgba(168,162,204,0.10)`                                    |
+| `shadow-md` | `0 4px 18px rgba(91,79,207,0.30)`                                 | `0 4px 24px rgba(168,162,204,0.18), 0 0 0 1px rgba(168,162,204,0.55), inset 0 1px 0 rgba(168,162,204,0.12)` |
+| `shadow-lg` | `0 8px 32px rgba(91,79,207,0.38), 0 0 0 1px rgba(91,79,207,0.10)` | `0 8px 36px rgba(168,162,204,0.22), 0 0 0 1px rgba(168,162,204,0.60), inset 0 1px 0 rgba(168,162,204,0.14)` |
+
+---
+
 ## Animation
 
 Two-mode motion system. Direction A (micro interactions): 50–200ms, ease-out. Direction B (moments

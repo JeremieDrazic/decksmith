@@ -14,6 +14,11 @@ const preview: Preview = {
   ],
   parameters: {
     backgrounds: { disable: true },
+    options: {
+      storySort: {
+        order: ['Design System', 'Components', '*'],
+      },
+    },
   },
 };
 

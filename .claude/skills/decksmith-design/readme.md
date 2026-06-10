@@ -94,8 +94,11 @@ gradient** stands in (derived from WUBRG). Surfaces carry a **subtle SVG grain**
 a printed, tactile feel. Imagery skews **warm and saturated**, never cold or flat.
 
 **Borders & shadows.** Hairline `border-subtle` for dividers, `border` for definition,
-`border-focus` (amber/violet) for focus rings. Shadow ladder (`sm` → `lg`) is tuned dark and deep;
-`shadow-accent` is the colored hover glow.
+`border-focus` (amber/violet) for focus rings. Components use semantic shadow roles — never the raw
+scale: `shadow-popover` (tooltips/dropdowns), `shadow-card` (cards/panels/menus), `shadow-overlay`
+(modals/drawers). `shadow-accent` is the mode-specific hover glow (violet light, amber dark).
+Standard card hover: `shadow-card + shadow-accent`. Scale tokens (`shadow-sm/md/lg`) exist as a
+reference only.
 
 **Motion.** Two modes. **Micro** (50–200ms, `ease-out`): hover, focus, toggle, press. **Key
 moments** (300–500ms, `ease-spring`): modal/drawer/slide-over open, card add, builder. Navigation is

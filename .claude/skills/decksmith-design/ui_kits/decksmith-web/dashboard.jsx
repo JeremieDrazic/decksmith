@@ -117,7 +117,7 @@
             background: 'var(--surface)',
             border: '1px solid var(--border-subtle)',
             borderRadius: 'var(--radius-surface)',
-            boxShadow: 'var(--shadow-sm)',
+            boxShadow: 'var(--shadow-card)',
             overflow: 'hidden',
           }}
         >
