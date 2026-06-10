@@ -14,7 +14,7 @@
     "@decksmith/schema": "workspace:*",
     "@fastify/cookie": "^11.0.2",
     "@fastify/cors": "catalog:",
-    "@fastify/rate-limit": "^10.3.0",
+    "@fastify/rate-limit": "^11.0.0",
     "@fastify/sensible": "catalog:",
     "dotenv": "catalog:",
     "fastify": "catalog:",
