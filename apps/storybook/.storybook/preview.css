@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+@import '@decksmith/tokens/web/tokens.css';
+
+@source '../../../packages/web-ui/src';
+@source '../../web/src';
+@source '../stories';
+@source './components';
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
