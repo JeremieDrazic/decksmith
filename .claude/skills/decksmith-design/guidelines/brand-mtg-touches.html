@@ -1,30 +1,124 @@
 <!-- @dsCard group="Brand" viewport="700x230" name="MTG touches" subtitle="Mana cost · color identity pips · format stamp · rarity dots · coverage" -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="dark">
-<head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../styles.css">
-<style>
-  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
-  .pane { padding: 22px 26px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
-  .block { }
-  .lbl { font: 600 10px var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 9px; }
-  .mana { font-size: 19px; display: flex; align-items: center; gap: 3px; }
-  .pips { display: flex; gap: 4px; font-size: 17px; }
-  .stamp { display: inline-block; padding: 4px 9px; border-radius: var(--radius-sm); border: 1px solid var(--accent-border); background: var(--accent-subtle); color: var(--accent-text); font: 700 11px var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
-  .rar { display: flex; align-items: center; gap: 14px; font: 500 12px var(--font-body); color: var(--text-muted); }
-  .rar span { display: flex; align-items: center; gap: 6px; }
-  .dot { width: 11px; height: 11px; border-radius: var(--radius-badge); }
-  .cov { display: flex; gap: 16px; font: 600 13px var(--font-mono); }
-</style>
-</head>
-<body>
-<div class="pane">
-  <div class="block"><p class="lbl">Mana cost</p><div class="mana"><i class="ms ms-3 ms-cost"></i><i class="ms ms-w ms-cost"></i><i class="ms ms-u ms-cost"></i><i class="ms ms-b ms-cost"></i></div></div>
-  <div class="block"><p class="lbl">Color identity</p><div class="pips"><i class="ms ms-w ms-cost"></i><i class="ms ms-u ms-cost"></i><i class="ms ms-b ms-cost"></i><i class="ms ms-r ms-cost"></i><i class="ms ms-g ms-cost"></i></div></div>
-  <div class="block"><p class="lbl">Format stamp</p><span class="stamp">Commander</span> <span class="stamp" style="border-color:var(--border);background:var(--surface-raised);color:var(--text-muted)">Modern</span></div>
-  <div class="block"><p class="lbl">Rarity</p><div class="rar"><span><i class="dot" style="background:#9aa3ab"></i>Common</span><span><i class="dot" style="background:#c8cdd4"></i>Uncommon</span><span><i class="dot" style="background:var(--brand)"></i>Rare</span><span><i class="dot" style="background:#e0701f"></i>Mythic</span></div></div>
-  <div class="block" style="grid-column:1/-1"><p class="lbl">Collection coverage</p><div class="cov"><span style="color:var(--success-text)">✓ 87% owned</span><span style="color:var(--warning-text)">⚠ 72% owned</span><span style="color:var(--error-text)">✗ 41% owned</span></div></div>
-</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+      .pane {
+        padding: 22px 26px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px 28px;
+      }
+      .block {
+      }
+      .lbl {
+        font: 600 10px var(--font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 9px;
+      }
+      .mana {
+        font-size: 19px;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+      .pips {
+        display: flex;
+        gap: 4px;
+        font-size: 17px;
+      }
+      .stamp {
+        display: inline-block;
+        padding: 4px 9px;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--accent-border);
+        background: var(--accent-subtle);
+        color: var(--accent-text);
+        font: 700 11px var(--font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .rar {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font: 500 12px var(--font-body);
+        color: var(--text-muted);
+      }
+      .rar span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .dot {
+        width: 11px;
+        height: 11px;
+        border-radius: var(--radius-badge);
+      }
+      .cov {
+        display: flex;
+        gap: 16px;
+        font: 600 13px var(--font-mono);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pane">
+      <div class="block">
+        <p class="lbl">Mana cost</p>
+        <div class="mana">
+          <i class="ms ms-3 ms-cost"></i><i class="ms ms-w ms-cost"></i
+          ><i class="ms ms-u ms-cost"></i><i class="ms ms-b ms-cost"></i>
+        </div>
+      </div>
+      <div class="block">
+        <p class="lbl">Color identity</p>
+        <div class="pips">
+          <i class="ms ms-w ms-cost"></i><i class="ms ms-u ms-cost"></i
+          ><i class="ms ms-b ms-cost"></i><i class="ms ms-r ms-cost"></i
+          ><i class="ms ms-g ms-cost"></i>
+        </div>
+      </div>
+      <div class="block">
+        <p class="lbl">Format stamp</p>
+        <span class="stamp">Commander</span>
+        <span
+          class="stamp"
+          style="
+            border-color: var(--border);
+            background: var(--surface-raised);
+            color: var(--text-muted);
+          "
+          >Modern</span
+        >
+      </div>
+      <div class="block">
+        <p class="lbl">Rarity</p>
+        <div class="rar">
+          <span><i class="dot" style="background: #9aa3ab"></i>Common</span
+          ><span><i class="dot" style="background: #c8cdd4"></i>Uncommon</span
+          ><span><i class="dot" style="background: var(--brand)"></i>Rare</span
+          ><span><i class="dot" style="background: #e0701f"></i>Mythic</span>
+        </div>
+      </div>
+      <div class="block" style="grid-column: 1/-1">
+        <p class="lbl">Collection coverage</p>
+        <div class="cov">
+          <span style="color: var(--success-text)">✓ 87% owned</span
+          ><span style="color: var(--warning-text)">⚠ 72% owned</span
+          ><span style="color: var(--error-text)">✗ 41% owned</span>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

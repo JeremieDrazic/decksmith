@@ -109,8 +109,12 @@
    * Dark mode: bg is max-dark, drop shadows are invisible. Use rim-light instead:
    * a visible violet rim (0 0 0 1px) + soft outer glow. Push opacity high enough to see it. */
   --shadow-sm: 0 0 0 1px rgba(168, 162, 204, 0.45), inset 0 1px 0 rgba(168, 162, 204, 0.1);
-  --shadow-md: 0 4px 24px rgba(168, 162, 204, 0.18), 0 0 0 1px rgba(168, 162, 204, 0.55), inset 0 1px 0 rgba(168, 162, 204, 0.12);
-  --shadow-lg: 0 8px 36px rgba(168, 162, 204, 0.22), 0 0 0 1px rgba(168, 162, 204, 0.6), inset 0 1px 0 rgba(168, 162, 204, 0.14);
+  --shadow-md:
+    0 4px 24px rgba(168, 162, 204, 0.18), 0 0 0 1px rgba(168, 162, 204, 0.55),
+    inset 0 1px 0 rgba(168, 162, 204, 0.12);
+  --shadow-lg:
+    0 8px 36px rgba(168, 162, 204, 0.22), 0 0 0 1px rgba(168, 162, 204, 0.6),
+    inset 0 1px 0 rgba(168, 162, 204, 0.14);
 
   /* Status — error */
   --error: #ef4444;

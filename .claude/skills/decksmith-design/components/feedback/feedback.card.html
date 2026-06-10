@@ -1,63 +1,124 @@
 <!-- @dsCard group="Components" viewport="700x380" name="Feedback — dialog, toast, tooltip" subtitle="Dialog · Toast (5 tones) · Tooltip" -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="dark">
-<head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../../styles.css">
-<style>
-  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
-  #root { padding: 24px 26px; }
-  .h { font: 600 10px var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 12px; }
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
-  .stack { display: flex; flex-direction: column; gap: 10px; }
-</style>
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script src="../../_ds_bundle.js"></script>
-</head>
-<body>
-<div id="root"></div>
-<script type="text/babel">
-  const NS = window.DecksmithDesignSystem_0a9b95;
-  const { Dialog, Toast, Tooltip, Button, IconButton } = NS;
-  function Demo() {
-    const [open, setOpen] = React.useState(false);
-    return (
-      <div>
-        <div className="grid">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+      #root {
+        padding: 24px 26px;
+      }
+      .h {
+        font: 600 10px var(--font-mono);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 12px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    </style>
+    <script
+      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
+      integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
+      integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"
+      integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../../_ds_bundle.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const NS = window.DecksmithDesignSystem_0a9b95;
+      const { Dialog, Toast, Tooltip, Button, IconButton } = NS;
+      function Demo() {
+        const [open, setOpen] = React.useState(false);
+        return (
           <div>
-            <p className="h">Toasts</p>
-            <div className="stack">
-              <Toast tone="success" title="Card added" onClose={()=>{}}>4× Llanowar Elves added to The Ur-Dragon.</Toast>
-              <Toast tone="warning" title="Coverage dropped">You're missing 12 cards from this deck.</Toast>
-              <Toast tone="error" title="Import failed" onClose={()=>{}}>Line 14 — card not found on Scryfall.</Toast>
-            </div>
-          </div>
-          <div>
-            <p className="h">Dialog &amp; tooltip</p>
-            <div className="stack" style={{gap:16}}>
-              <div><Button onClick={()=>setOpen(true)}>Open dialog</Button></div>
-              <div style={{display:'flex',gap:12,alignItems:'center'}}>
-                <Tooltip label="Duplicate deck" side="top"><IconButton aria-label="duplicate" variant="secondary">⧉</IconButton></Tooltip>
-                <Tooltip label="Delete — can't be undone" side="right"><IconButton aria-label="delete" variant="secondary">🗑</IconButton></Tooltip>
-                <span style={{font:'500 12px var(--font-mono)',color:'var(--text-muted)'}}>hover the icons →</span>
+            <div className="grid">
+              <div>
+                <p className="h">Toasts</p>
+                <div className="stack">
+                  <Toast tone="success" title="Card added" onClose={() => {}}>
+                    4× Llanowar Elves added to The Ur-Dragon.
+                  </Toast>
+                  <Toast tone="warning" title="Coverage dropped">
+                    You're missing 12 cards from this deck.
+                  </Toast>
+                  <Toast tone="error" title="Import failed" onClose={() => {}}>
+                    Line 14 — card not found on Scryfall.
+                  </Toast>
+                </div>
+              </div>
+              <div>
+                <p className="h">Dialog &amp; tooltip</p>
+                <div className="stack" style={{ gap: 16 }}>
+                  <div>
+                    <Button onClick={() => setOpen(true)}>Open dialog</Button>
+                  </div>
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                    <Tooltip label="Duplicate deck" side="top">
+                      <IconButton aria-label="duplicate" variant="secondary">
+                        ⧉
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip label="Delete — can't be undone" side="right">
+                      <IconButton aria-label="delete" variant="secondary">
+                        🗑
+                      </IconButton>
+                    </Tooltip>
+                    <span style={{ font: '500 12px var(--font-mono)', color: 'var(--text-muted)' }}>
+                      hover the icons →
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
+            <Dialog
+              open={open}
+              onClose={() => setOpen(false)}
+              title="Delete this deck?"
+              footer={
+                <>
+                  <Button variant="ghost" onClick={() => setOpen(false)}>
+                    Cancel
+                  </Button>
+                  <Button variant="destructive" onClick={() => setOpen(false)}>
+                    Delete deck
+                  </Button>
+                </>
+              }
+            >
+              “The Ur-Dragon” and its 100 cards will be permanently removed. This can't be undone.
+            </Dialog>
           </div>
-        </div>
-        <Dialog
-          open={open}
-          onClose={()=>setOpen(false)}
-          title="Delete this deck?"
-          footer={<><Button variant="ghost" onClick={()=>setOpen(false)}>Cancel</Button><Button variant="destructive" onClick={()=>setOpen(false)}>Delete deck</Button></>}
-        >
-          “The Ur-Dragon” and its 100 cards will be permanently removed. This can't be undone.
-        </Dialog>
-      </div>
-    );
-  }
-  ReactDOM.createRoot(document.getElementById('root')).render(<Demo/>);
-</script>
-</body>
+        );
+      }
+      ReactDOM.createRoot(document.getElementById('root')).render(<Demo />);
+    </script>
+  </body>
 </html>

@@ -1,40 +1,83 @@
 <!-- @dsCard group="Colors" viewport="700x150" name="Status colors" subtitle="success / warning / error / info — each with subtle bg + accessible text" -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../styles.css">
-<style>
-  body { margin: 0; font-family: var(--font-body); }
-  .pane { background: var(--bg); color: var(--text); padding: 22px 24px; }
-  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-  .item { }
-  .pill { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--radius-surface); background: var(--_sub); }
-  .dot { width: 12px; height: 12px; border-radius: var(--radius-badge); background: var(--_solid); }
-  .name { font: 600 13px var(--font-body); color: var(--_text); }
-  .hex { font: 500 11px var(--font-mono); color: var(--text-muted); margin-top: 7px; }
-</style>
-</head>
-<body>
-<div class="pane dark">
-  <div class="grid">
-    <div class="item">
-      <div class="pill" style="--_sub:var(--success-subtle)"><span class="dot" style="--_solid:var(--success)"></span><span class="name" style="--_text:var(--success-text)">Success</span></div>
-      <div class="hex">success · -subtle · -text</div>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+      }
+      .pane {
+        background: var(--bg);
+        color: var(--text);
+        padding: 22px 24px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+      .item {
+      }
+      .pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: var(--radius-surface);
+        background: var(--_sub);
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: var(--radius-badge);
+        background: var(--_solid);
+      }
+      .name {
+        font: 600 13px var(--font-body);
+        color: var(--_text);
+      }
+      .hex {
+        font: 500 11px var(--font-mono);
+        color: var(--text-muted);
+        margin-top: 7px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pane dark">
+      <div class="grid">
+        <div class="item">
+          <div class="pill" style="--_sub: var(--success-subtle)">
+            <span class="dot" style="--_solid: var(--success)"></span
+            ><span class="name" style="--_text: var(--success-text)">Success</span>
+          </div>
+          <div class="hex">success · -subtle · -text</div>
+        </div>
+        <div class="item">
+          <div class="pill" style="--_sub: var(--warning-subtle)">
+            <span class="dot" style="--_solid: var(--warning)"></span
+            ><span class="name" style="--_text: var(--warning-text)">Warning</span>
+          </div>
+          <div class="hex">warning · -subtle · -text</div>
+        </div>
+        <div class="item">
+          <div class="pill" style="--_sub: var(--error-subtle)">
+            <span class="dot" style="--_solid: var(--error)"></span
+            ><span class="name" style="--_text: var(--error-text)">Error</span>
+          </div>
+          <div class="hex">error · -subtle · -text</div>
+        </div>
+        <div class="item">
+          <div class="pill" style="--_sub: var(--info-subtle)">
+            <span class="dot" style="--_solid: var(--info)"></span
+            ><span class="name" style="--_text: var(--info-text)">Info</span>
+          </div>
+          <div class="hex">info · -subtle · -text</div>
+        </div>
+      </div>
     </div>
-    <div class="item">
-      <div class="pill" style="--_sub:var(--warning-subtle)"><span class="dot" style="--_solid:var(--warning)"></span><span class="name" style="--_text:var(--warning-text)">Warning</span></div>
-      <div class="hex">warning · -subtle · -text</div>
-    </div>
-    <div class="item">
-      <div class="pill" style="--_sub:var(--error-subtle)"><span class="dot" style="--_solid:var(--error)"></span><span class="name" style="--_text:var(--error-text)">Error</span></div>
-      <div class="hex">error · -subtle · -text</div>
-    </div>
-    <div class="item">
-      <div class="pill" style="--_sub:var(--info-subtle)"><span class="dot" style="--_solid:var(--info)"></span><span class="name" style="--_text:var(--info-text)">Info</span></div>
-      <div class="hex">info · -subtle · -text</div>
-    </div>
-  </div>
-</div>
-</body>
+  </body>
 </html>

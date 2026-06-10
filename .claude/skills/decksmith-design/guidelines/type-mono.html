@@ -1,25 +1,63 @@
 <!-- @dsCard group="Type" viewport="700x200" name="Mono — stats & prices" subtitle="JetBrains Mono for card counts, prices, mana cost text" -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="dark">
-<head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../styles.css">
-<style>
-  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
-  .pane { padding: 22px 26px; display: flex; gap: 36px; flex-wrap: wrap; }
-  .stat { }
-  .num { font-family: var(--font-mono); font-weight: 600; color: var(--text); line-height: 1; }
-  .k { font: 500 11px var(--font-mono); color: var(--text-muted); margin-top: 8px; letter-spacing: .04em; text-transform: uppercase; }
-  .big { font-size: 40px; }
-  .accent { color: var(--accent-text); }
-</style>
-</head>
-<body>
-<div class="pane">
-  <div class="stat"><div class="num big accent">$1,284.50</div><div class="k">Collection value</div></div>
-  <div class="stat"><div class="num big">2,417</div><div class="k">Cards owned</div></div>
-  <div class="stat"><div class="num big">12</div><div class="k">Decks</div></div>
-  <div class="stat" style="align-self:flex-end"><div class="num" style="font-size:18px">87% · 142€ · 4×</div><div class="k">Inline stats</div></div>
-</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+      .pane {
+        padding: 22px 26px;
+        display: flex;
+        gap: 36px;
+        flex-wrap: wrap;
+      }
+      .stat {
+      }
+      .num {
+        font-family: var(--font-mono);
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1;
+      }
+      .k {
+        font: 500 11px var(--font-mono);
+        color: var(--text-muted);
+        margin-top: 8px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .big {
+        font-size: 40px;
+      }
+      .accent {
+        color: var(--accent-text);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pane">
+      <div class="stat">
+        <div class="num big accent">$1,284.50</div>
+        <div class="k">Collection value</div>
+      </div>
+      <div class="stat">
+        <div class="num big">2,417</div>
+        <div class="k">Cards owned</div>
+      </div>
+      <div class="stat">
+        <div class="num big">12</div>
+        <div class="k">Decks</div>
+      </div>
+      <div class="stat" style="align-self: flex-end">
+        <div class="num" style="font-size: 18px">87% · 142€ · 4×</div>
+        <div class="k">Inline stats</div>
+      </div>
+    </div>
+  </body>
 </html>

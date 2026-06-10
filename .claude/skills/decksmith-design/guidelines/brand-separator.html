@@ -1,24 +1,52 @@
 <!-- @dsCard group="Brand" viewport="700x160" name="Section separator" subtitle="─────◈───── ornamental divider in brand amber" -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="dark">
-<head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../styles.css">
-<style>
-  body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); }
-  .pane { padding: 30px 40px; }
-  .sep { display: flex; align-items: center; gap: 14px; color: var(--brand); margin: 18px 0; }
-  .sep::before, .sep::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
-  .glyph { font-size: 16px; }
-  .glyph.lg { font-size: 22px; }
-  .lbl { text-align: center; font: 500 11px var(--font-mono); color: var(--text-muted); margin-top: 6px; }
-</style>
-</head>
-<body>
-<div class="pane">
-  <div class="sep"><span class="glyph">◈</span></div>
-  <div class="sep"><span class="glyph lg">─◈─</span></div>
-  <p class="lbl">Used between content sections — never decorative noise</p>
-</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font-body);
+      }
+      .pane {
+        padding: 30px 40px;
+      }
+      .sep {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: var(--brand);
+        margin: 18px 0;
+      }
+      .sep::before,
+      .sep::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--border), transparent);
+      }
+      .glyph {
+        font-size: 16px;
+      }
+      .glyph.lg {
+        font-size: 22px;
+      }
+      .lbl {
+        text-align: center;
+        font: 500 11px var(--font-mono);
+        color: var(--text-muted);
+        margin-top: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pane">
+      <div class="sep"><span class="glyph">◈</span></div>
+      <div class="sep"><span class="glyph lg">─◈─</span></div>
+      <p class="lbl">Used between content sections — never decorative noise</p>
+    </div>
+  </body>
 </html>
