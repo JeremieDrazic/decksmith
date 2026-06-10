@@ -135,7 +135,10 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 4.5 packages/web-ui Foundation
 
-- ⬜ shadcn/ui base components: Button, Input, Form, Card, Badge, Dialog, Toast
+- ✅ `apps/storybook` scaffold: Storybook 10 + `@storybook/addon-themes` + `withThemeByClassName`
+- ✅ Design System token pages: Colors, Typography, Spacing, Radius, Shadows, Motion (PR #26)
+- ✅ Semantic shadow tokens: `shadow-popover`, `shadow-card`, `shadow-overlay`, `shadow-accent`
+- 🔄 shadcn/ui base components: Button, Input, Form, Card, Badge, Dialog, Toast
 - ⬜ Design tokens from `packages/tokens` applied
 
 ---

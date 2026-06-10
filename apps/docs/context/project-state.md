@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-10 (session 4)_
+_Updated: 2026-06-11 (session 5)_
 
 ---
 
@@ -51,6 +51,13 @@ _Updated: 2026-06-10 (session 4)_
       `buildUserPreferences` factories
 - [x] `packages/query` scaffolded: `ApiClientProvider`, `useUser`, `useUserPreferences` — 8 tests —
       PR #23
+- [x] `apps/storybook` scaffolded: Storybook 10, `@storybook/addon-themes`, `withThemeByClassName`
+      decorator for runtime dark/light switching
+- [x] Design System token pages: Colors, Typography, Spacing, Radius, Shadows, Motion — co-located
+      in `packages/web-ui/src/design-system/` with auto-title from directory
+- [x] Semantic shadow tokens locked: `shadow-popover`, `shadow-card`, `shadow-overlay`,
+      `shadow-accent` — violet-tinted light mode, rim-light dark mode
+- [x] Shadow tokens propagated to all skill components (Card, Dialog, Toast, Tooltip, ui_kits)
 
 ---
 
@@ -65,20 +72,20 @@ _Updated: 2026-06-10 (session 4)_
   (`pnpm --filter @decksmith/db db:generate`)
 - `routeTree.gen.ts` must be regenerated after adding/changing routes
   (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
-- `packages/web-ui` not yet scaffolded
+- `packages/web-ui` has design-system stories but no shadcn/ui components yet (Phase 4.5 next)
 - `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
 
 ---
 
 ## Open PRs
 
-_None — `main` is clean._
+- PR #26 — `feat/storybook-scaffold` → `main` (Design System token pages + semantic shadows)
 
 ---
 
 ## Current Branch
 
-- Branch: `main` (clean, PR #23 merged)
+- Branch: `feat/storybook-scaffold` (PR #26 open)
 
 ---
 

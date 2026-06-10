@@ -4,6 +4,48 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-11] — Storybook Design System stories: co-location + CSS var patterns
+
+**Context:** Building 6 token doc pages (Colors, Typography, Spacing, Radius, Shadows, Motion)
+required decisions on file placement, theming approach, and how to resolve design tokens at runtime
+in Storybook.
+
+**Decisions:**
+
+- Stories co-located in `packages/web-ui/src/design-system/` (not `apps/storybook/stories/`) —
+  closer to the tokens they document, picked up via `{ directory, titlePrefix, files }` entry in
+  `main.ts`
+- Shadow demo components use `cssValue="var(--shadow-card)"` (live CSS var) rather than hardcoded
+  rgba strings — changes to `tokens.css` reflect immediately in stories
+- `MotionDemo` passes direct CSS values (`durationMs`, `easingCss`) rather than `var(--token)`
+  references for `transition` — static `@theme` tokens don't always resolve reliably in inline
+  styles in Storybook renderers
+- Dark mode shadows use rim-light (`0 0 0 1px rgba(168,162,204,X)`) not drop shadows — the `#0f0e17`
+  background is too dark for any darkening effect to be visible
+
+**Impact:** `packages/web-ui/src/design-system/`, `_doc-components.tsx`,
+`packages/tokens/src/web/tokens.css`
+
+---
+
+## [2026-06-11] — Semantic shadow tokens: shadow-popover / shadow-card / shadow-overlay
+
+**Context:** The scale tokens (`shadow-sm/md/lg`) were being used directly in components, creating
+the same drift risk as using raw radius scale tokens.
+
+**Decision:** Added three semantic roles + one accent glow, following the same philosophy as
+`radius-interactive/surface/modal/badge`:
+
+- `shadow-popover` = `shadow-sm` — tooltips, hints, small dropdowns
+- `shadow-card` = `shadow-md` — cards, panels, menus (default surface)
+- `shadow-overlay` = `shadow-lg` — modals, drawers, maximum elevation
+- `shadow-accent` — mode-specific glow (violet light, violet-muted dark); card hover =
+  `shadow-card + shadow-accent`
+
+**Impact:** `packages/tokens/src/web/tokens.css`, all skill components, `identity.md`, `DESIGN.md`
+
+---
+
 ## [2026-06-10] — Typography tokens completed: leading, tracking, font-body
 
 **Context:** `packages/tokens` was missing line heights and letter spacing, causing browser defaults
