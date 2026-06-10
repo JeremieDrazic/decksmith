@@ -200,10 +200,10 @@
   --radius-full: 9999px;
 
   /* Border radius — semantic roles (use these in components) */
-  --radius-interactive: 0.5rem;   /* buttons, inputs, selects, toggles */
-  --radius-surface: 0.75rem;      /* cards, panels, popovers, dropdowns */
-  --radius-modal: 1rem;           /* modals, dialogs, drawers */
-  --radius-badge: 9999px;         /* pills, tags, avatars, mana indicators */
+  --radius-interactive: 0.5rem; /* buttons, inputs, selects, toggles */
+  --radius-surface: 0.75rem; /* cards, panels, popovers, dropdowns */
+  --radius-modal: 1rem; /* modals, dialogs, drawers */
+  --radius-badge: 9999px; /* pills, tags, avatars, mana indicators */
 
   /* Shadows */
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
