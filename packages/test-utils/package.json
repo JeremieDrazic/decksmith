@@ -1,0 +1,32 @@
+{
+  "name": "@decksmith/test-utils",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "oxlint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    "./server": "./src/server.ts",
+    "./query-wrapper": "./src/query-wrapper.tsx",
+    "./factories/user": "./src/factories/user.ts",
+    "./factories/preferences": "./src/factories/preferences.ts"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
+    "react": "^19.0.0"
+  },
+  "dependencies": {
+    "@decksmith/schema": "workspace:*",
+    "msw": "^2.14.6"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "@tanstack/react-query": "^5.101.0",
+    "@types/react": "^19.1.8",
+    "react": "^19.2.7",
+    "typescript": "catalog:",
+    "vitest": "^4.1.8"
+  }
+}
