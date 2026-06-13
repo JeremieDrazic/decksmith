@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@base-ui/react": "^1.5.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.6.0"
@@ -21,11 +22,11 @@
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
-    "@storybook/react-vite": "^10.4.3",
-    "storybook": "^10.4.3",
     "@decksmith/tokens": "workspace:*",
+    "@storybook/react-vite": "^10.4.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "storybook": "^10.4.3",
     "typescript": "catalog:"
   }
 }

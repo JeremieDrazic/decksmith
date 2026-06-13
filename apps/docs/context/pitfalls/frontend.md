@@ -140,6 +140,96 @@ in `router.tsx` duplicates this and can drift out of sync.
 
 ---
 
+## Tailwind v4 + Vite — new files not scanned after Storybook start
+
+**`@source` does not hot-watch new files added after the initial scan.** In dev mode,
+`@tailwindcss/vite` builds a scanner once from `@source` paths at startup. Files written after that
+point are not in `scanner.files`, so touching them does NOT trigger a CSS rebuild — the classes they
+contain never appear.
+
+**Symptom:** classes unique to a newly created component (`size-7`, `cursor-text`,
+`group/input-group`) are absent from the generated CSS, while classes from older files in the same
+directory ARE present.
+
+**Fix:** save any change to the CSS entry point (`preview.css`) — this makes `requiresBuild()`
+return `true`, forces a full compiler + scanner rebuild, and picks up all new files.
+
+```css
+/* preview.css — add or remove a comment to force a full Tailwind rebuild */
+@source '../../../packages/web-ui/src/**/*.{ts,tsx}';
+```
+
+Use the explicit glob form (`**/*.{ts,tsx}`) rather than a bare directory path — it makes the intent
+clear and avoids ambiguity about which file types are scanned.
+
+---
+
+## Tailwind v4 — `has-[...]` built-in variant generates no CSS
+
+**`has-[...]` (built-in variant) produces no CSS rules in our Vite + Storybook setup.** The
+arbitrary variant form `[&:has(...)]` DOES work and must be used instead.
+
+```tsx
+// ❌ generates no CSS — built-in has-[...] variant
+'has-[[data-slot=foo]:focus-visible]:ring-2';
+'has-disabled:opacity-50';
+'has-[>textarea]:h-auto';
+
+// ✅ generates CSS — arbitrary [&:has(...)] variant
+'[&:has([data-slot=foo]:focus-visible)]:ring-2';
+'[&:has(:disabled)]:opacity-50';
+'[&:has(>textarea)]:h-auto';
+```
+
+Note: the `[&>[data-slot]:not(:has(~[data-slot]))]` form used in Button DOES work — nested brackets
+inside arbitrary variants are fine. Only the top-level `has-[...]` built-in shorthand is broken.
+
+---
+
+## SVG sizing inside Button children
+
+**SVGs passed as `children` to `Button` are not sized automatically.** `Button` only applies
+`[&>svg]:size-[1em]` to the `startIcon` and `endIcon` wrapper spans — not to plain children.
+
+If you build a component that passes icons as `children` to `Button` (e.g. `InputGroupButton`), add
+SVG sizing to your wrapper's CVA base class using the **descendant combinator** (`_`), not the
+direct child combinator (`>`):
+
+```tsx
+// ✅ correct — descendant combinator reaches svg inside Button's inner <span>
+cva(['[&_svg:not([class*="size-"])]:size-[1em]'], { ... })
+
+// ❌ wrong — direct child combinator doesn't reach svg (it's inside Button's <span>)
+cva(['[&>svg:not([class*="size-"])]:size-[1em]'], { ... })
+```
+
+---
+
+## Storybook — axe-core dark mode timing
+
+**`withThemeByClassName` applies `.dark` via `useEffect` — axe-core scans before it fires.** The
+a11y addon runs synchronously after the initial render, before React effects have committed. Result:
+axe-core sees `:root` (light mode) CSS var values even when dark mode is selected.
+
+Fix: add a `withSyncTheme` decorator that applies the class during the render phase, before axe-core
+runs. Place it first in the `decorators` array (outermost wrapper).
+
+```tsx
+// apps/storybook/.storybook/preview.tsx
+const withSyncTheme: Decorator = (Story, context) => {
+  const isDark = (context.globals['theme'] ?? 'dark') === 'dark';
+  document.documentElement.classList.toggle('dark', isDark);
+  return <Story />;
+};
+
+decorators: [withSyncTheme, withThemeByClassName({ ... })]
+```
+
+Keep the `#storybook-root { background-color: literal }` rules in `preview.css` — axe-core reads the
+`background-color` property by traversing ancestors, and literal values bypass the CSS var chain.
+
+---
+
 ## Architecture boundary (ADR-0016)
 
 **No backend code in `apps/web` — ever.** Route loaders must only call `apps/api` via HTTP

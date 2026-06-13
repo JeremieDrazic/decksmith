@@ -6,6 +6,24 @@
  *   .dark     → dark mode overrides (added to <html> at runtime)
  *   @theme inline → generates utility classes from runtime CSS vars (bg-bg, text-accent…)
  *   @theme    → generates utility classes from static values (motion, shadows, MTG colors…)
+ *
+ * Shadcn → Decksmith mapping — cheatsheet for copy-pasting generated components
+ *
+ *   bg-background               → bg-bg
+ *   text-foreground             → text-text
+ *   bg-card / bg-popover        → bg-surface
+ *   bg-primary                  → bg-accent
+ *   text-primary-foreground     → text-on-accent
+ *   bg-secondary / bg-muted     → bg-surface-raised
+ *   text-muted-foreground       → text-text-muted
+ *   bg-accent                   → bg-accent-subtle   ← shadcn accent ≠ notre accent
+ *   text-accent-foreground      → text-text
+ *   bg-destructive              → bg-error
+ *   text-destructive-foreground → text-on-error
+ *   border-border / border-input → border-border     ← même nom
+ *   border-border/50            → border-border-subtle
+ *   ring-ring                   → ring-border-focus
+ *   rounded-[--radius]          → rounded-interactive
  */
 
 /* ─── Theme-aware color variables ─────────────────────────────────────────── */
@@ -51,9 +69,11 @@
   --shadow-overlay: var(--shadow-lg);
 
   /* Status — error */
-  --error: #ef4444;
+  --error: #dc2626;
+  --error-hover: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.08);
   --error-text: #b91c1c;
+  --on-error: #ffffff;
 
   /* Status — success */
   --success: #22c55e;
@@ -117,7 +137,6 @@
     inset 0 1px 0 rgba(168, 162, 204, 0.14);
 
   /* Status — error */
-  --error: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.12);
   --error-text: #ef4444;
 
@@ -172,8 +191,10 @@
   --shadow-card: var(--shadow-card);
   --shadow-overlay: var(--shadow-overlay);
   --color-error: var(--error);
+  --color-error-hover: var(--error-hover);
   --color-error-subtle: var(--error-subtle);
   --color-error-text: var(--error-text);
+  --color-on-error: var(--on-error);
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-success-text: var(--success-text);

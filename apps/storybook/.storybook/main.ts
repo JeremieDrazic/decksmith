@@ -11,7 +11,7 @@ const config: StorybookConfig = {
       titlePrefix: 'Design System',
       files: '**/*.stories.@(ts|tsx)',
     },
-    '../../../packages/web-ui/src/typography/**/*.stories.@(ts|tsx)',
+    '../../../packages/web-ui/src/!(design-system)/**/*.stories.@(ts|tsx)',
     '../../web/src/**/*.mdx',
     '../../web/src/**/*.stories.@(ts|tsx)',
   ],
