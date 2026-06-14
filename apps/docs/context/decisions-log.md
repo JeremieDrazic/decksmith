@@ -4,6 +4,39 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-13] — InputGroup, Field, Button polish: component patterns and Tailwind v4 quirks
+
+**Context:** Session 7 — building InputGroup, Field, and polishing Button in `packages/web-ui`.
+Several non-obvious choices required during implementation.
+
+**Decisions:**
+
+- `[&:has(...)]` arbitrary variant instead of built-in `has-[...]` — the built-in form generates no
+  CSS in our Vite + Storybook setup. All `:has()` selectors use the arbitrary form.
+- Descendant combinator `_` (not direct child `>`) for SVG sizing in `InputGroupButton` — SVGs
+  passed as `children` to `Button` sit inside Button's inner `<span>`, so `[&>svg]` misses them;
+  `[&_svg]` reaches them.
+- `@source` with explicit glob (`**/*.{ts,tsx}`) in `preview.css` — Tailwind v4 Vite scanner doesn't
+  hot-watch files created after startup; touching the CSS entry point forces a full rescan.
+- shadcn Field (pure HTML) over Base UI Field (`@base-ui/react/field`) — TanStack Form manages all
+  validation state externally; using Base UI Field would add a second validation layer that
+  conflicts.
+- `FieldLabel` uses Eyebrow style
+  (`font-mono text-xs uppercase tracking-wide font-semibold text-text-muted`) — MTG identity, fully
+  semantic token–based, readable at label scale.
+- `FieldError.errors` typed as `(string | undefined)[]` (not `{ message?: string }[]`) — TanStack
+  Form's `field.state.meta.errors` format differs from react-hook-form; deduplication via `Set`.
+- Button `destructive` variant: subtle background (`bg-error-subtle`) at rest, fills to `bg-error`
+  on hover — communicates danger without alarming the user in an idle state.
+- `active:duration-instant` on Button base — 50ms snap-down for tactile press feel; resets to 0ms in
+  `prefers-reduced-motion` (handled in `tokens.css`).
+
+**Impact:** `packages/web-ui/src/ui/InputGroup/`, `packages/web-ui/src/ui/Field/`,
+`packages/web-ui/src/ui/Button/Button.tsx`, `packages/web-ui/src/ui/Separator/Separator.tsx`,
+`apps/storybook/.storybook/preview.css`, `apps/docs/context/pitfalls/frontend.md`
+
+---
+
 ## [2026-06-11] — Storybook Design System stories: co-location + CSS var patterns
 
 **Context:** Building 6 token doc pages (Colors, Typography, Spacing, Radius, Shadows, Motion)

@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 @import '@decksmith/tokens/web/tokens.css';
 
-@source '../../../packages/web-ui/src';
+@source '../../../packages/web-ui/src/**/*.{ts,tsx}';
 @source '../../web/src';
 @source '../stories';
 @source './components';
@@ -9,4 +9,17 @@
 body {
   background-color: var(--bg);
   color: var(--text);
+}
+
+/* Literal backgrounds for axe-core — CSS var() resolution from #storybook-root avoids
+   the two-level chain that axe-core can't follow. The real timing fix is withSyncTheme
+   in preview.tsx which applies .dark synchronously before axe-core scans. */
+#storybook-root {
+  background-color: #faf9f4;
+  color: #0f0e17;
+}
+
+html.dark #storybook-root {
+  background-color: #0f0e17;
+  color: #f0eef8;
 }

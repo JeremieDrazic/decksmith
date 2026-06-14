@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-11 (session 5)_
+_Updated: 2026-06-13 (session 7)_
 
 ---
 
@@ -58,6 +58,16 @@ _Updated: 2026-06-11 (session 5)_
 - [x] Semantic shadow tokens locked: `shadow-popover`, `shadow-card`, `shadow-overlay`,
       `shadow-accent` — violet-tinted light mode, rim-light dark mode
 - [x] Shadow tokens propagated to all skill components (Card, Dialog, Toast, Tooltip, ui_kits)
+- [x] `InputGroup` — composite input: `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`
+      (inline + block), `InputGroupButton`, `InputGroupText`; focus ring + error state via
+      `[&:has(...)]` Tailwind v4 pattern
+- [x] `Field` — `FieldGroup`, `FieldLabel` (Eyebrow style: font-mono uppercase tracking-wide),
+      `FieldDescription`, `FieldError` (TanStack Form: `(string | undefined)[]`, dedup via Set)
+- [x] Button polish: `hover:shadow-accent` on primary,
+      `active:translate-y-px active:duration-instant` press effect, destructive redesign (subtle →
+      filled on hover), Separator `elaborate` prop
+- [x] 3 new pitfalls documented in `apps/docs/context/pitfalls/frontend.md`: Tailwind v4 scanner
+      new-file bug, `has-[...]` vs `[&:has(...)]`, SVG descendant combinator in Button children
 
 ---
 
@@ -72,14 +82,15 @@ _Updated: 2026-06-11 (session 5)_
   (`pnpm --filter @decksmith/db db:generate`)
 - `routeTree.gen.ts` must be regenerated after adding/changing routes
   (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
-- `packages/web-ui` has design-system stories but no shadcn/ui components yet (Phase 4.5 next)
 - `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
+- `packages/web-ui` Phase 4.5 in progress: Card, Badge, Dialog, Toast not started
 
 ---
 
 ## Open PRs
 
-- PR #26 — `feat/storybook-scaffold` → `main` (Design System token pages + semantic shadows)
+- PR #26 — `feat/storybook-scaffold` → `main` (Design System token pages + semantic shadows +
+  InputGroup + Field + Button polish)
 
 ---
 

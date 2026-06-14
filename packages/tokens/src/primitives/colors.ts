@@ -47,6 +47,9 @@ export const primitiveColors = {
   error12: 'rgba(239, 68, 68, 0.12)',
   error08: 'rgba(239, 68, 68, 0.08)',
   errorDeep: '#b91c1c',
+  errorHoverLight: '#dc2626',
+  errorHoverDark: '#f87171',
+  onError: '#ffffff',
 
   // ─── Status — success ────────────────────────────────────────────────────────
   success: '#22c55e',

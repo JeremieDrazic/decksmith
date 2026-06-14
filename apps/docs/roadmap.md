@@ -138,8 +138,14 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ `apps/storybook` scaffold: Storybook 10 + `@storybook/addon-themes` + `withThemeByClassName`
 - ✅ Design System token pages: Colors, Typography, Spacing, Radius, Shadows, Motion (PR #26)
 - ✅ Semantic shadow tokens: `shadow-popover`, `shadow-card`, `shadow-overlay`, `shadow-accent`
-- 🔄 shadcn/ui base components: Button, Input, Form, Card, Badge, Dialog, Toast
-- ⬜ Design tokens from `packages/tokens` applied
+- ✅ Button (4 variants, 3 sizes, isLoading, startIcon/endIcon, polish: shadow-accent, press effect)
+- ✅ IconButton, ButtonGroup, Separator (`elaborate` prop `─◈─`)
+- ✅ Toggle, ToggleGroup
+- ✅ Input, Textarea
+- ✅ InputGroup — composite input with inline/block addons, button, error state
+- ✅ Field — FieldGroup, FieldLabel (Eyebrow style), FieldDescription, FieldError (TanStack Form)
+- 🔄 shadcn/ui base components remaining: Card, Badge, Dialog, Toast
+- ✅ Design tokens from `packages/tokens` applied (semantic token classes across all components)
 
 ---
 
