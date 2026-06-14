@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -26,8 +26,8 @@
         --shadow-accent: 0 0 20px rgba(91, 79, 207, 0.35);
         --shadow-error: 0 0 20px rgba(239, 68, 68, 0.45);
         --radius-interactive: 0.5rem;
-        --font-display: "Outfit", system-ui, sans-serif;
-        --font-mono: "JetBrains Mono", ui-monospace, monospace;
+        --font-display: 'Outfit', system-ui, sans-serif;
+        --font-mono: 'JetBrains Mono', ui-monospace, monospace;
       }
 
       /* ─── Reset & base ───────────────────────────────────────── */
@@ -93,7 +93,7 @@
       }
 
       .section-label::after {
-        content: "";
+        content: '';
         flex: 1;
         height: 1px;
         background: #2e2b47;
@@ -228,7 +228,7 @@
 
       /* Shimmer sweep overlay (used on primary + destructive) */
       .btn::after {
-        content: "";
+        content: '';
         position: absolute;
         inset: 0;
         background: linear-gradient(
@@ -293,7 +293,7 @@
       }
 
       .dark-secondary::before {
-        content: "";
+        content: '';
         position: absolute;
         inset: 0;
         background: radial-gradient(
@@ -351,7 +351,7 @@
       }
 
       .dark-ghost::before {
-        content: "";
+        content: '';
         position: absolute;
         inset: -4px;
         background: radial-gradient(
@@ -514,7 +514,7 @@
       }
 
       .light-secondary::before {
-        content: "";
+        content: '';
         position: absolute;
         inset: 0;
         background: radial-gradient(
@@ -572,7 +572,7 @@
       }
 
       .light-ghost::before {
-        content: "";
+        content: '';
         position: absolute;
         inset: -4px;
         background: radial-gradient(
@@ -783,7 +783,9 @@
           </div>
           <div class="grid-cell">
             <div class="cell-wrap">
-              <button class="btn dark-secondary is-hover"><span class="btn-label">Edit</span></button>
+              <button class="btn dark-secondary is-hover">
+                <span class="btn-label">Edit</span>
+              </button>
             </div>
           </div>
           <div class="grid-cell">
@@ -819,7 +821,9 @@
           </div>
           <div class="grid-cell">
             <div class="cell-wrap">
-              <button class="btn dark-ghost is-active"><span class="btn-label">Cancel</span></button>
+              <button class="btn dark-ghost is-active">
+                <span class="btn-label">Cancel</span>
+              </button>
               <p class="annotation">text → accent color</p>
             </div>
           </div>
@@ -918,10 +922,7 @@
       <div class="section light-section" style="background: transparent">
         <p class="section-label" style="color: #524d80">Light Mode</p>
 
-        <div
-          class="state-grid light-grid"
-          style="border-color: #d5d0be; --focus-color: #5b4fcf"
-        >
+        <div class="state-grid light-grid" style="border-color: #d5d0be; --focus-color: #5b4fcf">
           <div class="grid-header" style="text-align: left; color: #7b75a8">State</div>
           <div class="grid-header" style="color: #7b75a8">Primary</div>
           <div class="grid-header" style="color: #7b75a8">Secondary</div>
@@ -949,7 +950,9 @@
             </button>
           </div>
           <div class="grid-cell">
-            <button class="btn light-secondary is-hover"><span class="btn-label">Edit</span></button>
+            <button class="btn light-secondary is-hover">
+              <span class="btn-label">Edit</span>
+            </button>
           </div>
           <div class="grid-cell">
             <button class="btn light-ghost is-hover"><span class="btn-label">Cancel</span></button>
@@ -989,9 +992,7 @@
               style="color: #ffffff"
             >
               <span class="btn-label">Save deck</span>
-              <span class="btn-spinner" aria-hidden="true"
-                ><span class="spinner-ring"></span
-              ></span>
+              <span class="btn-spinner" aria-hidden="true"><span class="spinner-ring"></span></span>
             </button>
           </div>
           <div class="grid-cell">
@@ -1002,9 +1003,7 @@
               style="color: #5b4fcf"
             >
               <span class="btn-label">Edit</span>
-              <span class="btn-spinner" aria-hidden="true"
-                ><span class="spinner-ring"></span
-              ></span>
+              <span class="btn-spinner" aria-hidden="true"><span class="spinner-ring"></span></span>
             </button>
           </div>
           <div class="grid-cell">
@@ -1015,9 +1014,7 @@
               style="color: #524d80"
             >
               <span class="btn-label">Cancel</span>
-              <span class="btn-spinner" aria-hidden="true"
-                ><span class="spinner-ring"></span
-              ></span>
+              <span class="btn-spinner" aria-hidden="true"><span class="spinner-ring"></span></span>
             </button>
           </div>
           <div class="grid-cell">
@@ -1028,9 +1025,7 @@
               style="color: #ffffff"
             >
               <span class="btn-label">Delete</span>
-              <span class="btn-spinner" aria-hidden="true"
-                ><span class="spinner-ring"></span
-              ></span>
+              <span class="btn-spinner" aria-hidden="true"><span class="spinner-ring"></span></span>
             </button>
           </div>
 
@@ -1065,37 +1060,43 @@
           <div class="legend-item">
             <span class="legend-key">primary</span>
             <span class="legend-desc"
-              >Diagonal gradient (lighter center → base → darker edge) + translateY(-1px) + amber/violet outer glow + shimmer sweep on entry</span
+              >Diagonal gradient (lighter center → base → darker edge) + translateY(-1px) +
+              amber/violet outer glow + shimmer sweep on entry</span
             >
           </div>
           <div class="legend-item">
             <span class="legend-key">secondary</span>
             <span class="legend-desc"
-              >Border brightens + bottom radial glow grows inward from below + translateY(-1px) + no shimmer (cleaner for outlined)</span
+              >Border brightens + bottom radial glow grows inward from below + translateY(-1px) + no
+              shimmer (cleaner for outlined)</span
             >
           </div>
           <div class="legend-item">
             <span class="legend-key">ghost</span>
             <span class="legend-desc"
-              >Radial gradient bg fades in from center (ambient glow) + text color brightens — no translate, stays flat intentionally</span
+              >Radial gradient bg fades in from center (ambient glow) + text color brightens — no
+              translate, stays flat intentionally</span
             >
           </div>
           <div class="legend-item">
             <span class="legend-key">destructive</span>
             <span class="legend-desc"
-              >Ember gradient (bright center → base → deep) + intense red outer glow + translateY(-1px) + shimmer sweep</span
+              >Ember gradient (bright center → base → deep) + intense red outer glow +
+              translateY(-1px) + shimmer sweep</span
             >
           </div>
           <div class="legend-item">
             <span class="legend-key">active</span>
             <span class="legend-desc"
-              >translateY(+1px) (press-in) + shadow collapses + inset shadow for depth — opposite of hover</span
+              >translateY(+1px) (press-in) + shadow collapses + inset shadow for depth — opposite of
+              hover</span
             >
           </div>
           <div class="legend-item">
             <span class="legend-key">loading</span>
             <span class="legend-desc"
-              >Label visibility:hidden (width preserved) + centered spinner + aria-busy="true" + pointer-events:none</span
+              >Label visibility:hidden (width preserved) + centered spinner + aria-busy="true" +
+              pointer-events:none</span
             >
           </div>
         </div>
