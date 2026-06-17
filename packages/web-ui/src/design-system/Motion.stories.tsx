@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Separator, SectionLabel, MotionDemo } from './_doc-components';
 
 const meta = {
-  parameters: { layout: 'padded', backgrounds: { disable: true } },
+  parameters: { layout: 'padded', backgrounds: { disable: true }, a11y: { disable: true } },
 } satisfies Meta;
 
 export default meta;

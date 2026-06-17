@@ -111,7 +111,7 @@ export const Loading: Story = {
         <Button variant="secondary" isLoading loadingLabel="Saving…">
           Save deck
         </Button>
-        <Button variant="ghost" isLoading>
+        <Button variant="ghost" isLoading loadingLabel="Cancelling…">
           Cancel
         </Button>
         <Button variant="destructive" isLoading loadingLabel="Deleting…">
