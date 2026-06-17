@@ -91,7 +91,7 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - name: Install Playwright browsers
-        run: npx playwright install --with-deps chromium
+        run: pnpm --filter @decksmith/storybook exec playwright install --with-deps chromium
       - name: Build Storybook
         run: pnpm --filter @decksmith/storybook build
       - name: Run Storybook accessibility tests
