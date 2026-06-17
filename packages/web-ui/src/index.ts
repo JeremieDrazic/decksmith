@@ -1,3 +1,9 @@
+export { Mark } from './brand/Mark';
+export type { MarkProps } from './brand/Mark';
+
+export { Logo } from './brand/Logo';
+export type { LogoProps } from './brand/Logo';
+
 export { Button, buttonVariants } from './ui/Button';
 export type { ButtonProps } from './ui/Button';
 
@@ -56,3 +62,7 @@ export type { TextProps } from './typography/Text';
 
 export { Eyebrow } from './typography/Eyebrow';
 export type { EyebrowProps } from './typography/Eyebrow';
+
+// ─── Hooks ───────────────────────────────────────────────────────────────────
+
+export { usePrefersReducedMotion } from './hooks/use-prefers-reduced-motion';

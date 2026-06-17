@@ -230,6 +230,63 @@ Keep the `#storybook-root { background-color: literal }` rules in `preview.css` 
 
 ---
 
+## Tailwind v4 — new utility class not generated until a rebuild
+
+**A Tailwind utility used for the first time in a modified file may not appear in the generated CSS
+until a full rebuild is forced.** This is distinct from the new-file bug (above) — the file is
+known, but the new class isn't picked up by the incremental scanner.
+
+**Symptom:** `getComputedStyle(el).color` returns the inherited text color instead of the expected
+accent color. Inspecting `sheet.cssRules` shows no rule for the class (e.g. `.text-accent`).
+
+**Fix:** Use an inline `style` prop for colors that come from CSS vars — this bypasses the Tailwind
+scanner entirely and is always correct:
+
+```tsx
+// ✅ inline style — always resolves the CSS var correctly
+<svg style={{ color: 'var(--accent)' }} />
+
+// ❌ Tailwind class — may not be generated if this is the first use in the codebase
+<svg className="text-accent" />
+```
+
+For colors driven by design tokens in lab/story files, inline styles are more reliable than Tailwind
+classes. Tailwind classes are better for production components where the scanner is guaranteed to
+have run.
+
+If you need the Tailwind class to exist for other reasons, force a full rebuild by touching the CSS
+entry point (`preview.css` in Storybook, `globals.css` in apps/web).
+
+---
+
+## SVG filters — CSS custom property naming in Tailwind v4
+
+**Use `--accent`, not `--color-accent`, in SVG filter inline styles.**
+
+Tailwind v4 strips the namespace prefix when generating CSS custom properties on `:root`. A
+`@theme { --color-accent: #e8b84b; }` declaration generates `--accent` (not `--color-accent`) as the
+actual DOM variable. The Tailwind utility class `.text-accent` references `var(--accent)`.
+
+If you write `style={{ floodColor: 'var(--color-accent)' }}` on an SVG `<feFlood>`, the variable
+resolves to an empty string → falls back to `black` → invisible glow on a dark background.
+
+```tsx
+// ✅ correct — matches the variable Tailwind actually generates
+<feFlood style={{ floodColor: 'var(--accent)' }} />
+
+// ❌ wrong — --color-accent is empty in the DOM
+<feFlood style={{ floodColor: 'var(--color-accent)' }} />
+```
+
+To find the correct variable name for any token: open DevTools →
+`getComputedStyle(document.documentElement).getPropertyValue('--color-brand')` will be empty, but
+`getPropertyValue('--brand')` returns the value.
+
+Also applies to any SVG element attribute driven by a CSS var: `stroke`, `fill` via `style`,
+`flood-color`, `lighting-color`, etc.
+
+---
+
 ## Architecture boundary (ADR-0016)
 
 **No backend code in `apps/web` — ever.** Route loaders must only call `apps/api` via HTTP

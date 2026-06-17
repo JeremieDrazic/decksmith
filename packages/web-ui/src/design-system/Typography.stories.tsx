@@ -21,7 +21,7 @@ function WeightRow({ weightClass, numeric, label, usage }: WeightRowProps) {
     <div className="flex items-baseline gap-6 border-b border-border-subtle py-5 last:border-0">
       <div className="w-40 shrink-0">
         <p className="font-mono text-xs text-text">{label}</p>
-        <p className="font-mono text-xs text-text-faint">{numeric}</p>
+        <p className="font-mono text-xs text-text-muted">{numeric}</p>
       </div>
       <span className={`min-w-0 flex-1 font-display text-2xl text-text ${weightClass}`}>
         Build decks deliberately
@@ -45,7 +45,7 @@ function TypographyPage() {
         </code>{' '}
         — no FOUT, no layout shift.
       </p>
-      <p className="mb-10 font-mono text-xs text-text-faint">
+      <p className="mb-10 font-mono text-xs text-text-muted">
         Scale is fluid —{' '}
         <code className="rounded-sm bg-surface-raised px-1 py-0.5 text-text-muted">
           clamp(min, preferred, max)

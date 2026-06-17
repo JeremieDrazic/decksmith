@@ -19,7 +19,7 @@ linked below._
 | Accent hover   | `#c49a1a` | `#4a3db0`  |                                                               |
 | Accent text    | `#e8b84b` | `#3d319a`  | Colored text — passes WCAG AA in both modes                   |
 | On accent      | `#0f0e17` | `#ffffff`  | Text ON accent button — dark on amber, white on violet        |
-| Brand          | `#e8b84b` | `#c49a1a`  | Amber — decorative only (logo, ornaments, dividers)           |
+| Brand          | `#e8b84b` | `#c49a1a`  | Amber — ornaments, dividers only (not the logo mark)          |
 | Text           | `#f0eef8` | `#0f0e17`  |                                                               |
 | Text muted     | `#a8a2cc` | `#524d80`  |                                                               |
 | Text faint     | `#524d80` | `#7b75a8`  | Décoratif uniquement — ne pas utiliser pour contenu essentiel |
@@ -88,7 +88,7 @@ Tailwind v4 lit `@theme` et génère les classes utilitaires automatiquement —
 | Theme via `.dark` on `<html>`, not `dark:` variant                   | Runtime switching, no class proliferation in JSX                                                           |
 | MTG tokens separate from semantic tokens                             | `mtg-red` ≠ `error` — different semantic meaning                                                           |
 | `on-accent` is mode-specific — dark on amber, white on violet        | Contrast-driven: white on `#e8b84b` = 1.8:1 (fails); dark on `#5b4fcf` = 1.1:1 (fails)                     |
-| `brand` (amber) is decorative only in light mode                     | Interactive accent is violet — amber reserved for ornamental use                                           |
+| `brand` (amber) is for ornaments only — never the logo mark          | Logo mark uses `accent` (amber dark / violet light) — theme-adaptive, coherent with halo color             |
 | `brand` text fails AA in light mode (`#c49a1a` on `#faf9f4` ≈ 2.9:1) | Dark mode is fine (9.8:1) but light mode fails — treat like `text-faint`, never for readable content       |
 | `text-faint` for decoration only                                     | 2.5:1 ratio — fails AA for readable content                                                                |
 | Raw Tailwind type classes never in feature JSX                       | Encapsulated in `<Heading>`, `<Body>`, `<Label>`                                                           |

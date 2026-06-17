@@ -19,7 +19,7 @@ function ShadowsPage() {
         and punchy to read on the warm-dark canvas. The accent glow is mode-specific: violet in
         light, amber in dark.
       </p>
-      <p className="mb-10 font-mono text-xs text-text-faint">
+      <p className="mb-10 font-mono text-xs text-text-muted">
         Toggle the theme to see{' '}
         <code className="rounded-sm bg-surface-raised px-1 py-0.5 text-text-muted">
           shadow-accent

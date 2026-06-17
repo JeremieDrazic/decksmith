@@ -19,7 +19,7 @@ function TokenRow({ token, value, usage }: TokenRowProps) {
   return (
     <div className="flex items-center gap-6 border-b border-border-subtle py-3.5 last:border-0">
       <span className="w-48 shrink-0 font-mono text-xs text-text">--{token}</span>
-      <span className="w-24 shrink-0 font-mono text-xs text-text-faint">{value}</span>
+      <span className="w-24 shrink-0 font-mono text-xs text-text-muted">{value}</span>
       <span className="text-xs text-text-muted">{usage}</span>
     </div>
   );
