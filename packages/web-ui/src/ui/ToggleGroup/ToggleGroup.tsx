@@ -51,6 +51,7 @@ export function ToggleGroup({
 }: ToggleGroupProps) {
   return (
     <ToggleGroupPrimitive
+      role="toolbar"
       data-slot="toggle-group"
       data-variant={variant}
       data-size={size}

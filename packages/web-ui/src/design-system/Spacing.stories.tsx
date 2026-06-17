@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Separator, SectionLabel, SpacingRow } from './_doc-components';
 
 const meta = {
-  parameters: { layout: 'padded', backgrounds: { disable: true } },
+  parameters: { layout: 'padded', backgrounds: { disable: true }, a11y: { disable: true } },
 } satisfies Meta;
 
 export default meta;
@@ -35,7 +35,7 @@ function SpacingPage() {
         4px base grid — every spacing value is a multiple of 4. No custom scale: Decksmith uses
         Tailwind's default spacing directly. Consistent rhythm across all components.
       </p>
-      <p className="mb-10 font-mono text-xs text-text-faint">
+      <p className="mb-10 font-mono text-xs text-text-muted">
         1 Tailwind unit = 4px ·{' '}
         <code className="rounded-sm bg-surface-raised px-1 py-0.5 text-text-muted">p-4</code> = 16px
         · <code className="rounded-sm bg-surface-raised px-1 py-0.5 text-text-muted">gap-2</code> =

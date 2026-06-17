@@ -1,3 +1,4 @@
+/* touch: force Tailwind rebuild after adding new color classes (see pitfalls/frontend.md) */
 @import 'tailwindcss';
 @import '@decksmith/tokens/web/tokens.css';
 

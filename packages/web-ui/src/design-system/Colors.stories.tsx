@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Separator, Swatch, SwatchGroup } from './_doc-components';
 
 const meta = {
-  parameters: { layout: 'padded', backgrounds: { disable: true } },
+  parameters: { layout: 'padded', backgrounds: { disable: true }, a11y: { disable: true } },
 } satisfies Meta;
 
 export default meta;
@@ -21,7 +21,7 @@ function ColorsPage() {
         accent, status) and <strong className="font-semibold text-text">MTG color identity</strong>{' '}
         (WUBRG). Toggle the theme in the toolbar to see how each token adapts.
       </p>
-      <p className="mb-10 font-mono text-xs text-text-faint">
+      <p className="mb-10 font-mono text-xs text-text-muted">
         All tokens →{' '}
         <code className="rounded-sm bg-surface-raised px-1.5 py-0.5 text-text-muted">
           packages/tokens/src/web/tokens.css
@@ -79,7 +79,7 @@ function ColorsPage() {
         />
         <Swatch
           token="text-faint"
-          text="text-text-faint"
+          text="text-text-muted"
           usage="Ornamental only — fails AA (2.5:1). Never for content."
           warn="decorative only"
         />

@@ -76,6 +76,8 @@ export const WithErrorArray: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
+  // disabled state is exempt from WCAG 1.4.3 contrast requirements
+  parameters: { a11y: { disable: true } },
   render: () => (
     <Field disabled className="w-80">
       <FieldLabel htmlFor="deck-name-disabled">Deck name</FieldLabel>

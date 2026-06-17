@@ -148,6 +148,7 @@ export const ErrorState: Story = {
       <InputGroup>
         <InputGroupAddon>https://</InputGroupAddon>
         <InputGroupInput
+          aria-label="Website URL"
           aria-invalid="true"
           aria-describedby="url-error"
           defaultValue="not a url"
@@ -161,10 +162,12 @@ export const ErrorState: Story = {
 };
 
 export const Disabled: Story = {
+  // disabled state is exempt from WCAG 1.4.3 contrast requirements
+  parameters: { a11y: { disable: true } },
   render: () => (
     <InputGroup className="w-80">
       <InputGroupAddon>https://</InputGroupAddon>
-      <InputGroupInput disabled defaultValue="locked-site.com" />
+      <InputGroupInput aria-label="Website URL" disabled defaultValue="locked-site.com" />
     </InputGroup>
   ),
 };

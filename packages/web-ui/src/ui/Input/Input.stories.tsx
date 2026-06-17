@@ -36,7 +36,13 @@ export const Types: Story = {
 export const Error: Story = {
   render: () => (
     <div className="flex flex-col gap-2 w-72">
-      <Input type="text" aria-invalid aria-describedby="name-error" defaultValue="@invalid!" />
+      <Input
+        type="text"
+        aria-label="Deck name"
+        aria-invalid
+        aria-describedby="name-error"
+        defaultValue="@invalid!"
+      />
       <p id="name-error" className="text-xs text-error-text">
         Deck name can only contain letters, numbers, and spaces.
       </p>

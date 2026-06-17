@@ -69,7 +69,7 @@ export const NeutralWithLabel: Story = {
       <p className="text-sm text-text">Sign in</p>
       <div className="flex items-center gap-3">
         <Separator className="flex-1" />
-        <span className="text-xs text-text-faint">or</span>
+        <span className="text-xs text-text-muted">or</span>
         <Separator className="flex-1" />
       </div>
       <p className="text-sm text-text-muted">Continue with email</p>

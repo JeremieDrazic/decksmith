@@ -44,6 +44,7 @@ export const Error: Story = {
   render: () => (
     <div className="flex flex-col gap-2 w-80">
       <Textarea
+        aria-label="Strategy notes"
         aria-invalid
         aria-describedby="notes-error"
         placeholder="Required"

@@ -29,6 +29,8 @@ export const Sizes: Story = {
 };
 
 export const Tones: Story = {
+  // text-faint tone intentionally demonstrates a low-contrast token — exempt from a11y check
+  parameters: { a11y: { disable: true } },
   render: () => (
     <div className="flex flex-col gap-3">
       {(['default', 'muted', 'faint', 'accent'] as const).map((tone) => (

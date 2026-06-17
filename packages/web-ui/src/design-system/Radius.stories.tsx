@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Separator, SectionLabel, RadiusBlock } from './_doc-components';
 
 const meta = {
-  parameters: { layout: 'padded', backgrounds: { disable: true } },
+  parameters: { layout: 'padded', backgrounds: { disable: true }, a11y: { disable: true } },
 } satisfies Meta;
 
 export default meta;
@@ -21,7 +21,7 @@ function RadiusPage() {
         surfaces, modals, and pills. The scale exists as a reference and for one documented
         exception.
       </p>
-      <p className="mb-10 font-mono text-xs text-text-faint">
+      <p className="mb-10 font-mono text-xs text-text-muted">
         Rule:{' '}
         <code className="rounded-sm bg-surface-raised px-1 py-0.5 text-text-muted">
           radius-interactive

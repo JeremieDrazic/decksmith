@@ -76,3 +76,26 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
+
+  storybook:
+    name: Storybook (build + a11y)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: pnpm --filter @decksmith/storybook exec playwright install --with-deps chromium
+      - name: Build Storybook
+        run: pnpm --filter @decksmith/storybook build
+      - name: Run Storybook accessibility tests
+        run: |
+          npx http-server apps/storybook/storybook-static -p 6006 --silent &
+          until curl -sf http://localhost:6006 > /dev/null; do sleep 1; done
+          pnpm --filter @decksmith/storybook test-storybook --url http://localhost:6006 --ci
