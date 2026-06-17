@@ -144,6 +144,9 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Input, Textarea
 - ✅ InputGroup — composite input with inline/block addons, button, error state
 - ✅ Field — FieldGroup, FieldLabel (Eyebrow style), FieldDescription, FieldError (TanStack Form)
+- ✅ Storybook CI: `@storybook/test-runner` + `axe-playwright` — play functions + a11y on every
+  story
+- ✅ `packages/utils` scaffolded: `noop` function with colocated tests
 - 🔄 shadcn/ui base components remaining: Card, Badge, Dialog, Toast
 - ✅ Design tokens from `packages/tokens` applied (semantic token classes across all components)
 

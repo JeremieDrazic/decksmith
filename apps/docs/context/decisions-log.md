@@ -4,6 +4,40 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-17] — Storybook CI: axe-playwright + pnpm binary isolation
+
+**Context:** Session 8 — wiring `@storybook/test-runner` + `axe-playwright` into CI. Several
+non-obvious choices made during setup.
+
+**Decisions:**
+
+- `playwright` added as a **direct** devDependency in `apps/storybook` (not just transitive via
+  `@storybook/test-runner`) — pnpm doesn't hoist binaries from transitive deps; the binary must come
+  from a direct dep for `pnpm exec playwright` to work in CI.
+- CI pattern: `storybook build` → `http-server storybook-static -p 6006 --silent &` → `until curl`
+  health-check → `test-storybook --url http://localhost:6006 --ci` — serves the static build locally
+  rather than a full Playwright browser launch; avoids Storybook dev server instability in CI.
+- `storyContext.parameters?.['a11y']?.disable` (bracket notation) instead of
+  `parameters?.a11y?.disable` — TypeScript 6 strict index signature access (TS4111).
+- Stories showing intentionally low-contrast tokens (Design System pages, `Text/Tones`) get
+  `parameters: { a11y: { disable: true } }` — these document design tokens, not user-facing UI.
+- Disabled component stories get `parameters: { a11y: { disable: true } }` — WCAG 1.4.3 explicitly
+  exempts disabled controls from contrast requirements.
+- `noop` implemented as `function noop(): void { return; }` (named function with explicit `return;`)
+  — the three common alternatives all trigger oxlint: `() => {}` → `no-empty-function`,
+  `() => undefined` → `no-useless-undefined`, `() => void 0` → rejected as unclean. A statement body
+  satisfies `no-empty-function`; explicit `return;` is idiomatic.
+- `packages/utils` scaffolded as a proper workspace package (not a barrel in `packages/web-ui`) —
+  `noop` is reusable cross-package; keeping it in `utils` avoids coupling.
+- `use-prefers-reduced-motion.ts` filename (kebab-case) — oxlint `unicorn/filename-case` requires
+  kebab-case or PascalCase for non-component files.
+
+**Impact:** `.github/workflows/ci.yml`, `apps/storybook/package.json`,
+`apps/storybook/.storybook/test-runner.ts`, `packages/utils/`, `packages/web-ui/src/hooks/`,
+`packages/web-ui/src/ui/*/**.stories.tsx`
+
+---
+
 ## [2026-06-13] — InputGroup, Field, Button polish: component patterns and Tailwind v4 quirks
 
 **Context:** Session 7 — building InputGroup, Field, and polishing Button in `packages/web-ui`.
