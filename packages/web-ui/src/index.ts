@@ -34,6 +34,12 @@ export type { BadgeProps } from './ui/Badge';
 export { Checkbox } from './ui/Checkbox';
 export type { CheckboxProps } from './ui/Checkbox';
 
+export { Radio, RadioGroup } from './ui/Radio';
+export type { RadioProps, RadioGroupProps } from './ui/Radio';
+
+export { Switch } from './ui/Switch';
+export type { SwitchProps } from './ui/Switch';
+
 export { Tag } from './ui/Tag';
 export type { TagProps } from './ui/Tag';
 

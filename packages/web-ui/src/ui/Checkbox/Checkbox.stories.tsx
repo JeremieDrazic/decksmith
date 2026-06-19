@@ -28,7 +28,9 @@ export const Playground: Story = {
   render: (args) => (
     <Field orientation="horizontal" className="w-fit">
       <Checkbox id="playground" {...args} />
-      <FieldLabel htmlFor="playground">Accept terms and conditions</FieldLabel>
+      <FieldLabel variant="body" htmlFor="playground">
+        Accept terms and conditions
+      </FieldLabel>
     </Field>
   ),
 };
@@ -40,15 +42,21 @@ export const States: Story = {
     <div className="flex flex-col gap-4">
       <Field orientation="horizontal" className="w-fit">
         <Checkbox id="unchecked" />
-        <FieldLabel htmlFor="unchecked">Unchecked</FieldLabel>
+        <FieldLabel variant="body" htmlFor="unchecked">
+          Unchecked
+        </FieldLabel>
       </Field>
       <Field orientation="horizontal" className="w-fit">
         <Checkbox id="checked" defaultChecked />
-        <FieldLabel htmlFor="checked">Checked</FieldLabel>
+        <FieldLabel variant="body" htmlFor="checked">
+          Checked
+        </FieldLabel>
       </Field>
       <Field orientation="horizontal" className="w-fit">
         <Checkbox id="indeterminate" indeterminate defaultChecked />
-        <FieldLabel htmlFor="indeterminate">Indeterminate</FieldLabel>
+        <FieldLabel variant="body" htmlFor="indeterminate">
+          Indeterminate
+        </FieldLabel>
       </Field>
     </div>
   ),
@@ -62,11 +70,15 @@ export const Disabled: Story = {
     <div className="flex flex-col gap-4">
       <Field orientation="horizontal" className="w-fit">
         <Checkbox id="disabled-unchecked" disabled />
-        <FieldLabel htmlFor="disabled-unchecked">Disabled unchecked</FieldLabel>
+        <FieldLabel variant="body" htmlFor="disabled-unchecked">
+          Disabled unchecked
+        </FieldLabel>
       </Field>
       <Field orientation="horizontal" className="w-fit">
         <Checkbox id="disabled-checked" disabled defaultChecked />
-        <FieldLabel htmlFor="disabled-checked">Disabled checked</FieldLabel>
+        <FieldLabel variant="body" htmlFor="disabled-checked">
+          Disabled checked
+        </FieldLabel>
       </Field>
     </div>
   ),
@@ -77,7 +89,9 @@ export const Disabled: Story = {
 export const WithDescription: Story = {
   render: () => (
     <Field orientation="horizontal" className="w-96">
-      <FieldLabel htmlFor="newsletter">Subscribe to newsletter</FieldLabel>
+      <FieldLabel variant="body" htmlFor="newsletter">
+        Subscribe to newsletter
+      </FieldLabel>
       <Checkbox id="newsletter" />
       <FieldContent>
         <FieldDescription>
@@ -97,15 +111,21 @@ export const Group: Story = {
         <FieldLegend>Export options</FieldLegend>
         <Field orientation="horizontal" className="w-fit">
           <Checkbox id="export-pdf" defaultChecked />
-          <FieldLabel htmlFor="export-pdf">PDF printsheet</FieldLabel>
+          <FieldLabel variant="body" htmlFor="export-pdf">
+            PDF printsheet
+          </FieldLabel>
         </Field>
         <Field orientation="horizontal" className="w-fit">
           <Checkbox id="export-txt" defaultChecked />
-          <FieldLabel htmlFor="export-txt">Text list</FieldLabel>
+          <FieldLabel variant="body" htmlFor="export-txt">
+            Text list
+          </FieldLabel>
         </Field>
         <Field orientation="horizontal" className="w-fit">
           <Checkbox id="export-img" />
-          <FieldLabel htmlFor="export-img">Card images</FieldLabel>
+          <FieldLabel variant="body" htmlFor="export-img">
+            Card images
+          </FieldLabel>
         </Field>
       </FieldSet>
     </FieldGroup>
@@ -118,7 +138,9 @@ export const WithError: Story = {
   render: () => (
     <Field invalid orientation="horizontal" className="w-96">
       <Checkbox id="terms-error" aria-invalid aria-describedby="terms-err" />
-      <FieldLabel htmlFor="terms-error">I accept the terms of service</FieldLabel>
+      <FieldLabel variant="body" htmlFor="terms-error">
+        I accept the terms of service
+      </FieldLabel>
       <FieldError id="terms-err">You must accept the terms to continue.</FieldError>
     </Field>
   ),

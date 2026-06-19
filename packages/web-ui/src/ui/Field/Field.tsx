@@ -90,7 +90,14 @@ export function Field({
 
 // ─── FieldLabel ───────────────────────────────────────────────────────────────
 
-export type FieldLabelProps = React.ComponentProps<'label'>;
+export type FieldLabelProps = React.ComponentProps<'label'> & {
+  /**
+   * "label" (default) — mono eyebrow style for Input/Textarea/Select labels.
+   * "body" — normal text for inline Checkbox/Toggle labels.
+   * @default "label"
+   */
+  variant?: 'label' | 'body';
+};
 
 /**
  * Accessible label for the field control.
@@ -98,15 +105,19 @@ export type FieldLabelProps = React.ComponentProps<'label'>;
  *
  * @example
  * <FieldLabel htmlFor="deck-name">Deck name</FieldLabel>
+ * <FieldLabel variant="body" htmlFor="terms">Accept terms</FieldLabel>
  */
-export function FieldLabel({ className, ...props }: FieldLabelProps) {
+export function FieldLabel({ className, variant = 'label', ...props }: FieldLabelProps) {
   return (
     // eslint-disable-next-line jsx-a11y/label-has-associated-control -- htmlFor is passed by callers via ...props
     <label
       data-slot="field-label"
+      data-variant={variant}
       className={cn(
         'flex w-fit items-center gap-2',
-        'font-mono text-xs leading-xs tracking-wide uppercase font-semibold text-text-muted',
+        variant === 'label'
+          ? 'font-mono text-xs leading-xs tracking-wide uppercase font-semibold text-text-muted'
+          : 'text-sm text-text font-normal leading-none',
         'group-data-[disabled=true]/field:opacity-[0.38]',
         'group-data-[invalid=true]/field:text-error-text',
         className
