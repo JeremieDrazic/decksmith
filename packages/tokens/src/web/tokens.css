@@ -41,6 +41,7 @@
   --border: #d5d0be;
   --border-subtle: #e8e5d8;
   --border-focus: #5b4fcf;
+  --border-interactive: #b3add0; /* interactive controls at rest — soft luminous lavender */
 
   /* Text */
   --text: #0f0e17;
@@ -107,6 +108,7 @@
   --border: #2e2b47;
   --border-subtle: #232135;
   --border-focus: #e8b84b;
+  --border-interactive: #484373; /* interactive controls at rest — luminous purple, ~2.0:1 on dark surface */
 
   /* Text */
   --text: #f0eef8;
@@ -173,6 +175,7 @@
   --color-border: var(--border);
   --color-border-subtle: var(--border-subtle);
   --color-border-focus: var(--border-focus);
+  --color-border-interactive: var(--border-interactive);
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
   --color-text-faint: var(--text-faint);

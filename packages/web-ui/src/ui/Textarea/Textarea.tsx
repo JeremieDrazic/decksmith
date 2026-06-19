@@ -20,7 +20,7 @@ export function Textarea({ className, ...props }: TextareaProps) {
       data-slot="textarea"
       className={cn(
         'flex field-sizing-content min-h-16 w-full',
-        'rounded-interactive border border-border bg-transparent',
+        'rounded-interactive border border-border-interactive bg-transparent',
         'px-3 py-2 text-sm text-text',
         'placeholder:text-text-faint',
         'transition-[border-color,box-shadow] duration-fast outline-none',

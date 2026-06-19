@@ -6,10 +6,12 @@ export const primitiveColors = {
   ink850: '#232135', // dark surface-raised and dark border-subtle share this value intentionally — the raised surface acts as its own separator
   ink800: '#2a2840',
   ink750: '#2e2b47',
+  ink700: '#484373', // dark border-interactive — luminous purple, ~2.0:1 on dark surface
 
   // ─── Ink text scale — lavender-to-purple text (dark mode) ────────────────────
   ink50: '#f0eef8',
   ink300: '#a8a2cc',
+  ink350: '#b3add0', // light border-interactive — soft luminous lavender
   ink600: '#524d80', // used as dark text-faint AND light text-muted — same purple mid-tone
   ink400: '#7b75a8',
 

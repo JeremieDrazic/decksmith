@@ -49,7 +49,7 @@ export function Checkbox({ className, indeterminate, ...props }: CheckboxProps) 
       data-slot="checkbox"
       className={cn(
         'relative flex size-4 shrink-0 items-center justify-center rounded-sm',
-        'border border-border bg-surface',
+        'border border-border-interactive bg-surface',
         'data-[checked]:bg-accent data-[checked]:border-accent data-[checked]:text-on-accent',
         'data-[indeterminate]:bg-accent data-[indeterminate]:border-accent data-[indeterminate]:text-on-accent',
         'outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-1 focus-visible:ring-offset-bg',

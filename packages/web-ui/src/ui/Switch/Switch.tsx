@@ -24,7 +24,7 @@ export function Switch({ className, ...props }: SwitchProps) {
       data-slot="switch"
       className={cn(
         'relative flex items-center h-5 w-9 px-0.5 cursor-pointer rounded-full shrink-0',
-        'border border-border bg-surface-raised',
+        'border border-border-interactive bg-surface-raised',
         'data-[checked]:bg-accent data-[checked]:border-accent',
         'outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-1 focus-visible:ring-offset-bg',
         'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-[0.38]',

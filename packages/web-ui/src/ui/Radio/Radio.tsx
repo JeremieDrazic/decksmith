@@ -64,7 +64,7 @@ export function Radio<Value = string>({ className, children, ...props }: RadioPr
         data-slot="radio"
         className={cn(
           'relative flex size-4 shrink-0 items-center justify-center rounded-full',
-          'border border-border bg-surface',
+          'border border-border-interactive bg-surface',
           'data-[checked]:bg-accent data-[checked]:border-accent data-[checked]:text-on-accent',
           'outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-1 focus-visible:ring-offset-bg',
           'transition-colors duration-fast',
