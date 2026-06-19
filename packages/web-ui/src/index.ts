@@ -31,6 +31,9 @@ export type { InputProps } from './ui/Input';
 export { Badge } from './ui/Badge';
 export type { BadgeProps } from './ui/Badge';
 
+export { Checkbox } from './ui/Checkbox';
+export type { CheckboxProps } from './ui/Checkbox';
+
 export { Tag } from './ui/Tag';
 export type { TagProps } from './ui/Tag';
 
