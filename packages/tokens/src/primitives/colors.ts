@@ -55,7 +55,8 @@ export const primitiveColors = {
   success: '#22c55e',
   success12: 'rgba(34, 197, 94, 0.12)',
   success08: 'rgba(34, 197, 94, 0.08)',
-  successDeep: '#15803d',
+  successDeep:
+    '#166534' /* green-800 — green-700 (#15803d) fails WCAG AA on success-subtle in light mode */,
 
   // ─── Status — warning ────────────────────────────────────────────────────────
   warningVivid: '#f59e0b',

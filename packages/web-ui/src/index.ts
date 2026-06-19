@@ -28,6 +28,12 @@ export type { TextareaProps } from './ui/Textarea';
 export { Input } from './ui/Input';
 export type { InputProps } from './ui/Input';
 
+export { Badge } from './ui/Badge';
+export type { BadgeProps } from './ui/Badge';
+
+export { Tag } from './ui/Tag';
+export type { TagProps } from './ui/Tag';
+
 export { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from './ui/Field';
 export type {
   FieldProps,
