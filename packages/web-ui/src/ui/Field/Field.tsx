@@ -5,6 +5,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { Separator } from '../Separator/Separator';
 
 // ─── FieldGroup ───────────────────────────────────────────────────────────────
 
@@ -190,4 +191,150 @@ export function FieldError({ className, children, errors, ...props }: FieldError
       {content}
     </div>
   ) : null;
+}
+
+// ─── FieldSet ─────────────────────────────────────────────────────────────────
+
+export type FieldSetProps = React.ComponentProps<'fieldset'>;
+
+/**
+ * Semantic wrapper for a group of related controls (checkboxes, radios).
+ * Always pair with FieldLegend — it is the accessible name for the group.
+ *
+ * @example
+ * <FieldSet>
+ *   <FieldLegend>Notification preferences</FieldLegend>
+ *   <Checkbox>Email</Checkbox>
+ *   <Checkbox>SMS</Checkbox>
+ * </FieldSet>
+ */
+export function FieldSet({ className, ...props }: FieldSetProps) {
+  return (
+    <fieldset
+      data-slot="field-set"
+      className={cn('flex flex-col gap-3 border-0 p-0 m-0 min-w-0', className)}
+      {...props}
+    />
+  );
+}
+
+// ─── FieldLegend ──────────────────────────────────────────────────────────────
+
+export type FieldLegendProps = React.ComponentProps<'legend'> & {
+  /**
+   * "label" matches FieldLabel eyebrow style (mono uppercase).
+   * "legend" is slightly larger — for section-level groupings.
+   * @default "label"
+   */
+  variant?: 'label' | 'legend';
+};
+
+/**
+ * Accessible name for a FieldSet. Must be a direct child of FieldSet.
+ *
+ * @example
+ * <FieldLegend>Notification preferences</FieldLegend>
+ * <FieldLegend variant="legend">Account settings</FieldLegend>
+ */
+export function FieldLegend({ className, variant = 'label', ...props }: FieldLegendProps) {
+  return (
+    <legend
+      data-slot="field-legend"
+      data-variant={variant}
+      className={cn(
+        'mb-1',
+        variant === 'label'
+          ? 'font-mono text-xs leading-xs tracking-wide uppercase font-semibold text-text-muted'
+          : 'font-display font-medium text-sm text-text',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+// ─── FieldContent ─────────────────────────────────────────────────────────────
+
+export type FieldContentProps = React.ComponentProps<'div'>;
+
+/**
+ * Wraps FieldDescription + FieldError in horizontal Field layouts,
+ * placing helper text below the control when the label is inline.
+ *
+ * @example
+ * <Field orientation="horizontal">
+ *   <FieldLabel>Remember me</FieldLabel>
+ *   <Switch />
+ *   <FieldContent>
+ *     <FieldDescription>Stay signed in on this device.</FieldDescription>
+ *   </FieldContent>
+ * </Field>
+ */
+export function FieldContent({ className, ...props }: FieldContentProps) {
+  return (
+    <div
+      data-slot="field-content"
+      className={cn('flex flex-col gap-0.5 leading-snug', className)}
+      {...props}
+    />
+  );
+}
+
+// ─── FieldTitle ───────────────────────────────────────────────────────────────
+
+export type FieldTitleProps = React.ComponentProps<'div'>;
+
+/**
+ * Label-styled div for contexts where <label> is not semantically appropriate
+ * (e.g., labelling a colour picker, a custom control, or a fieldset companion).
+ * For real form controls always use FieldLabel instead.
+ *
+ * @example
+ * <FieldTitle>Colour identity</FieldTitle>
+ * <ColorIdentityPicker />
+ */
+export function FieldTitle({ className, ...props }: FieldTitleProps) {
+  return (
+    <div
+      data-slot="field-title"
+      className={cn(
+        'flex w-fit items-center gap-2',
+        'font-mono text-xs leading-xs tracking-wide uppercase font-semibold text-text-muted',
+        'group-data-[disabled=true]/field:opacity-[0.38]',
+        className
+      )}
+      {...props}
+    />
+  );
+}
+
+// ─── FieldSeparator ───────────────────────────────────────────────────────────
+
+export type FieldSeparatorProps = React.ComponentProps<'div'>;
+
+/**
+ * Horizontal rule between field sections. Accepts optional centred label text.
+ *
+ * @example
+ * <FieldSeparator />
+ * <FieldSeparator>or</FieldSeparator>
+ */
+export function FieldSeparator({ className, children, ...props }: FieldSeparatorProps) {
+  if (!children) {
+    return <Separator data-slot="field-separator" className={cn('my-1', className)} {...props} />;
+  }
+
+  return (
+    <div
+      data-slot="field-separator"
+      className={cn('flex items-center gap-3 py-1', className)}
+      {...props}
+    >
+      <Separator className="flex-1" />
+      <span className="font-mono text-[10px] uppercase tracking-wide text-text-faint shrink-0">
+        {children}
+      </span>
+      <Separator className="flex-1" />
+    </div>
+  );
 }

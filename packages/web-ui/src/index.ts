@@ -34,13 +34,29 @@ export type { BadgeProps } from './ui/Badge';
 export { Tag } from './ui/Tag';
 export type { TagProps } from './ui/Tag';
 
-export { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from './ui/Field';
+export {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+  FieldError,
+  FieldSet,
+  FieldLegend,
+  FieldContent,
+  FieldTitle,
+  FieldSeparator,
+} from './ui/Field';
 export type {
   FieldProps,
   FieldGroupProps,
   FieldLabelProps,
   FieldDescriptionProps,
   FieldErrorProps,
+  FieldSetProps,
+  FieldLegendProps,
+  FieldContentProps,
+  FieldTitleProps,
+  FieldSeparatorProps,
 } from './ui/Field';
 
 export {
