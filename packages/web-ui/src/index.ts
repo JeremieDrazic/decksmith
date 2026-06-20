@@ -40,6 +40,35 @@ export type { RadioProps, RadioGroupProps } from './ui/Radio';
 export { Switch } from './ui/Switch';
 export type { SwitchProps } from './ui/Switch';
 
+export {
+  Select,
+  SelectArrow,
+  SelectBackdrop,
+  SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
+  SelectIcon,
+  SelectItem,
+  SelectList,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from './ui/Select';
+export type {
+  SelectArrowProps,
+  SelectBackdropProps,
+  SelectContentProps,
+  SelectGroupLabelProps,
+  SelectGroupProps,
+  SelectIconProps,
+  SelectItemProps,
+  SelectListProps,
+  SelectProps,
+  SelectSeparatorProps,
+  SelectTriggerProps,
+  SelectValueProps,
+} from './ui/Select';
+
 export { Tag } from './ui/Tag';
 export type { TagProps } from './ui/Tag';
 
