@@ -123,6 +123,12 @@ export type { TextProps } from './typography/Text';
 export { Eyebrow } from './typography/Eyebrow';
 export type { EyebrowProps } from './typography/Eyebrow';
 
+export { Surface } from './ui/Surface';
+export type { SurfaceProps } from './ui/Surface';
+
+export { Card, LinkCard, ButtonCard } from './ui/Card';
+export type { CardProps, LinkCardProps, ButtonCardProps } from './ui/Card';
+
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
 export { usePrefersReducedMotion } from './hooks/use-prefers-reduced-motion';
