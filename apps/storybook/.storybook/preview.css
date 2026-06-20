@@ -1,4 +1,4 @@
-/* touch: force Tailwind rebuild after adding new color classes (see pitfalls/frontend.md) */
+/* touch: force Tailwind rebuild after adding shadow-card-rest, shadow-card-lift, -translate-y-[3px] (see pitfalls/frontend.md) */
 @import 'tailwindcss';
 @import '@decksmith/tokens/web/tokens.css';
 
