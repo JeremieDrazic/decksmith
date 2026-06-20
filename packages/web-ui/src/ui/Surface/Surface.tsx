@@ -9,7 +9,7 @@ import { cn } from '../../lib/cn';
 // Exported for internal reuse by Card.tsx — NOT re-exported from Surface/index.ts
 // or the package root. Keep this out of the public API.
 
-export const surfaceVariants = cva(['relative rounded-surface border'], {
+export const surfaceVariants = cva(['relative block rounded-surface border'], {
   variants: {
     variant: {
       /**
