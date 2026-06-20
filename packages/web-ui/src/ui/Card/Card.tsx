@@ -19,7 +19,7 @@ import { surfaceVariants } from '../Surface/Surface';
 const interactiveCardClasses = [
   'cursor-pointer outline-none',
   'shadow-card-rest',
-  'transition-[transform,box-shadow,border-color] duration-normal ease-out',
+  'transition-[translate,box-shadow,border-color] duration-normal ease-out',
   'hover:-translate-y-[3px]',
   'hover:border-accent-border',
   'hover:bg-surface-hover',
