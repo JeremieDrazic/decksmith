@@ -69,6 +69,15 @@
   --shadow-card: var(--shadow-md);
   --shadow-overlay: var(--shadow-lg);
 
+  /* Shadows — card tactile depth (private building blocks + composite roles)
+   * --shadow-inset        : top inner highlight at rest — light catching the top edge
+   * --shadow-inset-accent : same edge but in accent color on hover (light = violet)
+   * shadow-card-rest / shadow-card-lift are the only public roles; register in @theme inline */
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --shadow-inset-accent: inset 0 1px 0 var(--accent-border);
+  --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset-accent);
+
   /* Status — error */
   --error: #dc2626;
   --error-hover: #ef4444;
@@ -138,6 +147,15 @@
     0 8px 36px rgba(168, 162, 204, 0.22), 0 0 0 1px rgba(168, 162, 204, 0.6),
     inset 0 1px 0 rgba(168, 162, 204, 0.14);
 
+  /* Shadows — card tactile depth (private building blocks + composite roles)
+   * shadow-card (=shadow-md) already contains a lavender inset 0.12 in dark mode.
+   * At hover, shadow-card-lift stacks that + the amber accent inset 0.3 → amber wins.
+   * shadow-inset is kept explicit (lighter than md's built-in) for rest-state isolation. */
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-inset-accent: inset 0 1px 0 var(--accent-border);
+  --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset-accent);
+
   /* Status — error */
   --error-subtle: rgba(239, 68, 68, 0.12);
   --error-text: #ef4444;
@@ -192,6 +210,8 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-popover: var(--shadow-popover);
   --shadow-card: var(--shadow-card);
+  --shadow-card-rest: var(--shadow-card-rest);
+  --shadow-card-lift: var(--shadow-card-lift);
   --shadow-overlay: var(--shadow-overlay);
   --color-error: var(--error);
   --color-error-hover: var(--error-hover);

@@ -9,19 +9,25 @@ import { surfaceVariants } from '../Surface/Surface';
 
 // ─── Interactive classes ──────────────────────────────────────────────────────
 // Shared between LinkCard and ButtonCard. Module-private — not exported.
-// Hover: lift -2px + accent-border + card+accent shadow combo.
-// Focus: same visual as hover + explicit ring.
-// Active: instant snap back to baseline.
+// Rest    : shadow-card-rest = shadow-card + inset top highlight (lit edge).
+// Hover   : lift −3px, bg surface-hover, border accent, glow+inset-accent shadow.
+//           The inset edge "turns accent" (amber dark / violet light) — the signature detail.
+// Focus   : same visual as hover + explicit ring.
+// Active  : instant snap back to baseline.
+// shadow-card-rest / shadow-card-lift are @theme-registered Tailwind utilities — no var() in JSX.
 
 const interactiveCardClasses = [
   'cursor-pointer outline-none',
-  'transition-[transform,box-shadow,border-color] duration-normal ease-out',
-  'hover:-translate-y-0.5',
+  'shadow-card-rest',
+  'transition-[transform,box-shadow,border-color,background-color] duration-normal ease-out',
+  'hover:-translate-y-[3px]',
   'hover:border-accent-border',
-  'hover:shadow-[var(--shadow-card),var(--shadow-accent)]',
-  'focus-visible:-translate-y-0.5',
+  'hover:bg-surface-hover',
+  'hover:shadow-card-lift',
+  'focus-visible:-translate-y-[3px]',
   'focus-visible:border-accent-border',
-  'focus-visible:shadow-[var(--shadow-card),var(--shadow-accent)]',
+  'focus-visible:bg-surface-hover',
+  'focus-visible:shadow-card-lift',
   'focus-visible:ring-2 focus-visible:ring-border-focus',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
   'active:translate-y-0 active:duration-instant',
@@ -50,7 +56,7 @@ export function Card({ ref, className, variant, padding = 'md', ...props }: Card
     <div
       data-slot="card"
       ref={ref}
-      className={cn(surfaceVariants({ variant, padding }), 'shadow-card', className)}
+      className={cn(surfaceVariants({ variant, padding }), 'shadow-card-rest', className)}
       {...props}
     />
   );
@@ -65,7 +71,7 @@ export type ButtonCardProps = React.ComponentProps<'button'> & VariantProps<type
  * Renders a semantic `<button>` — use for actions (open modal, toggle, select).
  * For navigation, use `LinkCard` instead.
  *
- * Hover: lift (−2px) + accent-border glow. Press: instant snap back to baseline.
+ * Hover: lift (−3px) + surface-hover bg + accent-border + accent glow. Press: instant snap back.
  *
  * @example
  * <ButtonCard onClick={handleSelect} padding="sm">
@@ -78,12 +84,7 @@ export function ButtonCard({ ref, className, variant, padding = 'md', ...props }
       data-slot="button-card"
       type="button"
       ref={ref}
-      className={cn(
-        surfaceVariants({ variant, padding }),
-        'shadow-card',
-        interactiveCardClasses,
-        className
-      )}
+      className={cn(surfaceVariants({ variant, padding }), interactiveCardClasses, className)}
       {...props}
     />
   );
@@ -98,7 +99,7 @@ export type LinkCardProps = useRender.ComponentProps<'a'> & VariantProps<typeof 
  * Renders an `<a>` by default. For SPA client-side navigation, inject the
  * router's Link via the `render` prop — `web-ui` stays router-agnostic.
  *
- * Hover: lift (−2px) + accent-border glow. Press: instant snap back to baseline.
+ * Hover: lift (−3px) + surface-hover bg + accent-border + accent glow. Press: instant snap back.
  *
  * @example Native anchor
  * <LinkCard href="/decks/abc">Deck content</LinkCard>
@@ -122,12 +123,7 @@ export function LinkCard({
     defaultTagName: 'a',
     props: {
       'data-slot': 'link-card',
-      className: cn(
-        surfaceVariants({ variant, padding }),
-        'shadow-card',
-        interactiveCardClasses,
-        className
-      ),
+      className: cn(surfaceVariants({ variant, padding }), interactiveCardClasses, className),
       ...(rest as Record<string, unknown>),
     },
   });

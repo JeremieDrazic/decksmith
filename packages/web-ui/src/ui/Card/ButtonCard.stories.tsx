@@ -51,7 +51,7 @@ function SelectableDemo() {
           padding="sm"
           className={
             selected === format
-              ? 'border-accent-border shadow-[var(--shadow-card),var(--shadow-accent)]'
+              ? '-translate-y-[3px] border-accent-border bg-surface-hover shadow-card-lift'
               : ''
           }
         >
