@@ -301,3 +301,26 @@ export const Route = createFileRoute('/dashboard/')({
 // ❌ wrong — imports backend package directly
 import { getUser } from '@decksmith/domain';
 ```
+
+---
+
+## Tailwind v4 — `translate-y-*` uses CSS `translate`, not `transform`
+
+**In Tailwind v4, `translate-y-*` utilities set the CSS `translate` individual property, NOT
+`transform`.** Using `transition-property: transform` will NOT animate a `translate-y-*` change —
+the lift snaps instantly with no transition.
+
+```tsx
+// ✅ correct — matches the CSS property Tailwind v4 actually generates
+'transition-[translate,box-shadow,border-color] duration-normal ease-out';
+
+// ❌ wrong — transform ≠ translate in Tailwind v4; lift will snap with no animation
+'transition-[transform,box-shadow,border-color] duration-normal ease-out';
+```
+
+Tailwind v4 generates: `translate: var(--tw-translate-x) var(--tw-translate-y)` for `translate-y-*`
+utilities. The `transform` CSS shorthand is a separate property — `transition-property: transform`
+does not pick up `translate` changes.
+
+Note: the Tailwind built-in `transition` utility already includes `translate` in its property list
+alongside `transform` — so `transition duration-normal ease-out` also works correctly.

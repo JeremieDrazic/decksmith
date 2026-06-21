@@ -7,7 +7,6 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./src/index.ts",
     "./web/tokens.css": "./src/web/tokens.css"
   },
   "devDependencies": {

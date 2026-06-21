@@ -4,6 +4,69 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-21] — Worldclass audit: Card alignment + dead TS token layer deleted
+
+**Context:** Session 9 — full audit of Card components and `packages/tokens` against the
+`core/Card.jsx` canonical reference.
+
+**Decisions:**
+
+- **Card hover lift corrected −3px → −2px** — `core/Card.jsx:30` uses `translateY(-2px)`. Our
+  implementation had used −3px (copied from `DeckCard`, a heavier tile component). Fixed in
+  `Card.tsx` and `ButtonCard.stories.tsx`.
+- **`hover:bg-surface-hover` removed from interactive cards** — the reference keeps surface constant
+  on hover; hover is signalled by `border-accent` + accent glow + lift only. We removed
+  `hover:bg-surface-hover` and `focus-visible:bg-surface-hover` from `interactiveCardClasses`.
+- **Dead TS token layer deleted** — `primitives/`, `semantic/colors.ts`, `native/index.ts`,
+  `index.ts` removed; `"."` JS export removed from `package.json`. Nothing imported
+  `@decksmith/tokens` as JS (verified with `git grep`). The TS layer had silently drifted
+  (`primitives/shadows.ts` held legacy all-black values) while `tokens.css` was updated — a dead
+  "source of truth" is strictly worse than none. See ADR-0017 for the full rationale.
+- **Font fallbacks hardened** — `-apple-system` added to `--font-display`/`--font-body`; `'SF Mono'`
+  added to `--font-mono` for better pre-load behavior on macOS/iOS.
+- **`tokens.css` header documents source-of-truth status** — explicitly notes that Style Dictionary
+  (Phase 14) will generate dual outputs from this file; edit here and nowhere else.
+
+**Impact:** `packages/tokens/src/` (9 files deleted + `tokens.css` + `package.json` + `tsconfig`),
+`packages/web-ui/src/ui/Card/Card.tsx`, `packages/web-ui/src/ui/Card/ButtonCard.stories.tsx`,
+`apps/docs/adr/0017-packages-tokens-architecture.md`
+
+---
+
+## [2026-06-17] — Storybook CI: axe-playwright + pnpm binary isolation
+
+**Context:** Session 8 — wiring `@storybook/test-runner` + `axe-playwright` into CI. Several
+non-obvious choices made during setup.
+
+**Decisions:**
+
+- `playwright` added as a **direct** devDependency in `apps/storybook` (not just transitive via
+  `@storybook/test-runner`) — pnpm doesn't hoist binaries from transitive deps; the binary must come
+  from a direct dep for `pnpm exec playwright` to work in CI.
+- CI pattern: `storybook build` → `http-server storybook-static -p 6006 --silent &` → `until curl`
+  health-check → `test-storybook --url http://localhost:6006 --ci` — serves the static build locally
+  rather than a full Playwright browser launch; avoids Storybook dev server instability in CI.
+- `storyContext.parameters?.['a11y']?.disable` (bracket notation) instead of
+  `parameters?.a11y?.disable` — TypeScript 6 strict index signature access (TS4111).
+- Stories showing intentionally low-contrast tokens (Design System pages, `Text/Tones`) get
+  `parameters: { a11y: { disable: true } }` — these document design tokens, not user-facing UI.
+- Disabled component stories get `parameters: { a11y: { disable: true } }` — WCAG 1.4.3 explicitly
+  exempts disabled controls from contrast requirements.
+- `noop` implemented as `function noop(): void { return; }` (named function with explicit `return;`)
+  — the three common alternatives all trigger oxlint: `() => {}` → `no-empty-function`,
+  `() => undefined` → `no-useless-undefined`, `() => void 0` → rejected as unclean. A statement body
+  satisfies `no-empty-function`; explicit `return;` is idiomatic.
+- `packages/utils` scaffolded as a proper workspace package (not a barrel in `packages/web-ui`) —
+  `noop` is reusable cross-package; keeping it in `utils` avoids coupling.
+- `use-prefers-reduced-motion.ts` filename (kebab-case) — oxlint `unicorn/filename-case` requires
+  kebab-case or PascalCase for non-component files.
+
+**Impact:** `.github/workflows/ci.yml`, `apps/storybook/package.json`,
+`apps/storybook/.storybook/test-runner.ts`, `packages/utils/`, `packages/web-ui/src/hooks/`,
+`packages/web-ui/src/ui/*/**.stories.tsx`
+
+---
+
 ## [2026-06-13] — InputGroup, Field, Button polish: component patterns and Tailwind v4 quirks
 
 **Context:** Session 7 — building InputGroup, Field, and polishing Button in `packages/web-ui`.

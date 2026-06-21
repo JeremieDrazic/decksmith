@@ -1,5 +1,5 @@
 {
   "extends": "@decksmith/config/tsconfig/base.json",
-  "include": ["src"],
+  "files": [],
   "exclude": ["node_modules", "dist"]
 }

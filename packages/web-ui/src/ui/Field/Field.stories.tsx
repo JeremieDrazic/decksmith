@@ -3,7 +3,18 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Input } from '../Input/Input';
 import { Textarea } from '../Textarea/Textarea';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '../InputGroup/InputGroup';
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from './Field';
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+  FieldTitle,
+} from './Field';
 
 const meta = {
   title: 'Components/UI/Field',
@@ -116,6 +127,125 @@ export const WithInputGroup: Story = {
       </InputGroup>
       <FieldError id="site-url-err">Please enter a valid URL.</FieldError>
     </Field>
+  ),
+};
+
+// ─── FieldSeparator ───────────────────────────────────────────────────────────
+
+export const Separator: Story = {
+  render: () => (
+    <FieldGroup className="w-80">
+      <Field>
+        <FieldLabel htmlFor="sep-email">Email</FieldLabel>
+        <Input id="sep-email" type="email" placeholder="you@example.com" />
+      </Field>
+      <FieldSeparator>or</FieldSeparator>
+      <Field>
+        <FieldLabel htmlFor="sep-username">Username</FieldLabel>
+        <Input id="sep-username" placeholder="your-handle" />
+      </Field>
+      <FieldSeparator />
+      <Field>
+        <FieldLabel htmlFor="sep-other">Alternative</FieldLabel>
+        <Input id="sep-other" placeholder="…" />
+      </Field>
+    </FieldGroup>
+  ),
+};
+
+// ─── FieldSet + FieldLegend ───────────────────────────────────────────────────
+
+export const WithFieldSet: Story = {
+  render: () => (
+    <FieldGroup className="w-80">
+      <FieldSet>
+        <FieldLegend>Notification channels</FieldLegend>
+        <label className="flex items-center gap-2 text-sm text-text cursor-pointer">
+          <input type="checkbox" className="accent-accent" defaultChecked />
+          Email
+        </label>
+        <label className="flex items-center gap-2 text-sm text-text cursor-pointer">
+          <input type="checkbox" className="accent-accent" />
+          Push notifications
+        </label>
+        <label className="flex items-center gap-2 text-sm text-text cursor-pointer">
+          <input type="checkbox" className="accent-accent" />
+          SMS
+        </label>
+      </FieldSet>
+      <FieldSet>
+        <FieldLegend variant="legend">Account section</FieldLegend>
+        <label className="flex items-center gap-2 text-sm text-text cursor-pointer">
+          <input type="radio" name="visibility" className="accent-accent" defaultChecked />
+          Public profile
+        </label>
+        <label className="flex items-center gap-2 text-sm text-text cursor-pointer">
+          <input type="radio" name="visibility" className="accent-accent" />
+          Private profile
+        </label>
+      </FieldSet>
+    </FieldGroup>
+  ),
+};
+
+// ─── FieldTitle ───────────────────────────────────────────────────────────────
+
+export const WithFieldTitle: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4 w-80">
+      <div className="flex flex-col gap-2">
+        <FieldTitle>Colour identity</FieldTitle>
+        <div className="flex gap-2">
+          {['W', 'U', 'B', 'R', 'G'].map((color) => (
+            <button
+              key={color}
+              type="button"
+              className="size-8 rounded-full border border-border bg-surface-raised text-xs font-mono text-text-muted hover:border-accent-border transition-colors"
+            >
+              {color}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+// ─── HorizontalWithContent ────────────────────────────────────────────────────
+
+export const HorizontalWithContent: Story = {
+  render: () => (
+    <FieldGroup className="w-80">
+      <Field orientation="horizontal">
+        <FieldLabel htmlFor="marketing">Marketing emails</FieldLabel>
+        <input
+          id="marketing"
+          type="checkbox"
+          className="accent-accent size-4 shrink-0"
+          aria-describedby="marketing-desc"
+        />
+        <FieldContent>
+          <FieldDescription id="marketing-desc">
+            Receive news about new features and product updates.
+          </FieldDescription>
+        </FieldContent>
+      </Field>
+      <Field orientation="horizontal">
+        <FieldLabel htmlFor="analytics">Usage analytics</FieldLabel>
+        <input
+          id="analytics"
+          type="checkbox"
+          className="accent-accent size-4 shrink-0"
+          defaultChecked
+          aria-describedby="analytics-desc"
+        />
+        <FieldContent>
+          <FieldDescription id="analytics-desc">
+            Help us improve Decksmith by sharing anonymous usage data.
+          </FieldDescription>
+        </FieldContent>
+      </Field>
+    </FieldGroup>
   ),
 };
 

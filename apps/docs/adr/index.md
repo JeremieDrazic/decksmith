@@ -30,6 +30,7 @@ evolution history.
 | [0017](./0017-packages-tokens-architecture.md)            | `packages/tokens` Implementation Architecture | Active | 2026-06-08 |
 | [0018](./0018-frontend-library-stack.md)                  | Frontend Library Stack                        | Active | 2026-06-08 |
 | [0019](./0019-web-ui-component-architecture.md)           | `packages/web-ui` Component Architecture      | Active | 2026-06-08 |
+| [0020](./0020-tanstack-db-reactive-store.md)              | TanStack DB — Reactive Client Store           | Draft  | 2026-06-19 |
 
 ---
 

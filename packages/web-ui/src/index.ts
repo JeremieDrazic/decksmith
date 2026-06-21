@@ -28,13 +28,73 @@ export type { TextareaProps } from './ui/Textarea';
 export { Input } from './ui/Input';
 export type { InputProps } from './ui/Input';
 
-export { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from './ui/Field';
+export { Badge } from './ui/Badge';
+export type { BadgeProps } from './ui/Badge';
+
+export { Checkbox } from './ui/Checkbox';
+export type { CheckboxProps } from './ui/Checkbox';
+
+export { Radio, RadioGroup } from './ui/Radio';
+export type { RadioProps, RadioGroupProps } from './ui/Radio';
+
+export { Switch } from './ui/Switch';
+export type { SwitchProps } from './ui/Switch';
+
+export {
+  Select,
+  SelectArrow,
+  SelectBackdrop,
+  SelectContent,
+  SelectGroup,
+  SelectGroupLabel,
+  SelectIcon,
+  SelectItem,
+  SelectList,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from './ui/Select';
+export type {
+  SelectArrowProps,
+  SelectBackdropProps,
+  SelectContentProps,
+  SelectGroupLabelProps,
+  SelectGroupProps,
+  SelectIconProps,
+  SelectItemProps,
+  SelectListProps,
+  SelectProps,
+  SelectSeparatorProps,
+  SelectTriggerProps,
+  SelectValueProps,
+} from './ui/Select';
+
+export { Tag } from './ui/Tag';
+export type { TagProps } from './ui/Tag';
+
+export {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldDescription,
+  FieldError,
+  FieldSet,
+  FieldLegend,
+  FieldContent,
+  FieldTitle,
+  FieldSeparator,
+} from './ui/Field';
 export type {
   FieldProps,
   FieldGroupProps,
   FieldLabelProps,
   FieldDescriptionProps,
   FieldErrorProps,
+  FieldSetProps,
+  FieldLegendProps,
+  FieldContentProps,
+  FieldTitleProps,
+  FieldSeparatorProps,
 } from './ui/Field';
 
 export {
@@ -62,6 +122,12 @@ export type { TextProps } from './typography/Text';
 
 export { Eyebrow } from './typography/Eyebrow';
 export type { EyebrowProps } from './typography/Eyebrow';
+
+export { Surface } from './ui/Surface';
+export type { SurfaceProps } from './ui/Surface';
+
+export { Card, LinkCard, ButtonCard } from './ui/Card';
+export type { CardProps, LinkCardProps, ButtonCardProps } from './ui/Card';
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 

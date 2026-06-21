@@ -28,7 +28,7 @@ export function InputGroup({ className, ...props }: InputGroupProps) {
       role="group"
       className={cn(
         'group/input-group relative flex h-9 w-full min-w-0 items-center',
-        'rounded-interactive border border-border bg-surface',
+        'rounded-interactive border border-border-interactive bg-surface',
         'transition-[border-color,box-shadow] duration-fast outline-none',
         // Focus ring — [&:has(...)] form required (has-[...] built-in variant generates no CSS in v4+Vite)
         '[&:has([data-slot=input-group-control]:focus-visible)]:border-border-focus',

@@ -1,5 +1,8 @@
 /*
- * Decksmith Design Tokens — Tailwind v4 CSS-first
+ * Decksmith Design Tokens — single source of truth.
+ * All token values live here. Consumed via CSS @import only — no JS/TS entry point.
+ * Phase 14 will introduce Style Dictionary to generate web/native outputs from this file
+ * (see ADR-0017 and roadmap §14.0). Until then, edit here and nowhere else.
  *
  * Architecture:
  *   :root     → light mode defaults (absence of .dark = light)
@@ -41,6 +44,7 @@
   --border: #d5d0be;
   --border-subtle: #e8e5d8;
   --border-focus: #5b4fcf;
+  --border-interactive: #b3add0; /* interactive controls at rest — soft luminous lavender */
 
   /* Text */
   --text: #0f0e17;
@@ -59,7 +63,8 @@
   --brand: #c49a1a;
   --shadow-accent: 0 0 16px rgba(91, 79, 207, 0.2);
 
-  /* Shadows — scale (reference only) — violet-tinted using accent #5b4fcf */
+  /* Shadows — scale — violet-tinted using accent #5b4fcf. Prefer semantic roles in components
+   * (shadow-card, shadow-popover…). Scale registered in @theme inline so any direct use stays on-brand. */
   --shadow-sm: 0 1px 6px rgba(91, 79, 207, 0.22);
   --shadow-md: 0 4px 18px rgba(91, 79, 207, 0.3);
   --shadow-lg: 0 8px 32px rgba(91, 79, 207, 0.38), 0 0 0 1px rgba(91, 79, 207, 0.1);
@@ -68,7 +73,14 @@
   --shadow-card: var(--shadow-md);
   --shadow-overlay: var(--shadow-lg);
 
-  /* Status — error */
+  /* Shadows — card tactile depth (private building blocks + composite roles)
+   * shadow-card-rest / shadow-card-lift are the only public roles; register in @theme inline */
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
+
+  /* Status — error (#dc2626 = red-600 intentionally differs from reference red-500 #ef4444:
+   * white-on-red-600 passes WCAG AA 4.5:1; white-on-red-500 fails at 3.9:1) */
   --error: #dc2626;
   --error-hover: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.08);
@@ -78,7 +90,7 @@
   /* Status — success */
   --success: #22c55e;
   --success-subtle: rgba(34, 197, 94, 0.08);
-  --success-text: #15803d;
+  --success-text: #166534; /* green-800 — green-700 (#15803d) fails WCAG AA on success-subtle */
 
   /* Status — warning */
   --warning: #d97706;
@@ -107,6 +119,7 @@
   --border: #2e2b47;
   --border-subtle: #232135;
   --border-focus: #e8b84b;
+  --border-interactive: #484373; /* interactive controls at rest — luminous purple, ~2.0:1 on dark surface */
 
   /* Text */
   --text: #f0eef8;
@@ -123,11 +136,11 @@
 
   /* Brand amber — decorative only (same as accent in dark, kept separate for semantic clarity) */
   --brand: #e8b84b;
-  --shadow-accent: 0 0 20px rgba(168, 162, 204, 0.22);
+  --shadow-accent: 0 0 16px rgba(232, 184, 75, 0.2);
 
-  /* Shadows — scale (reference only)
-   * Dark mode: bg is max-dark, drop shadows are invisible. Use rim-light instead:
-   * a visible violet rim (0 0 0 1px) + soft outer glow. Push opacity high enough to see it. */
+  /* Shadows — scale — dark mode: bg is max-dark so drop shadows are invisible.
+   * Rim-light (0 0 0 1px) + soft glow used instead. Cards override --shadow-card to avoid
+   * double-border (rim + CSS border). Prefer semantic roles in components. */
   --shadow-sm: 0 0 0 1px rgba(168, 162, 204, 0.45), inset 0 1px 0 rgba(168, 162, 204, 0.1);
   --shadow-md:
     0 4px 24px rgba(168, 162, 204, 0.18), 0 0 0 1px rgba(168, 162, 204, 0.55),
@@ -135,6 +148,15 @@
   --shadow-lg:
     0 8px 36px rgba(168, 162, 204, 0.22), 0 0 0 1px rgba(168, 162, 204, 0.6),
     inset 0 1px 0 rgba(168, 162, 204, 0.14);
+
+  /* Shadows — card tactile depth (private building blocks + composite roles)
+   * --shadow-card overrides --shadow-md to drop the 0 0 0 1px rim-light.
+   * In dark mode the CSS border handles the edge; the shadow is purely depth + glow.
+   * Without this override, the rim-light + CSS border creates a visible double-border. */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
 
   /* Status — error */
   --error-subtle: rgba(239, 68, 68, 0.12);
@@ -173,6 +195,7 @@
   --color-border: var(--border);
   --color-border-subtle: var(--border-subtle);
   --color-border-focus: var(--border-focus);
+  --color-border-interactive: var(--border-interactive);
   --color-text: var(--text);
   --color-text-muted: var(--text-muted);
   --color-text-faint: var(--text-faint);
@@ -189,6 +212,8 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-popover: var(--shadow-popover);
   --shadow-card: var(--shadow-card);
+  --shadow-card-rest: var(--shadow-card-rest);
+  --shadow-card-lift: var(--shadow-card-lift);
   --shadow-overlay: var(--shadow-overlay);
   --color-error: var(--error);
   --color-error-hover: var(--error-hover);
@@ -221,9 +246,9 @@
   --color-mtg-multi: #c9a84c;
 
   /* Typography — font families */
-  --font-display: 'Outfit', system-ui, sans-serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-body: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Fluid type scale — generated via Utopia formula (320px → 1280px)
    * Each step: clamp(min-size, intercept + slope*vw, max-size)

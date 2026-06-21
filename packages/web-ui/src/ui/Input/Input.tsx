@@ -22,7 +22,7 @@ export function Input({ className, type, ...props }: InputProps) {
       data-slot="input"
       className={cn(
         'h-9 w-full min-w-0',
-        'rounded-interactive border border-border bg-transparent',
+        'rounded-interactive border border-border-interactive bg-transparent',
         'px-3 py-1 text-sm text-text',
         'placeholder:text-text-faint',
         'transition-[border-color,box-shadow] duration-fast outline-none',
