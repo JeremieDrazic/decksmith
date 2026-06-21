@@ -50,9 +50,7 @@ function SelectableDemo() {
           onClick={() => setSelected(format)}
           padding="sm"
           className={
-            selected === format
-              ? '-translate-y-[3px] border-accent-border bg-surface-hover shadow-card-lift'
-              : ''
+            selected === format ? '-translate-y-[2px] border-accent-border shadow-card-lift' : ''
           }
         >
           <span className="text-sm font-medium text-text">{format}</span>

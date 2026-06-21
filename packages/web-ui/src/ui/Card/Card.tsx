@@ -7,25 +7,18 @@ import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { surfaceVariants } from '../Surface/Surface';
 
-// ─── Interactive classes ──────────────────────────────────────────────────────
 // Shared between LinkCard and ButtonCard. Module-private — not exported.
-// Rest  : shadow-card-rest = shadow-card + inset top highlight (lit edge).
-// Hover : lift −3px, bg surface-hover, border accent, shadow-card + accent glow.
-// Focus : same visual as hover + explicit ring.
-// Active: instant snap back to baseline.
-// shadow-card-rest / shadow-card-lift are @theme-registered Tailwind utilities — no var() in JSX.
-
+// Follows core/Card.jsx: hover adds border-accent + accent glow + lift −2px; surface stays constant.
+// shadow-card-rest / shadow-card-lift are @theme inline utilities — no var() in JSX.
 const interactiveCardClasses = [
   'cursor-pointer outline-none',
   'shadow-card-rest',
   'transition-[translate,box-shadow,border-color] duration-normal ease-out',
-  'hover:-translate-y-[3px]',
+  'hover:-translate-y-[2px]',
   'hover:border-accent-border',
-  'hover:bg-surface-hover',
   'hover:shadow-card-lift',
-  'focus-visible:-translate-y-[3px]',
+  'focus-visible:-translate-y-[2px]',
   'focus-visible:border-accent-border',
-  'focus-visible:bg-surface-hover',
   'focus-visible:shadow-card-lift',
   'focus-visible:ring-2 focus-visible:ring-border-focus',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
@@ -70,7 +63,7 @@ export type ButtonCardProps = React.ComponentProps<'button'> & VariantProps<type
  * Renders a semantic `<button>` — use for actions (open modal, toggle, select).
  * For navigation, use `LinkCard` instead.
  *
- * Hover: lift (−3px) + surface-hover bg + accent-border + accent glow. Press: instant snap back.
+ * Hover: lift (−2px) + accent-border + accent glow. Surface stays constant. Press: instant snap back.
  *
  * @example
  * <ButtonCard onClick={handleSelect} padding="sm">
@@ -98,7 +91,7 @@ export type LinkCardProps = useRender.ComponentProps<'a'> & VariantProps<typeof 
  * Renders an `<a>` by default. For SPA client-side navigation, inject the
  * router's Link via the `render` prop — `web-ui` stays router-agnostic.
  *
- * Hover: lift (−3px) + surface-hover bg + accent-border + accent glow. Press: instant snap back.
+ * Hover: lift (−2px) + accent-border + accent glow. Surface stays constant. Press: instant snap back.
  *
  * @example Native anchor
  * <LinkCard href="/decks/abc">Deck content</LinkCard>

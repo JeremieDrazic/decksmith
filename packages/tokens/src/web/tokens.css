@@ -1,5 +1,8 @@
 /*
- * Decksmith Design Tokens — Tailwind v4 CSS-first
+ * Decksmith Design Tokens — single source of truth.
+ * All token values live here. Consumed via CSS @import only — no JS/TS entry point.
+ * Phase 14 will introduce Style Dictionary to generate web/native outputs from this file
+ * (see ADR-0017 and roadmap §14.0). Until then, edit here and nowhere else.
  *
  * Architecture:
  *   :root     → light mode defaults (absence of .dark = light)
@@ -60,7 +63,8 @@
   --brand: #c49a1a;
   --shadow-accent: 0 0 16px rgba(91, 79, 207, 0.2);
 
-  /* Shadows — scale (reference only) — violet-tinted using accent #5b4fcf */
+  /* Shadows — scale — violet-tinted using accent #5b4fcf. Prefer semantic roles in components
+   * (shadow-card, shadow-popover…). Scale registered in @theme inline so any direct use stays on-brand. */
   --shadow-sm: 0 1px 6px rgba(91, 79, 207, 0.22);
   --shadow-md: 0 4px 18px rgba(91, 79, 207, 0.3);
   --shadow-lg: 0 8px 32px rgba(91, 79, 207, 0.38), 0 0 0 1px rgba(91, 79, 207, 0.1);
@@ -75,7 +79,8 @@
   --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
   --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
 
-  /* Status — error */
+  /* Status — error (#dc2626 = red-600 intentionally differs from reference red-500 #ef4444:
+   * white-on-red-600 passes WCAG AA 4.5:1; white-on-red-500 fails at 3.9:1) */
   --error: #dc2626;
   --error-hover: #ef4444;
   --error-subtle: rgba(239, 68, 68, 0.08);
@@ -133,9 +138,9 @@
   --brand: #e8b84b;
   --shadow-accent: 0 0 16px rgba(232, 184, 75, 0.2);
 
-  /* Shadows — scale (reference only)
-   * Dark mode: bg is max-dark, drop shadows are invisible. Use rim-light instead:
-   * a visible violet rim (0 0 0 1px) + soft outer glow. Push opacity high enough to see it. */
+  /* Shadows — scale — dark mode: bg is max-dark so drop shadows are invisible.
+   * Rim-light (0 0 0 1px) + soft glow used instead. Cards override --shadow-card to avoid
+   * double-border (rim + CSS border). Prefer semantic roles in components. */
   --shadow-sm: 0 0 0 1px rgba(168, 162, 204, 0.45), inset 0 1px 0 rgba(168, 162, 204, 0.1);
   --shadow-md:
     0 4px 24px rgba(168, 162, 204, 0.18), 0 0 0 1px rgba(168, 162, 204, 0.55),
@@ -241,9 +246,9 @@
   --color-mtg-multi: #c9a84c;
 
   /* Typography — font families */
-  --font-display: 'Outfit', system-ui, sans-serif;
-  --font-body: 'Outfit', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-body: 'Outfit', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
 
   /* Fluid type scale — generated via Utopia formula (320px → 1280px)
    * Each step: clamp(min-size, intercept + slope*vw, max-size)
