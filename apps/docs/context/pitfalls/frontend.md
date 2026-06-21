@@ -304,6 +304,27 @@ import { getUser } from '@decksmith/domain';
 
 ---
 
+## axe-core — `text-text-faint` fails contrast when rendered as a DOM element
+
+**`text-text-faint` (2.5:1) is decorative-only and must never appear on visible DOM text nodes.**
+axe-core's `color-contrast` rule ignores CSS `::placeholder` pseudo-elements (e.g.
+`<input placeholder="…">`) but flags real DOM elements. Base UI components that render text as a
+`<span>` (e.g. `SelectValue` placeholder, `FieldSeparator` label) must use `text-text-muted` (≥5:1)
+minimum.
+
+```tsx
+// ✅ correct — text-text-muted passes WCAG AA on both bg-surface and bg-bg
+<SelectPrimitive.Value className="data-[placeholder]:text-text-muted" />
+
+// ❌ wrong — text-text-faint on a real <span> → axe color-contrast violation
+<SelectPrimitive.Value className="data-[placeholder]:text-text-faint" />
+```
+
+The exemption only covers: `input::placeholder`, `textarea::placeholder`, and other CSS
+pseudo-elements. Any visible text content rendered as a real DOM node must pass WCAG AA.
+
+---
+
 ## Tailwind v4 — `translate-y-*` uses CSS `translate`, not `transform`
 
 **In Tailwind v4, `translate-y-*` utilities set the CSS `translate` individual property, NOT
