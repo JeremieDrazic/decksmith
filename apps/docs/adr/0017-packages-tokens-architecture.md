@@ -25,45 +25,52 @@ Decisions made here:
 
 ## Current Decision
 
-### 1. 2-Layer Token Hierarchy
+### 1. Token Hierarchy
 
-We use a 2-layer system: **primitives → semantic**. No component-level tokens at this stage.
+All token values live in a single CSS file. No component-level tokens at this stage.
 
 ```
 packages/tokens/src/
-  primitives/    → raw TypeScript constants (hex values, px values, durations)
-  semantic/      → maps primitives to roles (bg, surface, accent…)
-  web/           → CSS file consumed by apps/web via @import
-  native/        → flat JS objects for apps/mobile (Phase 14)
-  index.ts       → re-exports everything
+  web/tokens.css  → CSS custom properties + Tailwind v4 @theme  (the only file)
 ```
+
+The original 2-layer TypeScript hierarchy (`primitives/ → semantic/`) was deleted in Session 9 — see
+§2 and the Evolution History entry for rationale. The 2-layer concept survives in how `tokens.css`
+is _structured_: `:root`/`.dark` blocks hold raw values (primitive-equivalent), while
+`@theme inline` block maps them to semantic role names (`--color-bg: var(--bg)`, etc.).
 
 Component tokens (e.g. `card-bg`, `btn-primary-bg`) are introduced on-demand if a pattern repeats
 across 3+ components — never preemptively.
 
-**Why 2-layer and not 3:** 3-layer systems serve large teams with hundreds of stable components.
-Before having any components, component tokens create overhead without benefit. The rule "3
-repetitions before abstracting" applies here as everywhere.
+**Why no component tokens yet:** 3-layer systems serve large teams with hundreds of stable
+components. Before having any components, component tokens create overhead without benefit. The rule
+"3 repetitions before abstracting" applies here as everywhere.
 
-### 2. Dual Output Format — No Style Dictionary (yet)
+### 2. Single Output Format — `tokens.css` is the sole source of truth
 
-`packages/tokens` outputs two formats from the same TypeScript source:
+`packages/tokens` has **one output** — the CSS file consumed by all consumers via `@import`:
 
-| Output                | File              | Consumer                 |
-| --------------------- | ----------------- | ------------------------ |
-| CSS custom properties | `web/tokens.css`  | `apps/web` via `@import` |
-| JS flat objects       | `native/index.ts` | `apps/mobile` (Phase 14) |
+| Output                | File             | Consumer                 |
+| --------------------- | ---------------- | ------------------------ |
+| CSS custom properties | `web/tokens.css` | `apps/web` via `@import` |
+
+The original dual-output approach (TS primitives → web CSS + native JS) was superseded: the TS layer
+(`primitives/`, `semantic/`, `native/`, `index.ts`) was removed in Session 9 because it was dead
+code — nothing imported `@decksmith/tokens` as JS. The `"."` export entry in `package.json` was also
+removed; only `"./web/tokens.css"` remains.
+
+**Why the TS layer was deleted:** The parallel TS source drifted silently — `primitives/shadows.ts`
+still held legacy black values while `tokens.css` had been updated to correct semantic values. A
+dead "source of truth" that nobody reads is strictly worse than no source: it creates a false sense
+of documentation and hides real drift.
 
 **Web — Tailwind v4 `@theme`:**
 
 ```css
 /* packages/tokens/src/web/tokens.css */
-@import 'tailwindcss';
-
 @theme {
-  --color-bg: #0f0e17;
-  --color-surface: #1a1827;
-  --color-accent: #e8b84b;
+  --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
+  --color-accent: var(--accent);
   /* … */
 }
 ```
@@ -71,22 +78,9 @@ repetitions before abstracting" applies here as everywhere.
 Tailwind v4 reads `@theme` and generates utility classes (`bg-bg`, `text-accent`, etc.)
 automatically. No JavaScript preset object needed — unlike Tailwind v3.
 
-**Mobile — flat JS objects:**
-
-```ts
-/* packages/tokens/src/native/index.ts */
-export const tokens = {
-  color: {
-    bg: '#0f0e17',
-    surface: '#1a1827',
-    accent: '#e8b84b',
-  },
-  // …
-};
-```
-
-**Style Dictionary** (source → multi-target transforms) is explicitly deferred to Phase 14 (ADR to
-be created then). The export-dual approach is sufficient for phases 4–13.
+**Style Dictionary** (source → multi-target transforms, one input → web CSS + native JS) is
+explicitly deferred to Phase 14 (see roadmap §14.0). Until then, if native tokens are needed, they
+are written by hand in `packages/native-ui` and cross-referenced against `tokens.css`.
 
 ### 3. Finalised Token Values
 
@@ -340,6 +334,34 @@ No visual instability.
 ---
 
 ## Evolution History
+
+### 2026-06-21: Dead TS layer deleted — tokens.css becomes single source of truth
+
+The parallel TypeScript source (`primitives/`, `semantic/colors.ts`, `native/index.ts`, `index.ts`)
+was removed entirely. Findings that triggered the decision:
+
+- Zero JS imports of `@decksmith/tokens` anywhere in the codebase — the `"."` export was never
+  consumed.
+- `primitives/shadows.ts` had silently drifted to legacy all-black shadow values while `tokens.css`
+  held the correct semantic values. A source that nobody reads is worse than no source.
+
+Changes committed:
+
+- Deleted: `src/index.ts`, `src/primitives/` (6 files), `src/semantic/colors.ts`,
+  `src/native/index.ts`
+- `package.json`: removed `"."` export, kept `"./web/tokens.css"` only
+- `tsconfig.json`: `"include": ["src"]` → `"files": []` (tsc --noEmit stays a no-op, no TS18003)
+- `tokens.css`: added "single source of truth" header comment with Phase 14 Style Dictionary note
+
+Card component alignments committed in the same session:
+
+- `Card.tsx`: hover/focus lift corrected −3px → −2px; `hover:bg-surface-hover` removed (reference
+  `core/Card.jsx` keeps surface constant on hover — signalling is border-accent + glow + lift only)
+- Font stacks: `-apple-system` added to `--font-display`/`--font-body`; `'SF Mono'` added to
+  `--font-mono`
+
+Style Dictionary (single source → web CSS + native JS outputs) remains deferred to Phase 14 (roadmap
+§14.0). Until then, any native token values are hand-maintained in `packages/native-ui`.
 
 ### 2026-06-10: Semantic radius roles added
 
