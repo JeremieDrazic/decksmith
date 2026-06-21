@@ -342,7 +342,7 @@ export function FieldSeparator({ className, children, ...props }: FieldSeparator
       {...props}
     >
       <Separator className="flex-1" />
-      <span className="font-mono text-[10px] uppercase tracking-wide text-text-faint shrink-0">
+      <span className="font-mono text-[10px] uppercase tracking-wide text-text-muted shrink-0">
         {children}
       </span>
       <Separator className="flex-1" />
