@@ -31,7 +31,10 @@ function IdentityTable({ rows, size }: { rows: Row[]; size?: ColorIdentityProps[
       </thead>
       <tbody>
         {rows.map(({ identity, size: rowSize }) => (
-          <tr key={identity.join('')} className="border-b border-border-subtle last:border-0">
+          <tr
+            key={`${identity.join('')}-${rowSize ?? ''}`}
+            className="border-b border-border-subtle last:border-0"
+          >
             <td className="w-32 whitespace-nowrap py-3 pr-6 font-mono text-xs text-text-muted">
               {getColorIdentityName(identity)}
             </td>
