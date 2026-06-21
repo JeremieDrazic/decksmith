@@ -41,13 +41,13 @@ export const Variants: Story = {
   render: () => (
     <div className="flex gap-4 items-start">
       <Card variant="surface" className="w-52">
-        <p className="font-mono text-[10px] text-text-faint uppercase tracking-wide mb-1">
+        <p className="font-mono text-[10px] text-text-muted uppercase tracking-wide mb-1">
           surface
         </p>
         <p className="text-sm text-text">Default. Sits on page bg.</p>
       </Card>
       <Card variant="raised" className="w-52">
-        <p className="font-mono text-[10px] text-text-faint uppercase tracking-wide mb-1">raised</p>
+        <p className="font-mono text-[10px] text-text-muted uppercase tracking-wide mb-1">raised</p>
         <p className="text-sm text-text">Sits on a surface context.</p>
       </Card>
     </div>
@@ -61,7 +61,7 @@ export const Padding: Story = {
     <div className="flex flex-wrap gap-6 items-start">
       {(['sm', 'md', 'lg'] as const).map((p) => (
         <div key={p} className="flex flex-col gap-1.5">
-          <span className="font-mono text-[10px] text-text-faint uppercase tracking-wide">
+          <span className="font-mono text-[10px] text-text-muted uppercase tracking-wide">
             padding=&quot;{p}&quot;
           </span>
           <Card padding={p} className="w-36">

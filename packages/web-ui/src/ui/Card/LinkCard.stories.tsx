@@ -56,7 +56,7 @@ export const RecentActivity: Story = {
               <p className="text-sm font-medium text-text truncate">{item.name}</p>
               <p className="text-xs text-text-muted truncate">{item.sub}</p>
             </div>
-            <span className="shrink-0 font-mono text-xs text-text-faint">{item.time}</span>
+            <span className="shrink-0 font-mono text-xs text-text-muted">{item.time}</span>
           </div>
         </LinkCard>
       ))}

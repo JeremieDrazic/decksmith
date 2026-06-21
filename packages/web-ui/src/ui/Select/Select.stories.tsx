@@ -306,9 +306,9 @@ export const AlignItemWithTrigger: Story = {
   render: () => (
     <div className="flex gap-12 items-start">
       <Field className="w-56">
-        <FieldLabel>Default (below)</FieldLabel>
+        <FieldLabel htmlFor="align-below">Default (below)</FieldLabel>
         <Select name="fmt-a" defaultValue="commander">
-          <SelectTrigger>
+          <SelectTrigger id="align-below">
             <SelectValue />
           </SelectTrigger>
           <SelectContent alignItemWithTrigger={false}>{FORMAT_ITEMS}</SelectContent>
@@ -319,9 +319,9 @@ export const AlignItemWithTrigger: Story = {
       </Field>
 
       <Field className="w-56">
-        <FieldLabel>Overlay trigger</FieldLabel>
+        <FieldLabel htmlFor="align-overlay">Overlay trigger</FieldLabel>
         <Select name="fmt-b" defaultValue="commander">
-          <SelectTrigger>
+          <SelectTrigger id="align-overlay">
             <SelectValue />
           </SelectTrigger>
           <SelectContent alignItemWithTrigger>{FORMAT_ITEMS}</SelectContent>

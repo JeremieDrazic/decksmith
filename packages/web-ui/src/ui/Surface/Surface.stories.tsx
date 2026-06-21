@@ -28,13 +28,13 @@ export const Variants: Story = {
   render: () => (
     <div className="flex gap-4 items-start">
       <Surface variant="surface" padding="md" className="w-52">
-        <p className="font-mono text-[10px] text-text-faint uppercase tracking-wide mb-1">
+        <p className="font-mono text-[10px] text-text-muted uppercase tracking-wide mb-1">
           surface
         </p>
         <p className="text-sm text-text">Sits directly on the page background.</p>
       </Surface>
       <Surface variant="raised" padding="md" className="w-52">
-        <p className="font-mono text-[10px] text-text-faint uppercase tracking-wide mb-1">raised</p>
+        <p className="font-mono text-[10px] text-text-muted uppercase tracking-wide mb-1">raised</p>
         <p className="text-sm text-text">Sits on a surface — adds elevation.</p>
       </Surface>
     </div>
@@ -48,7 +48,7 @@ export const Padding: Story = {
     <div className="flex flex-wrap gap-6 items-start">
       {(['none', 'sm', 'md', 'lg'] as const).map((p) => (
         <div key={p} className="flex flex-col gap-1.5">
-          <span className="font-mono text-[10px] text-text-faint uppercase tracking-wide">{p}</span>
+          <span className="font-mono text-[10px] text-text-muted uppercase tracking-wide">{p}</span>
           <Surface padding={p} className="w-28">
             <span className="block text-xs text-text-muted">Content</span>
           </Surface>
@@ -63,7 +63,7 @@ export const Padding: Story = {
 export const OnRaisedBg: Story = {
   render: () => (
     <div className="bg-surface-raised rounded-surface p-6 w-80">
-      <p className="font-mono text-[10px] text-text-faint uppercase tracking-wide mb-3">
+      <p className="font-mono text-[10px] text-text-muted uppercase tracking-wide mb-3">
         bg-surface-raised wrapper
       </p>
       <Surface variant="surface" padding="md">
