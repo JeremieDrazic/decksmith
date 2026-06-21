@@ -1,1 +1,2 @@
-export type { MtgColor, ColorIdentity, SnowMana, VariableMana } from './mtg/colors';
+export type { MtgColor, ColorIdentity, SnowMana, VariableMana } from './colors';
+export { parseManaCost } from './parse-mana-cost';
