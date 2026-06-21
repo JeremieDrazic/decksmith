@@ -11,8 +11,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@decksmith/utils": "workspace:*",
     "@base-ui/react": "^1.5.0",
+    "@decksmith/domain": "workspace:*",
+    "@decksmith/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.6.0"

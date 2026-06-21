@@ -147,7 +147,14 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Storybook CI: `@storybook/test-runner` + `axe-playwright` — play functions + a11y on every
   story
 - ✅ `packages/utils` scaffolded: `noop` function with colocated tests
-- 🔄 shadcn/ui base components remaining: Card, Badge, Dialog, Toast
+- ✅ Surface — bare elevation primitive (`surface` / `raised` variants, configurable padding)
+- ✅ Card, ButtonCard, LinkCard — semantic card family (static + interactive; a11y: focus ring, press
+  state, keyboard nav)
+- ✅ Badge, Tag — status badges + removable Tag with close button
+- ✅ Select — dropdown picker (Base UI) with groups, multi-select, error state
+- ✅ `packages/tokens` worldclass audit: dead TS layer deleted, `tokens.css` is the single source of
+  truth, font fallbacks hardened, shadow scale comment corrected (ADR-0017 updated)
+- 🔄 shadcn/ui base components remaining: Dialog, Toast
 - ✅ Design tokens from `packages/tokens` applied (semantic token classes across all components)
 
 ---
