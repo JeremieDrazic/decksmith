@@ -70,13 +70,10 @@
   --shadow-overlay: var(--shadow-lg);
 
   /* Shadows — card tactile depth (private building blocks + composite roles)
-   * --shadow-inset        : top inner highlight at rest — light catching the top edge
-   * --shadow-inset-accent : same edge but in accent color on hover (light = violet)
    * shadow-card-rest / shadow-card-lift are the only public roles; register in @theme inline */
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --shadow-inset-accent: inset 0 1px 0 var(--accent-border);
   --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
-  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset-accent);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
 
   /* Status — error */
   --error: #dc2626;
@@ -134,7 +131,7 @@
 
   /* Brand amber — decorative only (same as accent in dark, kept separate for semantic clarity) */
   --brand: #e8b84b;
-  --shadow-accent: 0 0 20px rgba(168, 162, 204, 0.22);
+  --shadow-accent: 0 0 16px rgba(232, 184, 75, 0.2);
 
   /* Shadows — scale (reference only)
    * Dark mode: bg is max-dark, drop shadows are invisible. Use rim-light instead:
@@ -148,14 +145,13 @@
     inset 0 1px 0 rgba(168, 162, 204, 0.14);
 
   /* Shadows — card tactile depth (private building blocks + composite roles)
-   * --shadow-card overrides the --shadow-md alias to drop the 0 0 0 1px rim-light.
+   * --shadow-card overrides --shadow-md to drop the 0 0 0 1px rim-light.
    * In dark mode the CSS border handles the edge; the shadow is purely depth + glow.
    * Without this override, the rim-light + CSS border creates a visible double-border. */
-  --shadow-card: 0 4px 24px rgba(168, 162, 204, 0.18);
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.5);
   --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  --shadow-inset-accent: inset 0 1px 0 var(--accent-border);
   --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
-  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset-accent);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
 
   /* Status — error */
   --error-subtle: rgba(239, 68, 68, 0.12);

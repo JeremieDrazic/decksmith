@@ -9,11 +9,10 @@ import { surfaceVariants } from '../Surface/Surface';
 
 // ─── Interactive classes ──────────────────────────────────────────────────────
 // Shared between LinkCard and ButtonCard. Module-private — not exported.
-// Rest    : shadow-card-rest = shadow-card + inset top highlight (lit edge).
-// Hover   : lift −3px, bg surface-hover, border accent, glow+inset-accent shadow.
-//           The inset edge "turns accent" (amber dark / violet light) — the signature detail.
-// Focus   : same visual as hover + explicit ring.
-// Active  : instant snap back to baseline.
+// Rest  : shadow-card-rest = shadow-card + inset top highlight (lit edge).
+// Hover : lift −3px, bg surface-hover, border accent, shadow-card + accent glow.
+// Focus : same visual as hover + explicit ring.
+// Active: instant snap back to baseline.
 // shadow-card-rest / shadow-card-lift are @theme-registered Tailwind utilities — no var() in JSX.
 
 const interactiveCardClasses = [
