@@ -245,6 +245,15 @@
   --color-mtg-colorless: #8fa3b0;
   --color-mtg-multi: #c9a84c;
 
+  /* MTG pip foreground — glyph color on each mana pip, contrast-derived */
+  --color-mtg-white-fg: #1a160b;
+  --color-mtg-blue-fg: #ffffff;
+  --color-mtg-black-fg: #cdb8e0;
+  --color-mtg-red-fg: #ffffff;
+  --color-mtg-green-fg: #ffffff;
+  --color-mtg-colorless-fg: #1a160b;
+  --color-mtg-multi-fg: #1a160b;
+
   /* Typography — font families */
   --font-display: 'Outfit', system-ui, -apple-system, sans-serif;
   --font-body: 'Outfit', system-ui, -apple-system, sans-serif;

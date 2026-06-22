@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-17 (session 8)_
+_Updated: 2026-06-21 (session 9)_
 
 ---
 
@@ -79,6 +79,16 @@ _Updated: 2026-06-17 (session 8)_
 - [x] All axe CI violations resolved: 6 DS pages + Text/Tones disabled (intentional low contrast),
       Field/Disabled + InputGroup/Disabled disabled (WCAG 1.4.3 exemption), Button/Loading ghost got
       `loadingLabel`, Input/Error + Textarea/Error + InputGroup/ErrorState got `aria-label`
+- [x] Surface — bare elevation primitive (`surface` / `raised` variants, configurable padding)
+- [x] Card, ButtonCard, LinkCard — semantic card family (PR #30); hover: lift −2px, border-accent,
+      accent glow, no bg shift; a11y: focus ring, press state, keyboard nav
+- [x] Badge, Tag — status badges + removable Tag with close button (PR #30)
+- [x] Select — Base UI dropdown picker: groups, multi-select, error state, align-item-with-trigger
+      (PR #30)
+- [x] `packages/tokens` worldclass audit (PR #30): dead TS layer (`primitives/`, `semantic/`,
+      `native/`, `index.ts`) deleted — `tokens.css` is now the single source of truth; font
+      fallbacks hardened; shadow scale comment corrected; ADR-0017 updated
+- [x] pitfall doc: `text-text-faint` fails axe-core contrast on real DOM nodes (PR #31)
 
 ---
 
@@ -92,7 +102,7 @@ _Updated: 2026-06-17 (session 8)_
 - `routeTree.gen.ts` must be regenerated after adding/changing routes
   (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
 - `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
-- `packages/web-ui` Phase 4.5 in progress: Card, Badge, Dialog, Toast not started
+- `packages/web-ui` Phase 4.5 in progress: Dialog, Toast not started
 - DB seed is broken — `User.id` no longer has `@default(uuid())`, seed must be updated to create
   Supabase Auth users first before seeding profile rows
 
@@ -106,7 +116,7 @@ _None_
 
 ## Current Branch
 
-- Branch: `main` (session 8 merged — PR #27 + PR #28)
+- Branch: `main` (session 9 merged — PR #30 + PR #31)
 
 ---
 
