@@ -2,6 +2,7 @@ import type { Rarity } from '@decksmith/domain';
 import { cva } from 'class-variance-authority';
 
 import { cn } from '../../lib/cn';
+import { ICON_SIZE } from '../../lib/sizing/icon-size';
 
 type RarityConfig = {
   fill: string;
@@ -18,9 +19,9 @@ const RARITY_MAP = {
 const badge = cva('inline-block flex-none', {
   variants: {
     size: {
-      sm: 'size-icon-sm',
-      md: 'size-icon-md',
-      lg: 'size-icon-lg',
+      sm: ICON_SIZE.sm,
+      md: ICON_SIZE.md,
+      lg: ICON_SIZE.lg,
     },
   },
   defaultVariants: { size: 'md' },

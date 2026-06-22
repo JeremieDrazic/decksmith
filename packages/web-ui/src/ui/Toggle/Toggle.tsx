@@ -2,6 +2,7 @@ import { Toggle as TogglePrimitive } from '@base-ui/react/toggle';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../../lib/cn';
+import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
 
 export const toggleBaseClasses = [
   'group/toggle inline-flex items-center justify-center gap-1',
@@ -30,10 +31,10 @@ export const toggleVariants = cva(toggleBaseClasses, {
   variants: {
     variant: toggleVariantStyles,
     size: {
-      xs: 'h-control-xs px-1.5 text-xs',
-      sm: 'h-control-sm px-2 text-xs',
-      md: 'h-control-md px-2.5 text-sm',
-      lg: 'h-control-lg px-2.5 text-sm',
+      xs: `${CONTROL_HEIGHT.xs} px-1.5 text-xs`,
+      sm: `${CONTROL_HEIGHT.sm} px-2 text-xs`,
+      md: `${CONTROL_HEIGHT.md} px-2.5 text-sm`,
+      lg: `${CONTROL_HEIGHT.lg} px-2.5 text-sm`,
     },
   },
   defaultVariants: {

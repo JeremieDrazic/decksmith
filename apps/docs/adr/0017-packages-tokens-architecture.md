@@ -363,6 +363,33 @@ Card component alignments committed in the same session:
 Style Dictionary (single source → web CSS + native JS outputs) remains deferred to Phase 14 (roadmap
 §14.0). Until then, any native token values are hand-maintained in `packages/native-ui`.
 
+### 2026-06-22: Token scope — dimensions are NOT tokens
+
+**What is tokenised:** axes where (a) Tailwind v4 has a native namespace (`--color-*`, `--radius-*`,
+`--font-*`, `--shadow-*`, `--duration-*`) AND (b) the value is a brand/design decision (colour,
+radius, typography, motion). These map directly to Tailwind utility namespaces with no workaround.
+
+**What is NOT tokenised:** the _application_ of dimensions (control heights, icon sizes). Reason:
+
+1. Tailwind v4 has no `--size-*` namespace — `--size-control-md: 2.25rem` generates **no classes**
+   (verified against `tailwindcss@4.3.0` source).
+2. Using `--spacing-control-*` would generate `h-*` but also `p-*` / `gap-*` — semantic leakage.
+3. Tailwind's `--spacing: 0.25rem` multiplier already IS the dimension token system: `h-9 = 36px`
+   without inventing anything. Duplicating it adds noise.
+
+**Aligned with shadcn/ui**: dimensions are expressed as a **shared cva map** in
+`packages/web-ui/src/lib/sizing/` — string literals visible to the Tailwind scanner, strictly typed
+via `as const`, internal to the package (YAGNI):
+
+| File                | Export           | Values                             |
+| ------------------- | ---------------- | ---------------------------------- |
+| `control-height.ts` | `CONTROL_HEIGHT` | h-6 / h-8 / h-9 / h-11             |
+| `control-square.ts` | `CONTROL_SQUARE` | size-6 / size-8 / size-9 / size-11 |
+| `icon-size.ts`      | `ICON_SIZE`      | size-4 / size-5 / size-6           |
+
+The `--size-*` blocks previously added to `layout.css` (PR #34) are removed. Radius and z-index
+remain — they use native namespaces and are legitimate tokens.
+
 ### 2026-06-10: Semantic radius roles added
 
 Four semantic radius roles added to `@theme` in `tokens.css`:

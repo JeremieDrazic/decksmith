@@ -3,16 +3,17 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { CONTROL_SQUARE } from '../../lib/sizing/control-square';
 import { toggleBaseClasses, toggleVariantStyles } from '../Toggle/Toggle';
 
 const iconToggleVariants = cva(toggleBaseClasses, {
   variants: {
     variant: toggleVariantStyles,
     size: {
-      xs: 'size-control-xs',
-      sm: 'size-control-sm',
-      md: 'size-control-md',
-      lg: 'size-control-lg',
+      xs: CONTROL_SQUARE.xs,
+      sm: CONTROL_SQUARE.sm,
+      md: CONTROL_SQUARE.md,
+      lg: CONTROL_SQUARE.lg,
     },
   },
   defaultVariants: {

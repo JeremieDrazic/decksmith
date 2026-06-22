@@ -1,5 +1,6 @@
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/cn';
+import { ICON_SIZE } from '../../lib/sizing/icon-size';
 import { ManaIcon } from '../ManaIcon/ManaIcon';
 import { HYBRID_DEFS } from '../ManaIcon/hybrid-defs';
 import { HybridManaSymbol } from './HybridManaSymbol';
@@ -38,9 +39,9 @@ const pip = cva(
   {
     variants: {
       size: {
-        sm: 'size-icon-sm',
-        md: 'size-icon-md',
-        lg: 'size-icon-lg',
+        sm: ICON_SIZE.sm,
+        md: ICON_SIZE.md,
+        lg: ICON_SIZE.lg,
       },
     },
     defaultVariants: { size: 'md' },
