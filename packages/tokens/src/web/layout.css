@@ -1,0 +1,39 @@
+/* ─── Layout tokens ────────────────────────────────────────────────────────
+ * Static @theme — border radius semantic roles and z-index.
+ * Use semantic radius roles in components — never Tailwind's built-in radius
+ * scale, which uses different values (rounded-md = 0.375rem ≠ radius-interactive
+ * = 0.5rem).
+ * Spacing tokens are intentionally absent — Tailwind's built-in scale is used
+ * directly until repeating patterns emerge across components.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Border radius — semantic roles */
+  --radius-interactive: 0.5rem; /* buttons, inputs, selects, toggles */
+  --radius-surface: 0.75rem; /* cards, panels, popovers, dropdowns */
+  --radius-modal: 1rem; /* modals, dialogs, drawers */
+  --radius-badge: 9999px; /* pills, tags, avatars, mana indicators */
+  --radius-stamp: 0.25rem; /* MTG format badges, rarity chips */
+
+  /* Component icon sizes — square indicators (mana pips, rarity badges, avatars).
+   * Tailwind generates size-icon-* (w + h), w-icon-*, h-icon-* from --size-*. */
+  --size-icon-sm: 1rem; /* 16px */
+  --size-icon-md: 1.25rem; /* 20px */
+  --size-icon-lg: 1.5rem; /* 24px */
+
+  /* Component control heights — interactive elements (buttons, inputs, selects).
+   * Use h-control-* in components — never raw h-8/h-9 etc. */
+  --size-control-xs: 1.5rem; /* 24px */
+  --size-control-sm: 2rem; /* 32px */
+  --size-control-md: 2.25rem; /* 36px */
+  --size-control-lg: 2.75rem; /* 44px */
+
+  /* Z-index */
+  --z-index-base: 0;
+  --z-index-raised: 10;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-overlay: 300;
+  --z-index-modal: 400;
+  --z-index-toast: 500;
+  --z-index-tooltip: 600;
+}

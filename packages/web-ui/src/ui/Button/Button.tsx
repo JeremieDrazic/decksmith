@@ -51,10 +51,10 @@ export const buttonVariants = cva(
         ],
       },
       size: {
-        xs: 'h-6 px-2 text-xs',
-        sm: 'h-8 px-3 text-xs',
-        md: 'h-9 px-4 text-sm',
-        lg: 'h-11 px-6 text-base',
+        xs: 'h-control-xs px-2 text-xs',
+        sm: 'h-control-sm px-3 text-xs',
+        md: 'h-control-md px-4 text-sm',
+        lg: 'h-control-lg px-6 text-base',
       },
     },
     defaultVariants: {

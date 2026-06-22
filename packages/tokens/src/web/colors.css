@@ -1,0 +1,202 @@
+/* ─── Theme-aware color variables ─────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* Backgrounds */
+  --bg: #faf9f4;
+  --surface: #ffffff;
+  --surface-raised: #f2f0e6;
+  --surface-hover: #ede9d8;
+
+  /* Borders */
+  --border: #d5d0be;
+  --border-subtle: #e8e5d8;
+  --border-focus: #5b4fcf;
+  --border-interactive: #b3add0; /* interactive controls at rest — soft luminous lavender */
+
+  /* Text */
+  --text: #0f0e17;
+  --text-muted: #524d80;
+  --text-faint: #7b75a8;
+
+  /* Accent (violet) */
+  --accent: #5b4fcf;
+  --accent-hover: #4a3db0;
+  --accent-subtle: rgba(91, 79, 207, 0.08);
+  --accent-border: rgba(91, 79, 207, 0.25);
+  --accent-text: #3d319a;
+  --on-accent: #ffffff;
+
+  /* Brand amber — decorative only (logo, ornaments, dividers) */
+  --brand: #c49a1a;
+  --shadow-accent: 0 0 16px rgba(91, 79, 207, 0.2);
+
+  /* Shadows — scale — violet-tinted using accent #5b4fcf. Prefer semantic roles in components
+   * (shadow-card, shadow-popover…). Scale registered in @theme inline so any direct use stays on-brand. */
+  --shadow-sm: 0 1px 6px rgba(91, 79, 207, 0.22);
+  --shadow-md: 0 4px 18px rgba(91, 79, 207, 0.3);
+  --shadow-lg: 0 8px 32px rgba(91, 79, 207, 0.38), 0 0 0 1px rgba(91, 79, 207, 0.1);
+  /* Shadows — semantic roles (use these in components) */
+  --shadow-popover: var(--shadow-sm);
+  --shadow-card: var(--shadow-md);
+  --shadow-overlay: var(--shadow-lg);
+
+  /* Shadows — card tactile depth (private building blocks + composite roles)
+   * shadow-card-rest / shadow-card-lift are the only public roles; register in @theme inline */
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
+
+  /* Status — error (#dc2626 = red-600 intentionally differs from reference red-500 #ef4444:
+   * white-on-red-600 passes WCAG AA 4.5:1; white-on-red-500 fails at 3.9:1) */
+  --error: #dc2626;
+  --error-hover: #ef4444;
+  --error-subtle: rgba(239, 68, 68, 0.08);
+  --error-text: #b91c1c;
+  --on-error: #ffffff;
+
+  /* Status — success */
+  --success: #22c55e;
+  --success-subtle: rgba(34, 197, 94, 0.08);
+  --success-text: #166534; /* green-800 — green-700 (#15803d) fails WCAG AA on success-subtle */
+
+  /* Status — warning */
+  --warning: #d97706;
+  --warning-subtle: rgba(217, 119, 6, 0.08);
+  --warning-text: #92400e;
+
+  /* Status — info */
+  --info: #2563eb;
+  --info-subtle: rgba(37, 99, 235, 0.08);
+  --info-text: #1d4ed8;
+
+  /* MTG White (only WUBRG color with a light/dark variant) */
+  --mtg-white: #c8b96e;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Backgrounds */
+  --bg: #0f0e17;
+  --surface: #1a1827;
+  --surface-raised: #232135;
+  --surface-hover: #2a2840;
+
+  /* Borders */
+  --border: #2e2b47;
+  --border-subtle: #232135;
+  --border-focus: #e8b84b;
+  --border-interactive: #484373; /* interactive controls at rest — luminous purple, ~2.0:1 on dark surface */
+
+  /* Text */
+  --text: #f0eef8;
+  --text-muted: #a8a2cc;
+  --text-faint: #524d80;
+
+  /* Accent (amber) */
+  --accent: #e8b84b;
+  --accent-hover: #c49a1a;
+  --accent-subtle: rgba(232, 184, 75, 0.12);
+  --accent-border: rgba(232, 184, 75, 0.3);
+  --accent-text: #e8b84b;
+  --on-accent: #0f0e17;
+
+  /* Brand amber — decorative only (same as accent in dark, kept separate for semantic clarity) */
+  --brand: #e8b84b;
+  --shadow-accent: 0 0 16px rgba(232, 184, 75, 0.2);
+
+  /* Shadows — scale — dark mode: bg is max-dark so drop shadows are invisible.
+   * Rim-light (0 0 0 1px) + soft glow used instead. Cards override --shadow-card to avoid
+   * double-border (rim + CSS border). Prefer semantic roles in components. */
+  --shadow-sm: 0 0 0 1px rgba(168, 162, 204, 0.45), inset 0 1px 0 rgba(168, 162, 204, 0.1);
+  --shadow-md:
+    0 4px 24px rgba(168, 162, 204, 0.18), 0 0 0 1px rgba(168, 162, 204, 0.55),
+    inset 0 1px 0 rgba(168, 162, 204, 0.12);
+  --shadow-lg:
+    0 8px 36px rgba(168, 162, 204, 0.22), 0 0 0 1px rgba(168, 162, 204, 0.6),
+    inset 0 1px 0 rgba(168, 162, 204, 0.14);
+
+  /* Shadows — card tactile depth (private building blocks + composite roles)
+   * --shadow-card overrides --shadow-md to drop the 0 0 0 1px rim-light.
+   * In dark mode the CSS border handles the edge; the shadow is purely depth + glow.
+   * Without this override, the rim-light + CSS border creates a visible double-border. */
+  --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --shadow-card-rest: var(--shadow-card), var(--shadow-inset);
+  --shadow-card-lift: var(--shadow-card), var(--shadow-accent), var(--shadow-inset);
+
+  /* Status — error */
+  --error-subtle: rgba(239, 68, 68, 0.12);
+  --error-text: #ef4444;
+
+  /* Status — success */
+  --success: #22c55e;
+  --success-subtle: rgba(34, 197, 94, 0.12);
+  --success-text: #22c55e;
+
+  /* Status — warning */
+  --warning: #f59e0b;
+  --warning-subtle: rgba(245, 158, 11, 0.12);
+  --warning-text: #f59e0b;
+
+  /* Status — info */
+  --info: #5b9cf6;
+  --info-subtle: rgba(91, 156, 246, 0.12);
+  --info-text: #5b9cf6;
+
+  /* MTG White */
+  --mtg-white: #f5f0d8;
+}
+
+/* ─── Tailwind v4 inline theme ─────────────────────────────────────────────
+ * @theme inline generates utility classes (bg-*, text-*, border-*) that
+ * resolve at runtime via var(). This is what makes dark mode switching work
+ * without rebuilding CSS — Tailwind generates `color: var(--text)` and the
+ * CSS var flips when .dark is toggled on <html>.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-hover: var(--surface-hover);
+  --color-border: var(--border);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-focus: var(--border-focus);
+  --color-border-interactive: var(--border-interactive);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-border: var(--accent-border);
+  --color-accent-text: var(--accent-text);
+  --color-on-accent: var(--on-accent);
+  --color-brand: var(--brand);
+  --shadow-accent: var(--shadow-accent);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-popover: var(--shadow-popover);
+  --shadow-card: var(--shadow-card);
+  --shadow-card-rest: var(--shadow-card-rest);
+  --shadow-card-lift: var(--shadow-card-lift);
+  --shadow-overlay: var(--shadow-overlay);
+  --color-error: var(--error);
+  --color-error-hover: var(--error-hover);
+  --color-error-subtle: var(--error-subtle);
+  --color-error-text: var(--error-text);
+  --color-on-error: var(--on-error);
+  --color-success: var(--success);
+  --color-success-subtle: var(--success-subtle);
+  --color-success-text: var(--success-text);
+  --color-warning: var(--warning);
+  --color-warning-subtle: var(--warning-subtle);
+  --color-warning-text: var(--warning-text);
+  --color-info: var(--info);
+  --color-info-subtle: var(--info-subtle);
+  --color-info-text: var(--info-text);
+  --color-mtg-white: var(--mtg-white);
+}

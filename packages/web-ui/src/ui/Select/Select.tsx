@@ -104,7 +104,7 @@ export function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       className={cn(
-        'group flex h-9 w-full items-center justify-between gap-2',
+        'group flex h-control-md w-full items-center justify-between gap-2',
         'rounded-interactive border border-border-interactive bg-transparent',
         'px-3 py-1 text-sm text-text',
         'outline-none transition-[border-color,box-shadow] duration-fast',
@@ -252,7 +252,7 @@ export function SelectItem({ className, children, ...props }: SelectItemProps) {
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        'relative flex h-9 cursor-default select-none items-center gap-2',
+        'relative flex h-control-md cursor-default select-none items-center gap-2',
         'rounded-sm px-2.5 pr-8 text-sm text-text outline-none',
         'data-[highlighted]:bg-surface-raised',
         'data-[selected]:text-accent-text',

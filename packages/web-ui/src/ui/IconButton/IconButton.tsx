@@ -37,10 +37,10 @@ const iconButtonVariants = cva(
         destructive: ['bg-error text-on-error', 'hover:bg-error-hover'],
       },
       size: {
-        xs: 'h-6 w-6',
-        sm: 'h-8 w-8',
-        md: 'h-9 w-9',
-        lg: 'h-11 w-11',
+        xs: 'size-control-xs',
+        sm: 'size-control-sm',
+        md: 'size-control-md',
+        lg: 'size-control-lg',
       },
     },
     defaultVariants: {

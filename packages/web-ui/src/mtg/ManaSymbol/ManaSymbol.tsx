@@ -30,17 +30,17 @@ const SYMBOL_MAP = {
   multi: { bg: 'bg-mtg-multi', text: 'text-mtg-multi-fg', label: 'Multicolor' },
 } satisfies Record<string, SymbolConfig>;
 
-// Icon sizes (px) — intentionally smaller than the pip so the colored background shows
-const ICON_SIZES = { sm: 10, md: 13, lg: 17 } as const;
+// Icon sizes (px) — intentionally smaller than the pip so the colored background shows (~65%)
+const ICON_SIZES = { sm: 10, md: 13, lg: 16 } as const;
 
 const pip = cva(
   'inline-flex items-center justify-center rounded-badge flex-none overflow-hidden [box-shadow:inset_0_-1px_2px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]',
   {
     variants: {
       size: {
-        sm: 'size-4',
-        md: 'size-5',
-        lg: 'size-[1.625rem]',
+        sm: 'size-icon-sm',
+        md: 'size-icon-md',
+        lg: 'size-icon-lg',
       },
     },
     defaultVariants: { size: 'md' },

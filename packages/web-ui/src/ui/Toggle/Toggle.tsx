@@ -3,43 +3,44 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../../lib/cn';
 
-export const toggleVariants = cva(
-  [
-    'group/toggle inline-flex items-center justify-center gap-1',
-    'rounded-interactive whitespace-nowrap',
-    'font-display font-medium',
-    'select-none cursor-pointer',
-    'transition-[background-color,border-color,color,opacity] duration-fast ease-out',
-    'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
-    'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
-    'disabled:pointer-events-none disabled:opacity-[0.38]',
-    '[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
-    // Pressed state — accent-subtle bg + accent text color
-    'aria-pressed:bg-accent-subtle aria-pressed:text-accent-text',
+export const toggleBaseClasses = [
+  'group/toggle inline-flex items-center justify-center gap-1',
+  'rounded-interactive whitespace-nowrap',
+  'font-display font-medium',
+  'select-none cursor-pointer',
+  'transition-[background-color,border-color,color,opacity] duration-fast ease-out',
+  'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
+  'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
+  'disabled:pointer-events-none disabled:opacity-[0.38]',
+  '[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  // Pressed state — accent-subtle bg + accent text color
+  'aria-pressed:bg-accent-subtle aria-pressed:text-accent-text',
+] as const;
+
+export const toggleVariantStyles = {
+  ghost: 'bg-transparent text-text-muted hover:bg-accent-subtle hover:text-text',
+  secondary: [
+    'border border-border bg-transparent text-text-muted',
+    'hover:bg-accent-subtle hover:text-text',
+    'aria-pressed:border-accent-border',
   ],
-  {
-    variants: {
-      variant: {
-        ghost: 'bg-transparent text-text-muted hover:bg-accent-subtle hover:text-text',
-        secondary: [
-          'border border-border bg-transparent text-text-muted',
-          'hover:bg-accent-subtle hover:text-text',
-          'aria-pressed:border-accent-border',
-        ],
-      },
-      size: {
-        xs: 'h-6 min-w-6 px-1.5 text-xs',
-        sm: 'h-7 min-w-7 px-2 text-xs',
-        md: 'h-8 min-w-8 px-2.5 text-sm',
-        lg: 'h-9 min-w-9 px-2.5 text-sm',
-      },
+} as const;
+
+export const toggleVariants = cva(toggleBaseClasses, {
+  variants: {
+    variant: toggleVariantStyles,
+    size: {
+      xs: 'h-control-xs px-1.5 text-xs',
+      sm: 'h-control-sm px-2 text-xs',
+      md: 'h-control-md px-2.5 text-sm',
+      lg: 'h-control-lg px-2.5 text-sm',
     },
-    defaultVariants: {
-      variant: 'ghost',
-      size: 'md',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'ghost',
+    size: 'md',
+  },
+});
 
 export type ToggleProps = TogglePrimitive.Props & VariantProps<typeof toggleVariants>;
 

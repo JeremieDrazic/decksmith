@@ -1,0 +1,37 @@
+/* ─── MTG static tokens ────────────────────────────────────────────────────
+ * All MTG-specific color tokens. Static @theme (not inline) — these are part
+ * of the MTG visual vocabulary and never change between light/dark mode.
+ * Exception: --color-mtg-white is in colors.css (has a light/dark variant).
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* MTG WUBRG — stable, no dark/light variant */
+  --color-mtg-blue: #1a6eb5;
+  --color-mtg-black: #160d22;
+  --color-mtg-red: #cc2222;
+  --color-mtg-green: #006e3c;
+  --color-mtg-colorless: #8fa3b0;
+  --color-mtg-multi: #c9a84c;
+
+  /* MTG pip foreground — glyph color on each mana pip, contrast-derived */
+  --color-mtg-white-fg: #1a160b;
+  --color-mtg-blue-fg: #ffffff;
+  --color-mtg-black-fg: #cdb8e0;
+  --color-mtg-red-fg: #ffffff;
+  --color-mtg-green-fg: #ffffff;
+  --color-mtg-colorless-fg: #1a160b;
+  --color-mtg-multi-fg: #1a160b;
+
+  /* MTG rarity — stable, no dark/light variant (canonical MTG visual vocabulary)
+   * Common uses mid-gray (#b8b8b8) rather than black — pure black is invisible in dark mode. */
+  --color-rarity-common: #b8b8b8;
+  --color-rarity-uncommon: #8fa9bf;
+  --color-rarity-rare: #c8a951;
+  --color-rarity-mythic: #e05c1e;
+
+  /* Rarity foreground — glyph color on each rarity badge, WCAG AA contrast-derived
+   * common 8.7:1 · uncommon 5.7:1 · rare 8.75:1 · mythic (white) 5.9:1 */
+  --color-rarity-common-fg: #1a160b;
+  --color-rarity-uncommon-fg: #1a160b;
+  --color-rarity-rare-fg: #1a160b;
+  --color-rarity-mythic-fg: #ffffff;
+}

@@ -16,6 +16,9 @@ export type { ButtonGroupProps } from './ui/ButtonGroup';
 export { Toggle, toggleVariants } from './ui/Toggle';
 export type { ToggleProps } from './ui/Toggle';
 
+export { IconToggle } from './ui/IconToggle';
+export type { IconToggleProps } from './ui/IconToggle';
+
 export { ToggleGroup, ToggleGroupItem } from './ui/ToggleGroup';
 export type { ToggleGroupProps, ToggleGroupItemProps } from './ui/ToggleGroup';
 
@@ -128,6 +131,23 @@ export type { SurfaceProps } from './ui/Surface';
 
 export { Card, LinkCard, ButtonCard } from './ui/Card';
 export type { CardProps, LinkCardProps, ButtonCardProps } from './ui/Card';
+
+// ─── MTG ─────────────────────────────────────────────────────────────────────
+
+export { ManaIcon } from './mtg/ManaIcon';
+export type { ManaIconProps, ManaSym } from './mtg/ManaIcon';
+
+export { ManaSymbol } from './mtg/ManaSymbol';
+export type { ManaSymbolProps } from './mtg/ManaSymbol';
+
+export { ManaCost } from './mtg/ManaCost';
+export type { ManaCostProps } from './mtg/ManaCost';
+
+export { ColorIdentity } from './mtg/ColorIdentity';
+export type { ColorIdentityProps } from './mtg/ColorIdentity';
+
+export { RarityBadge } from './mtg/RarityBadge';
+export type { RarityBadgeProps } from './mtg/RarityBadge';
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
