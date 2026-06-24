@@ -3,6 +3,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../../lib/cn';
+import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
 import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { Textarea } from '../Textarea/Textarea';
@@ -27,7 +28,7 @@ export function InputGroup({ className, ...props }: InputGroupProps) {
       data-slot="input-group"
       role="group"
       className={cn(
-        'group/input-group relative flex h-9 w-full min-w-0 items-center',
+        `group/input-group relative flex ${CONTROL_HEIGHT.md} w-full min-w-0 items-center`,
         'rounded-interactive border border-border-interactive bg-surface',
         'transition-[border-color,box-shadow] duration-fast outline-none',
         // Focus ring — [&:has(...)] form required (has-[...] built-in variant generates no CSS in v4+Vite)

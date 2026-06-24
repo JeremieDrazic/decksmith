@@ -2,6 +2,7 @@ import { Input as InputPrimitive } from '@base-ui/react/input';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
 
 export type InputProps = React.ComponentProps<'input'>;
 
@@ -21,7 +22,7 @@ export function Input({ className, type, ...props }: InputProps) {
       type={type}
       data-slot="input"
       className={cn(
-        'h-9 w-full min-w-0',
+        `${CONTROL_HEIGHT.md} w-full min-w-0`,
         'rounded-interactive border border-border-interactive bg-transparent',
         'px-3 py-1 text-sm text-text',
         'placeholder:text-text-faint',

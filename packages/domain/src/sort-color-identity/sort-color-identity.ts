@@ -1,4 +1,4 @@
-import type { ColorIdentity, MtgColor } from '../colors';
+import type { ColorIdentity, MtgColor } from '../mana';
 
 const WUBRG_ORDER: Record<MtgColor, number> = {
   w: 0,

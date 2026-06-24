@@ -1,4 +1,4 @@
-import type { ColorIdentity } from '../colors';
+import type { ColorIdentity } from '../mana';
 import { sortColorIdentity } from '../sort-color-identity';
 
 // Canonical MTG color combination names — sorted WUBRG key → lore name.

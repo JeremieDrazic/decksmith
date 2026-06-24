@@ -1,0 +1,34 @@
+/* ─── Layout tokens ────────────────────────────────────────────────────────
+ * Radius and z-index only. Dimensions (control heights, icon sizes) are NOT
+ * tokens — they are expressed as cva maps built on Tailwind's spacing scale
+ * (CONTROL_HEIGHT / CONTROL_SQUARE / ICON_SIZE in packages/web-ui/src/lib/sizing/).
+ *
+ * Why dimensions are not tokenised:
+ *   Tailwind's spacing scale IS the dimension token system. Inventing --size-*
+ *   would duplicate a primitive we already own. Moreover, --size-* is not a
+ *   Tailwind v4 namespace (only --spacing-* feeds h-*, w-*, size-* utilities),
+ *   and using --spacing-control-* would expose p-control-* / gap-control-* as
+ *   valid classes — semantic leakage. A shared cva map is strictly typed,
+ *   zero-leakage, and idiomatic with Tailwind (aligned with shadcn/ui).
+ *
+ * Radius tokens: --radius-* IS a native Tailwind v4 namespace → rounded-* is
+ * generated automatically and idiomatically. No conflict — radius belongs here.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Border radius — semantic roles ONLY (no raw scale exposed) */
+  --radius-interactive: 0.5rem; /* buttons, inputs, selects, toggles */
+  --radius-surface: 0.75rem; /* cards, panels, popovers, dropdowns */
+  --radius-modal: 1rem; /* modals, dialogs, drawers */
+  --radius-badge: 9999px; /* pills, tags, avatars, mana indicators */
+  --radius-stamp: 0.25rem; /* MTG format badges, rarity chips */
+
+  /* Z-index */
+  --z-index-base: 0;
+  --z-index-raised: 10;
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-overlay: 300;
+  --z-index-modal: 400;
+  --z-index-toast: 500;
+  --z-index-tooltip: 600;
+}

@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
 
 /**
  * CVA variants factory — exported so consumers can apply button styles to
@@ -51,10 +52,10 @@ export const buttonVariants = cva(
         ],
       },
       size: {
-        xs: 'h-6 px-2 text-xs',
-        sm: 'h-8 px-3 text-xs',
-        md: 'h-9 px-4 text-sm',
-        lg: 'h-11 px-6 text-base',
+        xs: `${CONTROL_HEIGHT.xs} px-2 text-xs`,
+        sm: `${CONTROL_HEIGHT.sm} px-3 text-xs`,
+        md: `${CONTROL_HEIGHT.md} px-4 text-sm`,
+        lg: `${CONTROL_HEIGHT.lg} px-6 text-base`,
       },
     },
     defaultVariants: {

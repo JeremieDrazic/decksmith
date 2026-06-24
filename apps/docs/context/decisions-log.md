@@ -738,4 +738,49 @@ only `apps/api` has tests today, installing directly avoids premature catalog en
 **Decision:** Vitest pinned in root `devDependencies` and `apps/api` `devDependencies`. Will move to
 catalog once 2+ packages use it.
 
+---
+
+## [2026-06-22] — `packages/tokens` split into thematic sub-files
+
+**Context:** `tokens.css` reached ~350 lines with all token categories in a single file. Adding MTG
+rarity tokens (new) made the growth trajectory clear — the file would keep growing with every new
+token domain.
+
+**Decision:** Split into `colors.css`, `mtg.css`, `typography.css`, `layout.css`, `motion.css`.
+`tokens.css` becomes a master `@import` entry point — the only file consumers reference. Tailwind v4
+merges multiple `@theme` blocks across imported files, so no consumer changes are needed.
+
+**Impact:** `packages/tokens/src/web/`. Import path `@decksmith/tokens/web/tokens.css` unchanged.
+
+---
+
+## [2026-06-22] — MTG rarity tokens added to `packages/tokens`
+
+**Context:** `RarityBadge` component (upcoming) needs canonical rarity colors. These are part of the
+MTG visual vocabulary like WUBRG — fixed, not theme-adaptive.
+
+**Decision:** Four rarity tokens + four foreground tokens in `mtg.css` under static `@theme`:
+`rarity-common` (#b8b8b8), `rarity-uncommon` (#8fa9bf), `rarity-rare` (#c8a951), `rarity-mythic`
+(#e05c1e). Common uses mid-gray rather than black — pure black is invisible in dark mode. All
+foreground contrast ratios WCAG AA verified (common 8.7:1, uncommon 5.7:1, rare 8.75:1, mythic
+5.9:1).
+
+**Impact:** `packages/tokens/src/web/mtg.css`. Generates `bg-rarity-*` and `text-rarity-*-fg`
+Tailwind utilities.
+
+---
+
+## [2026-06-22] — `radius-stamp` semantic token replaces `radius-sm` exception
+
+**Context:** The old rule used Tailwind's built-in `rounded-sm` with a required inline comment for
+MTG stamp elements (format badges, rarity chips). This was an undocumented exception that relied on
+a raw value rather than expressing intent.
+
+**Decision:** `--radius-stamp: 0.25rem` added as a fifth semantic radius role in `layout.css`. The
+raw radius scale (`radius-sm` through `radius-full`) removed entirely — Tailwind's built-in scale
+uses different values anyway (e.g. `rounded-md` = 0.375rem ≠ our former `radius-md` = 0.5rem),
+making the scale a source of confusion.
+
+**Impact:** `packages/tokens/src/web/layout.css`, `Radius.stories.tsx` updated.
+
 **Impact:** `package.json`, `apps/api/package.json`, `packages/config/package.json`.
