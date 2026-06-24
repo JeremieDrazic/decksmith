@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-21 (session 9)_
+_Updated: 2026-06-22 (session 10)_
 
 ---
 
@@ -89,6 +89,13 @@ _Updated: 2026-06-21 (session 9)_
       `native/`, `index.ts`) deleted — `tokens.css` is now the single source of truth; font
       fallbacks hardened; shadow scale comment corrected; ADR-0017 updated
 - [x] pitfall doc: `text-text-faint` fails axe-core contrast on real DOM nodes (PR #31)
+- [x] `packages/domain` scaffolded: `MtgColor`, `ColorIdentity`, `SnowMana`, `VariableMana` types;
+      `parseManaCost`, `sortColorIdentity`, `getColorIdentityName` — 30 unit tests (PR #32)
+- [x] MTG primitives in `packages/web-ui`: `ManaIcon` (pure SVG icon), `HybridManaSymbol`
+      (self-contained hybrid pip, diagonal `∕` split via SVG clipPath triangles + `useId()` ID
+      sanitization), `ManaSymbol` (router), `ManaCost` (pip row from cost string), `ColorIdentity`
+      (WUBRG-sorted + `role="img"` + aria-label lore name) — Storybook stories `Components/MTG/…`
+      (PR #32)
 
 ---
 
@@ -116,7 +123,7 @@ _None_
 
 ## Current Branch
 
-- Branch: `main` (session 9 merged — PR #30 + PR #31)
+- Branch: `main` (session 10 merged — PR #32)
 
 ---
 

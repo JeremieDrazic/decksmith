@@ -4,6 +4,44 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-22] — MTG primitives: SVG clipPath for hybrid pip split + packages/domain placement
+
+**Context:** Session 10 — MTG primitive components (ManaIcon, ManaSymbol, HybridManaSymbol,
+ManaCost, ColorIdentity) and domain functions (parseManaCost, sortColorIdentity,
+getColorIdentityName).
+
+**Decisions:**
+
+- **Diagonal hybrid split via SVG clipPath triangles** — top-left triangle
+  `polygon points="0,32 0,0 32,0"` clips the first color half; bottom-right
+  `polygon points="32,0 32,32 0,32"` clips the second. Matches the appearance of physical MTG cards.
+  Icons scaled at 0.4× and offset within each half.
+- **`useId()` + `.replaceAll(/[^a-zA-Z0-9]/g, '')` for SVG IDs** — React's `useId()` returns IDs
+  like `:r0:` containing colons, which are invalid in SVG `id` attributes when referenced via
+  `url(#id)`. Stripping non-alphanumeric characters produces safe, unique IDs per component
+  instance.
+- **`HybridManaSymbol` is self-contained** — renders its own pip container + SVG fill. `ManaIcon` is
+  pure SVG icon only (no pip, no colors). `ManaSymbol` is the router. This separates concerns
+  cleanly and avoids the old mixing of pip styling inside `HybridManaIcon`.
+- **`packages/domain` is shared, not frontend-specific** — `MtgColor` and domain functions live in
+  `packages/domain` (used by both `apps/api` and `apps/web`). Per ADR-0016, `apps/web` should
+  receive pre-computed values (e.g. `colorIdentityName`) from API DTOs rather than calling domain
+  functions directly. Current placement is correct; DTOs will carry the name string.
+- **No re-exports through intermediate files** — consumers import `MtgColor` directly from
+  `@decksmith/domain`, never via `hybrid-defs.ts` or any re-exporting barrel. Each file imports from
+  its canonical source.
+- **WUBRG-sorted keys in `getColorIdentityName` lookup** — all multi-color keys must be sorted in
+  WUBRG order (W=0 U=1 B=2 R=3 G=4). E.g. Selesnya = `wg` not `gw`, Simic = `ug` not `gu`, Naya =
+  `wrg` not `rgw`. Always produced by running `sortColorIdentity` before joining.
+- **`text-text-muted` for readable story table content** — `text-text-faint` (2.5:1) fails WCAG AA
+  and is decoration-only per the design system. All story table strings use `text-text-muted`.
+
+**Impact:** `packages/domain/` (new package, 3 functions, 30 tests), `packages/web-ui/src/mtg/`
+(ManaIcon, HybridManaSymbol, ManaSymbol, ManaCost, ColorIdentity + stories),
+`packages/web-ui/package.json` (added `@decksmith/domain` dep).
+
+---
+
 ## [2026-06-21] — Worldclass audit: Card alignment + dead TS token layer deleted
 
 **Context:** Session 9 — full audit of Card components and `packages/tokens` against the

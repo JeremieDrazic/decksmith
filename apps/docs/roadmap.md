@@ -156,6 +156,12 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   truth, font fallbacks hardened, shadow scale comment corrected (ADR-0017 updated)
 - 🔄 shadcn/ui base components remaining: Dialog, Toast
 - ✅ Design tokens from `packages/tokens` applied (semantic token classes across all components)
+- ✅ `packages/domain` scaffolded: `MtgColor`, `ColorIdentity`, `SnowMana`, `VariableMana` types +
+  `parseManaCost`, `sortColorIdentity`, `getColorIdentityName` — 30 unit tests (PR #32)
+- ✅ MTG primitive components: `ManaIcon` (pure SVG), `HybridManaSymbol` (diagonal split pip via SVG
+  clipPath), `ManaSymbol` (router), `ManaCost` (pip row from cost string), `ColorIdentity`
+  (WUBRG-sorted pip row + `role="img"` aria-label) — Storybook stories under `Components/MTG/…` (PR
+  #32)
 
 ---
 
