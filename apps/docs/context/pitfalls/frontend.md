@@ -325,28 +325,27 @@ pseudo-elements. Any visible text content rendered as a real DOM node must pass 
 
 ---
 
-## Tailwind v4 — pas de namespace `--size-*` ; les dimensions vont dans une map cva
+## Tailwind v4 — no `--size-*` namespace; dimensions go in a cva map
 
-**`--size-*` n'est pas un namespace de thème Tailwind v4.** Seul `--spacing-*` (un multiplicateur
-`--spacing: 0.25rem`) alimente `h-*`, `w-*`, et `size-*`. Définir `--size-control-md: 2.25rem` dans
-`@theme` ne génère **aucune classe** — ni `h-control-md`, ni `size-control-md`.
+**`--size-*` is not a Tailwind v4 theme namespace.** Only `--spacing-*` (a `--spacing: 0.25rem`
+multiplier) feeds `h-*`, `w-*`, and `size-*`. Defining `--size-control-md: 2.25rem` in `@theme`
+generates **no classes** — neither `h-control-md` nor `size-control-md`.
 
-De plus, placer des dimensions sous `--spacing-control-*` serait une fuite sémantique :
-`p-control-md`, `gap-icon-sm` deviendraient des classes valides.
+Furthermore, placing dimensions under `--spacing-control-*` would cause semantic leakage:
+`p-control-md`, `gap-icon-sm` would become valid classes.
 
-**La solution correcte :** exprimer les hauteurs de contrôle et tailles d'icônes dans une **map cva
-partagée** bâtie sur l'échelle spacing Tailwind (identique à l'approche shadcn/ui) :
+**The correct fix:** express control heights and icon sizes in a **shared cva map** built on
+Tailwind's spacing scale (same approach as shadcn/ui):
 
 ```ts
 // packages/web-ui/src/lib/sizing/control-height.ts
 export const CONTROL_HEIGHT = { xs: 'h-6', sm: 'h-8', md: 'h-9', lg: 'h-11' } as const;
 ```
 
-Les valeurs literals (`'h-6'`) sont visibles du scanner Tailwind dans le fichier de la constante.
-Les cva variants utilisent la map via template literal :
-`` xs: `${CONTROL_HEIGHT.xs} px-2 text-xs` ``
+The literal values (`'h-6'`) are visible to the Tailwind scanner in the constant's file. cva
+variants reference the map via template literal: `` xs: `${CONTROL_HEIGHT.xs} px-2 text-xs` ``
 
-Ne jamais inventer un namespace `--size-*` custom — il n'existe pas dans Tailwind v4.
+Never invent a custom `--size-*` namespace — it does not exist in Tailwind v4.
 
 ---
 
