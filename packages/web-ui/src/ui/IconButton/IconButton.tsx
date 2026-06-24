@@ -2,6 +2,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { CONTROL_SQUARE } from '../../lib/sizing/control-square';
 
 const iconButtonVariants = cva(
   [
@@ -37,10 +38,10 @@ const iconButtonVariants = cva(
         destructive: ['bg-error text-on-error', 'hover:bg-error-hover'],
       },
       size: {
-        xs: 'h-6 w-6',
-        sm: 'h-8 w-8',
-        md: 'h-9 w-9',
-        lg: 'h-11 w-11',
+        xs: CONTROL_SQUARE.xs,
+        sm: CONTROL_SQUARE.sm,
+        md: CONTROL_SQUARE.md,
+        lg: CONTROL_SQUARE.lg,
       },
     },
     defaultVariants: {

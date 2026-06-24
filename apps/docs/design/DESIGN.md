@@ -42,15 +42,20 @@ bg · surface · surface-raised · surface-hover · border · border-subtle · b
 text · text-muted · text-faint
 accent · accent-hover · accent-subtle · accent-border · accent-text · on-accent · brand
 mtg-white · mtg-blue · mtg-black · mtg-red · mtg-green · mtg-colorless · mtg-multi
+rarity-common · rarity-uncommon · rarity-rare · rarity-mythic
+rarity-common-fg · rarity-uncommon-fg · rarity-rare-fg · rarity-mythic-fg
 error · error-subtle · error-text
 success · success-subtle · success-text
 warning · warning-subtle · warning-text
 info · info-subtle · info-text
-shadow-popover · shadow-card · shadow-overlay · shadow-accent
-shadow-sm · shadow-md · shadow-lg (scale — reference only)
+shadow-popover · shadow-card · shadow-overlay · shadow-accent · shadow-sm · shadow-md · shadow-lg
 z-base · z-raised · z-dropdown · z-sticky · z-overlay · z-modal · z-toast · z-tooltip
-radius-interactive · radius-surface · radius-modal · radius-badge
+radius-interactive · radius-surface · radius-modal · radius-badge · radius-stamp
 ```
+
+> **Dimensions (control heights, icon sizes) are not tokens.** They live in a shared cva map
+> (`CONTROL_HEIGHT` / `CONTROL_SQUARE` / `ICON_SIZE`) in `packages/web-ui/src/lib/sizing/`, built on
+> Tailwind's spacing scale. See ADR-0017.
 
 > `info` ≠ `mtg-blue` — neutral UI state vs MTG color identity, never substitute one for the other.
 
@@ -59,13 +64,16 @@ radius-interactive · radius-surface · radius-modal · radius-badge
 ## Token Architecture (`packages/tokens`)
 
 ```
-primitives/  → constantes TS (hex, px, ms)
-semantic/    → rôles (bg, surface, accent…)
-web/         → tokens.css avec @theme { … } pour Tailwind v4
-native/      → objets JS plats pour React Native (Phase 14)
+web/
+  tokens.css     → master @import — single file to import in apps
+  colors.css     → :root · .dark · @theme inline (semantic colours + shadows)
+  mtg.css        → @theme MTG colors (WUBRG + rarity + foregrounds)
+  typography.css → @theme font families, type scale, line-height, tracking
+  layout.css     → @theme semantic radius roles, z-index (no size tokens — see ADR-0017)
+  motion.css     → @theme durations, easings + @media prefers-reduced-motion
 ```
 
-Tailwind v4 lit `@theme` et génère les classes utilitaires automatiquement — pas de preset JS.
+Tailwind v4 reads `@theme` and generates utility classes automatically — no JS preset.
 
 ---
 
@@ -81,20 +89,20 @@ Tailwind v4 lit `@theme` et génère les classes utilitaires automatiquement —
 
 ## Non-Negotiable Rules
 
-| Rule                                                                 | Why                                                                                                        |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Semantic tokens only — never hardcoded hex                           | Theming, consistency, single source of truth                                                               |
-| Mana symbols via Keyrune SVG (`{W}{U}{B}{R}{G}`)                     | Canonical MTG icons — every player recognises them                                                         |
-| Theme via `.dark` on `<html>`, not `dark:` variant                   | Runtime switching, no class proliferation in JSX                                                           |
-| MTG tokens separate from semantic tokens                             | `mtg-red` ≠ `error` — different semantic meaning                                                           |
-| `on-accent` is mode-specific — dark on amber, white on violet        | Contrast-driven: white on `#e8b84b` = 1.8:1 (fails); dark on `#5b4fcf` = 1.1:1 (fails)                     |
-| `brand` (amber) is for ornaments only — never the logo mark          | Logo mark uses `accent` (amber dark / violet light) — theme-adaptive, coherent with halo color             |
-| `brand` text fails AA in light mode (`#c49a1a` on `#faf9f4` ≈ 2.9:1) | Dark mode is fine (9.8:1) but light mode fails — treat like `text-faint`, never for readable content       |
-| `text-faint` for decoration only                                     | 2.5:1 ratio — fails AA for readable content                                                                |
-| Raw Tailwind type classes never in feature JSX                       | Encapsulated in `<Heading>`, `<Body>`, `<Label>`                                                           |
-| Semantic radius tokens in components — never scale tokens directly   | `radius-interactive` / `radius-surface` / `radius-modal` / `radius-badge` — one rule per context, no drift |
-| Exception: `radius-sm` for stamp/seal elements only                  | MTG format badges, rarity chips — requires inline comment                                                  |
-| Design system section required in Storybook                          | Living style guide, always in sync with tokens                                                             |
+| Rule                                                                                       | Why                                                                                                                                                |
+| ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Semantic tokens only — never hardcoded hex                                                 | Theming, consistency, single source of truth                                                                                                       |
+| Mana symbols via Keyrune SVG (`{W}{U}{B}{R}{G}`)                                           | Canonical MTG icons — every player recognises them                                                                                                 |
+| Theme via `.dark` on `<html>`, not `dark:` variant                                         | Runtime switching, no class proliferation in JSX                                                                                                   |
+| MTG tokens separate from semantic tokens                                                   | `mtg-red` ≠ `error` — different semantic meaning                                                                                                   |
+| `on-accent` is mode-specific — dark on amber, white on violet                              | Contrast-driven: white on `#e8b84b` = 1.8:1 (fails); dark on `#5b4fcf` = 1.1:1 (fails)                                                             |
+| `brand` (amber) is for ornaments only — never the logo mark                                | Logo mark uses `accent` (amber dark / violet light) — theme-adaptive, coherent with halo color                                                     |
+| `brand` text fails AA in light mode (`#c49a1a` on `#faf9f4` ≈ 2.9:1)                       | Dark mode is fine (9.8:1) but light mode fails — treat like `text-faint`, never for readable content                                               |
+| `text-faint` for decoration only                                                           | 2.5:1 ratio — fails AA for readable content                                                                                                        |
+| Raw Tailwind type classes never in feature JSX                                             | Encapsulated in `<Heading>`, `<Body>`, `<Label>`                                                                                                   |
+| Semantic radius tokens in components — never raw values                                    | `radius-interactive` / `radius-surface` / `radius-modal` / `radius-badge` / `radius-stamp` — one rule per context, no drift                        |
+| Design system section required in Storybook                                                | Living style guide, always in sync with tokens                                                                                                     |
+| Dimensions = cva map (`CONTROL_HEIGHT` / `CONTROL_SQUARE` / `ICON_SIZE`), never CSS tokens | Tailwind v4 has no `--size-*` namespace; `--spacing-*` would leak to `p-*`/`gap-*`; Tailwind's spacing scale already is the dimension token system |
 
 ---
 

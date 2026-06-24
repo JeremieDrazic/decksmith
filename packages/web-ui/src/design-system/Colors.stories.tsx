@@ -199,6 +199,48 @@ function ColorsPage() {
           usage="Multicolor / gold — two or more colors"
         />
       </SwatchGroup>
+
+      <SwatchGroup
+        title="MTG RARITY"
+        description="Canonical rarity colors — stable across modes (same as printed card sets). Used for RarityBadge fill and rarity chip backgrounds. Common uses mid-gray rather than black — pure black is invisible on the dark canvas."
+        cols={4}
+      >
+        <Swatch token="rarity-common" bg="bg-rarity-common" usage="Common — mid-gray (#b8b8b8)" />
+        <Swatch
+          token="rarity-uncommon"
+          bg="bg-rarity-uncommon"
+          usage="Uncommon — silver-blue (#8fa9bf)"
+        />
+        <Swatch token="rarity-rare" bg="bg-rarity-rare" usage="Rare — gold (#c8a951)" />
+        <Swatch
+          token="rarity-mythic"
+          bg="bg-rarity-mythic"
+          usage="Mythic Rare — orange (#e05c1e)"
+        />
+      </SwatchGroup>
+
+      <SwatchGroup
+        title="MTG RARITY FOREGROUND"
+        description="Glyph color on each rarity badge — contrast-derived, WCAG AA verified (common 8.7:1 · uncommon 5.7:1 · rare 8.75:1 · mythic 5.9:1). Use as fill or text color when rendering a symbol on top of the rarity background."
+        cols={4}
+      >
+        <Swatch
+          token="rarity-common-fg"
+          bg="bg-rarity-common-fg"
+          usage="Dark glyph on common gray"
+        />
+        <Swatch
+          token="rarity-uncommon-fg"
+          bg="bg-rarity-uncommon-fg"
+          usage="Dark glyph on uncommon silver"
+        />
+        <Swatch token="rarity-rare-fg" bg="bg-rarity-rare-fg" usage="Dark glyph on rare gold" />
+        <Swatch
+          token="rarity-mythic-fg"
+          bg="bg-rarity-mythic-fg"
+          usage="White glyph on mythic orange"
+        />
+      </SwatchGroup>
     </div>
   );
 }
