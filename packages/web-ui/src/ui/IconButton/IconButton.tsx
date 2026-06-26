@@ -6,8 +6,8 @@ import { CONTROL_SQUARE } from '../../lib/sizing/control-square';
 
 const iconButtonVariants = cva(
   [
-    // Layout — square, icon centered
-    'inline-flex items-center justify-center',
+    // Layout — square, icon centered, never flex-shrink
+    'inline-flex items-center justify-center shrink-0',
     // Shape
     'rounded-interactive border border-transparent',
     // Interaction base

@@ -5,7 +5,7 @@ import { cn } from '../../lib/cn';
 
 const tagVariants = cva(
   [
-    'inline-flex items-center gap-1',
+    'inline-flex w-fit items-center gap-1',
     'rounded-badge border',
     'font-mono font-medium whitespace-nowrap',
     'leading-none',

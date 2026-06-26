@@ -31,12 +31,18 @@ export const Playground: Story = {
 
 export const Tones: Story = {
   render: () => (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-faint">default</span>
       <Badge tone="default">Default</Badge>
+      <span className="font-mono text-xs text-text-faint">accent</span>
       <Badge tone="accent">Accent</Badge>
+      <span className="font-mono text-xs text-text-faint">success</span>
       <Badge tone="success">Success</Badge>
+      <span className="font-mono text-xs text-text-faint">warning</span>
       <Badge tone="warning">Warning</Badge>
+      <span className="font-mono text-xs text-text-faint">error</span>
       <Badge tone="error">Error</Badge>
+      <span className="font-mono text-xs text-text-faint">info</span>
       <Badge tone="info">Info</Badge>
     </div>
   ),
@@ -44,8 +50,10 @@ export const Tones: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-faint">sm</span>
       <Badge size="sm">Small</Badge>
+      <span className="font-mono text-xs text-text-faint">md</span>
       <Badge size="md">Medium</Badge>
     </div>
   ),
@@ -53,16 +61,20 @@ export const Sizes: Story = {
 
 export const WithDot: Story = {
   render: () => (
-    <div className="flex flex-wrap items-center gap-3">
+    <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-faint">default</span>
       <Badge tone="default" dot>
         Offline
       </Badge>
+      <span className="font-mono text-xs text-text-faint">success</span>
       <Badge tone="success" dot>
         Synced
       </Badge>
+      <span className="font-mono text-xs text-text-faint">warning</span>
       <Badge tone="warning" dot>
         Pending
       </Badge>
+      <span className="font-mono text-xs text-text-faint">error</span>
       <Badge tone="error" dot>
         Failed
       </Badge>

@@ -1,33 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { LayoutGrid, List, Table } from 'lucide-react';
 
 import { ToggleGroup, ToggleGroupItem } from './ToggleGroup';
-
-const GridIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-    <rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-    <rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-    <rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-);
-
-const ListIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M2 4h12M2 8h12M2 12h12"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const TableIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="2" y="2" width="12" height="12" rx="1" stroke="currentColor" strokeWidth="1.5" />
-    <path d="M2 6h12M6 6v8" stroke="currentColor" strokeWidth="1.5" />
-  </svg>
-);
 
 const meta = {
   title: 'Components/UI/ToggleGroup',
@@ -52,13 +26,13 @@ export const ViewSwitcher: Story = {
   render: () => (
     <ToggleGroup defaultValue={['grid']} aria-label="Collection view">
       <ToggleGroupItem value="grid" aria-label="Grid view">
-        <GridIcon />
+        <LayoutGrid aria-hidden={true} />
       </ToggleGroupItem>
       <ToggleGroupItem value="list" aria-label="List view">
-        <ListIcon />
+        <List aria-hidden={true} />
       </ToggleGroupItem>
       <ToggleGroupItem value="table" aria-label="Table view">
-        <TableIcon />
+        <Table aria-hidden={true} />
       </ToggleGroupItem>
     </ToggleGroup>
   ),

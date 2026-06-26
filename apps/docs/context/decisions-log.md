@@ -4,6 +4,31 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-06-25] — lucide-react adopted as the icon library for packages/web-ui
+
+**Context:** Session 11 — floating components, NavigationButton, Lucide migration.
+
+**Decisions:**
+
+- **`lucide-react@^1.21.0` added to `packages/web-ui`** — ADR-0018 (§ Icons) mandates Lucide as the
+  sole icon system. Added as a direct dependency of `packages/web-ui` (not the pnpm catalog) because
+  `apps/web` does not yet consume it directly; it will be promoted to catalog when a second consumer
+  appears.
+- **MTG icons remain hand-crafted SVG** — Keyrune/MTG glyphs (`packages/web-ui/src/mtg/`) are
+  canonical MTG iconography and not available in any generic icon library. They stay as custom SVG
+  components and are explicitly excluded from the Lucide migration scope.
+- **Inline SVG in `*.stories.tsx` files replaced with Lucide** — ~29 duplicated inline SVG elements
+  across 10 story files replaced story-by-story. This is cosmetic for stories but enforces the
+  one-system rule immediately so the pattern doesn't spread to component files.
+- **Internal icons in components also replaced** — `SelectIcon` (chevron) and `SelectItem`
+  `ItemIndicator` (check) migrated from custom inline SVG to `<ChevronDown>` and `<Check>` from
+  Lucide.
+
+**Impact:** `packages/web-ui/package.json` (+1 dep), `packages/web-ui/src/ui/Select/Select.tsx`, all
+`*.stories.tsx` files that had inline SVG.
+
+---
+
 ## [2026-06-22] — MTG primitives: SVG clipPath for hybrid pip split + packages/domain placement
 
 **Context:** Session 10 — MTG primitive components (ManaIcon, ManaSymbol, HybridManaSymbol,

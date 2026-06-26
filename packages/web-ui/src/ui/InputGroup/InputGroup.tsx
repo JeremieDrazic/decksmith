@@ -207,7 +207,7 @@ export function InputGroupInput({ className, ...props }: InputGroupInputProps) {
     <Input
       data-slot="input-group-control"
       className={cn(
-        'flex-1 rounded-none border-0 bg-transparent shadow-none',
+        'flex-1 !rounded-none border-0 bg-transparent shadow-none',
         'ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0',
         className
       )}
@@ -229,7 +229,7 @@ export function InputGroupTextarea({ className, ...props }: InputGroupTextareaPr
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        'flex-1 resize-none rounded-none border-0 bg-transparent py-2 shadow-none',
+        'flex-1 resize-none !rounded-none border-0 bg-transparent py-2 shadow-none',
         'ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0',
         className
       )}

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Copy, Search, X } from 'lucide-react';
 
 import {
   InputGroup,
@@ -8,31 +9,6 @@ import {
   InputGroupText,
   InputGroupTextarea,
 } from './InputGroup';
-
-const SearchIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="7" cy="7" r="4.5" stroke="currentColor" strokeWidth="1.25" />
-    <path d="M10.5 10.5L13.5 13.5" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-  </svg>
-);
-
-const XIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" />
-  </svg>
-);
-
-const CopyIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="5" y="5" width="8" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.25" />
-    <path
-      d="M3 11V4a1 1 0 0 1 1-1h7"
-      stroke="currentColor"
-      strokeWidth="1.25"
-      strokeLinecap="round"
-    />
-  </svg>
-);
 
 const meta = {
   title: 'Components/UI/InputGroup',
@@ -91,7 +67,7 @@ export const WithButton: Story = {
         <InputGroupInput placeholder="Search cards…" />
         <InputGroupAddon align="inline-end">
           <InputGroupButton size="icon-sm" aria-label="Search">
-            <SearchIcon />
+            <Search aria-hidden={true} />
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
@@ -100,7 +76,7 @@ export const WithButton: Story = {
         <InputGroupInput placeholder="Deck name" defaultValue="Atraxa Commander" />
         <InputGroupAddon align="inline-end">
           <InputGroupButton size="icon-sm" aria-label="Clear">
-            <XIcon />
+            <X aria-hidden={true} />
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
@@ -116,7 +92,7 @@ export const Combined: Story = {
         <InputGroupInput placeholder="your-site.com" />
         <InputGroupAddon align="inline-end">
           <InputGroupButton size="icon-sm" aria-label="Copy URL">
-            <CopyIcon />
+            <Copy aria-hidden={true} />
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>

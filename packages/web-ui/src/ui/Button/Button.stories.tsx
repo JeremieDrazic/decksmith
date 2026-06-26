@@ -1,25 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ArrowRight, Plus } from 'lucide-react';
 
 import { Button } from './Button';
-
-// Minimal inline SVGs — no external icon dep in packages/web-ui
-const PlusIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-  </svg>
-);
-
-const ArrowRightIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M3 8h10M9 4l4 4-4 4"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 const meta = {
   title: 'Components/UI/Button',
@@ -53,10 +35,14 @@ export const Playground: Story = {
 
 export const Variants: Story = {
   render: () => (
-    <div className="flex items-center gap-3 flex-wrap">
+    <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-faint">primary</span>
       <Button variant="primary">Primary</Button>
+      <span className="font-mono text-xs text-text-faint">secondary</span>
       <Button variant="secondary">Secondary</Button>
+      <span className="font-mono text-xs text-text-faint">ghost</span>
       <Button variant="ghost">Ghost</Button>
+      <span className="font-mono text-xs text-text-faint">destructive</span>
       <Button variant="destructive">Destructive</Button>
     </div>
   ),
@@ -64,10 +50,14 @@ export const Variants: Story = {
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-end gap-3">
+    <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-faint">xs</span>
       <Button size="xs">XSmall</Button>
+      <span className="font-mono text-xs text-text-faint">sm</span>
       <Button size="sm">Small</Button>
+      <span className="font-mono text-xs text-text-faint">md</span>
       <Button size="md">Medium</Button>
+      <span className="font-mono text-xs text-text-faint">lg</span>
       <Button size="lg">Large</Button>
     </div>
   ),
@@ -77,20 +67,20 @@ export const WithIcons: Story = {
   render: () => (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-3 flex-wrap">
-        <Button startIcon={<PlusIcon />}>Add card</Button>
-        <Button endIcon={<ArrowRightIcon />}>Continue</Button>
-        <Button startIcon={<PlusIcon />} endIcon={<ArrowRightIcon />}>
+        <Button startIcon={<Plus aria-hidden={true} />}>Add card</Button>
+        <Button endIcon={<ArrowRight aria-hidden={true} />}>Continue</Button>
+        <Button startIcon={<Plus aria-hidden={true} />} endIcon={<ArrowRight aria-hidden={true} />}>
           Both icons
         </Button>
       </div>
       <div className="flex items-center gap-3 flex-wrap">
-        <Button variant="secondary" startIcon={<PlusIcon />}>
+        <Button variant="secondary" startIcon={<Plus aria-hidden={true} />}>
           Secondary
         </Button>
-        <Button variant="ghost" startIcon={<PlusIcon />}>
+        <Button variant="ghost" startIcon={<Plus aria-hidden={true} />}>
           Ghost
         </Button>
-        <Button variant="destructive" startIcon={<PlusIcon />}>
+        <Button variant="destructive" startIcon={<Plus aria-hidden={true} />}>
           Destructive
         </Button>
       </div>
@@ -120,10 +110,10 @@ export const Loading: Story = {
       </div>
       <div className="flex items-center gap-3 flex-wrap">
         <p className="text-text-muted text-sm font-mono w-full">With icons (all hidden)</p>
-        <Button isLoading loadingLabel="Saving…" startIcon={<PlusIcon />}>
+        <Button isLoading loadingLabel="Saving…" startIcon={<Plus aria-hidden={true} />}>
           Save deck
         </Button>
-        <Button isLoading loadingLabel="Saving…" endIcon={<ArrowRightIcon />}>
+        <Button isLoading loadingLabel="Saving…" endIcon={<ArrowRight aria-hidden={true} />}>
           Continue
         </Button>
       </div>
@@ -133,14 +123,18 @@ export const Loading: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="flex items-center gap-3 flex-wrap">
+    <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-faint">primary</span>
       <Button disabled>Primary</Button>
+      <span className="font-mono text-xs text-text-faint">secondary</span>
       <Button variant="secondary" disabled>
         Secondary
       </Button>
+      <span className="font-mono text-xs text-text-faint">ghost</span>
       <Button variant="ghost" disabled>
         Ghost
       </Button>
+      <span className="font-mono text-xs text-text-faint">destructive</span>
       <Button variant="destructive" disabled>
         Destructive
       </Button>

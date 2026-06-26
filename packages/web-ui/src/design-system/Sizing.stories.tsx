@@ -132,6 +132,13 @@ function SizingPage() {
           <strong className="font-semibold text-text">never standalone tap targets</strong>.
         </p>
         <SizeRow
+          label="xs"
+          twClass="size-3.5"
+          px="14px"
+          usage="Menu items, inline with text-sm"
+          square
+        />
+        <SizeRow
           label="sm"
           twClass="size-4"
           px="16px"
