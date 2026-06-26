@@ -154,7 +154,12 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Select — dropdown picker (Base UI) with groups, multi-select, error state
 - ✅ `packages/tokens` worldclass audit: dead TS layer deleted, `tokens.css` is the single source of
   truth, font fallbacks hardened, shadow scale comment corrected (ADR-0017 updated)
-- 🔄 shadcn/ui base components remaining: Dialog, Toast
+- ✅ Dialog, AlertDialog — Base UI modal + confirmation dialog (PR #36)
+- ✅ Floating components: DropdownMenu, ContextMenu, Tooltip, Popover (PR #36)
+- ✅ Form primitives: Checkbox, Radio, Switch (PR #36)
+- ✅ Kbd, NavigationButton, DeleteButton + `useArmedState` hook (PR #36)
+- ✅ Icon sizing centralized: `ICON_IN_CONTROL`, `ICON_INLINE` tables + ADR-0021 (PR #36)
+- 🔄 Base UI components remaining: Toast, Drawer
 - ✅ Design tokens from `packages/tokens` applied (semantic token classes across all components)
 - ✅ `packages/domain` scaffolded: `MtgColor`, `ColorIdentity`, `SnowMana`, `VariableMana` types +
   `parseManaCost`, `sortColorIdentity`, `getColorIdentityName` — 30 unit tests (PR #32)
