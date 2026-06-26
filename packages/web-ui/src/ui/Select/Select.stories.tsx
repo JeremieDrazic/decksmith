@@ -1,5 +1,6 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ChevronsUpDown } from 'lucide-react';
 
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '../Field/Field';
 import {
@@ -344,16 +345,7 @@ export const CustomIcon: Story = {
         <SelectTrigger id="select-custom-icon" showIcon={false}>
           <SelectValue />
           <SelectIcon>
-            <svg viewBox="0 0 16 16" fill="none" className="size-4" aria-hidden="true">
-              <circle cx="8" cy="8" r="5" stroke="currentColor" strokeWidth="1.5" />
-              <path
-                d="M6 7l2 2 2-2"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ChevronsUpDown className="size-4" aria-hidden={true} />
           </SelectIcon>
         </SelectTrigger>
         <SelectContent>{FORMAT_ITEMS}</SelectContent>

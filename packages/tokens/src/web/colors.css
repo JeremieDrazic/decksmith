@@ -71,6 +71,10 @@
   --info-subtle: rgba(37, 99, 235, 0.08);
   --info-text: #1d4ed8;
 
+  /* Modal scrim — backdrop overlay for Dialog, Drawer
+   * Purple-black at 55 % — readable scrim on the parchment background */
+  --scrim: rgb(15 14 23 / 0.55);
+
   /* MTG White (only WUBRG color with a light/dark variant) */
   --mtg-white: #c8b96e;
 }
@@ -146,6 +150,9 @@
   --info-subtle: rgba(91, 156, 246, 0.12);
   --info-text: #5b9cf6;
 
+  /* Modal scrim — darker at 70 % on the deep purple-black background */
+  --scrim: rgb(0 0 0 / 0.7);
+
   /* MTG White */
   --mtg-white: #f5f0d8;
 }
@@ -198,5 +205,6 @@
   --color-info: var(--info);
   --color-info-subtle: var(--info-subtle);
   --color-info-text: var(--info-text);
+  --color-scrim: var(--scrim);
   --color-mtg-white: var(--mtg-white);
 }

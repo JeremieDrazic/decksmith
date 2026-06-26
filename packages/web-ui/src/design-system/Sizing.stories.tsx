@@ -125,12 +125,110 @@ function SizingPage() {
       <Separator />
 
       <section className="mb-10">
-        <SectionLabel>ICON_SIZE — inline icons and indicators</SectionLabel>
+        <SectionLabel>ICON_IN_CONTROL — icon fills a square tap target</SectionLabel>
         <p className="mb-6 text-sm leading-relaxed text-text-muted">
-          For decorative icons that sit inline within text or UI chrome — mana pips, rarity badges,
-          avatars. These are smaller than interactive controls and are{' '}
-          <strong className="font-semibold text-text">never standalone tap targets</strong>.
+          Icon sizes for{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            IconButton
+          </code>{' '}
+          and{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            IconToggle
+          </code>
+          . The icon fills ~50% of the square tap target. Applied via a descendant selector with an
+          escape hatch —{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            {'[&_svg:not([class*="size-"])]:size-X'}
+          </code>{' '}
+          — so callers can override with an explicit class.
         </p>
+        <SizeRow label="xs" twClass="size-3" px="12px" usage="Icon in a 24px square" square />
+        <SizeRow label="sm" twClass="size-4" px="16px" usage="Icon in a 32px square" square />
+        <SizeRow
+          label="md"
+          twClass="size-5"
+          px="20px"
+          usage="Default — icon in a 36px square"
+          square
+        />
+        <SizeRow label="lg" twClass="size-6" px="24px" usage="Icon in a 44px square" square />
+      </section>
+
+      <Separator />
+
+      <section className="mb-10">
+        <SectionLabel>ICON_INLINE — icon beside a text label</SectionLabel>
+        <p className="mb-6 text-sm leading-relaxed text-text-muted">
+          Icon sizes for controls that pair an icon with a text label:{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">Button</code>
+          ,{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">Toggle</code>
+          ,{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            InputGroupButton
+          </code>
+          . The icon aligns visually with the cap height of the label. Same escape hatch as
+          ICON_IN_CONTROL.
+        </p>
+        <SizeRow
+          label="xs"
+          twClass="size-3.5"
+          px="14px"
+          usage="Beside text-xs in a h-6 control"
+          square
+        />
+        <SizeRow
+          label="sm"
+          twClass="size-4"
+          px="16px"
+          usage="Beside text-xs in a h-8 control"
+          square
+        />
+        <SizeRow
+          label="md"
+          twClass="size-4"
+          px="16px"
+          usage="Default — beside text-sm in a h-9 control"
+          square
+        />
+        <SizeRow
+          label="lg"
+          twClass="size-5"
+          px="20px"
+          usage="Beside text-base in a h-11 control"
+          square
+        />
+      </section>
+
+      <Separator />
+
+      <section className="mb-10">
+        <SectionLabel>ICON_SIZE — self-rendered icon with a size prop</SectionLabel>
+        <p className="mb-6 text-sm leading-relaxed text-text-muted">
+          For components that own their icon and expose a{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">size</code>{' '}
+          prop (
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            Spinner
+          </code>
+          ,{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            RarityBadge
+          </code>
+          ,{' '}
+          <code className="rounded-sm bg-surface-raised px-1 py-0.5 font-mono text-xs">
+            ManaSymbol
+          </code>
+          ). The class is applied <strong className="font-semibold text-text">directly</strong> to
+          the icon element — not via a descendant selector. Never standalone tap targets.
+        </p>
+        <SizeRow
+          label="xs"
+          twClass="size-3.5"
+          px="14px"
+          usage="Menu items, inline with text-sm"
+          square
+        />
         <SizeRow
           label="sm"
           twClass="size-4"
@@ -158,14 +256,28 @@ function SizingPage() {
         </p>
         <pre className="overflow-x-auto rounded-surface bg-surface-raised p-6 font-mono text-xs leading-relaxed text-text-muted">
           <code>{`import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
+import { ICON_INLINE } from '../../lib/sizing/icon-inline';
+import { ICON_IN_CONTROL } from '../../lib/sizing/icon-in-control';
 
+// Button (icon + label): use ICON_INLINE
 const button = cva('inline-flex items-center rounded-interactive', {
   variants: {
     size: {
-      xs: \`\${CONTROL_HEIGHT.xs} px-2 text-xs gap-1\`,
-      sm: \`\${CONTROL_HEIGHT.sm} px-3 text-sm gap-1.5\`,
-      md: \`\${CONTROL_HEIGHT.md} px-4 text-sm gap-2\`,
-      lg: \`\${CONTROL_HEIGHT.lg} px-6 text-base gap-2\`,
+      xs: \`\${CONTROL_HEIGHT.xs} px-2 text-xs \${ICON_INLINE.xs}\`,
+      md: \`\${CONTROL_HEIGHT.md} px-4 text-sm \${ICON_INLINE.md}\`,
+      lg: \`\${CONTROL_HEIGHT.lg} px-6 text-base \${ICON_INLINE.lg}\`,
+    },
+  },
+  defaultVariants: { size: 'md' },
+});
+
+// IconButton (icon only): use ICON_IN_CONTROL
+const iconButton = cva('inline-flex items-center justify-center rounded-interactive', {
+  variants: {
+    size: {
+      xs: \`\${CONTROL_SQUARE.xs} \${ICON_IN_CONTROL.xs}\`,
+      md: \`\${CONTROL_SQUARE.md} \${ICON_IN_CONTROL.md}\`,
+      lg: \`\${CONTROL_SQUARE.lg} \${ICON_IN_CONTROL.lg}\`,
     },
   },
   defaultVariants: { size: 'md' },

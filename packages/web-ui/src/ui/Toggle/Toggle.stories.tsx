@@ -1,39 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Bold, Italic, Underline } from 'lucide-react';
 
+import { Eyebrow } from '../../typography/Eyebrow';
+import { Text } from '../../typography/Text';
 import { Toggle } from './Toggle';
-
-const BoldIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M4 8h5a2.5 2.5 0 000-5H4v5zm0 0h5.5a2.5 2.5 0 010 5H4V8z"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
-const ItalicIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M10 3H6M10 13H6M9 3L7 13"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const UnderlineIcon = () => (
-  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M4 13h8M5 3v5a3 3 0 006 0V3"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-  </svg>
-);
 
 const meta = {
   title: 'Components/UI/Toggle',
@@ -60,35 +30,66 @@ export const Playground: Story = {
 
 export const Variants: Story = {
   render: () => (
-    <div className="flex items-center gap-4 flex-wrap">
-      <div className="flex flex-col gap-2">
-        <p className="text-text-muted text-xs font-mono">ghost</p>
-        <div className="flex gap-2">
-          <Toggle variant="ghost">Unpressed</Toggle>
-          <Toggle variant="ghost" defaultPressed>
-            Pressed
-          </Toggle>
-        </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <p className="text-text-muted text-xs font-mono">secondary</p>
-        <div className="flex gap-2">
-          <Toggle variant="secondary">Unpressed</Toggle>
-          <Toggle variant="secondary" defaultPressed>
-            Pressed
-          </Toggle>
-        </div>
-      </div>
-    </div>
+    <table className="border-separate border-spacing-x-8 border-spacing-y-3">
+      <thead>
+        <tr>
+          <th className="text-left">
+            <Eyebrow>variant</Eyebrow>
+          </th>
+          <th className="text-left">
+            <Eyebrow>unpressed</Eyebrow>
+          </th>
+          <th className="text-left">
+            <Eyebrow>pressed</Eyebrow>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <Text size="sm" tone="muted" mono>
+              ghost
+            </Text>
+          </td>
+          <td>
+            <Toggle variant="ghost">Unpressed</Toggle>
+          </td>
+          <td>
+            <Toggle variant="ghost" defaultPressed>
+              Pressed
+            </Toggle>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <Text size="sm" tone="muted" mono>
+              secondary
+            </Text>
+          </td>
+          <td>
+            <Toggle variant="secondary">Unpressed</Toggle>
+          </td>
+          <td>
+            <Toggle variant="secondary" defaultPressed>
+              Pressed
+            </Toggle>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   ),
 };
 
 export const Sizes: Story = {
   render: () => (
-    <div className="flex items-end gap-3">
+    <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <Toggle size="xs">xs</Toggle>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <Toggle size="sm">sm</Toggle>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <Toggle size="md">md</Toggle>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <Toggle size="lg">lg</Toggle>
     </div>
   ),
@@ -99,24 +100,24 @@ export const IconOnly: Story = {
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
         <Toggle aria-label="Bold">
-          <BoldIcon />
+          <Bold aria-hidden={true} />
         </Toggle>
         <Toggle aria-label="Italic">
-          <ItalicIcon />
+          <Italic aria-hidden={true} />
         </Toggle>
         <Toggle aria-label="Underline">
-          <UnderlineIcon />
+          <Underline aria-hidden={true} />
         </Toggle>
       </div>
       <div className="flex items-center gap-2">
         <Toggle variant="secondary" defaultPressed aria-label="Bold">
-          <BoldIcon />
+          <Bold aria-hidden={true} />
         </Toggle>
         <Toggle variant="secondary" aria-label="Italic">
-          <ItalicIcon />
+          <Italic aria-hidden={true} />
         </Toggle>
         <Toggle variant="secondary" aria-label="Underline">
-          <UnderlineIcon />
+          <Underline aria-hidden={true} />
         </Toggle>
       </div>
     </div>
@@ -125,13 +126,16 @@ export const IconOnly: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="flex items-center gap-3">
+    <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <Toggle disabled>Ghost</Toggle>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <Toggle variant="secondary" disabled>
         Secondary
       </Toggle>
+      <span className="font-mono text-xs text-text-muted">pressed + disabled</span>
       <Toggle defaultPressed disabled>
-        Pressed disabled
+        Pressed
       </Toggle>
     </div>
   ),

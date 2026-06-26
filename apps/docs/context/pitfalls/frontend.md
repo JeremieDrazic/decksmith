@@ -188,20 +188,29 @@ inside arbitrary variants are fine. Only the top-level `has-[...]` built-in shor
 
 ## SVG sizing inside Button children
 
-**SVGs passed as `children` to `Button` are not sized automatically.** `Button` only applies
-`[&>svg]:size-[1em]` to the `startIcon` and `endIcon` wrapper spans — not to plain children.
+**SVGs passed as `children` to `Button` are not sized automatically.** `Button` applies
+`ICON_INLINE[size]` only to the `startIcon` and `endIcon` wrapper spans — not to plain children.
 
 If you build a component that passes icons as `children` to `Button` (e.g. `InputGroupButton`), add
-SVG sizing to your wrapper's CVA base class using the **descendant combinator** (`_`), not the
-direct child combinator (`>`):
+per-size SVG sizing in your own CVA using the **descendant combinator** (`_`):
 
 ```tsx
 // ✅ correct — descendant combinator reaches svg inside Button's inner <span>
-cva(['[&_svg:not([class*="size-"])]:size-[1em]'], { ... })
+cva(['...'], {
+  variants: {
+    size: {
+      sm: '[&_svg:not([class*="size-"])]:size-3.5',
+      xs: '[&_svg:not([class*="size-"])]:size-3',
+    },
+  },
+})
 
 // ❌ wrong — direct child combinator doesn't reach svg (it's inside Button's <span>)
-cva(['[&>svg:not([class*="size-"])]:size-[1em]'], { ... })
+cva(['[&>svg:not([class*="size-"])]:size-4'], { ... })
 ```
+
+The `:not([class*="size-"])` guard is the escape hatch — passing `<Icon className="size-7" />` is
+respected automatically.
 
 ---
 
@@ -369,3 +378,51 @@ does not pick up `translate` changes.
 
 Note: the Tailwind built-in `transition` utility already includes `translate` in its property list
 alongside `transform` — so `transition duration-normal ease-out` also works correctly.
+
+---
+
+## Tailwind v4 — utility layer order, not `cn()` order, decides conflicts
+
+**When two `size-*` utilities apply to the same element, `cn()` merge order does NOT decide which
+wins — Tailwind's layer order does.** In `@layer utilities`, classes are ordered by first appearance
+in the scanned source. Two conflicting `size-4` / `size-5` utilities have identical specificity and
+are in the same layer, so the one that appears _later in the generated CSS_ wins — unpredictably.
+
+**Practical consequence for icon sizing:** never put a default icon size in a base class and try to
+override it per size-variant. Both classes will be present, but only one will win, and not
+necessarily the per-variant one.
+
+```tsx
+// ❌ wrong — base class conflicts with variant class; result is unpredictable
+cva(
+  ['[&_svg:not([class*="size-"])]:size-4'], // base: size-4
+  {
+    variants: {
+      size: {
+        lg: '[&_svg:not([class*="size-"])]:size-6', // variant: size-6 — may or may not win
+      },
+    },
+  }
+);
+
+// ✅ correct — no default in base; each size variant is the sole authority
+cva(
+  ['[&_svg]:pointer-events-none'], // base: only non-size classes
+  {
+    variants: {
+      size: {
+        sm: `${CONTROL_HEIGHT.sm} ${ICON_INLINE.sm}`, // sole icon size for sm
+        lg: `${CONTROL_HEIGHT.lg} ${ICON_INLINE.lg}`, // sole icon size for lg
+      },
+    },
+  }
+);
+```
+
+This is why `toggleBaseClasses` no longer contains a default `size-4` — it was removed to make
+`ICON_INLINE` per-size-variant reliable.
+
+**Escape hatch still works correctly** because `:not([class*="size-"])` removes the component's
+selector from the equation entirely when the caller adds an explicit `className="size-X"`.
+
+See ADR-0021 for the full icon sizing convention.

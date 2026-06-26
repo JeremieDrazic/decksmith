@@ -2,12 +2,13 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { ICON_IN_CONTROL } from '../../lib/sizing/icon-in-control';
 import { CONTROL_SQUARE } from '../../lib/sizing/control-square';
 
 const iconButtonVariants = cva(
   [
-    // Layout — square, icon centered
-    'inline-flex items-center justify-center',
+    // Layout — square, icon centered, never flex-shrink
+    'inline-flex items-center justify-center shrink-0',
     // Shape
     'rounded-interactive border border-transparent',
     // Interaction base
@@ -50,14 +51,6 @@ const iconButtonVariants = cva(
     },
   }
 );
-
-// Icon pixel size matched to button height so the icon fills ~44–50% of the surface
-const iconSizeMap = {
-  xs: '[&>svg]:size-3',
-  sm: '[&>svg]:size-4',
-  md: '[&>svg]:size-5',
-  lg: '[&>svg]:size-6',
-} as const;
 
 export type IconButtonProps = Omit<React.ComponentProps<'button'>, 'aria-label' | 'children'> &
   VariantProps<typeof iconButtonVariants> & {
@@ -142,7 +135,7 @@ export function IconButton({
         aria-hidden={isLoading ? true : undefined}
         className={cn(
           'inline-flex items-center justify-center',
-          iconSizeMap[size ?? 'md'],
+          ICON_IN_CONTROL[size ?? 'md'],
           isLoading && 'invisible'
         )}
       >

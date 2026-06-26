@@ -1,9 +1,11 @@
 'use client';
 
 import { Select as SelectPrimitive } from '@base-ui/react/select';
+import { Check, ChevronDown } from 'lucide-react';
 import * as React from 'react';
 
 import { cn } from '../../lib/cn';
+import { BACKDROP_ANIMATION, POPUP_ANIMATION } from '../../lib/floating/animations';
 import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
 import { Separator } from '../Separator/Separator';
 
@@ -53,17 +55,7 @@ export function SelectIcon({ className, children, ...props }: SelectIconProps) {
       )}
       {...props}
     >
-      {children ?? (
-        <svg viewBox="0 0 16 16" fill="none" className="size-4" aria-hidden="true">
-          <path
-            d="M4 6l4 4 4-4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
+      {children ?? <ChevronDown className="size-4" aria-hidden={true} />}
     </SelectPrimitive.Icon>
   );
 }
@@ -219,12 +211,10 @@ export function SelectContent({
         <SelectPrimitive.Popup
           data-slot="select-content"
           className={cn(
-            'min-w-[var(--anchor-width)]',
+            'z-dropdown min-w-[var(--anchor-width)]',
             'rounded-surface border border-border bg-surface shadow-popover',
             'outline-none',
-            'data-[open]:animate-in data-[closed]:animate-out',
-            'data-[open]:fade-in-0 data-[closed]:fade-out-0',
-            'data-[open]:zoom-in-95 data-[closed]:zoom-out-95',
+            POPUP_ANIMATION,
             className
           )}
           {...props}
@@ -267,15 +257,7 @@ export function SelectItem({ className, children, ...props }: SelectItemProps) {
         data-slot="select-item-indicator"
         className="absolute right-2.5 flex items-center justify-center"
       >
-        <svg viewBox="0 0 12 12" fill="none" className="size-3 text-accent-text" aria-hidden="true">
-          <path
-            d="M2 6l3 3 5-5"
-            stroke="currentColor"
-            strokeWidth="1.75"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <Check className="size-3 text-accent-text" aria-hidden={true} />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   );
@@ -337,12 +319,7 @@ export function SelectBackdrop({ className, ...props }: SelectBackdropProps) {
   return (
     <SelectPrimitive.Backdrop
       data-slot="select-backdrop"
-      className={cn(
-        'fixed inset-0 bg-transparent',
-        'data-[open]:animate-in data-[closed]:animate-out',
-        'data-[open]:fade-in-0 data-[closed]:fade-out-0',
-        className
-      )}
+      className={cn('fixed inset-0 bg-transparent', BACKDROP_ANIMATION, className)}
       {...props}
     />
   );

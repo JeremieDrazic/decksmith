@@ -62,7 +62,7 @@ const inputGroupAddonVariants = cva(
     'flex h-auto cursor-text items-center justify-center gap-2 py-1.5',
     'text-sm font-medium text-text-muted select-none',
     'group-data-[disabled=true]/input-group:opacity-[0.38]',
-    '[&>svg:not([class*="size-"])]:size-4',
+    '[&_svg:not([class*="size-"])]:size-4',
   ],
   {
     variants: {
@@ -119,27 +119,35 @@ export function InputGroupAddon({
 
 // ─── InputGroupButton ─────────────────────────────────────────────────────────
 
-const inputGroupButtonVariants = cva(
-  // SVG sizing: descendant combinator (_) required — SVG is inside Button's inner <span>
-  ['flex items-center gap-2 shadow-none', '[&_svg:not([class*="size-"])]:size-[1em]'],
-  {
-    variants: {
-      size: {
-        sm: ['h-7 px-2 text-xs', 'rounded-[calc(var(--radius-interactive)-2px)]'],
-        'icon-sm': ['size-7 p-0', 'rounded-[calc(var(--radius-interactive)-2px)]'],
-        xs: [
-          'h-5 gap-1 px-1.5 text-xs',
-          'rounded-[calc(var(--radius-interactive)-3px)]',
-          '[&_svg:not([class*="size-"])]:size-3.5',
-        ],
-        'icon-xs': ['size-5 p-0', 'rounded-[calc(var(--radius-interactive)-3px)]'],
-      },
+const inputGroupButtonVariants = cva(['flex items-center gap-2 shadow-none'], {
+  variants: {
+    size: {
+      sm: [
+        'h-7 px-2 text-xs',
+        'rounded-[calc(var(--radius-interactive)-2px)]',
+        '[&_svg:not([class*="size-"])]:size-3.5',
+      ],
+      'icon-sm': [
+        'size-7 p-0',
+        'rounded-[calc(var(--radius-interactive)-2px)]',
+        '[&_svg:not([class*="size-"])]:size-3.5',
+      ],
+      xs: [
+        'h-5 gap-1 px-1.5 text-xs',
+        'rounded-[calc(var(--radius-interactive)-3px)]',
+        '[&_svg:not([class*="size-"])]:size-3.5',
+      ],
+      'icon-xs': [
+        'size-5 p-0',
+        'rounded-[calc(var(--radius-interactive)-3px)]',
+        '[&_svg:not([class*="size-"])]:size-3',
+      ],
     },
-    defaultVariants: {
-      size: 'sm',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    size: 'sm',
+  },
+});
 
 export type InputGroupButtonProps = Omit<React.ComponentProps<typeof Button>, 'size' | 'type'> &
   VariantProps<typeof inputGroupButtonVariants> & {
@@ -207,7 +215,7 @@ export function InputGroupInput({ className, ...props }: InputGroupInputProps) {
     <Input
       data-slot="input-group-control"
       className={cn(
-        'flex-1 rounded-none border-0 bg-transparent shadow-none',
+        'flex-1 !rounded-none border-0 bg-transparent shadow-none',
         'ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0',
         className
       )}
@@ -229,7 +237,7 @@ export function InputGroupTextarea({ className, ...props }: InputGroupTextareaPr
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        'flex-1 resize-none rounded-none border-0 bg-transparent py-2 shadow-none',
+        'flex-1 resize-none !rounded-none border-0 bg-transparent py-2 shadow-none',
         'ring-0 focus-visible:ring-0 disabled:bg-transparent aria-invalid:ring-0',
         className
       )}

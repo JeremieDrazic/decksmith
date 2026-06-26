@@ -381,11 +381,16 @@ radius, typography, motion). These map directly to Tailwind utility namespaces w
 `packages/web-ui/src/lib/sizing/` — string literals visible to the Tailwind scanner, strictly typed
 via `as const`, internal to the package (YAGNI):
 
-| File                | Export           | Values                             |
-| ------------------- | ---------------- | ---------------------------------- |
-| `control-height.ts` | `CONTROL_HEIGHT` | h-6 / h-8 / h-9 / h-11             |
-| `control-square.ts` | `CONTROL_SQUARE` | size-6 / size-8 / size-9 / size-11 |
-| `icon-size.ts`      | `ICON_SIZE`      | size-4 / size-5 / size-6           |
+| File                 | Export            | Values                              | Context                                        |
+| -------------------- | ----------------- | ----------------------------------- | ---------------------------------------------- |
+| `control-height.ts`  | `CONTROL_HEIGHT`  | h-6 / h-8 / h-9 / h-11              | Button, Input, Toggle, Select heights          |
+| `control-square.ts`  | `CONTROL_SQUARE`  | size-6 / size-8 / size-9 / size-11  | IconButton, IconToggle square                  |
+| `icon-size.ts`       | `ICON_SIZE`       | size-3.5 / size-4 / size-5 / size-6 | Self-rendered icons with their own `size` prop |
+| `icon-in-control.ts` | `ICON_IN_CONTROL` | selector `size-3…6`                 | Icon fills a square tap target                 |
+| `icon-inline.ts`     | `ICON_INLINE`     | selector `size-3.5/4/4/5`           | Icon beside a text label                       |
+
+The icon-sizing tables (`ICON_IN_CONTROL`, `ICON_INLINE`) and their application rules are fully
+documented in **ADR-0021**.
 
 The `--size-*` blocks previously added to `layout.css` (PR #34) are removed. Radius and z-index
 remain — they use native namespaces and are legitimate tokens.

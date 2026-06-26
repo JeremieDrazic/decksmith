@@ -4,11 +4,17 @@ export type { MarkProps } from './brand/Mark';
 export { Logo } from './brand/Logo';
 export type { LogoProps } from './brand/Logo';
 
+export { Spinner } from './ui/Spinner';
+export type { SpinnerProps, SpinnerSize } from './ui/Spinner';
+
 export { Button, buttonVariants } from './ui/Button';
 export type { ButtonProps } from './ui/Button';
 
 export { IconButton } from './ui/IconButton';
 export type { IconButtonProps } from './ui/IconButton';
+
+export { NavigationButton } from './ui/NavigationButton';
+export type { NavigationButtonProps, NavigationButtonVariant } from './ui/NavigationButton';
 
 export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from './ui/ButtonGroup';
 export type { ButtonGroupProps } from './ui/ButtonGroup';
@@ -74,6 +80,129 @@ export type {
 
 export { Tag } from './ui/Tag';
 export type { TagProps } from './ui/Tag';
+
+export {
+  Popover,
+  PopoverClose,
+  PopoverContent,
+  PopoverDescription,
+  PopoverTitle,
+  PopoverTrigger,
+} from './ui/Popover';
+export type {
+  PopoverCloseProps,
+  PopoverContentProps,
+  PopoverDescriptionProps,
+  PopoverProps,
+  PopoverTitleProps,
+  PopoverTriggerProps,
+} from './ui/Popover';
+
+export {
+  AlertDialog,
+  AlertDialogClose,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './ui/AlertDialog';
+export type {
+  AlertDialogCloseProps,
+  AlertDialogContentProps,
+  AlertDialogDescriptionProps,
+  AlertDialogFooterProps,
+  AlertDialogProps,
+  AlertDialogTitleProps,
+  AlertDialogTriggerProps,
+} from './ui/AlertDialog';
+
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/Dialog';
+export type {
+  DialogCloseProps,
+  DialogContentProps,
+  DialogDescriptionProps,
+  DialogFooterProps,
+  DialogProps,
+  DialogTitleProps,
+  DialogTriggerProps,
+} from './ui/Dialog';
+
+export {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuGroup,
+  ContextMenuGroupLabel,
+  ContextMenuItem,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuTrigger,
+} from './ui/ContextMenu';
+export type {
+  ContextMenuCheckboxItemProps,
+  ContextMenuContentProps,
+  ContextMenuGroupLabelProps,
+  ContextMenuGroupProps,
+  ContextMenuItemProps,
+  ContextMenuProps,
+  ContextMenuRadioGroupProps,
+  ContextMenuRadioItemProps,
+  ContextMenuSeparatorProps,
+  ContextMenuShortcutProps,
+  ContextMenuTriggerProps,
+} from './ui/ContextMenu';
+
+export {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuGroupLabel,
+  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from './ui/DropdownMenu';
+export type {
+  DropdownMenuCheckboxItemProps,
+  DropdownMenuContentProps,
+  DropdownMenuGroupLabelProps,
+  DropdownMenuGroupProps,
+  DropdownMenuItemProps,
+  DropdownMenuProps,
+  DropdownMenuRadioGroupProps,
+  DropdownMenuRadioItemProps,
+  DropdownMenuSeparatorProps,
+  DropdownMenuShortcutProps,
+  DropdownMenuTriggerProps,
+} from './ui/DropdownMenu';
+
+export { DeleteButton } from './ui/DeleteButton';
+export type { DeleteButtonProps } from './ui/DeleteButton';
+
+export { Kbd, KbdCmd, KbdDel, KbdEnter, KbdGroup, KbdOpt, KbdShift } from './ui/Kbd';
+export type { KbdGroupProps, KbdIconProps, KbdProps } from './ui/Kbd';
+
+export { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/Tooltip';
+export type {
+  TooltipContentProps,
+  TooltipProps,
+  TooltipProviderProps,
+  TooltipTriggerProps,
+} from './ui/Tooltip';
 
 export {
   Field,
@@ -151,4 +280,5 @@ export type { RarityBadgeProps } from './mtg/RarityBadge';
 
 // ─── Hooks ───────────────────────────────────────────────────────────────────
 
+export { useArmedState } from './hooks/use-armed-state';
 export { usePrefersReducedMotion } from './hooks/use-prefers-reduced-motion';

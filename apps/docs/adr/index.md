@@ -31,6 +31,7 @@ evolution history.
 | [0018](./0018-frontend-library-stack.md)                  | Frontend Library Stack                        | Active | 2026-06-08 |
 | [0019](./0019-web-ui-component-architecture.md)           | `packages/web-ui` Component Architecture      | Active | 2026-06-08 |
 | [0020](./0020-tanstack-db-reactive-store.md)              | TanStack DB — Reactive Client Store           | Draft  | 2026-06-19 |
+| [0021](./0021-icon-sizing-convention.md)                  | Icon Sizing Convention in `packages/web-ui`   | Active | 2026-06-27 |
 
 ---
 

@@ -5,7 +5,7 @@ import { cn } from '../../lib/cn';
 
 const tagVariants = cva(
   [
-    'inline-flex items-center gap-1',
+    'inline-flex w-fit items-center gap-1',
     'rounded-badge border',
     'font-mono font-medium whitespace-nowrap',
     'leading-none',
@@ -21,8 +21,8 @@ const tagVariants = cva(
         info: 'bg-info-subtle text-info-text border-transparent',
       },
       size: {
-        sm: 'h-5 pl-2 pr-1 text-[10px]',
-        md: 'h-6 pl-2.5 pr-1.5 text-xs',
+        sm: 'h-5 pl-2 pr-1 text-[10px] [&_svg:not([class*="size-"])]:size-3',
+        md: 'h-6 pl-2.5 pr-1.5 text-xs [&_svg:not([class*="size-"])]:size-3.5',
       },
     },
     defaultVariants: {
