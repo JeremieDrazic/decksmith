@@ -21,8 +21,8 @@ const badgeVariants = cva(
         info: 'bg-info-subtle text-info-text border-transparent',
       },
       size: {
-        sm: 'h-5 px-2 text-[10px]',
-        md: 'h-6 px-2.5 text-xs',
+        sm: 'h-5 px-2 text-[10px] [&_svg:not([class*="size-"])]:size-3',
+        md: 'h-6 px-2.5 text-xs [&_svg:not([class*="size-"])]:size-3.5',
       },
     },
     defaultVariants: {

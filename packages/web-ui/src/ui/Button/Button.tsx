@@ -3,6 +3,7 @@ import * as React from 'react';
 
 import { cn } from '../../lib/cn';
 import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
+import { ICON_INLINE } from '../../lib/sizing/icon-inline';
 import { Spinner } from '../Spinner/Spinner';
 
 /**
@@ -133,13 +134,13 @@ export function Button({
         className={cn('inline-flex items-center gap-2', isLoading && 'invisible')}
       >
         {startIcon ? (
-          <span className="shrink-0 [&>svg]:size-[1em]" aria-hidden="true">
+          <span className={cn('shrink-0', ICON_INLINE[size ?? 'md'])} aria-hidden="true">
             {startIcon}
           </span>
         ) : null}
         {children}
         {endIcon ? (
-          <span className="shrink-0 [&>svg]:size-[1em]" aria-hidden="true">
+          <span className={cn('shrink-0', ICON_INLINE[size ?? 'md'])} aria-hidden="true">
             {endIcon}
           </span>
         ) : null}

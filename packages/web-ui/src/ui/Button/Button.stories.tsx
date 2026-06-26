@@ -36,13 +36,13 @@ export const Playground: Story = {
 export const Variants: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">primary</span>
+      <span className="font-mono text-xs text-text-muted">primary</span>
       <Button variant="primary">Primary</Button>
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <Button variant="secondary">Secondary</Button>
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <Button variant="ghost">Ghost</Button>
-      <span className="font-mono text-xs text-text-faint">destructive</span>
+      <span className="font-mono text-xs text-text-muted">destructive</span>
       <Button variant="destructive">Destructive</Button>
     </div>
   ),
@@ -51,13 +51,13 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">xs</span>
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <Button size="xs">XSmall</Button>
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <Button size="sm">Small</Button>
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <Button size="md">Medium</Button>
-      <span className="font-mono text-xs text-text-faint">lg</span>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <Button size="lg">Large</Button>
     </div>
   ),
@@ -124,17 +124,17 @@ export const Loading: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">primary</span>
+      <span className="font-mono text-xs text-text-muted">primary</span>
       <Button disabled>Primary</Button>
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <Button variant="secondary" disabled>
         Secondary
       </Button>
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <Button variant="ghost" disabled>
         Ghost
       </Button>
-      <span className="font-mono text-xs text-text-faint">destructive</span>
+      <span className="font-mono text-xs text-text-muted">destructive</span>
       <Button variant="destructive" disabled>
         Destructive
       </Button>

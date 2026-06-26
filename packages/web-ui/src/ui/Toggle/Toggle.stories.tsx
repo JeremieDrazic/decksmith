@@ -83,13 +83,13 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">xs</span>
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <Toggle size="xs">xs</Toggle>
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <Toggle size="sm">sm</Toggle>
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <Toggle size="md">md</Toggle>
-      <span className="font-mono text-xs text-text-faint">lg</span>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <Toggle size="lg">lg</Toggle>
     </div>
   ),
@@ -127,13 +127,13 @@ export const IconOnly: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <Toggle disabled>Ghost</Toggle>
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <Toggle variant="secondary" disabled>
         Secondary
       </Toggle>
-      <span className="font-mono text-xs text-text-faint">pressed + disabled</span>
+      <span className="font-mono text-xs text-text-muted">pressed + disabled</span>
       <Toggle defaultPressed disabled>
         Pressed
       </Toggle>

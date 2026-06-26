@@ -76,7 +76,8 @@ export type KbdIconProps = Omit<KbdProps, 'children' | 'aria-label'> & {
 /** ⌘ Command key. */
 export function KbdCmd({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
   return (
-    <Kbd aria-label={ariaLabel} {...props}>
+    <Kbd {...props}>
+      <span className="sr-only">{ariaLabel}</span>
       <Command className="size-3" aria-hidden={true} />
     </Kbd>
   );
@@ -85,7 +86,8 @@ export function KbdCmd({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
 /** ⌥ Option / Alt key. */
 export function KbdOpt({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
   return (
-    <Kbd aria-label={ariaLabel} {...props}>
+    <Kbd {...props}>
+      <span className="sr-only">{ariaLabel}</span>
       <Option className="size-3" aria-hidden={true} />
     </Kbd>
   );
@@ -94,7 +96,8 @@ export function KbdOpt({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
 /** ⇧ Shift key. */
 export function KbdShift({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
   return (
-    <Kbd aria-label={ariaLabel} {...props}>
+    <Kbd {...props}>
+      <span className="sr-only">{ariaLabel}</span>
       <ArrowBigUp className="size-3" aria-hidden={true} />
     </Kbd>
   );
@@ -103,7 +106,8 @@ export function KbdShift({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
 /** ⌫ Delete / Backspace key. */
 export function KbdDel({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
   return (
-    <Kbd aria-label={ariaLabel} {...props}>
+    <Kbd {...props}>
+      <span className="sr-only">{ariaLabel}</span>
       <Delete className="size-3" aria-hidden={true} />
     </Kbd>
   );
@@ -112,7 +116,8 @@ export function KbdDel({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
 /** ↵ Enter / Return key. */
 export function KbdEnter({ 'aria-label': ariaLabel, ...props }: KbdIconProps) {
   return (
-    <Kbd aria-label={ariaLabel} {...props}>
+    <Kbd {...props}>
+      <span className="sr-only">{ariaLabel}</span>
       <CornerDownLeft className="size-3" aria-hidden={true} />
     </Kbd>
   );

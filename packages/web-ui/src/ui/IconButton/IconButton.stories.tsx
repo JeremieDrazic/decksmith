@@ -36,25 +36,25 @@ export const Playground: Story = {
 export const Variants: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">primary</span>
+      <span className="font-mono text-xs text-text-muted">primary</span>
       <IconButton
         variant="primary"
         icon={<Plus aria-hidden={true} />}
         aria-label="Add card (primary)"
       />
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <IconButton
         variant="secondary"
         icon={<Plus aria-hidden={true} />}
         aria-label="Add card (secondary)"
       />
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <IconButton
         variant="ghost"
         icon={<Plus aria-hidden={true} />}
         aria-label="Add card (ghost)"
       />
-      <span className="font-mono text-xs text-text-faint">destructive</span>
+      <span className="font-mono text-xs text-text-muted">destructive</span>
       <IconButton
         variant="destructive"
         icon={<Trash2 aria-hidden={true} />}
@@ -67,13 +67,13 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">xs</span>
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <IconButton size="xs" icon={<Plus aria-hidden={true} />} aria-label="Add card (xs)" />
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <IconButton size="sm" icon={<Plus aria-hidden={true} />} aria-label="Add card (small)" />
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <IconButton size="md" icon={<Plus aria-hidden={true} />} aria-label="Add card (medium)" />
-      <span className="font-mono text-xs text-text-faint">lg</span>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <IconButton size="lg" icon={<Plus aria-hidden={true} />} aria-label="Add card (large)" />
     </div>
   ),
@@ -172,28 +172,28 @@ export const Loading: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">primary</span>
+      <span className="font-mono text-xs text-text-muted">primary</span>
       <IconButton
         variant="primary"
         icon={<Plus aria-hidden={true} />}
         aria-label="Add card"
         disabled
       />
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <IconButton
         variant="secondary"
         icon={<Plus aria-hidden={true} />}
         aria-label="Add card"
         disabled
       />
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <IconButton
         variant="ghost"
         icon={<Search aria-hidden={true} />}
         aria-label="Search"
         disabled
       />
-      <span className="font-mono text-xs text-text-faint">destructive</span>
+      <span className="font-mono text-xs text-text-muted">destructive</span>
       <IconButton
         variant="destructive"
         icon={<Trash2 aria-hidden={true} />}

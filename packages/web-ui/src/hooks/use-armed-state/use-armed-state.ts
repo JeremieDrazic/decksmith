@@ -14,13 +14,13 @@ import { useEffect, useRef, useState } from 'react';
  */
 export function useArmedState(timeout: number, onDelete: () => void) {
   const [armed, setArmed] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>();
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => () => clearTimeout(timerRef.current), []);
+  useEffect(() => () => clearTimeout(timerRef.current ?? undefined), []);
 
   function handleArmOrConfirm() {
     if (armed) {
-      clearTimeout(timerRef.current);
+      clearTimeout(timerRef.current ?? undefined);
       setArmed(false);
       onDelete();
     } else {

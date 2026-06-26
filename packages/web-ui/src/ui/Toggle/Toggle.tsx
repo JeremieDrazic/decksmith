@@ -3,6 +3,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '../../lib/cn';
 import { CONTROL_HEIGHT } from '../../lib/sizing/control-height';
+import { ICON_INLINE } from '../../lib/sizing/icon-inline';
 
 export const toggleBaseClasses = [
   'group/toggle inline-flex items-center justify-center gap-1',
@@ -13,7 +14,7 @@ export const toggleBaseClasses = [
   'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
   'disabled:pointer-events-none disabled:opacity-[0.38]',
-  '[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*="size-"])]:size-4',
+  '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   // Pressed state — accent-subtle bg + accent text color
   'aria-pressed:bg-accent-subtle aria-pressed:text-accent-text',
 ] as const;
@@ -31,10 +32,10 @@ export const toggleVariants = cva(toggleBaseClasses, {
   variants: {
     variant: toggleVariantStyles,
     size: {
-      xs: `${CONTROL_HEIGHT.xs} px-1.5 text-xs`,
-      sm: `${CONTROL_HEIGHT.sm} px-2 text-xs`,
-      md: `${CONTROL_HEIGHT.md} px-2.5 text-sm`,
-      lg: `${CONTROL_HEIGHT.lg} px-2.5 text-sm`,
+      xs: `${CONTROL_HEIGHT.xs} px-1.5 text-xs ${ICON_INLINE.xs}`,
+      sm: `${CONTROL_HEIGHT.sm} px-2 text-xs ${ICON_INLINE.sm}`,
+      md: `${CONTROL_HEIGHT.md} px-2.5 text-sm ${ICON_INLINE.md}`,
+      lg: `${CONTROL_HEIGHT.lg} px-2.5 text-sm ${ICON_INLINE.lg}`,
     },
   },
   defaultVariants: {

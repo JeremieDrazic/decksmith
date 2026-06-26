@@ -32,17 +32,17 @@ export const Playground: Story = {
 export const Tones: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">default</span>
+      <span className="font-mono text-xs text-text-muted">default</span>
       <Badge tone="default">Default</Badge>
-      <span className="font-mono text-xs text-text-faint">accent</span>
+      <span className="font-mono text-xs text-text-muted">accent</span>
       <Badge tone="accent">Accent</Badge>
-      <span className="font-mono text-xs text-text-faint">success</span>
+      <span className="font-mono text-xs text-text-muted">success</span>
       <Badge tone="success">Success</Badge>
-      <span className="font-mono text-xs text-text-faint">warning</span>
+      <span className="font-mono text-xs text-text-muted">warning</span>
       <Badge tone="warning">Warning</Badge>
-      <span className="font-mono text-xs text-text-faint">error</span>
+      <span className="font-mono text-xs text-text-muted">error</span>
       <Badge tone="error">Error</Badge>
-      <span className="font-mono text-xs text-text-faint">info</span>
+      <span className="font-mono text-xs text-text-muted">info</span>
       <Badge tone="info">Info</Badge>
     </div>
   ),
@@ -51,9 +51,9 @@ export const Tones: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <Badge size="sm">Small</Badge>
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <Badge size="md">Medium</Badge>
     </div>
   ),
@@ -62,19 +62,19 @@ export const Sizes: Story = {
 export const WithDot: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">default</span>
+      <span className="font-mono text-xs text-text-muted">default</span>
       <Badge tone="default" dot>
         Offline
       </Badge>
-      <span className="font-mono text-xs text-text-faint">success</span>
+      <span className="font-mono text-xs text-text-muted">success</span>
       <Badge tone="success" dot>
         Synced
       </Badge>
-      <span className="font-mono text-xs text-text-faint">warning</span>
+      <span className="font-mono text-xs text-text-muted">warning</span>
       <Badge tone="warning" dot>
         Pending
       </Badge>
-      <span className="font-mono text-xs text-text-faint">error</span>
+      <span className="font-mono text-xs text-text-muted">error</span>
       <Badge tone="error" dot>
         Failed
       </Badge>

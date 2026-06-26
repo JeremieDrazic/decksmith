@@ -1,15 +1,17 @@
 /**
- * Square sizes for inline icons and visual indicators.
- * These are smaller than interactive controls — they sit inline within text or UI chrome,
- * never as standalone tap targets.
+ * Square sizes for self-rendered icons — components that own their icon and expose a `size` prop
+ * (Spinner, RarityBadge, ManaSymbol). The class is applied directly to the icon element, not via
+ * a descendant selector.
  *
- * xs — text-sm contexts (menu items, compact badges) — matches 14px line height
- * sm — standard inline icons (button labels, list items, breadcrumbs)
- * md — prominent icons (card headers, section markers)
- * lg — large icons (empty states, avatars, hero elements)
+ * xs — 14px — text-sm contexts (menu items, compact badges)
+ * sm — 16px — mana pips, compact indicators
+ * md — 20px — default — rarity badges, inline icons
+ * lg — 24px — prominent icons, avatars, hero elements
  *
- * For IconButton icon slots, see the internal `iconSizeMap` in IconButton.tsx
- * which uses `[&>svg]:size-*` selectors and mirrors this scale.
+ * This is one of three icon sizing tables (see ADR-0021):
+ *   ICON_SIZE        — self-rendered icon with a `size` prop (this file)
+ *   ICON_IN_CONTROL  — icon fills a square tap target (IconButton, IconToggle)
+ *   ICON_INLINE      — icon beside a text label (Button, Toggle)
  */
 export const ICON_SIZE = {
   xs: 'size-3.5', // 14px × 14px — inline with text-sm

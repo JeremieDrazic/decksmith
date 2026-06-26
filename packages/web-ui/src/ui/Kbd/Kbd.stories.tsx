@@ -39,17 +39,17 @@ export const Playground: Story = {
 export const SingleKeys: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">Command</span>
+      <span className="font-mono text-xs text-text-muted">Command</span>
       <KbdCmd aria-label="Command" />
-      <span className="font-mono text-xs text-text-faint">Option</span>
+      <span className="font-mono text-xs text-text-muted">Option</span>
       <KbdOpt aria-label="Option" />
-      <span className="font-mono text-xs text-text-faint">Shift</span>
+      <span className="font-mono text-xs text-text-muted">Shift</span>
       <KbdShift aria-label="Shift" />
-      <span className="font-mono text-xs text-text-faint">Delete</span>
+      <span className="font-mono text-xs text-text-muted">Delete</span>
       <KbdDel aria-label="Delete" />
-      <span className="font-mono text-xs text-text-faint">Enter</span>
+      <span className="font-mono text-xs text-text-muted">Enter</span>
       <KbdEnter aria-label="Enter" />
-      <span className="font-mono text-xs text-text-faint">text</span>
+      <span className="font-mono text-xs text-text-muted">text</span>
       <div className="flex items-center gap-1">
         <Kbd>Ctrl</Kbd>
         <Kbd>Esc</Kbd>

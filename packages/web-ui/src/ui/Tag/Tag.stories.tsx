@@ -32,17 +32,17 @@ export const Playground: Story = {
 export const Tones: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">default</span>
+      <span className="font-mono text-xs text-text-muted">default</span>
       <Tag tone="default">Default</Tag>
-      <span className="font-mono text-xs text-text-faint">accent</span>
+      <span className="font-mono text-xs text-text-muted">accent</span>
       <Tag tone="accent">Accent</Tag>
-      <span className="font-mono text-xs text-text-faint">success</span>
+      <span className="font-mono text-xs text-text-muted">success</span>
       <Tag tone="success">Success</Tag>
-      <span className="font-mono text-xs text-text-faint">warning</span>
+      <span className="font-mono text-xs text-text-muted">warning</span>
       <Tag tone="warning">Warning</Tag>
-      <span className="font-mono text-xs text-text-faint">error</span>
+      <span className="font-mono text-xs text-text-muted">error</span>
       <Tag tone="error">Error</Tag>
-      <span className="font-mono text-xs text-text-faint">info</span>
+      <span className="font-mono text-xs text-text-muted">info</span>
       <Tag tone="info">Info</Tag>
     </div>
   ),
@@ -51,9 +51,9 @@ export const Tones: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <Tag size="sm">Small</Tag>
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <Tag size="md">Medium</Tag>
     </div>
   ),
@@ -62,23 +62,23 @@ export const Sizes: Story = {
 export const Dismissible: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">default</span>
+      <span className="font-mono text-xs text-text-muted">default</span>
       <Tag tone="default" onDismiss={noop} dismissLabel="Remove Default tag">
         Default
       </Tag>
-      <span className="font-mono text-xs text-text-faint">accent</span>
+      <span className="font-mono text-xs text-text-muted">accent</span>
       <Tag tone="accent" onDismiss={noop} dismissLabel="Remove Accent tag">
         Accent
       </Tag>
-      <span className="font-mono text-xs text-text-faint">success</span>
+      <span className="font-mono text-xs text-text-muted">success</span>
       <Tag tone="success" onDismiss={noop} dismissLabel="Remove Success tag">
         Success
       </Tag>
-      <span className="font-mono text-xs text-text-faint">warning</span>
+      <span className="font-mono text-xs text-text-muted">warning</span>
       <Tag tone="warning" onDismiss={noop} dismissLabel="Remove Warning tag">
         Warning
       </Tag>
-      <span className="font-mono text-xs text-text-faint">error</span>
+      <span className="font-mono text-xs text-text-muted">error</span>
       <Tag tone="error" onDismiss={noop} dismissLabel="Remove Error tag">
         Error
       </Tag>

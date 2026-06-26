@@ -44,19 +44,19 @@ export const Default: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">xs</span>
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <DeleteButton size="xs" onDelete={noop}>
         Delete
       </DeleteButton>
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <DeleteButton size="sm" onDelete={noop}>
         Delete
       </DeleteButton>
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <DeleteButton size="md" onDelete={noop}>
         Delete
       </DeleteButton>
-      <span className="font-mono text-xs text-text-faint">lg</span>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <DeleteButton size="lg" onDelete={noop}>
         Delete
       </DeleteButton>

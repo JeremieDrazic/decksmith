@@ -72,13 +72,13 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">xs</span>
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <IconToggle size="xs" icon={<Moon aria-hidden={true} />} aria-label="Dark mode" />
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <IconToggle size="sm" icon={<Moon aria-hidden={true} />} aria-label="Dark mode" />
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <IconToggle size="md" icon={<Moon aria-hidden={true} />} aria-label="Dark mode" />
-      <span className="font-mono text-xs text-text-faint">lg</span>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <IconToggle size="lg" icon={<Moon aria-hidden={true} />} aria-label="Dark mode" />
     </div>
   ),
@@ -87,16 +87,16 @@ export const Sizes: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <IconToggle icon={<Star aria-hidden={true} />} aria-label="Favourite" disabled />
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <IconToggle
         variant="secondary"
         icon={<Star aria-hidden={true} />}
         aria-label="Favourite"
         disabled
       />
-      <span className="font-mono text-xs text-text-faint">pressed + disabled</span>
+      <span className="font-mono text-xs text-text-muted">pressed + disabled</span>
       <IconToggle
         icon={<Star aria-hidden={true} />}
         aria-label="Favourite"

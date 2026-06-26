@@ -49,11 +49,11 @@ export const Playground: Story = {
 export const Variants: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">close</span>
+      <span className="font-mono text-xs text-text-muted">close</span>
       <NavigationButton variant="close" />
-      <span className="font-mono text-xs text-text-faint">back</span>
+      <span className="font-mono text-xs text-text-muted">back</span>
       <NavigationButton variant="back" />
-      <span className="font-mono text-xs text-text-faint">forward</span>
+      <span className="font-mono text-xs text-text-muted">forward</span>
       <NavigationButton variant="forward" />
     </div>
   ),
@@ -62,13 +62,13 @@ export const Variants: Story = {
 export const Sizes: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">xs</span>
+      <span className="font-mono text-xs text-text-muted">xs</span>
       <NavigationButton variant="close" size="xs" />
-      <span className="font-mono text-xs text-text-faint">sm</span>
+      <span className="font-mono text-xs text-text-muted">sm</span>
       <NavigationButton variant="close" size="sm" />
-      <span className="font-mono text-xs text-text-faint">md</span>
+      <span className="font-mono text-xs text-text-muted">md</span>
       <NavigationButton variant="close" size="md" />
-      <span className="font-mono text-xs text-text-faint">lg</span>
+      <span className="font-mono text-xs text-text-muted">lg</span>
       <NavigationButton variant="close" size="lg" />
     </div>
   ),
@@ -77,11 +77,11 @@ export const Sizes: Story = {
 export const ButtonVariants: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">ghost</span>
+      <span className="font-mono text-xs text-text-muted">ghost</span>
       <NavigationButton variant="close" buttonVariant="ghost" />
-      <span className="font-mono text-xs text-text-faint">secondary</span>
+      <span className="font-mono text-xs text-text-muted">secondary</span>
       <NavigationButton variant="close" buttonVariant="secondary" />
-      <span className="font-mono text-xs text-text-faint">primary</span>
+      <span className="font-mono text-xs text-text-muted">primary</span>
       <NavigationButton variant="close" buttonVariant="primary" />
     </div>
   ),
@@ -90,11 +90,11 @@ export const ButtonVariants: Story = {
 export const Disabled: Story = {
   render: () => (
     <div className="inline-grid grid-cols-[auto_auto] items-center justify-items-start gap-x-8 gap-y-3">
-      <span className="font-mono text-xs text-text-faint">close</span>
+      <span className="font-mono text-xs text-text-muted">close</span>
       <NavigationButton variant="close" disabled />
-      <span className="font-mono text-xs text-text-faint">back</span>
+      <span className="font-mono text-xs text-text-muted">back</span>
       <NavigationButton variant="back" disabled />
-      <span className="font-mono text-xs text-text-faint">forward</span>
+      <span className="font-mono text-xs text-text-muted">forward</span>
       <NavigationButton variant="forward" disabled />
     </div>
   ),

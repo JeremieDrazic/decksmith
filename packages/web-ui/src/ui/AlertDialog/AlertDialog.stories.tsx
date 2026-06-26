@@ -86,7 +86,7 @@ export const Controlled: Story = {
             <Button
               size="sm"
               variant="ghost"
-              className="text-error hover:text-error"
+              className="text-error-text hover:text-error"
               onClick={() => setTarget(deck)}
             >
               Delete
