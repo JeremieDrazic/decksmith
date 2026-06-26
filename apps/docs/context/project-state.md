@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-22 (session 10)_
+_Updated: 2026-06-27 (session 11)_
 
 ---
 
@@ -96,6 +96,18 @@ _Updated: 2026-06-22 (session 10)_
       sanitization), `ManaSymbol` (router), `ManaCost` (pip row from cost string), `ColorIdentity`
       (WUBRG-sorted + `role="img"` + aria-label lore name) — Storybook stories `Components/MTG/…`
       (PR #32)
+- [x] Floating components (PR #36): `Dialog`, `AlertDialog`, `DropdownMenu`, `ContextMenu`,
+      `Tooltip`, `Popover` — all via `@base-ui/react`; Storybook stories + axe CI
+- [x] Form primitives (PR #36): `Checkbox`, `Radio`, `Switch` — Base UI, Storybook stories + axe CI
+- [x] `Kbd`, `KbdCmd`, `KbdOpt`, `KbdShift`, `KbdDel`, `KbdEnter` — keyboard shortcut badges (PR
+      #36)
+- [x] `NavigationButton` (close/back/forward semantic variants) + `DeleteButton` + `useArmedState`
+      hook — armed delete pattern: first click arms, second click confirms, auto-resets on timeout
+      (PR #36)
+- [x] Icon sizing refactor (PR #36): three-table system — `ICON_IN_CONTROL` (icon fills square tap
+      target), `ICON_INLINE` (icon beside text label), `ICON_SIZE` (self-rendered); ADR-0021; bug
+      fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
+      removed; pitfall documented (Tailwind v4 layer-order conflict)
 
 ---
 
@@ -109,7 +121,7 @@ _Updated: 2026-06-22 (session 10)_
 - `routeTree.gen.ts` must be regenerated after adding/changing routes
   (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
 - `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
-- `packages/web-ui` Phase 4.5 in progress: Dialog, Toast not started
+- `packages/web-ui` Phase 4.5 in progress: Toast, Drawer not yet started
 - DB seed is broken — `User.id` no longer has `@default(uuid())`, seed must be updated to create
   Supabase Auth users first before seeding profile rows
 
@@ -123,7 +135,7 @@ _None_
 
 ## Current Branch
 
-- Branch: `main` (session 10 merged — PR #32)
+- Branch: `main` (session 11 merged — PR #36)
 
 ---
 
