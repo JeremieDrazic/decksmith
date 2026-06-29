@@ -437,4 +437,31 @@ This is why `toggleBaseClasses` no longer contains a default `size-4` — it was
 **Escape hatch still works correctly** because `:not([class*="size-"])` removes the component's
 selector from the equation entirely when the caller adds an explicit `className="size-X"`.
 
+---
+
+## Base UI NumberField — `aria-roledescription` requires explicit ARIA labeling
+
+Base UI's `NumberField.Input` always renders `aria-roledescription="Number field"` on the `<input>`.
+The axe rule for `aria-roledescription` requires an explicit ARIA label (`aria-label` or
+`aria-labelledby`) — native `<label htmlFor>` alone is not sufficient.
+
+**Symptom:** Storybook axe CI fails with "1 accessibility violation" on every NumberField story that
+uses `<FieldLabel htmlFor>` without also setting `aria-labelledby` on the input.
+
+```tsx
+// ❌ wrong — htmlFor/id alone doesn't satisfy the aria-roledescription rule
+<FieldLabel htmlFor="qty">Quantity</FieldLabel>
+<NumberFieldInput id="qty" />
+
+// ✅ correct — aria-labelledby provides explicit ARIA labeling
+<FieldLabel id="qty-label" htmlFor="qty">Quantity</FieldLabel>
+<NumberFieldInput id="qty" aria-labelledby="qty-label" />
+
+// ✅ also correct — standalone input without a FieldLabel
+<NumberFieldInput aria-label="Quantity" />
+```
+
+The `aria-labelledby` points to the label element's `id`, while `htmlFor`/`id` keeps the click-to-
+focus behavior. Both mechanisms point to the same text — no duplication issue.
+
 See ADR-0021 for the full icon sizing convention.
