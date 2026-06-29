@@ -37,7 +37,7 @@ export const Playground: Story = {
       <NumberField {...args}>
         <NumberFieldGroup>
           <NumberFieldDecrement />
-          <NumberFieldInput />
+          <NumberFieldInput aria-label="Quantity" />
           <NumberFieldIncrement />
         </NumberFieldGroup>
       </NumberField>
@@ -56,7 +56,7 @@ export const Sizes: Story = {
           <NumberField defaultValue={2} min={0} max={4}>
             <NumberFieldGroup size={size}>
               <NumberFieldDecrement />
-              <NumberFieldInput />
+              <NumberFieldInput aria-label={`Quantity (${size})`} />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
@@ -82,7 +82,7 @@ export const WithScrub: Story = {
             </NumberFieldScrubArea>
             <NumberFieldGroup>
               <NumberFieldDecrement />
-              <NumberFieldInput />
+              <NumberFieldInput aria-label="Quantity" />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
@@ -95,7 +95,7 @@ export const WithScrub: Story = {
             </NumberFieldScrubArea>
             <NumberFieldGroup>
               <NumberFieldDecrement />
-              <NumberFieldInput />
+              <NumberFieldInput aria-label="CMC" />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
@@ -120,7 +120,7 @@ export const WithFormat: Story = {
         >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput className="w-24" />
+            <NumberFieldInput className="w-24" aria-label="Price (USD)" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -136,7 +136,7 @@ export const WithFormat: Story = {
         >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput className="w-24" />
+            <NumberFieldInput className="w-24" aria-label="Price (EUR)" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -147,7 +147,7 @@ export const WithFormat: Story = {
         <NumberField defaultValue={0.75} min={0} max={1} step={0.05} format={{ style: 'percent' }}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput className="w-20" />
+            <NumberFieldInput className="w-20" aria-label="Completion" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -166,7 +166,7 @@ export const States: Story = {
         <NumberField defaultValue={2} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput />
+            <NumberFieldInput aria-label="Default quantity" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -177,7 +177,7 @@ export const States: Story = {
         <NumberField defaultValue={0} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput />
+            <NumberFieldInput aria-label="At minimum quantity" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -188,7 +188,7 @@ export const States: Story = {
         <NumberField defaultValue={4} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput />
+            <NumberFieldInput aria-label="At maximum quantity" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -199,7 +199,7 @@ export const States: Story = {
         <NumberField defaultValue={2} min={0} max={4} disabled>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput />
+            <NumberFieldInput aria-label="Disabled quantity" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -210,7 +210,7 @@ export const States: Story = {
         <NumberField defaultValue={1} min={1} step={1}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput />
+            <NumberFieldInput aria-label="Quantity" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -222,7 +222,7 @@ export const States: Story = {
         <NumberField defaultValue={5} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-invalid="true" />
+            <NumberFieldInput aria-label="With error quantity" aria-invalid="true" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -255,7 +255,7 @@ export const Examples: Story = {
                 <NumberField defaultValue={qty} min={0} max={max}>
                   <NumberFieldGroup size="sm">
                     <NumberFieldDecrement />
-                    <NumberFieldInput />
+                    <NumberFieldInput aria-label={`${name} quantity`} />
                     <NumberFieldIncrement />
                   </NumberFieldGroup>
                 </NumberField>
@@ -276,7 +276,7 @@ export const Examples: Story = {
               </NumberFieldScrubArea>
               <NumberFieldGroup>
                 <NumberFieldDecrement />
-                <NumberFieldInput />
+                <NumberFieldInput aria-label="Minimum CMC" />
                 <NumberFieldIncrement />
               </NumberFieldGroup>
             </NumberField>
@@ -289,7 +289,7 @@ export const Examples: Story = {
               </NumberFieldScrubArea>
               <NumberFieldGroup>
                 <NumberFieldDecrement />
-                <NumberFieldInput />
+                <NumberFieldInput aria-label="Maximum CMC" />
                 <NumberFieldIncrement />
               </NumberFieldGroup>
             </NumberField>
