@@ -33,11 +33,11 @@ export const Playground: Story = {
   },
   render: (args) => (
     <Field>
-      <FieldLabel>Quantity</FieldLabel>
+      <FieldLabel htmlFor="nf-playground">Quantity</FieldLabel>
       <NumberField {...args}>
         <NumberFieldGroup>
           <NumberFieldDecrement />
-          <NumberFieldInput aria-label="Quantity" />
+          <NumberFieldInput id="nf-playground" />
           <NumberFieldIncrement />
         </NumberFieldGroup>
       </NumberField>
@@ -78,11 +78,13 @@ export const WithScrub: Story = {
         <Field>
           <NumberField defaultValue={2} min={0} max={4}>
             <NumberFieldScrubArea>
-              <FieldLabel className="cursor-ew-resize">Quantity</FieldLabel>
+              <FieldLabel htmlFor="nf-scrub-qty" className="cursor-ew-resize">
+                Quantity
+              </FieldLabel>
             </NumberFieldScrubArea>
             <NumberFieldGroup>
               <NumberFieldDecrement />
-              <NumberFieldInput aria-label="Quantity" />
+              <NumberFieldInput id="nf-scrub-qty" />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
@@ -91,11 +93,13 @@ export const WithScrub: Story = {
         <Field>
           <NumberField defaultValue={3} min={0} max={16}>
             <NumberFieldScrubArea>
-              <FieldLabel className="cursor-ew-resize">CMC</FieldLabel>
+              <FieldLabel htmlFor="nf-scrub-cmc" className="cursor-ew-resize">
+                CMC
+              </FieldLabel>
             </NumberFieldScrubArea>
             <NumberFieldGroup>
               <NumberFieldDecrement />
-              <NumberFieldInput aria-label="CMC" />
+              <NumberFieldInput id="nf-scrub-cmc" />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
@@ -111,7 +115,7 @@ export const WithFormat: Story = {
   render: () => (
     <div className="flex flex-wrap gap-8">
       <Field>
-        <FieldLabel>Price (USD)</FieldLabel>
+        <FieldLabel htmlFor="nf-price-usd">Price (USD)</FieldLabel>
         <NumberField
           defaultValue={12.5}
           min={0}
@@ -120,14 +124,14 @@ export const WithFormat: Story = {
         >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput className="w-24" aria-label="Price (USD)" />
+            <NumberFieldInput id="nf-price-usd" className="w-24" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
 
       <Field>
-        <FieldLabel>Price (EUR)</FieldLabel>
+        <FieldLabel htmlFor="nf-price-eur">Price (EUR)</FieldLabel>
         <NumberField
           defaultValue={11.2}
           min={0}
@@ -136,18 +140,18 @@ export const WithFormat: Story = {
         >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput className="w-24" aria-label="Price (EUR)" />
+            <NumberFieldInput id="nf-price-eur" className="w-24" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
 
       <Field>
-        <FieldLabel>Completion</FieldLabel>
+        <FieldLabel htmlFor="nf-completion">Completion</FieldLabel>
         <NumberField defaultValue={0.75} min={0} max={1} step={0.05} format={{ style: 'percent' }}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput className="w-20" aria-label="Completion" />
+            <NumberFieldInput id="nf-completion" className="w-20" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -162,55 +166,55 @@ export const States: Story = {
   render: () => (
     <div className="flex flex-wrap gap-8">
       <Field>
-        <FieldLabel>Default</FieldLabel>
+        <FieldLabel htmlFor="nf-default">Default</FieldLabel>
         <NumberField defaultValue={2} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-label="Default quantity" />
+            <NumberFieldInput id="nf-default" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
 
       <Field>
-        <FieldLabel>At minimum</FieldLabel>
+        <FieldLabel htmlFor="nf-min">At minimum</FieldLabel>
         <NumberField defaultValue={0} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-label="At minimum quantity" />
+            <NumberFieldInput id="nf-min" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
 
       <Field>
-        <FieldLabel>At maximum</FieldLabel>
+        <FieldLabel htmlFor="nf-max">At maximum</FieldLabel>
         <NumberField defaultValue={4} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-label="At maximum quantity" />
+            <NumberFieldInput id="nf-max" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
 
       <Field>
-        <FieldLabel>Disabled</FieldLabel>
+        <FieldLabel htmlFor="nf-disabled">Disabled</FieldLabel>
         <NumberField defaultValue={2} min={0} max={4} disabled>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-label="Disabled quantity" />
+            <NumberFieldInput id="nf-disabled" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
       </Field>
 
       <Field>
-        <FieldLabel>With description</FieldLabel>
+        <FieldLabel htmlFor="nf-desc">With description</FieldLabel>
         <NumberField defaultValue={1} min={1} step={1}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-label="Quantity" />
+            <NumberFieldInput id="nf-desc" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -218,11 +222,11 @@ export const States: Story = {
       </Field>
 
       <Field>
-        <FieldLabel>With error</FieldLabel>
+        <FieldLabel htmlFor="nf-error">With error</FieldLabel>
         <NumberField defaultValue={5} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput aria-label="With error quantity" aria-invalid="true" />
+            <NumberFieldInput id="nf-error" aria-invalid="true" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -272,11 +276,13 @@ export const Examples: Story = {
           <Field>
             <NumberField defaultValue={1} min={0} max={16}>
               <NumberFieldScrubArea>
-                <FieldLabel className="cursor-ew-resize">Min CMC</FieldLabel>
+                <FieldLabel htmlFor="nf-cmc-min" className="cursor-ew-resize">
+                  Min CMC
+                </FieldLabel>
               </NumberFieldScrubArea>
               <NumberFieldGroup>
                 <NumberFieldDecrement />
-                <NumberFieldInput aria-label="Minimum CMC" />
+                <NumberFieldInput id="nf-cmc-min" />
                 <NumberFieldIncrement />
               </NumberFieldGroup>
             </NumberField>
@@ -285,11 +291,13 @@ export const Examples: Story = {
           <Field>
             <NumberField defaultValue={4} min={0} max={16}>
               <NumberFieldScrubArea>
-                <FieldLabel className="cursor-ew-resize">Max CMC</FieldLabel>
+                <FieldLabel htmlFor="nf-cmc-max" className="cursor-ew-resize">
+                  Max CMC
+                </FieldLabel>
               </NumberFieldScrubArea>
               <NumberFieldGroup>
                 <NumberFieldDecrement />
-                <NumberFieldInput aria-label="Maximum CMC" />
+                <NumberFieldInput id="nf-cmc-max" />
                 <NumberFieldIncrement />
               </NumberFieldGroup>
             </NumberField>
