@@ -36,10 +36,10 @@ export const Playground: Story = {
       <FieldLabel id="nf-playground-label" htmlFor="nf-playground">
         Quantity
       </FieldLabel>
-      <NumberField {...args}>
+      <NumberField id="nf-playground" {...args}>
         <NumberFieldGroup>
           <NumberFieldDecrement />
-          <NumberFieldInput id="nf-playground" aria-labelledby="nf-playground-label" />
+          <NumberFieldInput aria-labelledby="nf-playground-label" />
           <NumberFieldIncrement />
         </NumberFieldGroup>
       </NumberField>
@@ -78,7 +78,7 @@ export const WithScrub: Story = {
       </p>
       <div className="flex items-center gap-6">
         <Field>
-          <NumberField defaultValue={2} min={0} max={4}>
+          <NumberField id="nf-scrub-qty" defaultValue={2} min={0} max={4}>
             <NumberFieldScrubArea>
               <FieldLabel
                 id="nf-scrub-qty-label"
@@ -90,14 +90,14 @@ export const WithScrub: Story = {
             </NumberFieldScrubArea>
             <NumberFieldGroup>
               <NumberFieldDecrement />
-              <NumberFieldInput id="nf-scrub-qty" aria-labelledby="nf-scrub-qty-label" />
+              <NumberFieldInput aria-labelledby="nf-scrub-qty-label" />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
         </Field>
 
         <Field>
-          <NumberField defaultValue={3} min={0} max={16}>
+          <NumberField id="nf-scrub-cmc" defaultValue={3} min={0} max={16}>
             <NumberFieldScrubArea>
               <FieldLabel
                 id="nf-scrub-cmc-label"
@@ -109,7 +109,7 @@ export const WithScrub: Story = {
             </NumberFieldScrubArea>
             <NumberFieldGroup>
               <NumberFieldDecrement />
-              <NumberFieldInput id="nf-scrub-cmc" aria-labelledby="nf-scrub-cmc-label" />
+              <NumberFieldInput aria-labelledby="nf-scrub-cmc-label" />
               <NumberFieldIncrement />
             </NumberFieldGroup>
           </NumberField>
@@ -129,6 +129,7 @@ export const WithFormat: Story = {
           Price (USD)
         </FieldLabel>
         <NumberField
+          id="nf-price-usd"
           defaultValue={12.5}
           min={0}
           step={0.01}
@@ -136,11 +137,7 @@ export const WithFormat: Story = {
         >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput
-              id="nf-price-usd"
-              aria-labelledby="nf-price-usd-label"
-              className="w-24"
-            />
+            <NumberFieldInput aria-labelledby="nf-price-usd-label" className="w-24" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -151,6 +148,7 @@ export const WithFormat: Story = {
           Price (EUR)
         </FieldLabel>
         <NumberField
+          id="nf-price-eur"
           defaultValue={11.2}
           min={0}
           step={0.01}
@@ -158,11 +156,7 @@ export const WithFormat: Story = {
         >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput
-              id="nf-price-eur"
-              aria-labelledby="nf-price-eur-label"
-              className="w-24"
-            />
+            <NumberFieldInput aria-labelledby="nf-price-eur-label" className="w-24" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -172,14 +166,17 @@ export const WithFormat: Story = {
         <FieldLabel id="nf-completion-label" htmlFor="nf-completion">
           Completion
         </FieldLabel>
-        <NumberField defaultValue={0.75} min={0} max={1} step={0.05} format={{ style: 'percent' }}>
+        <NumberField
+          id="nf-completion"
+          defaultValue={0.75}
+          min={0}
+          max={1}
+          step={0.05}
+          format={{ style: 'percent' }}
+        >
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput
-              id="nf-completion"
-              aria-labelledby="nf-completion-label"
-              className="w-20"
-            />
+            <NumberFieldInput aria-labelledby="nf-completion-label" className="w-20" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -197,10 +194,10 @@ export const States: Story = {
         <FieldLabel id="nf-default-label" htmlFor="nf-default">
           Default
         </FieldLabel>
-        <NumberField defaultValue={2} min={0} max={4}>
+        <NumberField id="nf-default" defaultValue={2} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput id="nf-default" aria-labelledby="nf-default-label" />
+            <NumberFieldInput aria-labelledby="nf-default-label" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -210,10 +207,10 @@ export const States: Story = {
         <FieldLabel id="nf-min-label" htmlFor="nf-min">
           At minimum
         </FieldLabel>
-        <NumberField defaultValue={0} min={0} max={4}>
+        <NumberField id="nf-min" defaultValue={0} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput id="nf-min" aria-labelledby="nf-min-label" />
+            <NumberFieldInput aria-labelledby="nf-min-label" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -223,10 +220,10 @@ export const States: Story = {
         <FieldLabel id="nf-max-label" htmlFor="nf-max">
           At maximum
         </FieldLabel>
-        <NumberField defaultValue={4} min={0} max={4}>
+        <NumberField id="nf-max" defaultValue={4} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput id="nf-max" aria-labelledby="nf-max-label" />
+            <NumberFieldInput aria-labelledby="nf-max-label" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -236,10 +233,10 @@ export const States: Story = {
         <FieldLabel id="nf-disabled-label" htmlFor="nf-disabled">
           Disabled
         </FieldLabel>
-        <NumberField defaultValue={2} min={0} max={4} disabled>
+        <NumberField id="nf-disabled" defaultValue={2} min={0} max={4} disabled>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput id="nf-disabled" aria-labelledby="nf-disabled-label" />
+            <NumberFieldInput aria-labelledby="nf-disabled-label" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -249,10 +246,10 @@ export const States: Story = {
         <FieldLabel id="nf-desc-label" htmlFor="nf-desc">
           With description
         </FieldLabel>
-        <NumberField defaultValue={1} min={1} step={1}>
+        <NumberField id="nf-desc" defaultValue={1} min={1} step={1}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput id="nf-desc" aria-labelledby="nf-desc-label" />
+            <NumberFieldInput aria-labelledby="nf-desc-label" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -263,10 +260,10 @@ export const States: Story = {
         <FieldLabel id="nf-error-label" htmlFor="nf-error">
           With error
         </FieldLabel>
-        <NumberField defaultValue={5} min={0} max={4}>
+        <NumberField id="nf-error" defaultValue={5} min={0} max={4}>
           <NumberFieldGroup>
             <NumberFieldDecrement />
-            <NumberFieldInput id="nf-error" aria-labelledby="nf-error-label" aria-invalid="true" />
+            <NumberFieldInput aria-labelledby="nf-error-label" aria-invalid="true" />
             <NumberFieldIncrement />
           </NumberFieldGroup>
         </NumberField>
@@ -314,7 +311,7 @@ export const Examples: Story = {
         <p className="mb-4 font-mono text-xs text-text-muted">Collection filter — CMC range</p>
         <div className="flex items-end gap-3">
           <Field>
-            <NumberField defaultValue={1} min={0} max={16}>
+            <NumberField id="nf-cmc-min" defaultValue={1} min={0} max={16}>
               <NumberFieldScrubArea>
                 <FieldLabel id="nf-cmc-min-label" htmlFor="nf-cmc-min" className="cursor-ew-resize">
                   Min CMC
@@ -322,14 +319,14 @@ export const Examples: Story = {
               </NumberFieldScrubArea>
               <NumberFieldGroup>
                 <NumberFieldDecrement />
-                <NumberFieldInput id="nf-cmc-min" aria-labelledby="nf-cmc-min-label" />
+                <NumberFieldInput aria-labelledby="nf-cmc-min-label" />
                 <NumberFieldIncrement />
               </NumberFieldGroup>
             </NumberField>
           </Field>
           <span className="mb-2 text-sm text-text-muted">–</span>
           <Field>
-            <NumberField defaultValue={4} min={0} max={16}>
+            <NumberField id="nf-cmc-max" defaultValue={4} min={0} max={16}>
               <NumberFieldScrubArea>
                 <FieldLabel id="nf-cmc-max-label" htmlFor="nf-cmc-max" className="cursor-ew-resize">
                   Max CMC
@@ -337,7 +334,7 @@ export const Examples: Story = {
               </NumberFieldScrubArea>
               <NumberFieldGroup>
                 <NumberFieldDecrement />
-                <NumberFieldInput id="nf-cmc-max" aria-labelledby="nf-cmc-max-label" />
+                <NumberFieldInput aria-labelledby="nf-cmc-max-label" />
                 <NumberFieldIncrement />
               </NumberFieldGroup>
             </NumberField>

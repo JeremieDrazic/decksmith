@@ -439,29 +439,48 @@ selector from the equation entirely when the caller adds an explicit `className=
 
 ---
 
-## Base UI NumberField — `aria-roledescription` requires explicit ARIA labeling
+## Base UI NumberField — `id` must go on the Root, not on the Input
 
-Base UI's `NumberField.Input` always renders `aria-roledescription="Number field"` on the `<input>`.
-The axe rule for `aria-roledescription` requires an explicit ARIA label (`aria-label` or
-`aria-labelledby`) — native `<label htmlFor>` alone is not sufficient.
+Base UI's `NumberField` maintains a shared ID in context (via `useLabelableId` in the Root). The
+Decrement and Increment stepper buttons read this context ID and render
+`aria-controls="<context-id>"` to reference the input they control.
 
-**Symptom:** Storybook axe CI fails with "1 accessibility violation" on every NumberField story that
-uses `<FieldLabel htmlFor>` without also setting `aria-labelledby` on the input.
+**The problem:** if you pass `id` to `<NumberFieldInput>`, it overrides the context ID on the
+`<input>` element via prop merging — but the stepper buttons still use the original context ID. The
+result is `aria-controls` pointing to an element that no longer has that ID → axe rule
+`aria-valid-attr-value` fails (Critical).
+
+**Symptom:** Storybook axe CI fails with "1 accessibility violation" on every NumberField story (1
+violation = 2 nodes: Decrement + Increment both have an invalid `aria-controls` value like
+`aria-controls="base-ui-_r_c_"`).
 
 ```tsx
-// ❌ wrong — htmlFor/id alone doesn't satisfy the aria-roledescription rule
-<FieldLabel htmlFor="qty">Quantity</FieldLabel>
-<NumberFieldInput id="qty" />
+// ❌ wrong — id on Input overrides context id on the <input> but not on stepper buttons
+<NumberField>
+  <NumberFieldGroup>
+    <NumberFieldDecrement />          {/* aria-controls="base-ui-_r_c_" — broken! */}
+    <NumberFieldInput id="qty" />     {/* id="qty" — but buttons point to something else */}
+    <NumberFieldIncrement />          {/* aria-controls="base-ui-_r_c_" — broken! */}
+  </NumberFieldGroup>
+</NumberField>
 
-// ✅ correct — aria-labelledby provides explicit ARIA labeling
+// ✅ correct — id on Root flows through context to all children consistently
 <FieldLabel id="qty-label" htmlFor="qty">Quantity</FieldLabel>
-<NumberFieldInput id="qty" aria-labelledby="qty-label" />
+<NumberField id="qty">
+  <NumberFieldGroup>
+    <NumberFieldDecrement />                          {/* aria-controls="qty" ✓ */}
+    <NumberFieldInput aria-labelledby="qty-label" /> {/* id="qty" from context ✓ */}
+    <NumberFieldIncrement />                          {/* aria-controls="qty" ✓ */}
+  </NumberFieldGroup>
+</NumberField>
 
-// ✅ also correct — standalone input without a FieldLabel
-<NumberFieldInput aria-label="Quantity" />
+// ✅ also correct — standalone (no FieldLabel), aria-label on Input is fine
+<NumberField>
+  <NumberFieldInput aria-label="Quantity" />
+</NumberField>
 ```
 
-The `aria-labelledby` points to the label element's `id`, while `htmlFor`/`id` keeps the click-to-
-focus behavior. Both mechanisms point to the same text — no duplication issue.
+`htmlFor` on `FieldLabel` still needs to match the Root `id` for click-to-focus. The explicit
+`aria-labelledby` on `NumberFieldInput` satisfies screen readers regardless of `htmlFor`.
 
 See ADR-0021 for the full icon sizing convention.
