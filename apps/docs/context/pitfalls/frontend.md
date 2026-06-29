@@ -332,6 +332,18 @@ minimum.
 The exemption only covers: `input::placeholder`, `textarea::placeholder`, and other CSS
 pseudo-elements. Any visible text content rendered as a real DOM node must pass WCAG AA.
 
+**This also applies to Storybook story JSX.** Story render functions are scanned by `axe-playwright`
+in CI — any `text-text-faint` in a `<p>`, `<span>`, or similar inside a story will fail the
+`color-contrast` rule. Use `text-text-muted` for explanatory/secondary text in stories.
+
+```tsx
+// ✅ correct — secondary text in a story
+<p className="font-mono text-xs text-text-muted">Drag left/right to scrub</p>
+
+// ❌ wrong — fails axe CI even in story-only JSX
+<p className="font-mono text-xs text-text-faint">Drag left/right to scrub</p>
+```
+
 ---
 
 ## Tailwind v4 — no `--size-*` namespace; dimensions go in a cva map
@@ -424,5 +436,51 @@ This is why `toggleBaseClasses` no longer contains a default `size-4` — it was
 
 **Escape hatch still works correctly** because `:not([class*="size-"])` removes the component's
 selector from the equation entirely when the caller adds an explicit `className="size-X"`.
+
+---
+
+## Base UI NumberField — `id` must go on the Root, not on the Input
+
+Base UI's `NumberField` maintains a shared ID in context (via `useLabelableId` in the Root). The
+Decrement and Increment stepper buttons read this context ID and render
+`aria-controls="<context-id>"` to reference the input they control.
+
+**The problem:** if you pass `id` to `<NumberFieldInput>`, it overrides the context ID on the
+`<input>` element via prop merging — but the stepper buttons still use the original context ID. The
+result is `aria-controls` pointing to an element that no longer has that ID → axe rule
+`aria-valid-attr-value` fails (Critical).
+
+**Symptom:** Storybook axe CI fails with "1 accessibility violation" on every NumberField story (1
+violation = 2 nodes: Decrement + Increment both have an invalid `aria-controls` value like
+`aria-controls="base-ui-_r_c_"`).
+
+```tsx
+// ❌ wrong — id on Input overrides context id on the <input> but not on stepper buttons
+<NumberField>
+  <NumberFieldGroup>
+    <NumberFieldDecrement />          {/* aria-controls="base-ui-_r_c_" — broken! */}
+    <NumberFieldInput id="qty" />     {/* id="qty" — but buttons point to something else */}
+    <NumberFieldIncrement />          {/* aria-controls="base-ui-_r_c_" — broken! */}
+  </NumberFieldGroup>
+</NumberField>
+
+// ✅ correct — id on Root flows through context to all children consistently
+<FieldLabel id="qty-label" htmlFor="qty">Quantity</FieldLabel>
+<NumberField id="qty">
+  <NumberFieldGroup>
+    <NumberFieldDecrement />                          {/* aria-controls="qty" ✓ */}
+    <NumberFieldInput aria-labelledby="qty-label" /> {/* id="qty" from context ✓ */}
+    <NumberFieldIncrement />                          {/* aria-controls="qty" ✓ */}
+  </NumberFieldGroup>
+</NumberField>
+
+// ✅ also correct — standalone (no FieldLabel), aria-label on Input is fine
+<NumberField>
+  <NumberFieldInput aria-label="Quantity" />
+</NumberField>
+```
+
+`htmlFor` on `FieldLabel` still needs to match the Root `id` for click-to-focus. The explicit
+`aria-labelledby` on `NumberFieldInput` satisfies screen readers regardless of `htmlFor`.
 
 See ADR-0021 for the full icon sizing convention.
