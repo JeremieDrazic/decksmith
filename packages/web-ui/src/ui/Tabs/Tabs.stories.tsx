@@ -93,7 +93,7 @@ export const ActivateOnFocus: Story = {
         <p className="mb-1 font-mono text-xs text-text-muted">
           activateOnFocus=false (default) — arrow keys move focus, Enter/Space activates
         </p>
-        <p className="mb-4 text-xs text-text-faint">
+        <p className="mb-4 text-xs text-text-muted">
           Prefer this when panels fetch data — avoids a fetch on every arrow key press.
         </p>
         <Tabs defaultValue="cards">
@@ -119,7 +119,7 @@ export const ActivateOnFocus: Story = {
         <p className="mb-1 font-mono text-xs text-text-muted">
           activateOnFocus=true — panel activates immediately on arrow key focus
         </p>
-        <p className="mb-4 text-xs text-text-faint">
+        <p className="mb-4 text-xs text-text-muted">
           Fine for pre-loaded content or lightweight panels (no fetch involved).
         </p>
         <Tabs defaultValue="cards">

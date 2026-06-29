@@ -96,10 +96,15 @@ export function NumberFieldGroup({ className, size, ...props }: NumberFieldGroup
 export type NumberFieldDecrementProps = NumberFieldPrimitive.Decrement.Props;
 
 /** Stepper button that decrements the value by `step`. */
-export function NumberFieldDecrement({ className, ...props }: NumberFieldDecrementProps) {
+export function NumberFieldDecrement({
+  className,
+  'aria-label': ariaLabel = 'Decrease',
+  ...props
+}: NumberFieldDecrementProps) {
   return (
     <NumberFieldPrimitive.Decrement
       data-slot="number-field-step"
+      aria-label={ariaLabel}
       className={cn(
         'flex h-full items-center px-2.5',
         'rounded-l-interactive border-r border-border-interactive',
@@ -142,10 +147,15 @@ export function NumberFieldInput({ className, ...props }: NumberFieldInputProps)
 export type NumberFieldIncrementProps = NumberFieldPrimitive.Increment.Props;
 
 /** Stepper button that increments the value by `step`. */
-export function NumberFieldIncrement({ className, ...props }: NumberFieldIncrementProps) {
+export function NumberFieldIncrement({
+  className,
+  'aria-label': ariaLabel = 'Increase',
+  ...props
+}: NumberFieldIncrementProps) {
   return (
     <NumberFieldPrimitive.Increment
       data-slot="number-field-step"
+      aria-label={ariaLabel}
       className={cn(
         'flex h-full items-center px-2.5',
         'rounded-r-interactive border-l border-border-interactive',

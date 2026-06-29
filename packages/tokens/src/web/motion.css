@@ -26,8 +26,12 @@
   --animate-progress-x: progress-x linear forwards;
 }
 @keyframes progress-x {
-  from { transform: scaleX(1); }
-  to   { transform: scaleX(0); }
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

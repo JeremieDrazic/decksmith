@@ -308,9 +308,12 @@
     "jsx-a11y/aria-role": "error",
     "jsx-a11y/aria-props": "error",
     "jsx-a11y/aria-proptypes": "error",
-    "jsx-a11y/label-has-associated-control": ["error", {
-      "controlComponents": ["Checkbox", "Radio", "Switch"]
-    }],
+    "jsx-a11y/label-has-associated-control": [
+      "error",
+      {
+        "controlComponents": ["Checkbox", "Radio", "Switch"]
+      }
+    ],
     "jsx-a11y/no-redundant-roles": "error"
   },
   "globals": {

@@ -139,7 +139,7 @@ export const Tones: Story = {
         // eslint-disable-next-line react-hooks/exhaustive-deps
       }, []);
       return (
-        <p className="font-mono text-xs text-text-faint">
+        <p className="font-mono text-xs text-text-muted">
           Toasts appear bottom-right — hover to expand stack
         </p>
       );
