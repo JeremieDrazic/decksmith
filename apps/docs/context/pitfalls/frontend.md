@@ -332,6 +332,18 @@ minimum.
 The exemption only covers: `input::placeholder`, `textarea::placeholder`, and other CSS
 pseudo-elements. Any visible text content rendered as a real DOM node must pass WCAG AA.
 
+**This also applies to Storybook story JSX.** Story render functions are scanned by `axe-playwright`
+in CI — any `text-text-faint` in a `<p>`, `<span>`, or similar inside a story will fail the
+`color-contrast` rule. Use `text-text-muted` for explanatory/secondary text in stories.
+
+```tsx
+// ✅ correct — secondary text in a story
+<p className="font-mono text-xs text-text-muted">Drag left/right to scrub</p>
+
+// ❌ wrong — fails axe CI even in story-only JSX
+<p className="font-mono text-xs text-text-faint">Drag left/right to scrub</p>
+```
+
 ---
 
 ## Tailwind v4 — no `--size-*` namespace; dimensions go in a cva map
