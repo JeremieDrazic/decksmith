@@ -19,6 +19,17 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Generic scaleX drain for determinate progress bars (toast timer, future progress components).
+ * Duration is supplied inline by the component — only the shape lives here.
+ * Tailwind v4 @theme exposes it as animate-progress-x. */
+@theme {
+  --animate-progress-x: progress-x linear forwards;
+}
+@keyframes progress-x {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --duration-instant: 0ms;

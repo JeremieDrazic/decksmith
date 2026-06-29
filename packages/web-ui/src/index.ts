@@ -37,6 +37,49 @@ export type { TextareaProps } from './ui/Textarea';
 export { Input } from './ui/Input';
 export type { InputProps } from './ui/Input';
 
+export { Avatar, AvatarFallback, AvatarImage } from './ui/Avatar';
+export type { AvatarFallbackProps, AvatarImageProps, AvatarProps } from './ui/Avatar';
+
+export { Collapsible, CollapsiblePanel, CollapsibleTrigger } from './ui/Collapsible';
+export type {
+  CollapsiblePanelProps,
+  CollapsibleProps,
+  CollapsibleTriggerProps,
+} from './ui/Collapsible';
+
+export {
+  NumberField,
+  NumberFieldDecrement,
+  NumberFieldGroup,
+  NumberFieldIncrement,
+  NumberFieldInput,
+  NumberFieldScrubArea,
+  NumberFieldScrubCursor,
+  NumberFieldValue,
+} from './ui/NumberField';
+export type {
+  NumberFieldDecrementProps,
+  NumberFieldGroupProps,
+  NumberFieldIncrementProps,
+  NumberFieldInputProps,
+  NumberFieldProps,
+  NumberFieldScrubAreaProps,
+  NumberFieldScrubCursorProps,
+  NumberFieldValueProps,
+} from './ui/NumberField';
+
+export { Tab, Tabs, TabsIndicator, TabsList, TabsPanel } from './ui/Tabs';
+
+export { createToastManager, Toaster, ToastProvider, useToast } from './ui/Toast';
+export type { ToasterPosition, ToasterProps, ToastObject, ToastProviderProps } from './ui/Toast';
+export type {
+  TabProps,
+  TabsIndicatorProps,
+  TabsListProps,
+  TabsPanelProps,
+  TabsProps,
+} from './ui/Tabs';
+
 export { Badge } from './ui/Badge';
 export type { BadgeProps } from './ui/Badge';
 
@@ -135,6 +178,27 @@ export type {
   DialogTitleProps,
   DialogTriggerProps,
 } from './ui/Dialog';
+
+export {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerTitle,
+  DrawerTrigger,
+} from './ui/Drawer';
+export type {
+  DrawerCloseIcon,
+  DrawerCloseProps,
+  DrawerContentProps,
+  DrawerDescriptionProps,
+  DrawerFooterProps,
+  DrawerProps,
+  DrawerSide,
+  DrawerTitleProps,
+  DrawerTriggerProps,
+} from './ui/Drawer';
 
 export {
   ContextMenu,
