@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-27 (session 11)_
+_Updated: 2026-06-29 (session 12)_
 
 ---
 
@@ -115,7 +115,8 @@ _Updated: 2026-06-27 (session 11)_
 
 - `apps/worker`, `apps/mobile` are empty shells
 - OAuth providers (Google, GitHub) not yet enabled in Supabase dashboard
-- RLS policies not yet applied to user-owned tables
+- RLS policies written (`packages/db/sql/rls-policies.sql`, ADR-0022) but **not yet applied** — run
+  via Supabase SQL Editor or `psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`
 - Prisma client must be regenerated locally after `pnpm install`
   (`pnpm --filter @decksmith/db db:generate`)
 - `routeTree.gen.ts` must be regenerated after adding/changing routes

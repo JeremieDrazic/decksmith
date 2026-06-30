@@ -1,13 +1,19 @@
+import { useState } from 'react';
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
+
 import '../styles/globals.css';
 import '../i18n';
 
-const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 30_000 } },
-});
-
 function Root() {
+  // One QueryClient per component instance = one per SSR request, one per browser session.
+  // Module-scope instantiation shares a single cache across all requests, leaking one
+  // user's data into another's response (see TanStack Query SSR guide).
+  const [queryClient] = useState(
+    () => new QueryClient({ defaultOptions: { queries: { staleTime: 30_000 } } })
+  );
+
   return (
     <html lang="en" className="dark">
       <head>

@@ -159,7 +159,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Form primitives: Checkbox, Radio, Switch (PR #36)
 - ✅ Kbd, NavigationButton, DeleteButton + `useArmedState` hook (PR #36)
 - ✅ Icon sizing centralized: `ICON_IN_CONTROL`, `ICON_INLINE` tables + ADR-0021 (PR #36)
-- 🔄 Base UI components remaining: Toast, Drawer
+- ✅ Toast, Drawer — Base UI components complete (PR #38)
 - ✅ Design tokens from `packages/tokens` applied (semantic token classes across all components)
 - ✅ `packages/domain` scaffolded: `MtgColor`, `ColorIdentity`, `SnowMana`, `VariableMana` types +
   `parseManaCost`, `sortColorIdentity`, `getColorIdentityName` — 30 unit tests (PR #32)

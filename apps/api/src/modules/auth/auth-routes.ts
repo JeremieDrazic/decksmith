@@ -25,7 +25,7 @@ import { toUserResponse } from '../user/user-mapper.js';
 import { toRegisterResponse } from './auth-mapper.js';
 
 import { config } from '@/config.js';
-import { createHttpError } from '@/utils/http-errors.js';
+import { createHttpError } from '@/utils/http-errors/http-errors.js';
 
 // ---------------------------------------------------------------------------
 // Cookie options
@@ -74,6 +74,9 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
   app.post(
     '/register',
     {
+      config: {
+        rateLimit: { max: 5, timeWindow: '1 hour' },
+      },
       schema: {
         body: RegisterInputSchema,
         response: { 201: RegisterResponseSchema },
@@ -204,6 +207,9 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
   app.post(
     '/refresh',
     {
+      config: {
+        rateLimit: { max: 20, timeWindow: '15 minutes' },
+      },
       schema: {
         response: { 200: RefreshResponseSchema },
       },

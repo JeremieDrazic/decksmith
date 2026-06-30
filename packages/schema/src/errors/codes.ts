@@ -38,6 +38,9 @@ export const EMAIL_ALREADY_TAKEN = 'EMAIL_ALREADY_TAKEN';
 /** The session has expired — user must log in again. */
 export const SESSION_EXPIRED = 'SESSION_EXPIRED';
 
+/** Authenticated but not allowed to access this resource (ownership mismatch). */
+export const FORBIDDEN = 'FORBIDDEN';
+
 /** Account creation failed (e.g. third-party auth error). */
 export const REGISTRATION_FAILED = 'REGISTRATION_FAILED';
 

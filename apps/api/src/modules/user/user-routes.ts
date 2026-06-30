@@ -15,9 +15,9 @@ import { z } from 'zod';
 
 import { toUserPreferencesResponse, toUserResponse } from './user-mapper.js';
 
-import { createHttpError } from '@/utils/http-errors.js';
-import { mergeJsonField } from '@/utils/json-merge.js';
-import { isUniqueConstraintError } from '@/utils/prisma-errors.js';
+import { createHttpError } from '@/utils/http-errors/http-errors.js';
+import { mergeJsonField } from '@/utils/json-merge/json-merge.js';
+import { isUniqueConstraintError } from '@/utils/prisma-errors/prisma-errors.js';
 
 // ---------------------------------------------------------------------------
 // Shared schemas
@@ -43,6 +43,7 @@ const userRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/:id',
     {
+      preHandler: [app.authenticate, app.assertOwnership('id')],
       schema: {
         params: UserIdParamsSchema,
         response: { 200: UserResponseSchema },
@@ -67,6 +68,7 @@ const userRoutes: FastifyPluginAsyncZod = async (app) => {
   app.patch(
     '/:id',
     {
+      preHandler: [app.authenticate, app.assertOwnership('id')],
       schema: {
         params: UserIdParamsSchema,
         body: UpdateUserInputSchema,
@@ -104,6 +106,7 @@ const userRoutes: FastifyPluginAsyncZod = async (app) => {
   app.get(
     '/:id/preferences',
     {
+      preHandler: [app.authenticate, app.assertOwnership('id')],
       schema: {
         params: UserIdParamsSchema,
         response: { 200: UserPreferencesResponseSchema },
@@ -128,6 +131,7 @@ const userRoutes: FastifyPluginAsyncZod = async (app) => {
   app.patch(
     '/:id/preferences',
     {
+      preHandler: [app.authenticate, app.assertOwnership('id')],
       schema: {
         params: UserIdParamsSchema,
         body: UpdatePreferencesInputSchema,
