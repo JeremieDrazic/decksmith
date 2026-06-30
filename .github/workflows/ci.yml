@@ -75,6 +75,10 @@ jobs:
           node-version: 22
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      - name: Generate Prisma client
+        run: pnpm --filter @decksmith/db db:generate
+        env:
+          DATABASE_URL: 'postgresql://localhost:5432/dummy'
       - run: pnpm test
 
   storybook:
