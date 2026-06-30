@@ -11,6 +11,8 @@ export const supabase = {
     updateUser: vi.fn(),
     admin: {
       getUserById: vi.fn(),
+      signOut: vi.fn(),
+      updateUserById: vi.fn(),
     },
   },
 };
