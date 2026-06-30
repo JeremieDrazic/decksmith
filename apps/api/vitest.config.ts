@@ -1,9 +1,15 @@
-import { mergeConfig, defineConfig } from 'vitest/config';
+import { defineConfig, mergeConfig } from 'vitest/config';
 import baseConfig from '@decksmith/config/vitest/base';
 
 export default mergeConfig(
   baseConfig,
   defineConfig({
+    resolve: {
+      alias: {
+        // Mirror the TypeScript path alias so @/ works in test files too
+        '@/': new URL('src/', import.meta.url).pathname,
+      },
+    },
     test: {
       include: ['src/**/*.test.ts'],
       coverage: {
