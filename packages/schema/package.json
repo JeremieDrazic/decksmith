@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "lint": "oxlint .",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
