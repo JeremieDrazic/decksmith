@@ -1,5 +1,3 @@
-'use client';
-
 import { RadioGroup as RadioGroupPrimitive } from '@base-ui/react/radio-group';
 import { Radio as RadioPrimitive } from '@base-ui/react/radio';
 import * as React from 'react';
@@ -57,7 +55,7 @@ export function Radio<Value = string>({ className, children, ...props }: RadioPr
         'flex items-center gap-2.5 w-fit',
         'text-sm text-text font-normal leading-none',
         'cursor-pointer select-none',
-        'has-[span[data-disabled]]:cursor-not-allowed has-[span[data-disabled]]:opacity-[0.38]'
+        'has-[span[data-disabled]]:cursor-not-allowed has-[span[data-disabled]]:opacity-disabled'
       )}
     >
       <RadioPrimitive.Root

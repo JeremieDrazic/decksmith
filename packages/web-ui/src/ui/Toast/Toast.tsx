@@ -1,5 +1,3 @@
-'use client';
-
 import { Toast as ToastPrimitive } from '@base-ui/react/toast';
 import { Bell, CircleCheck, CircleX, Info, TriangleAlert, X } from 'lucide-react';
 import * as React from 'react';

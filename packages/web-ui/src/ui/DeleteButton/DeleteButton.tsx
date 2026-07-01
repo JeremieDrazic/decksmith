@@ -1,5 +1,3 @@
-'use client';
-
 import { Trash, Trash2 } from 'lucide-react';
 
 import { useArmedState } from '../../hooks/use-armed-state/use-armed-state';

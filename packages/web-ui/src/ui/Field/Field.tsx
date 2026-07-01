@@ -1,5 +1,3 @@
-'use client';
-
 import { useMemo } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
@@ -118,7 +116,7 @@ export function FieldLabel({ className, variant = 'label', ...props }: FieldLabe
         variant === 'label'
           ? 'font-mono text-xs leading-xs tracking-wide uppercase font-semibold text-text-muted'
           : 'text-sm text-text font-normal leading-none',
-        'group-data-[disabled=true]/field:opacity-[0.38]',
+        'group-data-[disabled=true]/field:opacity-disabled',
         'group-data-[invalid=true]/field:text-error-text',
         className
       )}
@@ -144,7 +142,7 @@ export function FieldDescription({ className, ...props }: FieldDescriptionProps)
       data-slot="field-description"
       className={cn(
         'text-sm text-text-muted leading-snug',
-        'group-data-[disabled=true]/field:opacity-[0.38]',
+        'group-data-[disabled=true]/field:opacity-disabled',
         className
       )}
       {...props}
@@ -311,7 +309,7 @@ export function FieldTitle({ className, ...props }: FieldTitleProps) {
       className={cn(
         'flex w-fit items-center gap-2',
         'font-mono text-xs leading-xs tracking-wide uppercase font-semibold text-text-muted',
-        'group-data-[disabled=true]/field:opacity-[0.38]',
+        'group-data-[disabled=true]/field:opacity-disabled',
         className
       )}
       {...props}

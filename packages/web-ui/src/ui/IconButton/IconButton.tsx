@@ -20,7 +20,7 @@ const iconButtonVariants = cva(
     // Focus ring
     'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
     'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
-    'disabled:opacity-[0.38] disabled:cursor-not-allowed disabled:pointer-events-none',
+    'disabled:opacity-disabled disabled:cursor-not-allowed disabled:pointer-events-none',
   ],
   {
     variants: {

@@ -1,5 +1,3 @@
-'use client';
-
 import { Tabs as TabsPrimitive } from '@base-ui/react/tabs';
 import { cva, type VariantProps } from 'class-variance-authority';
 
@@ -73,7 +71,7 @@ const tabVariants = cva(
     'hover:text-text',
     'data-[active]:text-text',
     'outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:rounded-t-interactive',
-    'data-[disabled]:pointer-events-none data-[disabled]:opacity-[0.38]',
+    'data-[disabled]:pointer-events-none data-[disabled]:opacity-disabled',
   ],
   {
     variants: {

@@ -1,5 +1,3 @@
-'use client';
-
 import { NumberField as NumberFieldPrimitive } from '@base-ui/react/number-field';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Minus, MoveHorizontal, Plus } from 'lucide-react';
@@ -57,7 +55,7 @@ const numberFieldGroupVariants = cva(
     '[&:has(:disabled)]:cursor-not-allowed',
     // Whole-field disabled: fade the group only when the input itself is disabled,
     // not when a single stepper is disabled at a min/max boundary.
-    '[&:has([data-slot=number-field-control]:disabled)]:opacity-[0.38]',
+    '[&:has([data-slot=number-field-control]:disabled)]:opacity-disabled',
     '[&:has([aria-invalid=true])]:border-error',
     '[&:has([aria-invalid=true])]:ring-2 [&:has([aria-invalid=true])]:ring-error/20',
   ],
@@ -111,7 +109,7 @@ export function NumberFieldDecrement({
         'text-text-muted transition-colors duration-fast',
         'hover:bg-surface-hover hover:text-text',
         'outline-none focus-visible:bg-surface-hover',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-[0.38]',
+        'data-[disabled]:pointer-events-none data-[disabled]:opacity-disabled',
         className
       )}
       {...props}
@@ -162,7 +160,7 @@ export function NumberFieldIncrement({
         'text-text-muted transition-colors duration-fast',
         'hover:bg-surface-hover hover:text-text',
         'outline-none focus-visible:bg-surface-hover',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-[0.38]',
+        'data-[disabled]:pointer-events-none data-[disabled]:opacity-disabled',
         className
       )}
       {...props}

@@ -1,5 +1,3 @@
-'use client';
-
 import { Switch as SwitchPrimitive } from '@base-ui/react/switch';
 import * as React from 'react';
 
@@ -27,7 +25,7 @@ export function Switch({ className, ...props }: SwitchProps) {
         'border border-border-interactive bg-surface-raised',
         'data-[checked]:bg-accent data-[checked]:border-accent',
         'outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-1 focus-visible:ring-offset-bg',
-        'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-[0.38]',
+        'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-disabled',
         'transition-colors duration-fast',
         className
       )}

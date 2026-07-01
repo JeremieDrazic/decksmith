@@ -1,5 +1,3 @@
-'use client';
-
 import { useRender } from '@base-ui/react/use-render';
 import { type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
@@ -23,7 +21,7 @@ const interactiveCardClasses = [
   'focus-visible:ring-2 focus-visible:ring-border-focus',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
   'active:translate-y-0 active:duration-instant',
-  'disabled:pointer-events-none disabled:opacity-[0.38] disabled:cursor-not-allowed',
+  'disabled:pointer-events-none disabled:opacity-disabled disabled:cursor-not-allowed',
 ].join(' ');
 
 // ─── Card ─────────────────────────────────────────────────────────────────────

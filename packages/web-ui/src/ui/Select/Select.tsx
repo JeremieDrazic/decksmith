@@ -1,5 +1,3 @@
-'use client';
-
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { Check, ChevronDown } from 'lucide-react';
 import * as React from 'react';
@@ -105,7 +103,7 @@ export function SelectTrigger({
         'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
         'data-[popup-open]:border-border-focus',
         'aria-invalid:border-error aria-invalid:ring-2 aria-invalid:ring-error/20',
-        'disabled:cursor-not-allowed disabled:opacity-[0.38]',
+        'disabled:cursor-not-allowed disabled:opacity-disabled',
         className
       )}
       {...props}
@@ -247,7 +245,7 @@ export function SelectItem({ className, children, ...props }: SelectItemProps) {
         'rounded-sm px-2.5 pr-8 text-sm text-text outline-none',
         'data-[highlighted]:bg-surface-raised',
         'data-[selected]:text-accent-text',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-[0.38]',
+        'data-[disabled]:pointer-events-none data-[disabled]:opacity-disabled',
         className
       )}
       {...props}

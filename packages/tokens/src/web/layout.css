@@ -14,6 +14,16 @@
  * Radius tokens: --radius-* IS a native Tailwind v4 namespace → rounded-* is
  * generated automatically and idiomatically. No conflict — radius belongs here.
  * ─────────────────────────────────────────────────────────────────────────── */
+/* ─── Disabled state opacity ─────────────────────────────────────────────
+ * WCAG 1.4.3 explicitly exempts disabled UI components from contrast
+ * requirements. All disabled interactive elements use this value for
+ * consistency. Tailwind v4 @utility so any modifier can prefix it:
+ * disabled:opacity-disabled  data-[disabled]:opacity-disabled  etc.
+ * ─────────────────────────────────────────────────────────────────────── */
+@utility opacity-disabled {
+  opacity: 0.38;
+}
+
 @theme {
   /* Border radius — semantic roles ONLY (no raw scale exposed) */
   --radius-interactive: 0.5rem; /* buttons, inputs, selects, toggles */

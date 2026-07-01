@@ -31,7 +31,7 @@ const FILL_FG: Record<MtgColor, string> = {
 
 // inline-block (not inline-flex) so that size-full on the SVG child fills the pip cleanly
 const pip = cva(
-  'inline-block rounded-badge flex-none overflow-hidden [box-shadow:inset_0_-1px_2px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]',
+  'inline-block rounded-badge flex-none overflow-hidden [box-shadow:var(--shadow-pip)]',
   {
     variants: {
       size: {

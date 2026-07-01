@@ -1,5 +1,3 @@
-'use client';
-
 import type { ComponentProps } from 'react';
 
 import { Check } from 'lucide-react';
@@ -117,7 +115,7 @@ const ITEM_BASE = [
   'rounded-interactive px-2 py-1.5 text-sm text-text outline-none',
   'transition-colors duration-fast ease-out',
   'data-[highlighted]:bg-accent-subtle data-[highlighted]:text-text',
-  'data-[disabled]:pointer-events-none data-[disabled]:opacity-[0.38]',
+  'data-[disabled]:pointer-events-none data-[disabled]:opacity-disabled',
 ] as const;
 
 // ─── ContextMenuItem ─────────────────────────────────────────────────────────
