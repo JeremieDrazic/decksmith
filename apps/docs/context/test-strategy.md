@@ -25,14 +25,15 @@ as the code, before the feature is considered done.
 
 ## Tooling Overview
 
-| Tool                         | Role                                        | Layers                                               |
-| ---------------------------- | ------------------------------------------- | ---------------------------------------------------- |
-| Vitest                       | Unit + integration tests                    | All except E2E                                       |
-| Storybook (`apps/storybook`) | Documentation + visual tests + interactions | `packages/web-ui`, `apps/web` components             |
-| Testing Library              | Behaviour tests for complex components      | `packages/web-ui` (non-trivial interactions)         |
-| MSW (Mock Service Worker)    | Network interception                        | `packages/api-client`, `packages/web-ui`, `apps/web` |
-| Playwright                   | E2E on critical flows                       | `apps/web`                                           |
-| Docker PostgreSQL            | Isolated test database                      | `apps/api`                                           |
+| Tool                         | Role                                        | Layers                                               | Status     |
+| ---------------------------- | ------------------------------------------- | ---------------------------------------------------- | ---------- |
+| Vitest                       | Unit + integration tests                    | All except E2E                                       | ✅ Active  |
+| Storybook (`apps/storybook`) | Documentation + visual tests + interactions | `packages/web-ui`, `apps/web` components             | ✅ Active  |
+| axe-playwright               | Accessibility audit on every story          | `apps/storybook` (CI via `test-storybook`)           | ✅ Active  |
+| Testing Library              | Behaviour tests for complex components      | `packages/web-ui` (non-trivial interactions)         | ⬜ Planned |
+| MSW (Mock Service Worker)    | Network interception                        | `packages/api-client`, `packages/web-ui`, `apps/web` | ✅ Active  |
+| Playwright                   | E2E on critical flows                       | `apps/web`                                           | ⬜ Planned |
+| Docker PostgreSQL            | Isolated test database (replaces mocked DB) | `apps/api`                                           | ⬜ Planned |
 
 ---
 
@@ -83,16 +84,16 @@ it('accepts exactly the minimum length boundary');
 
 ### `apps/api`
 
-**Pattern: Vitest + Fastify inject + real PostgreSQL Docker.**
+**Target pattern: Vitest + Fastify inject + real PostgreSQL Docker.**
 
 Fastify supports in-memory injected requests — no real HTTP server, but a real Fastify instance with
 all plugins. Combined with a real test PostgreSQL database, each test covers the full behaviour
 end-to-end (route → plugin → Prisma → DB → DTO).
 
-**Test DB setup in CI:**
+**Aspirational test DB setup in CI:**
 
 ```yaml
-# .github/workflows/test.yml
+# .github/workflows/ci.yml (to be added once Docker PostgreSQL is configured)
 services:
   postgres:
     image: postgres:16
@@ -111,18 +112,43 @@ on every CI run.
 **Test isolation:** `beforeEach` truncates the relevant tables. No transaction rollback for now —
 simpler, sufficient.
 
-**What is mocked in `apps/api`:** only Supabase Auth SDK HTTP calls (via `vi.mock` on specific
-methods). Prisma is never mocked — we test against the real database.
+---
 
-**File structure:**
+**Current state (mocked DB):** Docker PostgreSQL is not yet configured in CI. Tests currently use
+Vitest `vi.mock` to intercept `@decksmith/db` at the module boundary, providing controlled Prisma +
+Supabase stubs. This is a known deviation from the target pattern.
+
+The reason for the deviation: pnpm workspace symlinks prevent `__mocks__` directories from being
+resolved by Vitest (it follows the symlink to `packages/db/src/` and looks for `__mocks__` there).
+The current workaround is an async factory pattern:
+
+```ts
+vi.mock('@decksmith/db', () => import('@/test-utils/mocks/db.js'));
+```
+
+When Docker PostgreSQL is added to CI, these mocks will be replaced by real DB interactions, and the
+mocking table entry for Prisma will become "do not mock."
+
+**Current file structure:**
 
 ```
 apps/api/src/
-  modules/auth/
-    auth-routes.ts
-    auth-routes.test.ts      → unit tests (mappers, isolated logic)
-  __tests__/
-    auth.integration.test.ts → end-to-end with inject + DB
+  test-utils/
+    mocks/
+      db.ts        → vi.mock factory for @decksmith/db (supabase + prisma stubs)
+      config.ts    → vi.mock factory for @/config
+    factories/
+      auth-user.ts → buildAuthUser()
+      prisma-*.ts  → buildPrismaUser(), buildPrismaPreferences()
+    server.ts      → getApp() — builds a test Fastify instance
+    inject.ts      → asUser(), asGuest() — typed inject wrappers
+  modules/
+    auth/
+      auth-routes.ts
+      auth-routes.test.ts   → 16 integration tests (inject + mocked DB)
+    user/
+      user-routes.ts
+      user-routes.test.ts   → 15 integration tests (inject + mocked DB)
 ```
 
 ---
@@ -191,12 +217,16 @@ A system boundary is the edge between your process and the outside world.
 | Email sending (Phase 5+)             | Irreversible side effect        | Stub that captures without sending |
 | Network requests (frontend)          | Control responses               | MSW — intercepts at network level  |
 
-| What                 | Why NOT mock                                | Alternative        |
-| -------------------- | ------------------------------------------- | ------------------ |
-| Prisma               | Mock ≠ real SQL behaviour                   | Real test database |
-| `packages/domain`    | Pure functions — calling them costs nothing | Call directly      |
-| `packages/schema`    | Zod schemas — parsing costs nothing         | Use directly       |
-| TanStack Query hooks | Hides data flow bugs                        | MSW instead        |
+| What                 | Why NOT mock                                | Alternative                                   |
+| -------------------- | ------------------------------------------- | --------------------------------------------- |
+| Prisma               | Mock ≠ real SQL behaviour                   | Real test database (currently mocked — see §) |
+| `packages/domain`    | Pure functions — calling them costs nothing | Call directly                                 |
+| `packages/schema`    | Zod schemas — parsing costs nothing         | Use directly                                  |
+| TanStack Query hooks | Hides data flow bugs                        | MSW instead                                   |
+
+> **Note on Prisma mocking:** `apps/api` currently mocks Prisma via `vi.mock` (see `apps/api`
+> section above). This is a temporary measure pending Docker PostgreSQL in CI — not a strategic
+> choice. The intent remains "never mock Prisma; use a real database."
 
 **Prefer stubs over mocks.** A mock that asserts `expect(fn).toHaveBeenCalledWith(args)` breaks on
 every internal refactor, even when observable behaviour is unchanged. Test behaviour, not
@@ -240,6 +270,24 @@ For integration tests that need data in the DB, factories create the TS object �
 
 ## CI Structure
 
+### Current state (`.github/workflows/ci.yml`)
+
+```
+Every PR
+├── format          → oxfmt (pnpm format:check)
+├── lint            → oxlint (pnpm lint)
+├── typecheck       → pnpm typecheck (includes db:generate with dummy DATABASE_URL)
+├── test            → pnpm test (Vitest, all packages in parallel via Turborepo)
+│   ├── db:generate → Prisma client generation (DATABASE_URL=postgresql://localhost:5432/dummy)
+│   └── pnpm test   → packages/domain (30) + packages/utils (3) + packages/schema (42)
+│                      + apps/api (31) + packages/api-client (15) + packages/query (8)
+└── storybook       → build + test-storybook (axe-playwright on every story)
+```
+
+No Docker PostgreSQL service. No separate jobs per layer. No E2E job yet.
+
+### Aspirational structure (target — not yet implemented)
+
 ```
 Every PR (target: < 3 min)
 ├── typecheck        → pnpm typecheck
@@ -254,10 +302,9 @@ On main only
 └── Storybook build  → verify the build does not break
 ```
 
-**Why the split:** E2E tests take several minutes and are naturally more fragile (timing, async
-state, network dependencies). Blocking every PR on them would slow merges without adding much signal
-— `apps/api` integration tests already cover server behaviour. E2E is the last safety net, not the
-first.
+**Why the split (when implemented):** E2E tests take several minutes and are naturally more fragile.
+Blocking every PR on them would slow merges without adding much signal — `apps/api` integration
+tests already cover server behaviour. E2E is the last safety net, not the first.
 
 **Turborepo caching:** per-package tests are cached by Turborepo. If `packages/domain` has not
 changed, its tests do not re-run. Only packages touched by a PR are retested.

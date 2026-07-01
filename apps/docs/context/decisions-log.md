@@ -438,82 +438,78 @@ updated, token-preview.html updated (new section + all color chips)
 
 ---
 
-## [2026-06-08] — Session C : définition de "composant prêt à l'emploi" validée (Phase 4.0.5)
+## [2026-06-08] — Session C: "production-ready component" definition validated (Phase 4.0.5)
 
-**Context:** Avant de scaffolder `packages/web-ui`, on a aligné sur ce que signifie "fini" pour un
-composant et comment le package doit être structuré.
+**Context:** Before scaffolding `packages/web-ui`, aligned on what "done" means for a component and
+how the package should be structured.
 
-**Décisions clés :**
+**Key decisions:**
 
-- **Structure `packages/web-ui`** : `ui/` (shadcn-generated), `components/` (custom Decksmith),
-  `typography/` (`<Heading>`, `<Body>`, `<Label>`), `icons/` (SVG animés custom)
-- **Frontière `packages/web-ui` vs `apps/web`** : test mental "ce composant peut-il être utilisé
-  dans une autre appli React sans modification ?" Oui → `packages/web-ui`, Non →
-  `apps/web/src/components/`
-- **Interdit dans `packages/web-ui`** : imports TanStack Router, TanStack Query hooks, Zustand,
-  `packages/api-client` — aucun couplage à l'app
-- **Deux niveaux de "done"** : v1 (utilisable — 7 critères) et Complet (stable — tous les critères
-  v1 + play functions, MDX, a11y-reviewer, tokens motion). La v1 débloque l'usage; le niveau complet
-  est gagné par l'usage.
-- **Règle des 3** : ne pas créer de composant par anticipation — extraire quand un pattern se répète
-  dans 3 contextes différents
-- **MDX anatomy** : chaque composant stable a un `.mdx` avec schéma d'anatomie, table API,
-  dos/don'ts, notes a11y. `<Anatomy>` est un utilitaire Storybook uniquement.
-- **Commentaires** : JSDoc requis sur les exports; commentaires inline uniquement pour les
-  contraintes non-évidentes (le _pourquoi_, jamais le _quoi_)
+- **`packages/web-ui` structure:** `ui/` (shadcn-generated), `components/` (custom Decksmith),
+  `typography/` (`<Heading>`, `<Body>`, `<Label>`), `icons/` (custom animated SVG)
+- **`packages/web-ui` vs `apps/web` boundary:** mental test — "could this component be used in
+  another React app without modification?" Yes → `packages/web-ui`, No → `apps/web/src/components/`
+- **Forbidden in `packages/web-ui`:** TanStack Router imports, TanStack Query hooks, Zustand,
+  `packages/api-client` — no app coupling
+- **Two levels of "done":** v1 (usable — 7 criteria) and Complete (stable — all v1 criteria + play
+  functions, MDX, a11y-reviewer, motion tokens). v1 unblocks usage; Complete is earned through use.
+- **Rule of 3:** never create a component speculatively — extract when a pattern repeats in 3
+  distinct contexts
+- **MDX anatomy:** each stable component has a `.mdx` with anatomy diagram, API table, dos/don'ts,
+  a11y notes. `<Anatomy>` is a Storybook-only utility.
+- **Comments:** JSDoc required on exports; inline comments only for non-obvious constraints (the
+  _why_, never the _what_)
 
-**Impact:** ADR-0019 créé
+**Impact:** ADR-0019 created
 
 ---
 
-## [2026-06-08] — Session B : stack frontend validée (Phase 4.0.5)
+## [2026-06-08] — Session B: frontend stack validated (Phase 4.0.5)
 
-**Context:** Revue conversationnelle de tous les aspects techniques du frontend avant de scaffolder
-`apps/web` et `packages/web-ui`. Toutes les décisions sont documentées dans ADR-0018.
+**Context:** Conversational review of all frontend technical aspects before scaffolding `apps/web`
+and `packages/web-ui`. All decisions are documented in ADR-0018.
 
-**Décisions clés et corrections :**
+**Key decisions and corrections:**
 
-- **shadcn/ui + Base UI** (pas Radix) — first-class depuis janvier 2026, par les auteurs de Radix
-- **PDFKit** (pas @react-pdf/renderer) — les cartes sont des images, précision pixel/mm requise
-- **Zustand ajouté** — l'état UI partagé (sidebar, search, nav) croise les frontières de composants
-- **Lucide** (pas Phosphor) — système d'icônes natif shadcn/ui, cohérence visuelle garantie
-- **Animations d'icônes** — composants SVG custom avec Motion, pas de Lottie ni de Lordicon
-- **TanStack Virtual + Table** — oubliés dans la stack initiale, indispensables (listes longues,
-  collection)
-- **@dnd-kit** — drag & drop deck builder (Phase 7)
-- **tinykeys** — raccourcis clavier avec support chord sequences
-- **Intl natif** pour les dates — date-fns uniquement si besoin prouvé
-- **Règle i18n dès Phase 4** — aucune string hardcodée, `t('key')` partout dès le début
+- **shadcn/ui + Base UI** (not Radix) — first-class since January 2026, by the Radix authors
+- **PDFKit** (not @react-pdf/renderer) — cards are images, pixel/mm precision required
+- **Zustand added** — shared UI state (sidebar, search, nav) crosses component boundaries
+- **Lucide** (not Phosphor) — native shadcn/ui icon system, guaranteed visual consistency
+- **Icon animations** — custom SVG components with Motion, not Lottie or Lordicon
+- **TanStack Virtual + Table** — missed in initial stack, essential (long lists, collection view)
+- **@dnd-kit** — drag & drop for deck builder (Phase 7)
+- **tinykeys** — keyboard shortcuts with chord sequence support
+- **Native Intl** for dates — date-fns only if proven necessary
+- **i18n rule from Phase 4** — no hardcoded strings, `t('key')` everywhere from the start
 
-**Impact:** ADR-0018 créé
+**Impact:** ADR-0018 created
 
 ---
 
-## [2026-06-08] — Session A : architecture `packages/tokens` validée (Phase 4.0.5)
+## [2026-06-08] — Session A: `packages/tokens` architecture validated (Phase 4.0.5)
 
-**Context:** Avant de scaffolder `packages/tokens`, on a conduit une session conversationnelle pour
-valider l'architecture complète du système de tokens avec visualisation dans un fichier HTML de
-preview (`apps/docs/design/token-preview.html`).
+**Context:** Before scaffolding `packages/tokens`, ran a conversational session to validate the
+complete token system architecture, with visual preview in `apps/docs/design/token-preview.html`.
 
 **Decisions:**
 
-- **Hiérarchie 2 couches** : primitifs → sémantiques. Tokens composants ajoutés à la demande (règle
-  des 3 répétitions), pas en avance.
-- **Dual output** : `web/tokens.css` (`@theme` Tailwind v4, CSS vars) + `native/index.ts` (objets JS
-  plats pour React Native). Style Dictionary reporté à Phase 14.
-- **Accent revu** : `#f59e0b` (orange Tailwind) remplacé par `#e8b84b` (doré chaud). Deux nouveaux
-  tokens : `on-accent` (`#0f0e17` — texte sur bouton amber) et `accent-text` (`#8a6a0c` en light —
-  doré assez sombre pour passer WCAG AA sur fond clair).
-- **Contraste WCAG AA** : toutes paires critiques vérifiées et documentées dans ADR-0017.
-  `text-faint` accepté décoratif uniquement (2.5:1 — jamais pour contenu essentiel).
-- **Motion** : Direction A (micro 50–200ms, ease-out) + Direction B (moments clés 300–500ms,
-  ease-spring). Séparation explicite : feedback immédiat vs narration expressive.
-- **Typo fluide** : `clamp()` via Utopia confirmé — pas de breakpoints fixes pour la typo. Valeurs
-  générées lors du scaffold Phase 4.1. Fonts self-hosted, `font-display: optional`.
-- **Storybook** : section Design System requise dans Storybook — palette, typo, spacing, motion,
-  shadows, z-index — vivant et toujours synchronisé avec les tokens réels.
+- **2-layer hierarchy:** primitives → semantic. Component tokens added on demand (rule of 3
+  repetitions), never speculatively.
+- **Dual output:** `web/tokens.css` (`@theme` Tailwind v4, CSS vars) + `native/index.ts` (flat JS
+  objects for React Native). Style Dictionary deferred to Phase 14.
+- **Accent revised:** `#f59e0b` (Tailwind orange) replaced by `#e8b84b` (warm gold). Two new tokens:
+  `on-accent` (`#0f0e17` — text on amber button) and `accent-text` (`#8a6a0c` in light mode — dark
+  enough to pass WCAG AA on light backgrounds).
+- **WCAG AA contrast:** all critical pairs verified and documented in ADR-0017. `text-faint`
+  accepted as decorative only (2.5:1 — never for essential content).
+- **Motion:** Mode A (micro 50–200ms, ease-out) + Mode B (key moments 300–500ms, ease-spring).
+  Explicit separation: immediate feedback vs expressive narration.
+- **Fluid typography:** `clamp()` via Utopia confirmed — no fixed breakpoints for type scale. Values
+  generated during Phase 4.1 scaffold. Fonts self-hosted, `font-display: optional`.
+- **Storybook:** Design System section required — palette, typography, spacing, motion, shadows,
+  z-index — always live and synchronized with the real tokens.
 
-**Impact:** ADR-0017 créé · ADR-0015 mis à jour · token-preview.html créé dans `apps/docs/design/`
+**Impact:** ADR-0017 created · ADR-0015 updated · token-preview.html created in `apps/docs/design/`
 
 ---
 
@@ -674,42 +670,42 @@ surface isolated to one package (ADR-0005).
 
 ## [2026-03-17] — Supabase direct connection deprecated, switched to Session Pooler
 
-**Context:** La connexion directe PostgreSQL (`db.<ref>.supabase.co:5432`) ne résout plus en DNS
-pour ce projet Supabase. Supabase a migré vers une infrastructure pooler.
+**Context:** The direct PostgreSQL connection (`db.<ref>.supabase.co:5432`) no longer resolves via
+DNS for this Supabase project. Supabase migrated to a pooler infrastructure.
 
-**Decision:** `DATABASE_URL` pointe désormais vers le **Session Pooler** Supabase
-(`aws-[region].pooler.supabase.com:5432`). Le Session Pooler est compatible avec Prisma (connexions
-persistantes, contrairement au Transaction Pooler sur port 6543 qui n'est pas compatible avec les
-transactions Prisma).
+**Decision:** `DATABASE_URL` now points to the **Session Pooler**
+(`aws-[region].pooler.supabase.com:5432`). The Session Pooler is compatible with Prisma (persistent
+connections, unlike the Transaction Pooler on port 6543 which is incompatible with Prisma
+transactions).
 
-**Impact:** `.env` et `.env.example` mis à jour. Tout développeur qui clone le repo doit utiliser
-l'URL Session Pooler depuis le dashboard Supabase → Settings → Database.
-
----
-
-## [2026-03-17] — `User.id` ne doit pas être auto-généré par Prisma
-
-**Context:** Le modèle `User` en Prisma avait `@default(uuid())` sur son `id`. Cette valeur par
-défaut a été ajoutée lors de l'écriture initiale du schéma, avant que Supabase Auth soit intégré. À
-ce stade, les users n'existaient que dans la table publique `users` — créés directement via le seed
-script (faker + Prisma), sans aucune couche d'authentification.
-
-**Problème:** Avec Supabase Auth, chaque utilisateur est d'abord créé dans `auth.users` (table
-interne de Supabase), qui génère un UUID. La table publique `users` est une table de profil qui
-**doit référencer ce même ID**. Si Prisma génère son propre UUID, les deux tables auront des IDs
-différents et les politiques RLS (`auth.uid() = user_id`) ne fonctionneront jamais.
-
-**Decision:** Retirer `@default(uuid())` sur `User.id`. L'ID de `User` sera toujours passé
-explicitement depuis l'ID Supabase Auth au moment de la création du profil utilisateur.
-
-**Impact:** `packages/db/prisma/schema.prisma` — migration nécessaire. Le seed script devra être mis
-à jour pour ne plus générer d'UUID arbitraires pour les users.
+**Impact:** `.env` and `.env.example` updated. Any developer cloning the repo must use the Session
+Pooler URL from the Supabase dashboard → Settings → Database.
 
 ---
 
-## [2026-03-17] — Auth API-proxied, pas Supabase direct depuis le frontend
+## [2026-03-17] — `User.id` must not be auto-generated by Prisma
 
-**Context:** Voir ADR-0014. Décision significative documentée en ADR.
+**Context:** The `User` Prisma model had `@default(uuid())` on its `id`. This default was added
+during initial schema design, before Supabase Auth was integrated. At that point, users only existed
+in the public `users` table — created directly via the seed script (faker + Prisma), without any
+authentication layer.
+
+**Problem:** With Supabase Auth, every user is first created in `auth.users` (Supabase's internal
+table), which generates a UUID. The public `users` table is a profile table that **must reference
+that same ID**. If Prisma generates its own UUID, the two tables will have different IDs and RLS
+policies (`auth.uid() = user_id`) will never work.
+
+**Decision:** Remove `@default(uuid())` from `User.id`. The `User` ID is always passed explicitly
+from the Supabase Auth ID at profile creation time.
+
+**Impact:** `packages/db/prisma/schema.prisma` — migration required. The seed script must be updated
+to no longer generate arbitrary UUIDs for users.
+
+---
+
+## [2026-03-17] — Auth API-proxied, not Supabase direct from the frontend
+
+**Context:** See ADR-0014. Significant decision documented in full as an ADR.
 
 ---
 

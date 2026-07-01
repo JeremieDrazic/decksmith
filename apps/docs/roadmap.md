@@ -15,8 +15,9 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Zod schemas (all domains) in `packages/schema`
 - ✅ Fastify server + Zod type provider in `apps/api`
 - ✅ User CRUD routes (`/api/v1/users`)
-- ✅ Database seed script with faker.js
-- ✅ 14 ADRs + 10 feature specs
+- ✅ Database seed script with faker.js _(note: `units`/`sortOrder`/notification fields fixed in
+  session 13; auth.users orphan issue remains — see project-state.md)_
+- ✅ 22 ADRs + 10 feature specs
 - ✅ Vitest infrastructure (shared config + sample test)
 - ✅ `.env.example`
 

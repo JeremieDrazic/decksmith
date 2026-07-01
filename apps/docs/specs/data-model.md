@@ -140,6 +140,7 @@ Represents a **unique Magic card by Oracle ID** (rules identity).
 **Indexes:**
 
 - Full-text search on (`name`, `type_line`, `oracle_text`) using Postgres `tsvector`
+  > ⚠️ **Planned — not yet in schema (Phase 3: Scryfall integration)**
 
 ---
 
@@ -185,10 +186,12 @@ Represents a **specific edition/variant** of a card.
 
 **Indexes:**
 
-- `(oracle_id, set_code, collector_number, language)` unique index (updated for multi-language)
+- `(oracle_id, set_code, collector_number, language)` unique index ✅ in schema
+- `scryfall_id` unique index ✅ in schema
 - `(language)` index for language filtering
+  > ⚠️ **Planned — not yet in schema (Phase 3: Scryfall integration)**
 - `(oracle_id, language)` composite index for localized lookups
-- `scryfall_id` unique index
+  > ⚠️ **Planned — not yet in schema (Phase 3: Scryfall integration)**
 
 ---
 
@@ -390,16 +393,16 @@ Card in a specific deck section.
 
 User-managed tags for organizing decks, collection entries, and cards.
 
-| Field         | Type      | Description                                                  |
-| ------------- | --------- | ------------------------------------------------------------ |
-| `id`          | UUID (PK) | Unique tag ID                                                |
-| `user_id`     | UUID (FK) | References `User.id`                                         |
-| `name`        | String    | Tag name (e.g., "Staples", "Budget", "Wishlist")             |
-| `description` | Text      | Optional description explaining the tag's purpose (nullable) |
-| `color`       | String    | Hex color code (e.g., "#3B82F6")                             |
-| `type`        | Enum      | `deck`, `collection`, or `card`                              |
-| `created_at`  | Timestamp | Tag creation                                                 |
-| `updated_at`  | Timestamp | Last modification                                            |
+| Field         | Type      | Description                                                                  |
+| ------------- | --------- | ---------------------------------------------------------------------------- |
+| `id`          | UUID (PK) | Unique tag ID                                                                |
+| `user_id`     | UUID (FK) | References `User.id`                                                         |
+| `name`        | String    | Tag name (e.g., "Staples", "Budget", "Wishlist")                             |
+| `description` | Text      | Optional description explaining the tag's purpose (nullable)                 |
+| `color`       | String    | Hex color code (e.g., "#3B82F6")                                             |
+| `type`        | Enum      | `deck`, `collection`, or `card` ⚠️ **Planned — not yet in schema (Phase 6)** |
+| `created_at`  | Timestamp | Tag creation                                                                 |
+| `updated_at`  | Timestamp | Last modification                                                            |
 
 **Relationships:**
 
@@ -410,8 +413,9 @@ User-managed tags for organizing decks, collection entries, and cards.
 
 **Constraints:**
 
-- **Unique:** `(user_id, name, type)`
-  - Can have "Staples" tag for decks, collection, and cards separately
+- **Current schema:** `@@unique([userId, name])` — one "Staples" tag per user
+- **Planned (Phase 6):** `@@unique([userId, name, type])` — "Staples" tag separately for decks,
+  collection, and cards, once `type` field is added
 
 **Business Rules:**
 
@@ -585,7 +589,7 @@ User feedback on recommendations for algorithm improvement.
 | `Deck`                   | `public_slug` (when `is_public = true`)                            | `user_id → User.id`                                                                    |
 | `DeckSection`            | `(deck_id, position)`                                              | `deck_id → Deck.id`                                                                    |
 | `DeckCard`               | `(section_id, position)`                                           | `section_id → DeckSection.id`, `card_print_id → CardPrint.id`                          |
-| `Tag`                    | `(user_id, name, type)`                                            | `user_id → User.id`                                                                    |
+| `Tag`                    | `(user_id, name)` · planned: `(user_id, name, type)` Phase 6       | `user_id → User.id`                                                                    |
 | `CardTag`                | `(oracle_id, tag_id, user_id)`                                     | `oracle_id → Card.oracle_id`, `tag_id → Tag.id`, `user_id → User.id`                   |
 | `CraftGuideArticle`      | `slug`                                                             | -                                                                                      |
 | `DeckRecommendation`     | -                                                                  | `deck_id → Deck.id`                                                                    |
@@ -645,11 +649,11 @@ Summary:
    - `(deck_id)` on `DeckSection`
    - `(section_id)` on `DeckCard`
 
-3. **Card search:**
-   - Full-text `tsvector` on `Card(name, type_line, oracle_text)`
-   - `(set_code)` on `CardPrint`
-   - `(language)` on `CardPrint` (multi-language filtering)
-   - `(oracle_id, language)` composite on `CardPrint` (localized lookups)
+3. **Card search:** _(indexes below are planned for Phase 3 — not yet in schema)_
+   - Full-text `tsvector` on `Card(name, type_line, oracle_text)` ⚠️ Planned
+   - `(set_code)` on `CardPrint` ⚠️ Planned
+   - `(language)` on `CardPrint` (multi-language filtering) ⚠️ Planned
+   - `(oracle_id, language)` composite on `CardPrint` (localized lookups) ⚠️ Planned
 
 4. **Public deck sharing:**
    - `(public_slug)` unique on `Deck` (partial index)
