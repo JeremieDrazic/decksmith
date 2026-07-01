@@ -105,7 +105,8 @@ are written by hand in `packages/native-ui` and cross-referenced against `tokens
 | `brand`          | `#e8b84b`                | `#c49a1a`               | Decorative only — logo, ornaments, separators                   |
 | `surface-hover`  | `#2a2840`                | `#ede9d8`               | Interactive surface on hover                                    |
 | `border-focus`   | `#e8b84b`                | `#5b4fcf`               | Focus ring — matches accent per mode                            |
-| `error`          | `#ef4444`                | `#ef4444`               |                                                                 |
+| `error`          | `#dc2626`                | `#dc2626`               | red-600, not red-500 — see evolution entry 2026-06-30           |
+| `error-hover`    | `#ef4444`                | `#ef4444`               | Hover / fill state only (transient — WCAG AA not required)      |
 | `error-subtle`   | `rgba(239,68,68,0.12)`   | `rgba(239,68,68,0.08)`  | Error field background                                          |
 | `error-text`     | `#ef4444`                | `#b91c1c`               | Error message text — WCAG AA ✅                                 |
 | `success`        | `#22c55e`                | `#22c55e`               |                                                                 |
@@ -334,6 +335,21 @@ No visual instability.
 ---
 
 ## Evolution History
+
+### 2026-06-30: `error` token adjusted from red-500 to red-600
+
+`--error` changed from `#ef4444` (Tailwind red-500) to `#dc2626` (Tailwind red-600) in `colors.css`.
+
+**Why:** `#ef4444` on `--on-error: #ffffff` yields ~3.9:1 — below WCAG AA 4.5:1 for text on a solid
+error background. `#dc2626` yields ~5.9:1, passing AA. The value shift applies to both modes since
+`:root` defines the only explicit `--error` value and `.dark` inherits it.
+
+**`error-hover` retains `#ef4444`** — hover is a transient, non-essential state; WCAG does not
+require contrast compliance on purely transitional UI states.
+
+The `error-subtle` (rgba) and `error-text` values were correct as written and were not changed.
+
+---
 
 ### 2026-06-21: Dead TS layer deleted — tokens.css becomes single source of truth
 
