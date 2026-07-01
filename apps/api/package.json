@@ -25,6 +25,7 @@
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@types/node": "catalog:",
+    "light-my-request": "^6.0.0",
     "pino-pretty": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:",

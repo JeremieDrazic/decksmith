@@ -141,6 +141,9 @@ importers:
       '@types/node':
         specifier: 'catalog:'
         version: 26.0.0
+      light-my-request:
+        specifier: ^6.0.0
+        version: 6.6.0
       pino-pretty:
         specifier: 'catalog:'
         version: 13.1.3

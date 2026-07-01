@@ -1,4 +1,9 @@
 import type { FastifyInstance } from 'fastify';
+import type {
+  InjectOptions,
+  InjectPayload,
+  Response as LightMyRequestResponse,
+} from 'light-my-request';
 
 /**
  * Sends an authenticated inject request as the given user.
@@ -13,10 +18,10 @@ import type { FastifyInstance } from 'fastify';
  */
 export function asUser(
   app: FastifyInstance,
-  method: string,
+  method: NonNullable<InjectOptions['method']>,
   url: string,
-  payload?: unknown
-): ReturnType<FastifyInstance['inject']> {
+  payload?: InjectPayload
+): Promise<LightMyRequestResponse> {
   return app.inject({
     method,
     url,
@@ -35,10 +40,10 @@ export function asUser(
  */
 export function asGuest(
   app: FastifyInstance,
-  method: string,
+  method: NonNullable<InjectOptions['method']>,
   url: string,
-  payload?: unknown
-): ReturnType<FastifyInstance['inject']> {
+  payload?: InjectPayload
+): Promise<LightMyRequestResponse> {
   return app.inject({
     method,
     url,
