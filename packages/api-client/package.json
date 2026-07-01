@@ -19,6 +19,6 @@
     "@decksmith/config": "workspace:*",
     "msw": "^2.14.6",
     "typescript": "catalog:",
-    "vitest": "^4.1.8"
+    "vitest": "catalog:"
   }
 }

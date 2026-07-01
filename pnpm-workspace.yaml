@@ -20,5 +20,5 @@ catalog:
   react-dom: ^19.2.7
   tsx: ^4.22.4
   typescript: ^6.0.3
-  vitest: ^4.1.8
+  vitest: ^4.1.9
   zod: ^4.4.3

@@ -1,6 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["tsconfig.json", ".oxfmtrc.json", ".oxlintrc.json"],
+  "globalDependencies": [
+    "tsconfig.json",
+    ".oxfmtrc.json",
+    ".oxlintrc.json",
+    "pnpm-workspace.yaml",
+    "package.json"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
