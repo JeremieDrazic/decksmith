@@ -39,7 +39,7 @@ export type Username = z.infer<typeof UsernameSchema>;
  *
  * The user's public display name (can contain any characters).
  */
-export const DisplayNameSchema = z.string().min(1).max(50).trim();
+export const DisplayNameSchema = z.string().trim().min(1).max(50);
 export type DisplayName = z.infer<typeof DisplayNameSchema>;
 
 /**

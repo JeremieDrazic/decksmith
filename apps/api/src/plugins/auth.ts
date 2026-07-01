@@ -1,19 +1,22 @@
 import { supabase } from '@decksmith/db';
-import { SESSION_EXPIRED, UNAUTHORIZED } from '@decksmith/schema/errors/codes';
+import { FORBIDDEN, SESSION_EXPIRED, UNAUTHORIZED } from '@decksmith/schema/errors/codes';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 
-import { createHttpError } from '@/utils/http-errors.js';
+import { createHttpError } from '@/utils/http-errors/http-errors.js';
 
 /**
- * Auth plugin — verifies the access token from the httpOnly cookie and exposes
- * `fastify.authenticate` as a preHandler decorator.
+ * Auth plugin — exposes two preHandler decorators on the Fastify instance:
  *
- * Throws a structured error routed through the centralized error handler so
- * all 401 responses have the same `{ statusCode, error, code, message }` shape.
+ * - `app.authenticate` — verifies the access token cookie and populates `req.user`
+ * - `app.assertOwnership(paramName)` — ensures the caller owns the resource identified
+ *   by the given URL param (must be called after `app.authenticate`)
+ *
+ * Both are designed to live in the `preHandler` array of a route so that ownership
+ * checks are visible at the route definition level, not buried in the handler body.
  *
  * @example
- * fastify.get('/me', { preHandler: fastify.authenticate }, handler)
+ * fastify.get('/:id', { preHandler: [app.authenticate, app.assertOwnership('id')] }, handler)
  */
 export default fp(
   async (app: FastifyInstance) => {
@@ -26,19 +29,30 @@ export default fp(
 
       const { data, error } = await supabase.auth.getUser(token);
 
-      if (!data.user) {
-        throw createHttpError(UNAUTHORIZED, 'No access token. Please log in.', 401);
-      }
-
-      // Supabase returns an AuthApiError with code 'user_not_found' or similar
-      // when the JWT is expired. Map it to SESSION_EXPIRED so the client can
-      // distinguish "never logged in" from "session timed out".
-      if (error) {
+      // Checking error first (before !data.user) is intentional: an expired or revoked
+      // JWT returns both a non-null error AND a null user. Merging into a single condition
+      // makes the order irrelevant and avoids a dead SESSION_EXPIRED branch.
+      // A present-but-rejected token maps to SESSION_EXPIRED; no token at all maps to UNAUTHORIZED.
+      if (error || !data.user) {
         throw createHttpError(SESSION_EXPIRED, 'Session expired. Please log in again.', 401);
       }
 
       req.user = data.user;
     });
+
+    app.decorate(
+      'assertOwnership',
+      (paramName: string) => async (req: FastifyRequest, _reply: FastifyReply) => {
+        const resourceId = (req.params as Record<string, string>)[paramName];
+        if (req.user.id !== resourceId) {
+          throw createHttpError(
+            FORBIDDEN,
+            'You do not have permission to access this resource.',
+            403
+          );
+        }
+      }
+    );
   },
   { name: 'auth' }
 );

@@ -30,7 +30,7 @@ export const buttonVariants = cva(
     'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
     'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
     // pointer-events-none prevents hover styles from firing while disabled
-    'disabled:opacity-[0.38] disabled:cursor-not-allowed disabled:pointer-events-none',
+    'disabled:opacity-disabled disabled:cursor-not-allowed disabled:pointer-events-none',
     // Press effect — snaps down 1px on active, instant timing for tactile feel
     'active:translate-y-px active:duration-instant',
   ],

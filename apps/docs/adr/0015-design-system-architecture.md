@@ -104,16 +104,24 @@ ASCII mocks in `apps/docs/design/screens/` define screen structure and layout re
 version control alongside the specs they reference. `packages/web-ui` + Storybook replace Figma for
 visual component iteration.
 
-### 4. Keyrune SVG Icons for Mana Symbols
+### 4. Mana Symbol Icons — Inline SVG (mana-font paths)
 
-MTG mana symbols (`{W}` `{U}` `{B}` `{R}` `{G}` `{C}` `{X}` etc.) are rendered using **Keyrune**
-(`mana.andrewgioia.com`) — the official community SVG/icon font for MTG symbols.
+MTG mana symbols (`{W}` `{U}` `{B}` `{R}` `{G}` `{C}` `{X}` etc.) are rendered using **inline SVG
+path data** sourced from mana-font. The implementation consists of three composed components:
 
-Convention: `{W}`, `{U}`, `{B}`, `{R}`, `{G}` notation in ASCII mocks maps to `<i class="ms ms-w">`
-in HTML. In React components, this will be wrapped in a `<ManaSymbol symbol="W" />` component.
+- `ManaIcon` — pure SVG element, `fill="currentColor"`, zero dependencies. Takes a symbol key
+  (`'w'`, `'u'`, `'b'`, `'r'`, `'g'`, `'c'`, `'x'`, `'tap'`, numeric generics, etc.).
+- `ManaSymbol` — wraps `ManaIcon` in a rounded pip container with the correct `bg-mtg-*` token
+  color. This is the canonical colored pip that mirrors physical card appearance.
+- `HybridManaSymbol` — diagonal split pip via SVG clipPath triangles for hybrid costs (`{W/U}` etc.)
+- `ManaCost` — parses a cost string and renders a row of `ManaSymbol` / `HybridManaSymbol`.
 
-WUBRG colour tokens (`mtg-white`, `mtg-blue`, etc.) are kept for background tints, text, badges, and
-charts — complementary to Keyrune, not replacements.
+Convention: `{W}`, `{U}`, `{B}`, `{R}`, `{G}` notation in ASCII mocks maps to
+`<ManaSymbol symbol="W" />` in React. In Storybook stories, Lucide icons are used for decoration;
+mana glyphs always use these components.
+
+WUBRG colour tokens (`mtg-white`, `mtg-blue`, etc.) are the canonical source for pip background
+colors, text in color-identity badges, and rarity chips — always via tokens, never hardcoded.
 
 ---
 
@@ -151,14 +159,25 @@ For a solo/small-team project, the cost of maintaining Figma sync outweighs its 
 - Storybook provides the living component gallery that Figma would otherwise be used for
 - The no-Figma workflow forces decisions to be made in code, where they actually live
 
-### Why Keyrune instead of custom coloured circles?
+### Why inline SVG paths instead of Keyrune or bare coloured circles?
 
 Every MTG player recognises `{W}` `{U}` `{B}` `{R}` `{G}` as canonical symbols — they see them on
-every card they own. Coloured circles lose the iconic semantics: the white mana symbol (sun) is
+every card they own. Bare coloured circles lose the iconic semantics: the white mana symbol (sun) is
 immediately understood; a white circle is ambiguous and requires text labels to communicate meaning.
 
-Keyrune uses the official WotC symbol set in SVG/CSS font form. It handles edge cases (split costs
-like `{W/U}`, colourless `{C}`, `{X}`, tap `{T}`) that a custom icon set would need to solve anyway.
+Keyrune (the original decision) was planned before implementation. The inline SVG approach was
+adopted instead for three reasons:
+
+1. **No external asset load** — Keyrune requires loading `mana.css` (a CSS icon font). Inline SVG
+   paths are bundled directly, with zero network dependency after the initial page load.
+2. **Tree-shakeable** — only the symbols actually used appear in the bundle. Keyrune ships all
+   symbols regardless.
+3. **Full styling control** — `fill="currentColor"` on `ManaIcon` means any CSS color applies.
+   Combined with `mtg-*` token pip backgrounds, the result matches the physical card appearance
+   exactly — which Keyrune with a CSS font would require additional CSS to achieve.
+
+The mana-font SVG path data covers the same symbol set as Keyrune (including `{W/U}` hybrids, `{C}`,
+`{X}`, `{T}`, numeric generics 0–20, Phyrexian mana, snow, energy, etc.).
 
 ---
 
@@ -169,7 +188,7 @@ like `{W/U}`, colourless `{C}`, `{X}`, tap `{T}`) that a custom icon set would n
 - Single token source shared across web and mobile — no duplication or drift
 - Runtime theme switching with zero changes to component code
 - Semantic class names (`bg-surface`) are more meaningful and more stable than colour names
-- Keyrune icons are immediately recognisable to the target audience
+- Mana icons are immediately recognisable to the target audience (canonical WotC glyph shapes)
 - No external tool dependency for design iteration
 - Design decisions are version-controlled and reviewed in PRs
 
@@ -178,7 +197,7 @@ like `{W/U}`, colourless `{C}`, `{X}`, tap `{T}`) that a custom icon set would n
 - CSS vars are slightly less discoverable in JSX than explicit `dark:` classes
 - Storybook must be set up before visual component iteration is possible
 - `packages/tokens` must be built before `apps/web` or `packages/web-ui` can start
-- Keyrune adds a CSS/SVG asset load (mitigated by its small size and cacheability)
+- `mana-paths.ts` adds bundle weight, but only the symbols used are included (tree-shaken)
 
 **Risks:**
 

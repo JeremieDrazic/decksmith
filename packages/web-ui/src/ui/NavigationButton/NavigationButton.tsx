@@ -1,5 +1,3 @@
-'use client';
-
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 import { IconButton, type IconButtonProps } from '../IconButton/IconButton';

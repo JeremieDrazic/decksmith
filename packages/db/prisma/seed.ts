@@ -6,6 +6,11 @@ import { prisma } from '../src/client.js';
 // Deterministic IDs — easy to copy-paste for curl testing
 // ---------------------------------------------------------------------------
 
+// WARNING: these User rows have no corresponding auth.users entry in Supabase.
+// The seed creates orphaned profiles intentionally for local DB exploration.
+// Auth routes (register/login) will not work for these users.
+// To fix: create Supabase auth users with these IDs via the Supabase dashboard
+// or supabase.auth.admin.createUser() before running this seed.
 const ALICE_ID = '00000000-0000-4000-8000-000000000001';
 const BOB_ID = '00000000-0000-4000-8000-000000000002';
 
@@ -40,8 +45,10 @@ async function main() {
       language: 'fr',
       theme: 'dark',
       defaultCurrency: 'eur',
-      collectionViewConfig: { sortBy: 'name', sortOrder: 'asc', viewMode: 'grid' },
-      notificationPreferences: { email: true, push: false },
+      // collectionViewConfig fields must match CollectionViewConfigSchema
+      collectionViewConfig: { sortBy: 'name', sortDirection: 'asc', viewMode: 'grid' },
+      // notificationPreferences fields must match NotificationPreferencesSchema
+      notificationPreferences: { emailOnPdfReady: true },
     },
   });
 
@@ -65,7 +72,7 @@ async function main() {
       language: 'en',
       theme: 'system',
       defaultCurrency: 'usd',
-      units: 'in',
+      units: 'inches',
     },
   });
 

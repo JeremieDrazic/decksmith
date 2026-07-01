@@ -1,5 +1,3 @@
-'use client';
-
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import * as React from 'react';
 
@@ -53,7 +51,7 @@ export function Checkbox({ className, indeterminate, ...props }: CheckboxProps) 
         'data-[checked]:bg-accent data-[checked]:border-accent data-[checked]:text-on-accent',
         'data-[indeterminate]:bg-accent data-[indeterminate]:border-accent data-[indeterminate]:text-on-accent',
         'outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-1 focus-visible:ring-offset-bg',
-        'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-[0.38]',
+        'data-[disabled]:cursor-not-allowed data-[disabled]:opacity-disabled',
         'transition-colors duration-fast',
         className
       )}

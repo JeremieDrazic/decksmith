@@ -42,7 +42,7 @@ export function InputGroup({ className, ...props }: InputGroupProps) {
         '[&:has([aria-invalid=true])]:ring-2',
         '[&:has([aria-invalid=true])]:ring-error/20',
         // Disabled state
-        '[&:has(:disabled)]:opacity-[0.38] [&:has(:disabled)]:cursor-not-allowed',
+        '[&:has(:disabled)]:opacity-disabled [&:has(:disabled)]:cursor-not-allowed',
         // Textarea → height auto
         '[&:has(>textarea)]:h-auto',
         // Block-aligned addons → height auto, column layout
@@ -61,7 +61,7 @@ const inputGroupAddonVariants = cva(
   [
     'flex h-auto cursor-text items-center justify-center gap-2 py-1.5',
     'text-sm font-medium text-text-muted select-none',
-    'group-data-[disabled=true]/input-group:opacity-[0.38]',
+    'group-data-[disabled=true]/input-group:opacity-disabled',
     '[&_svg:not([class*="size-"])]:size-4',
   ],
   {

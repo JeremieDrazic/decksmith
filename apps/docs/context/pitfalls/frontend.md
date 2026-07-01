@@ -484,3 +484,18 @@ violation = 2 nodes: Decrement + Increment both have an invalid `aria-controls` 
 `aria-labelledby` on `NumberFieldInput` satisfies screen readers regardless of `htmlFor`.
 
 See ADR-0021 for the full icon sizing convention.
+
+---
+
+## `'use client'` is a no-op in TanStack Start / Vite
+
+**Symptom:** Components in `packages/web-ui` accumulate `'use client';` directives at the top of the
+file.
+
+**Why it happens:** The directive is a React Server Components convention (Next.js). It has no
+effect in Vite-based projects, including TanStack Start. Editors and snippet libraries may auto-add
+it, and it slips in undetected because the build doesn't warn.
+
+**Fix:** Never add `'use client'` to files in `packages/web-ui`. If you find one, delete the line
+and the blank line below it. The `@decksmith/web-ui` package has no RSC boundary — all components
+run in the client bundle by definition.

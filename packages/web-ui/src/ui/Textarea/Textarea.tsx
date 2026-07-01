@@ -26,7 +26,7 @@ export function Textarea({ className, ...props }: TextareaProps) {
         'transition-[border-color,box-shadow] duration-fast outline-none',
         'focus-visible:border-border-focus focus-visible:ring-2 focus-visible:ring-border-focus',
         'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
-        'disabled:cursor-not-allowed disabled:opacity-[0.38]',
+        'disabled:cursor-not-allowed disabled:opacity-disabled',
         'aria-invalid:border-error aria-invalid:ring-2 aria-invalid:ring-error/20',
         className
       )}

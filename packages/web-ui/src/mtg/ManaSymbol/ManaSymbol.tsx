@@ -35,7 +35,7 @@ const SYMBOL_MAP = {
 const ICON_SIZES = { sm: 10, md: 13, lg: 16 } as const;
 
 const pip = cva(
-  'inline-flex items-center justify-center rounded-badge flex-none overflow-hidden [box-shadow:inset_0_-1px_2px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)]',
+  'inline-flex items-center justify-center rounded-badge flex-none overflow-hidden [box-shadow:var(--shadow-pip)]',
   {
     variants: {
       size: {

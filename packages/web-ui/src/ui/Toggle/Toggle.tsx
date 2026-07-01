@@ -13,7 +13,7 @@ export const toggleBaseClasses = [
   'transition-[background-color,border-color,color,opacity] duration-fast ease-out',
   'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-bg',
-  'disabled:pointer-events-none disabled:opacity-[0.38]',
+  'disabled:pointer-events-none disabled:opacity-disabled',
   '[&_svg]:pointer-events-none [&_svg]:shrink-0',
   // Pressed state — accent-subtle bg + accent text color
   'aria-pressed:bg-accent-subtle aria-pressed:text-accent-text',

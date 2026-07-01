@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-27 (session 11)_
+_Updated: 2026-06-30 (session 13 — quality audit)_
 
 ---
 
@@ -26,7 +26,8 @@ _Updated: 2026-06-27 (session 11)_
 - [x] Auth routes: `/api/v1/auth/` — all 6 routes implemented (merged in PR #14)
 - [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
 - [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
-- [x] Tests: `pnpm test` → 3/3 passing (`apps/api`)
+- [x] Tests: `pnpm test` → ~132 passing (30 domain · 42 schema · 31 api · 15 api-client · 8 query ·
+      3 utils · 3 json-merge)
 - [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 6.0.3)
 - [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
@@ -108,6 +109,35 @@ _Updated: 2026-06-27 (session 11)_
       target), `ICON_INLINE` (icon beside text label), `ICON_SIZE` (self-rendered); ADR-0021; bug
       fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
       removed; pitfall documented (Tailwind v4 layer-order conflict)
+- [x] Toast, Drawer — Base UI components complete (PR #38)
+
+### Quality audit (session 13)
+
+- [x] IDOR fix: `preHandler: app.authenticate` + `assertOwnership(req, params.id)` on all 4 user
+      routes (GET/PATCH `/:id`, GET/PATCH `/:id/preferences`) — ADR-0022
+- [x] `COOKIE_SECRET` length validation: config startup fails if secret < 64 chars
+- [x] Auth plugin order fixed: `error` checked before `data.user` → `SESSION_EXPIRED` now reachable
+      (previously dead branch)
+- [x] `apps/api` test infrastructure: `test-utils/` with `mocks/db.ts`, `mocks/config.ts`,
+      `factories/auth-user.ts`, `server.ts`, `inject.ts` — shared across all route tests
+- [x] `apps/api` auth route tests: 16 integration tests (all 6 routes) via Fastify inject + mocked
+      Supabase/Prisma
+- [x] `apps/api` user route tests: 15 integration tests including IDOR protection cases (401
+      unauthenticated, 403 wrong user) and correct ownership checks
+- [x] `packages/schema` contract tests: 42 `safeParse` boundary tests — auth (10), user (13),
+      primitives (19)
+- [x] `DisplayNameSchema` trim bug fixed: `.min(1).max(50).trim()` → `.trim().min(1).max(50)` (was
+      silently accepting whitespace-only strings)
+- [x] CI `db:generate` step added to `test` job (`DATABASE_URL=postgresql://localhost:5432/dummy`) —
+      prevents "Missing DATABASE_URL" failures when packages import Prisma client
+- [x] `seed.ts` fixed: `units: 'in'` → `'inches'`, `sortOrder` → `sortDirection`, `email`/`push` →
+      `emailOnPdfReady`; orphan-profile caveat documented in code comment
+- [x] `test-strategy.md` reconciled with actual CI: current (mocked DB, single `test` job) vs
+      aspirational (Docker PostgreSQL, split jobs) clearly distinguished
+- [x] `data-model.md` spec drift annotated: `Tag.type`, Card FTS index, CardPrint `(language)` and
+      `(oracle_id, language)` indexes marked ⚠️ Planned with target phase
+- [x] `decisions-log.md` fully translated to English: Sessions A/B/C, Supabase pooler, `User.id`,
+      Auth API-proxied entries
 
 ---
 
@@ -115,15 +145,18 @@ _Updated: 2026-06-27 (session 11)_
 
 - `apps/worker`, `apps/mobile` are empty shells
 - OAuth providers (Google, GitHub) not yet enabled in Supabase dashboard
-- RLS policies not yet applied to user-owned tables
+- RLS policies written (`packages/db/sql/rls-policies.sql`, ADR-0022) but **not yet applied** — run
+  via Supabase SQL Editor or `psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`
 - Prisma client must be regenerated locally after `pnpm install`
   (`pnpm --filter @decksmith/db db:generate`)
 - `routeTree.gen.ts` must be regenerated after adding/changing routes
   (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
 - `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
-- `packages/web-ui` Phase 4.5 in progress: Toast, Drawer not yet started
-- DB seed is broken — `User.id` no longer has `@default(uuid())`, seed must be updated to create
-  Supabase Auth users first before seeding profile rows
+- `apps/api` tests use mocked Prisma/Supabase (not real DB) — pending Docker PostgreSQL service in
+  CI (see `test-strategy.md` aspirational CI section)
+- DB seed creates orphaned `User` profiles with no matching `auth.users` row — seed is usable for DB
+  exploration but auth routes won't work for seeded users. Full fix requires creating Supabase auth
+  users via `supabase.auth.admin.createUser()` before seeding profile rows.
 
 ---
 
@@ -135,29 +168,10 @@ _None_
 
 ## Current Branch
 
-- Branch: `main` (session 11 merged — PR #36)
+- Branch: `feat/floating-components-clean` (session 13 quality audit — not yet merged)
 
----
-
-## Dependency Versions (as of 2026-06-09)
-
-| Package                | Version  |
-| ---------------------- | -------- |
-| TypeScript             | 6.0.3    |
-| Vitest                 | 4.1.8    |
-| Oxlint                 | 1.69.0   |
-| Oxfmt                  | 0.54.0   |
-| Turbo                  | 2.9.16   |
-| lint-staged            | 17.0.7   |
-| oxlint-tsgolint        | 0.23.0   |
-| @tanstack/react-start  | 1.168.25 |
-| @tanstack/react-router | 1.170.15 |
-| @tanstack/react-query  | 5.101.0  |
-| react                  | 19.2.7   |
-| vite                   | 8.0.16   |
-| @tailwindcss/vite      | 4.3.0    |
-| i18next                | 26.3.1   |
-| react-i18next          | 17.0.8   |
+> Dependency versions are in the individual `package.json` files. The version table was removed from
+> this file (it was always stale and duplicated package.json).
 
 ---
 
@@ -181,8 +195,8 @@ Steps completed:
 Steps remaining:
 
 - [ ] Enable OAuth providers in Supabase dashboard (Google, GitHub)
-- [ ] RLS policies for user-owned tables
-- [ ] `test-writer` for auth routes
+- [ ] Apply RLS policies (`psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`)
+- [x] Integration tests for auth + user routes (done in session 13)
 
 ---
 

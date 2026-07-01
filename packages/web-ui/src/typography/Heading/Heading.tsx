@@ -41,7 +41,7 @@ export type HeadingProps = VariantProps<typeof headingVariants> &
  * and appearance can be controlled independently.
  *
  * @example
- * <Heading as="h1" size="5xl">Decksmith</Heading>
+ * <Heading as="h1" size="4xl">Decksmith</Heading>
  * <Heading as="h2" size="xl" weight="semibold">Section title</Heading>
  */
 export function Heading({ as: Tag = 'h2', size, weight, tone, className, ...props }: HeadingProps) {

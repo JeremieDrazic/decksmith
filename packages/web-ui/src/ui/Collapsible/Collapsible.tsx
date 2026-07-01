@@ -1,5 +1,3 @@
-'use client';
-
 import { Collapsible as CollapsiblePrimitive } from '@base-ui/react/collapsible';
 import { ChevronDown } from 'lucide-react';
 
@@ -78,7 +76,7 @@ export function CollapsibleTrigger({
         'outline-none focus-visible:ring-2 focus-visible:ring-border-focus',
         'hover:bg-surface-hover transition-colors duration-fast',
         separator && 'border-b border-border-subtle',
-        'data-[disabled]:pointer-events-none data-[disabled]:opacity-[0.38]',
+        'data-[disabled]:pointer-events-none data-[disabled]:opacity-disabled',
         className
       )}
       {...props}

@@ -28,7 +28,8 @@ clarification instead of guessing.
 ## Design Rules (non-negotiable)
 
 - Semantic tokens only — never hardcoded hex values in components (`bg-surface`, not `#1a1827`)
-- Mana symbols via Keyrune SVG (`{W}` `{U}` `{B}` `{R}` `{G}`) — never coloured circles
+- Mana symbols via inline SVG paths (mana-font glyphs) + `mtg-*` token pip backgrounds — no external
+  font dependency, tree-shakeable. Never bare coloured circles without icon
 - Theme switching via `.dark` class on `<html>` — never Tailwind `dark:` variant in JSX
 - MTG colour tokens (`mtg-red`, `mtg-blue`) are separate from semantic tokens — `mtg-red` ≠ `error`
 - All tokens originate in `packages/tokens` — never duplicated in app-level config
@@ -48,8 +49,10 @@ reference and flag any conflicts with current token values or patterns.
 - TypeScript strict mode everywhere
 - No circular dependencies
 - JSDoc on exported functions (description + @param + @returns when non-obvious)
-- `apps/web` route loaders → `fetch` → `apps/api` only. Never import `packages/db` or
-  `packages/domain` in `apps/web`, even in server-side loaders (ADR-0016)
+- `apps/web` route loaders → `fetch` → `apps/api` only. Never import `packages/db` in `apps/web`
+  (Prisma is server-only). `packages/domain` pure utilities may enter the client bundle only via
+  `packages/web-ui` as a controlled intermediary — `apps/web` must never import `@decksmith/domain`
+  directly (ADR-0016)
 - No server functions or API routes in `apps/web` — `apps/api` is the sole backend
 
 If a suggestion violates these, flag it explicitly.
