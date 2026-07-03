@@ -499,3 +499,60 @@ it, and it slips in undetected because the build doesn't warn.
 **Fix:** Never add `'use client'` to files in `packages/web-ui`. If you find one, delete the line
 and the blank line below it. The `@decksmith/web-ui` package has no RSC boundary — all components
 run in the client bundle by definition.
+
+---
+
+## TanStack Form v1 + Zod Standard Schema — errors are objects, not strings
+
+**`field.state.meta.errors` contains Zod issue objects, not plain strings.** When using the Standard
+Schema integration (`validators={{ onChange: ZodSchema }}`), TanStack Form v1 passes raw Zod v4
+issue objects into the errors array. Each object has shape
+`{ origin, code, format, pattern, path, message }`. Rendering them directly crashes React with
+"Objects are not valid as a React child".
+
+**Fix:** always extract `.message` before rendering. Use a `toMessage` helper that is also safe for
+plain strings (fallback for future integrations):
+
+```ts
+function toMessage(e: unknown): string {
+  if (typeof e === 'string') return e;
+  if (
+    e != null &&
+    typeof e === 'object' &&
+    'message' in e &&
+    typeof (e as { message: unknown }).message === 'string'
+  ) {
+    return (e as { message: string }).message;
+  }
+  return String(e);
+}
+```
+
+Only `message` is needed for display. The other fields (`code`, `path`, `format`…) are Zod internals
+— custom messages belong in the schema definition (`.min(8, 'At least 8 characters')`), not in the
+component.
+
+---
+
+## Tailwind v4 — `@source` path is relative to the CSS file, not the project root
+
+**`@source` paths are resolved relative to the CSS file that contains the directive**, not the
+project root or `vite.config.ts`. Count levels carefully.
+
+From `apps/web/src/styles/globals.css` (4 levels deep from monorepo root), reaching
+`packages/web-ui/src/` requires **four** `../`:
+
+```css
+/* ✅ correct — 4 levels up from apps/web/src/styles/ to monorepo root */
+@source '../../../../packages/web-ui/src/**/*.{ts,tsx}';
+
+/* ❌ wrong — only 3 levels up, resolves to apps/packages/… (does not exist) */
+@source '../../../packages/web-ui/src/**/*.{ts,tsx}';
+```
+
+**Symptom of wrong path:** component structure renders (CSS vars from `tokens.css` work because they
+are in a separate `@import`), but `Input`, `Button`, and other components from `web-ui` have no
+visible styling — their Tailwind classes are never generated.
+
+Compare to `apps/storybook/.storybook/preview.css` which is also 4 levels deep and uses the same
+`../../../../` prefix.

@@ -1,21 +1,21 @@
 # Project State
 
-_Updated: 2026-07-01 (session 14 — PR #39 merged)_
+_Updated: 2026-07-03 (session 15 — PR #41 open — Phase 4.4 Auth UI)_
 
 ---
 
 ## Environment
 
-| Variable                    | Status                                                  |
-| --------------------------- | ------------------------------------------------------- |
-| `DATABASE_URL`              | ✅ Configured (Supabase Session Pooler — IPv4 fallback) |
-| Supabase project            | ✅ Active (`amsnscsignhhcderjczy.supabase.co`)          |
-| `SUPABASE_URL`              | ✅ Configured                                           |
-| `SUPABASE_ANON_KEY`         | ✅ Configured                                           |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured                                           |
-| `COOKIE_SECRET`             | ✅ Configured                                           |
-| Redis                       | Not needed yet                                          |
-| `.env.example`              | ✅ Updated (Session Pooler format + COOKIE_SECRET)      |
+| Variable                    | Status                                                     |
+| --------------------------- | ---------------------------------------------------------- |
+| `DATABASE_URL`              | ✅ Configured (Supabase Session Pooler — IPv4 fallback)    |
+| Supabase project            | ✅ Active (`amsnscsignhhcderjczy.supabase.co`)             |
+| `SUPABASE_URL`              | ✅ Configured                                              |
+| `SUPABASE_ANON_KEY`         | ✅ Configured                                              |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured                                              |
+| `COOKIE_SECRET`             | ✅ Configured                                              |
+| Redis                       | Not needed yet                                             |
+| `.env.example`              | ✅ Updated (Session Pooler + COOKIE_SECRET + VITE_API_URL) |
 
 ---
 
@@ -26,8 +26,8 @@ _Updated: 2026-07-01 (session 14 — PR #39 merged)_
 - [x] Auth routes: `/api/v1/auth/` — all 6 routes implemented (merged in PR #14)
 - [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
 - [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
-- [x] Tests: `pnpm test` → ~132 passing (30 domain · 42 schema · 31 api · 15 api-client · 8 query ·
-      3 utils · 3 json-merge)
+- [x] Tests: `pnpm test` → ~150 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
+      3 utils · 3 json-merge · 9 web-ui)
 - [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 6.0.3)
 - [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
@@ -111,6 +111,27 @@ _Updated: 2026-07-01 (session 14 — PR #39 merged)_
       removed; pitfall documented (Tailwind v4 layer-order conflict)
 - [x] Toast, Drawer — Base UI components complete (PR #38)
 
+### Phase 4.4 Auth UI (session 15 — PR #41)
+
+- [x] `.claude/skills/decksmith-design/` deleted — obsolete skill superseded by `packages/web-ui`
+- [x] `useLogin`, `useRegister`, `useForgotPassword` mutation hooks in `packages/query` (18 tests)
+- [x] `getErrorCode` utility in `packages/query/src/lib/` — `ErrorCode | undefined` from Query error
+- [x] `apps/web/src/lib/api-client.ts` — `apiClient` singleton (`VITE_API_URL` env var)
+- [x] `ApiClientProvider` wired in `apps/web/src/routes/__root.tsx`
+- [x] `@source '../../../../packages/web-ui/src/**/*.{ts,tsx}'` in `globals.css` (4 levels up from
+      file)
+- [x] `@vitejs/plugin-react` added to `vite.config.ts` (required for React Refresh in dev mode)
+- [x] Auth layout `_auth.tsx` — full-screen bg, animated logo lockup (Mark + wordmark), responsive
+      card
+- [x] Login page (`_auth/login.tsx`) — email + password, `INVALID_CREDENTIALS` inline error, links
+- [x] Register page (`_auth/register.tsx`) — email + password, `EMAIL_ALREADY_TAKEN` error, success
+      state
+- [x] Forgot Password page (`_auth/forgot-password.tsx`) — email, success confirmation state
+- [x] `getFieldError` + `makeSubmitHandler` utilities in `apps/web/src/lib/form/`
+- [x] `en.json` extended with full auth namespace (login · register · forgotPassword)
+- [x] 2 pitfalls documented: Zod issue objects in TanStack Form errors, `@source` relative path
+- [x] `decisions-log.md` updated with `@tanstack/react-form` adoption entry
+
 ### Quality audit (session 13)
 
 - [x] IDOR fix: `preHandler: app.authenticate` + `assertOwnership(req, params.id)` on all 4 user
@@ -170,13 +191,13 @@ _Updated: 2026-07-01 (session 14 — PR #39 merged)_
 
 ## Open PRs
 
-_None_
+- PR #41 — `feat/auth-ui` — Phase 4.4 Auth UI (Login, Register, Forgot Password)
 
 ---
 
 ## Current Branch
 
-- Branch: `main` (PR #39 merged 2026-07-01 — session 13 quality audit complete)
+- Branch: `feat/auth-ui` (PR #41 open against `main` — session 15)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).
@@ -261,9 +282,14 @@ Steps remaining:
 ## Phase 4.3 packages/query — Complete
 
 - [x] `ApiClientProvider` + `useApiClient` React Context in `context/context.tsx`
-- [x] `useUser(id)` — TanStack Query hook, `enabled: !!id`, `errorCode` on return
+- [x] `useUser(id)` — TanStack Query hook, `enabled: !!id`, `errorCode: ErrorCode | undefined`
 - [x] `useUserPreferences(id)` — same pattern, key nested under `['user', id, 'preferences']`
-- [x] 8 tests (2 context + 3 per hook) with MSW + `createQueryWrapper` + `ApiClientProvider`
+- [x] `useLogin` — mutation, `onSuccess` seeds user cache via `queryClient.setQueryData`
+- [x] `useRegister` — mutation, exposes `isSuccess` for email confirmation state
+- [x] `useForgotPassword` — mutation, exposes `isSuccess` for confirmation state
+- [x] `getErrorCode` — `packages/query/src/lib/` — extracts `ErrorCode | undefined` from Query error
+- [x] 18 tests (2 context + 3 use-user + 3 use-user-preferences + 3 use-login + 2 use-register + 2
+      use-forgot-password + 3 get-error-code)
 
 ---
 

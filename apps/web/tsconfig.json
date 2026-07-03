@@ -1,6 +1,7 @@
 {
   "extends": "@decksmith/config/tsconfig/react.json",
   "compilerOptions": {
+    "types": ["vite/client"],
     "paths": {
       "@/*": ["./src/*"]
     }

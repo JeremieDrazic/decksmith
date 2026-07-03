@@ -131,8 +131,12 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 4.4 Auth UI
 
-- ⬜ Login + Register pages
-- ⬜ Email confirmation + password reset flow
+- ✅ Login + Register pages (session 15)
+- ✅ Forgot Password page (session 15)
+- ✅ `useLogin`, `useRegister`, `useForgotPassword` mutation hooks in `packages/query` (session 15)
+- ✅ `ApiClientProvider` wired in `apps/web/__root.tsx` (session 15)
+- ✅ `@source` for `packages/web-ui` in `apps/web/globals.css` (session 15)
+- ⬜ Email confirmation + password reset flow (reset-password page — blocked on OAuth/deep-link)
 - ⬜ Auth guard for protected routes
 
 ### 4.5 packages/web-ui Foundation

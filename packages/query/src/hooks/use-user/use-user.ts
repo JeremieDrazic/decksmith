@@ -1,9 +1,10 @@
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 
-import { isApiError, type ErrorCode } from '@decksmith/api-client/errors';
+import type { ErrorCode } from '@decksmith/api-client/errors';
 import type { User } from '@decksmith/schema/user/user';
 
 import { useApiClient } from '../../context/context.js';
+import { getErrorCode } from '../../lib/get-error-code/get-error-code.js';
 
 /**
  * Query key factory for user detail queries.
@@ -16,8 +17,8 @@ export const userKeys = {
 };
 
 type UseUserResult = UseQueryResult<User, Error> & {
-  /** Typed error code from the API, or null if the error is not an ApiError. */
-  errorCode: ErrorCode | null;
+  /** Typed error code from the API, or undefined if the error is not an ApiError. */
+  errorCode: ErrorCode | undefined;
 };
 
 /**
@@ -42,6 +43,6 @@ export function useUser(id: string | undefined): UseUserResult {
 
   return {
     ...query,
-    errorCode: isApiError(query.error) ? (query.error.code as ErrorCode) : null,
+    errorCode: getErrorCode(query.error),
   };
 }

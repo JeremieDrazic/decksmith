@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
+import { ApiClientProvider } from '@decksmith/query';
 
+import { apiClient } from '../lib/api-client';
 import '../styles/globals.css';
 import '../i18n';
 
@@ -21,7 +23,9 @@ function Root() {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          <Outlet />
+          <ApiClientProvider client={apiClient}>
+            <Outlet />
+          </ApiClientProvider>
         </QueryClientProvider>
         <Scripts />
       </body>

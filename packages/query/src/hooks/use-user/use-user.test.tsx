@@ -37,7 +37,7 @@ describe('useUser', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(mockUser);
-    expect(result.current.errorCode).toBeNull();
+    expect(result.current.errorCode).toBeUndefined();
   });
 
   it('sets errorCode when the API returns an error', async () => {
