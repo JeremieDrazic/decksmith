@@ -10,7 +10,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@decksmith/api-client": "workspace:*",
+    "@decksmith/query": "workspace:*",
+    "@decksmith/schema": "workspace:*",
     "@decksmith/tokens": "workspace:*",
+    "@decksmith/web-ui": "workspace:*",
+    "@tanstack/react-form": "^1.33.0",
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-router": "^1.170.15",
     "@tanstack/react-start": "^1.168.25",

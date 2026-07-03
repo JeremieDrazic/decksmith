@@ -1,2 +1,4 @@
 @import 'tailwindcss';
 @import '@decksmith/tokens/web/tokens.css';
+
+@source '../../../../packages/web-ui/src/**/*.{ts,tsx}';

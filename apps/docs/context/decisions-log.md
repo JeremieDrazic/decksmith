@@ -4,6 +4,26 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-03] — @tanstack/react-form added to apps/web (Phase 4.4 Auth UI)
+
+**Context:** Session 15 — Login, Register, Forgot Password pages.
+
+**Decisions:**
+
+- **`@tanstack/react-form@^1.33.0` added directly to `apps/web`** — ADR-0018 (§ Forms) mandates
+  TanStack Form. Added as a direct dep of `apps/web` (not the pnpm catalog) because no other package
+  consumes forms today; will be promoted to catalog if `apps/mobile` or a shared package adopts it.
+- **Zod Standard Schema integration used (no adapter)** — TanStack Form v1 ships native support for
+  Zod v4 Standard Schema via `validators={{ onChange: ZodSchema }}`. No `@tanstack/zod-form-adapter`
+  needed. Raw Zod issue objects (`{origin, code, format, pattern, path, message}`) are returned in
+  `field.state.meta.errors` — `getFieldError()` extracts `.message` before rendering.
+- **`getFieldError` and `makeSubmitHandler` placed in `apps/web/src/lib/form/`** — app-level
+  utilities, not shared across packages. No colocated tests (apps/web has no Vitest config).
+
+**Impact:** `apps/web/package.json` (+1 dep), `apps/web/src/lib/form/`, 3 auth route files.
+
+---
+
 ## [2026-06-25] — lucide-react adopted as the icon library for packages/web-ui
 
 **Context:** Session 11 — floating components, NavigationButton, Lucide migration.
