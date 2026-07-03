@@ -53,7 +53,8 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Auth plugin in `apps/api` (JWT verification middleware)
 - ✅ Auth routes: register, login, logout, refresh, forgot-password, reset-password
 - ✅ Zod schemas for auth DTOs in `packages/schema/src/auth/`
-- ⬜ RLS policies for user-owned tables
+- 🔄 RLS policies for user-owned tables _(written: `packages/db/sql/rls-policies.sql` + ADR-0022;
+  not yet applied to Supabase — run `psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`)_
 - ✅ Auto-create `UserPreferences` on signup (nested Prisma write in register route)
 
 ### 2.3 Rate Limiting & CORS

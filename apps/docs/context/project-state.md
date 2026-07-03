@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-06-30 (session 13 — quality audit)_
+_Updated: 2026-07-01 (session 14 — PR #39 merged)_
 
 ---
 
@@ -138,6 +138,14 @@ _Updated: 2026-06-30 (session 13 — quality audit)_
       `(oracle_id, language)` indexes marked ⚠️ Planned with target phase
 - [x] `decisions-log.md` fully translated to English: Sessions A/B/C, Supabase pooler, `User.id`,
       Auth API-proxied entries
+- [x] `inject.ts` typecheck fix: `ReturnType<FastifyInstance['inject']>` resolves to
+      `LightMyRequestChain` (TypeScript picks the last overload — zero-arg variant); fixed to
+      `Promise<LightMyRequestResponse>` imported directly from `light-my-request`
+- [x] Vague 5 — magic values centralized: `@utility opacity-disabled` in `layout.css` (replaces 23×
+      `opacity-[0.38]`); `--shadow-pip` CSS var in `mtg.css` (replaces duplicated rgba in
+      `ManaSymbol` + `HybridManaSymbol`); 21 `'use client'` directives removed (no-op in Vite);
+      tooling cleanup (pnpm catalog, CI pnpm version, turbo globalDependencies)
+- [x] **PR #39 merged** — all session 13 quality audit work (vagues 1–5) now on `main`
 
 ---
 
@@ -168,7 +176,7 @@ _None_
 
 ## Current Branch
 
-- Branch: `feat/floating-components-clean` (session 13 quality audit — not yet merged)
+- Branch: `main` (PR #39 merged 2026-07-01 — session 13 quality audit complete)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).
@@ -205,7 +213,8 @@ Steps remaining:
 - [x] TanStack Start v1 (`@tanstack/react-start` 1.168.25) initialized with `vite.config.ts`
 - [x] Tailwind v4 wired via `@tailwindcss/vite` + `@import` in `globals.css`
 - [x] `packages/tokens` wired: `globals.css` imports `@decksmith/tokens/web/tokens.css`
-- [x] TanStack Query configured: singleton `QueryClient` in `__root.tsx`, `staleTime: 30_000`
+- [x] TanStack Query configured: per-request `QueryClient` via `useState` initializer in
+      `__root.tsx` (SSR cache leak fix — session 13), `staleTime: 30_000`
 - [x] react-i18next configured: `src/i18n.ts` + `src/locales/en.json`
 - [x] Base routes: `/` (SSR), `/_auth/login` → `/login`, `/_auth/register` → `/register`,
       `/dashboard/`
