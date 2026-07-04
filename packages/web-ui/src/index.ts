@@ -353,3 +353,8 @@ export { useMediaQuery, useBreakpoint, BREAKPOINTS } from './hooks/use-media-que
 export type { Breakpoint } from './hooks/use-media-query';
 export { useKeyboardShortcut } from './hooks/use-keyboard-shortcut';
 export type { KeyboardShortcutOptions } from './hooks/use-keyboard-shortcut';
+export { useLocalStorage } from './hooks/use-local-storage';
+export { ThemeProvider, useTheme } from './hooks/use-theme';
+export type { Theme, ThemeContextValue } from './hooks/use-theme';
+export { ThemeToggle } from './ui/ThemeToggle';
+export type { ThemeToggleProps } from './ui/ThemeToggle';

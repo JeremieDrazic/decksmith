@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Moon, Sun } from 'lucide-react';
+import { useState } from 'react';
 
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from '../Field/Field';
 import { Switch } from './Switch';
@@ -67,6 +69,35 @@ export const Disabled: Story = {
       </Field>
     </div>
   ),
+};
+
+// ─── WithThumbIcon ────────────────────────────────────────────────────────────
+
+export const WithThumbIcon: Story = {
+  render: () => {
+    function Demo() {
+      const [checked, setChecked] = useState(false);
+      const icon = checked ? (
+        <Moon className="size-2.5 text-accent-icon" />
+      ) : (
+        <Sun className="size-2.5 text-accent-icon" />
+      );
+      return (
+        <Field orientation="horizontal" className="w-fit">
+          <FieldLabel variant="body" htmlFor="switch-thumb-icon">
+            Dark mode
+          </FieldLabel>
+          <Switch
+            id="switch-thumb-icon"
+            checked={checked}
+            onCheckedChange={setChecked}
+            thumbIcon={icon}
+          />
+        </Field>
+      );
+    }
+    return <Demo />;
+  },
 };
 
 // ─── WithDescription ──────────────────────────────────────────────────────────

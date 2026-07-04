@@ -3,10 +3,19 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
 import { ApiClientProvider } from '@decksmith/query';
+import { ThemeProvider } from '@decksmith/web-ui';
 
 import { apiClient } from '../lib/api-client';
 import '../styles/globals.css';
 import '../i18n';
+
+// Runs synchronously before React hydrates — sets .dark on <html> from localStorage
+// or prefers-color-scheme so the first paint matches the user's preference (no FOUC).
+const ANTI_FOUC_SCRIPT = `(function(){
+  var s=localStorage.getItem('decksmith-theme');
+  var p=window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if(s==='dark'||(s!=='light'&&p)){document.documentElement.classList.add('dark');}
+})();`;
 
 function Root() {
   // One QueryClient per component instance = one per SSR request, one per browser session.
@@ -17,14 +26,18 @@ function Root() {
   );
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* oxlint-disable-next-line react/no-danger -- controlled anti-FOUC script, no user input */}
+        <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC_SCRIPT }} />
         <HeadContent />
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
           <ApiClientProvider client={apiClient}>
-            <Outlet />
+            <ThemeProvider>
+              <Outlet />
+            </ThemeProvider>
           </ApiClientProvider>
         </QueryClientProvider>
         <Scripts />
