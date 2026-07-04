@@ -4,6 +4,9 @@ export type { MarkProps } from './brand/Mark';
 export { Logo } from './brand/Logo';
 export type { LogoProps } from './brand/Logo';
 
+export { Skeleton } from './ui/Skeleton';
+export type { SkeletonProps } from './ui/Skeleton';
+
 export { Spinner } from './ui/Spinner';
 export type { SpinnerProps, SpinnerSize } from './ui/Spinner';
 
