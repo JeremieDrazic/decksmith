@@ -2,6 +2,8 @@ import { useForm } from '@tanstack/react-form';
 import { Link, createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
+import { makePageHead } from '../../lib/head/make-page-head';
+
 import { useRegister } from '@decksmith/query';
 import { PasswordSchema, RegisterInputSchema } from '@decksmith/schema/auth';
 import {
@@ -126,5 +128,6 @@ function RegisterPage() {
 }
 
 export const Route = createFileRoute('/_auth/register')({
+  head: () => makePageHead('Create account'),
   component: RegisterPage,
 });

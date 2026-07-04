@@ -1,5 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
+
+import { makePageHead } from '../../lib/head/make-page-head';
 import { useTranslation } from 'react-i18next';
 
 import { useLogin } from '@decksmith/query';
@@ -121,5 +123,6 @@ function LoginPage() {
 }
 
 export const Route = createFileRoute('/_auth/login')({
+  head: () => makePageHead('Sign in'),
   component: LoginPage,
 });
