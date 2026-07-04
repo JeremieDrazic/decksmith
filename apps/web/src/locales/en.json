@@ -43,5 +43,11 @@
   },
   "dashboard": {
     "title": "Dashboard"
+  },
+  "common": {
+    "theme": {
+      "dark": "Dark mode",
+      "light": "Light mode"
+    }
   }
 }

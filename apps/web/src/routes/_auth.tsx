@@ -1,9 +1,14 @@
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router';
 import { Logo, Mark } from '@decksmith/web-ui';
 
+import { ThemeControl } from '../components/ThemeControl';
+
 function AuthLayout() {
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 py-12">
+      <div className="fixed top-4 right-4">
+        <ThemeControl />
+      </div>
       <Link
         to="/"
         className="mb-8 flex flex-col items-center gap-3 rounded-interactive outline-none focus-visible:ring-2 focus-visible:ring-border-focus focus-visible:ring-offset-2 focus-visible:ring-offset-bg"

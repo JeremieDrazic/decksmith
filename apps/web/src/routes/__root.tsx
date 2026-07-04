@@ -11,10 +11,15 @@ import '../i18n';
 
 // Runs synchronously before React hydrates — sets .dark on <html> from localStorage
 // or prefers-color-scheme so the first paint matches the user's preference (no FOUC).
+// useLocalStorage JSON-stringifies values, so localStorage stores '"light"' not 'light'.
+// Parse before comparing, and guard with try/catch in case localStorage is blocked.
 const ANTI_FOUC_SCRIPT = `(function(){
-  var s=localStorage.getItem('decksmith-theme');
-  var p=window.matchMedia('(prefers-color-scheme: dark)').matches;
-  if(s==='dark'||(s!=='light'&&p)){document.documentElement.classList.add('dark');}
+  try{
+    var raw=localStorage.getItem('decksmith-theme');
+    var s=raw?JSON.parse(raw):null;
+    var p=window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if(s==='dark'||(s!=='light'&&p)){document.documentElement.classList.add('dark');}
+  }catch(e){}
 })();`;
 
 function Root() {
