@@ -4,6 +4,26 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-04] — tinykeys added to packages/web-ui (useKeyboardShortcut)
+
+**Context:** Session 16 — fondations hooks frontend (Skeleton, useMediaQuery, useKeyboardShortcut).
+
+**Decisions:**
+
+- **`tinykeys@^4.0.0` added to `packages/web-ui`** — wraps native
+  `addEventListener`/`removeEventListener` with a clean shortcut syntax (`Control+k`, `$mod+k`,
+  sequences). Chosen over `react-hotkeys-hook` (React-agnostic, < 1kB, we control the React API
+  surface via our own wrapper hook) and over a hand-rolled implementation (tinykeys handles modifier
+  normalization, `$mod` cross-platform, `contenteditable`/input ignoring out of the box).
+- **Named export `{ tinykeys }` not default** — inline
+  `// oxlint-disable-next-line unicorn/prefer-global-this` on `tinykeys(window, …)` call — tinykeys
+  types require `Window` explicitly, `globalThis` cast would be noisier.
+
+**Impact:** `packages/web-ui/package.json` (+1 dep), `pnpm-lock.yaml`,
+`packages/web-ui/src/hooks/use-keyboard-shortcut/`.
+
+---
+
 ## [2026-07-03] — @tanstack/react-form added to apps/web (Phase 4.4 Auth UI)
 
 **Context:** Session 15 — Login, Register, Forgot Password pages.
