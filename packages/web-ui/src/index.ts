@@ -351,3 +351,5 @@ export { useArmedState } from './hooks/use-armed-state';
 export { usePrefersReducedMotion } from './hooks/use-prefers-reduced-motion';
 export { useMediaQuery, useBreakpoint, BREAKPOINTS } from './hooks/use-media-query';
 export type { Breakpoint } from './hooks/use-media-query';
+export { useKeyboardShortcut } from './hooks/use-keyboard-shortcut';
+export type { KeyboardShortcutOptions } from './hooks/use-keyboard-shortcut';
