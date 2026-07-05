@@ -37,6 +37,9 @@ export type { SeparatorProps } from './ui/Separator';
 export { Textarea } from './ui/Textarea';
 export type { TextareaProps } from './ui/Textarea';
 
+export { TextLink, textLinkVariants } from './ui/TextLink';
+export type { TextLinkProps, TextLinkVariant } from './ui/TextLink';
+
 export { Input } from './ui/Input';
 export type { InputProps } from './ui/Input';
 

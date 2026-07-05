@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { makePageHead } from '../../lib/head/make-page-head';
@@ -18,6 +18,7 @@ import {
   Text,
 } from '@decksmith/web-ui';
 
+import { AppLink } from '../../components/AppLink';
 import { getFieldError } from '../../lib/form/get-field-error';
 import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 
@@ -97,9 +98,7 @@ function ForgotPasswordPage() {
       </form>
 
       <Text as="p" size="sm" tone="muted" className="mt-6">
-        <Link to="/login" className="text-accent-text hover:underline">
-          {t('auth.forgotPassword.back')}
-        </Link>
+        <AppLink to="/login">{t('auth.forgotPassword.back')}</AppLink>
       </Text>
     </div>
   );

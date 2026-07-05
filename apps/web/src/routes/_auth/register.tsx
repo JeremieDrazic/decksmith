@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { makePageHead } from '../../lib/head/make-page-head';
@@ -19,6 +19,7 @@ import {
   Text,
 } from '@decksmith/web-ui';
 
+import { AppLink } from '../../components/AppLink';
 import { getFieldError } from '../../lib/form/get-field-error';
 import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 
@@ -118,10 +119,7 @@ function RegisterPage() {
       </form>
 
       <Text as="p" size="sm" tone="muted" className="mt-6 text-center">
-        {t('auth.register.haveAccount')}{' '}
-        <Link to="/login" className="text-accent-text hover:underline">
-          {t('auth.register.signIn')}
-        </Link>
+        {t('auth.register.haveAccount')} <AppLink to="/login">{t('auth.register.signIn')}</AppLink>
       </Text>
     </div>
   );

@@ -1,13 +1,19 @@
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router';
-import { Logo, Mark } from '@decksmith/web-ui';
+import { Heart } from 'lucide-react';
+import { Trans, useTranslation } from 'react-i18next';
+import { Logo, Mark, Text, TextLink } from '@decksmith/web-ui';
 
+import { LanguageControl } from '../components/LanguageControl';
 import { ThemeControl } from '../components/ThemeControl';
 
 function AuthLayout() {
+  useTranslation(); // subscribes to language changes so Trans re-renders on switch
+
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 py-12">
-      <div className="fixed top-4 right-4">
+      <div className="fixed top-4 right-4 flex items-center gap-3">
         <ThemeControl />
+        <LanguageControl />
       </div>
       <Link
         to="/"
@@ -19,6 +25,48 @@ function AuthLayout() {
       <div className="w-full max-w-sm md:bg-surface md:border md:border-border md:rounded-surface md:shadow-card md:p-8">
         <Outlet />
       </div>
+
+      <footer className="mt-8 flex flex-col items-center gap-2">
+        <Text as="p" size="xs" tone="faint" className="flex items-center gap-1">
+          <Trans
+            i18nKey="common.footer.madeBy"
+            components={{
+              heart: (
+                <Heart className="size-3 fill-current stroke-none text-accent" aria-hidden="true" />
+              ),
+              author: (
+                <TextLink
+                  href="https://github.com/JeremieDrazic"
+                  variant="subtle"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              ),
+            }}
+          />
+        </Text>
+        <Text as="p" size="xs" tone="faint" className="flex items-center gap-3">
+          <TextLink
+            href="https://github.com/JeremieDrazic/decksmith"
+            variant="subtle"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </TextLink>
+          <TextLink
+            href="https://jeremiedrazic.github.io/decksmith/"
+            variant="subtle"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Docs
+          </TextLink>
+          <TextLink href="#" variant="subtle">
+            Storybook
+          </TextLink>
+        </Text>
+      </footer>
     </div>
   );
 }
