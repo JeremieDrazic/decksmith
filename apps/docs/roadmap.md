@@ -136,6 +136,18 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ `useLogin`, `useRegister`, `useForgotPassword` mutation hooks in `packages/query` (session 15)
 - ✅ `ApiClientProvider` wired in `apps/web/__root.tsx` (session 15)
 - ✅ `@source` for `packages/web-ui` in `apps/web/globals.css` (session 15)
+- ✅ Per-route document titles (`makePageHead()` helper in `lib/head/`) + adaptive SVG favicon
+  (amber dark / violet light via `prefers-color-scheme`) (session 16)
+- ✅ Cookie-based language persistence — SSR-safe, no FOUT; `createServerFn` loader reads cookie
+  server-side, `parseLangFromCookieString` shared across server and client (session 16)
+- ✅ `ThemeControl` component in `apps/web` — i18n label + `ThemeToggle` primitive (session 16)
+- ✅ `LanguageControl` — cookie write on switch, `mounted` pattern removed (session 16)
+- ✅ Auth page footer — `Trans` + Heart icon + GitHub/Docs/Storybook links, fully translated EN/FR
+  (session 16)
+- ✅ `::selection` accent coloring in `globals.css` — amber dark / violet light via CSS vars
+  (session 16)
+- ✅ Storybook stories for `apps/web` components (`ThemeControl`, `LanguageControl`) in
+  `Components/App/` (session 16)
 - ⬜ Email confirmation + password reset flow (reset-password page — blocked on OAuth/deep-link)
 - ⬜ Auth guard for protected routes
 
@@ -173,6 +185,19 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   clipPath), `ManaSymbol` (router), `ManaCost` (pip row from cost string), `ColorIdentity`
   (WUBRG-sorted pip row + `role="img"` aria-label) — Storybook stories under `Components/MTG/…` (PR
   #32)
+- ✅ Skeleton — 4 shapes (`text` / `control` / `block` / `circle`), `motion-safe:animate-pulse`,
+  `aria-hidden`, dimension from caller `className` (session 16)
+- ✅ `useLocalStorage<T>` — SSR-safe hook, sync write (session 16)
+- ✅ `ThemeProvider`, `useTheme` — resolves localStorage → `prefers-color-scheme`; `ThemeToggle`
+  (Switch with Sun/Moon thumb icon, `--accent-icon` token) (session 16)
+- ✅ `useMediaQuery(query)` — `useSyncExternalStore`, reactive, SSR-safe; `useBreakpoint()` semantic
+  shortcut (`isMobile` / `isTablet` / `isDesktop`); `BREAKPOINTS` const (session 16)
+- ✅ `useKeyboardShortcut(shortcuts, handler)` — wraps tinykeys, ref-stabilized callback, SSR-safe
+  (session 16)
+- ✅ `TextLink` — styled `<a>`, `default` / `subtle` variants, exports `textLinkVariants` for
+  `AppLink` reuse; `AppLink` in `apps/web` wraps TanStack Router `Link` (session 16)
+- ✅ `Text size="xs"` added to typography scale (session 16)
+- ✅ `--accent-icon` token (`#5b4fcf` both modes) for static-violet icon tints (session 16)
 
 ---
 
@@ -182,7 +207,8 @@ _Dependency: Phase 4.1 (apps/web initialized)_
 
 - ⬜ ADR: i18n strategy — Zod error codes vs hardcoded messages
 - ⬜ Replace hardcoded English strings in `packages/schema` Zod validators with error codes
-- ⬜ i18n library in `apps/web` (e.g. `react-i18next`) with locale files (EN + FR baseline)
+- ✅ i18n library in `apps/web` (`react-i18next`) with locale files (EN + FR baseline) — done in
+  session 14; cookie-based SSR persistence + `Trans` component added session 16
 - ⬜ `Accept-Language` header support in `apps/api` (locale-aware error messages)
 - ⬜ i18n in `apps/mobile` (Expo Localization)
 

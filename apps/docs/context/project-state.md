@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-07-03 (session 15 — PR #41 open — Phase 4.4 Auth UI)_
+_Updated: 2026-07-05 (session 16 — Phase 4.4/4.5 polish + frontend hooks)_
 
 ---
 
@@ -132,6 +132,40 @@ _Updated: 2026-07-03 (session 15 — PR #41 open — Phase 4.4 Auth UI)_
 - [x] 2 pitfalls documented: Zod issue objects in TanStack Form errors, `@source` relative path
 - [x] `decisions-log.md` updated with `@tanstack/react-form` adoption entry
 
+### Phase 4.4 + 4.5 polish (session 16)
+
+- [x] Adaptive SVG favicon — diamond mark, amber dark / violet light via
+      `@media prefers-color-scheme`
+- [x] `makePageHead()` helper in `apps/web/src/lib/head/` — `"<page> · Decksmith"`, greppable for
+      i18n migration; `head()` on all auth routes + dashboard
+- [x] `Skeleton` — `shape` variant (text/control/block/circle), `motion-safe:animate-pulse`,
+      `aria-hidden`; `bg-border-subtle` background (session 16)
+- [x] `useLocalStorage<T>` — SSR-safe, sync write; used by `ThemeProvider`
+- [x] `ThemeProvider` + `useTheme` — resolves localStorage → `prefers-color-scheme` fallback;
+      `.dark` on `<html>`; anti-FOUC inline script in `__root.tsx` (JSON-parse aware)
+- [x] `ThemeToggle` — Switch with Sun/Moon `thumbIcon`; `--accent-icon` static-violet token added to
+      `packages/tokens`
+- [x] `ThemeControl` component in `apps/web` — i18n label + `ThemeToggle`; wired in `_auth.tsx`
+      (fixed top-right)
+- [x] Cookie-based language persistence — `LANGUAGE_COOKIE`, `parseLangFromCookieString` exported
+      from `i18n.ts`; root loader reads cookie via `createServerFn` → `getCookie` server-side, no
+      FOUT on translated strings; `LanguageControl` writes cookie on switch, `mounted` pattern
+      removed
+- [x] `TextLink` (`packages/web-ui`) — `default` / `subtle` variants, exports `textLinkVariants`;
+      `AppLink` (`apps/web`) wraps TanStack Router `Link`; replaces bare `Link` in all auth pages
+- [x] `Text size="xs"` added
+- [x] `useMediaQuery(query)` — `useSyncExternalStore`, reactive on threshold crossing, SSR-safe;
+      `useBreakpoint()` (`isMobile`/`isTablet`/`isDesktop`); `BREAKPOINTS` const; 9 tests
+- [x] `useKeyboardShortcut(shortcuts, handler)` — tinykeys, ref-stabilized callback, SSR-safe; 6
+      tests
+- [x] Auth footer — `Trans` + Heart icon + GitHub/Docs/Storybook links, EN/FR; `useTranslation()` in
+      `AuthLayout` for re-render on language switch
+- [x] `::selection` in `globals.css` — `--color-accent` / `--color-on-accent` (amber dark, violet
+      light)
+- [x] Storybook stories for `TextLink`, `ThemeControl`, `LanguageControl` (`Components/App/`)
+- [x] `apps/web` tsconfig excludes `*.stories.tsx`; `apps/storybook` tsconfig owns web stories
+- [x] `lucide-react` added to pnpm catalog; `apps/web` migrated to `catalog:`
+
 ### Quality audit (session 13)
 
 - [x] IDOR fix: `preHandler: app.authenticate` + `assertOwnership(req, params.id)` on all 4 user
@@ -191,13 +225,13 @@ _Updated: 2026-07-03 (session 15 — PR #41 open — Phase 4.4 Auth UI)_
 
 ## Open PRs
 
-- PR #41 — `feat/auth-ui` — Phase 4.4 Auth UI (Login, Register, Forgot Password)
+None.
 
 ---
 
 ## Current Branch
 
-- Branch: `feat/auth-ui` (PR #41 open against `main` — session 15)
+- Branch: `main` (9 commits ahead of `origin/main` — not yet pushed)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).

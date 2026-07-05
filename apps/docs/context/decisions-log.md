@@ -4,6 +4,60 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-05] — Cookie-based i18n persistence + TextLink/AppLink split
+
+**Context:** Session 16 — eliminating FOUT on translated strings (SSR/client divergence when
+language was in localStorage) + introducing typed navigation links without coupling the DS to
+TanStack Router.
+
+**Decisions:**
+
+- **Cookie over localStorage for language preference** — cookies are sent with every HTTP request,
+  so the TanStack Start root loader can call `getCookie(LANGUAGE_COOKIE)` via
+  `@tanstack/react-start/server` server-side and pass the resolved language to
+  `i18n.changeLanguage()` before the component tree renders. localStorage is client-only — the
+  server has no access, causing SSR to always render in `'en'` and the client to correct it
+  post-hydration (FOUT). `LANGUAGE_COOKIE`, `SUPPORTED_LANGUAGES`, and `parseLangFromCookieString`
+  exported from `i18n.ts` as the single source of truth.
+- **`createServerFn` for SSR cookie reading, guarded by `typeof window === 'undefined'`** — the
+  handler runs directly in the SSR pipeline (no HTTP round-trip); on the client the guard
+  short-circuits to `parseLangFromCookieString(document.cookie)`.
+- **`TextLink` (DS) / `AppLink` (apps/web) split** — `packages/web-ui` stays router-agnostic:
+  `TextLink` wraps a plain `<a>` and exports `textLinkVariants` (cva). `AppLink` in `apps/web` owns
+  the TanStack Router `Link` integration and applies `textLinkVariants` for visual consistency. No
+  DS component takes a router dependency.
+
+**Impact:** `apps/web/src/i18n.ts`, `apps/web/src/routes/__root.tsx`,
+`apps/web/src/components/LanguageControl.tsx`, `packages/web-ui/src/ui/TextLink/`,
+`apps/web/src/components/AppLink.tsx`.
+
+---
+
+## [2026-07-05] — bg-border-subtle for Skeleton background
+
+**Context:** Session 16 — Skeleton component visual verification.
+
+**Decision:** `bg-border-subtle` chosen over `bg-surface-raised` as the Skeleton fill — visually
+readable against both `bg-surface` (dark and light mode) without being too prominent.
+`bg-surface-raised` was too subtle on `bg-surface` in dark mode.
+
+**Impact:** `packages/web-ui/src/ui/Skeleton/Skeleton.tsx`.
+
+---
+
+## [2026-07-05] — ThemeProvider anti-FOUC inline script — JSON.parse for useLocalStorage
+
+**Context:** Session 16 — `ThemeProvider` reads localStorage. `useLocalStorage` JSON-stringifies
+values, so localStorage stores `'"dark"'` not `'dark'`.
+
+**Decision:** Anti-FOUC inline script in `__root.tsx` wraps the localStorage read in `JSON.parse()`
+before comparing to `'dark'`/`'light'`, with a `try/catch` guard for when localStorage is blocked.
+Without this the script silently fails and the first paint flashes the wrong theme.
+
+**Impact:** `apps/web/src/routes/__root.tsx` (`ANTI_FOUC_SCRIPT` constant).
+
+---
+
 ## [2026-07-04] — tinykeys added to packages/web-ui (useKeyboardShortcut)
 
 **Context:** Session 16 — fondations hooks frontend (Skeleton, useMediaQuery, useKeyboardShortcut).
