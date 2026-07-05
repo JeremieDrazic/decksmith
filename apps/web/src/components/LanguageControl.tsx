@@ -31,6 +31,7 @@ export function LanguageControl() {
   function switchLanguage(next: string | null) {
     if (!next || next === lang) return;
     void i18n.changeLanguage(next);
+    // oxlint-disable-next-line unicorn/no-document-cookie -- Cookie Store API not yet widely supported; intentional direct write for SSR persistence
     document.cookie = `${LANGUAGE_COOKIE}=${next}; path=/; max-age=31536000; SameSite=Lax`;
   }
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
+import { useTranslation } from 'react-i18next';
 import { ApiClientProvider } from '@decksmith/query';
 import { ThemeProvider } from '@decksmith/web-ui';
 
@@ -12,7 +13,7 @@ import '../styles/globals.css';
 
 // Reads the language cookie from the HTTP request on the server.
 // createServerFn handlers run directly during SSR (no HTTP round-trip);
-// on the client the call is guarded by typeof window so it is never invoked.
+// on the client the call is guarded by globalThis.window so it is never invoked.
 const $getServerLanguage = createServerFn({ method: 'GET' }).handler(async () => {
   const { getCookie } = await import('@tanstack/react-start/server');
   const stored = getCookie(LANGUAGE_COOKIE);
@@ -38,16 +39,13 @@ const ANTI_FOUC_SCRIPT = `(function(){
   }catch(e){}
 })();`;
 
+// Root reads language from i18n directly (not Route.useLoaderData) to avoid a
+// circular reference: Route → component: Root → Root → Route.useLoaderData.
+// The loader calls i18n.changeLanguage before this component renders, so the value
+// is always up-to-date. useTranslation subscribes to subsequent language switches.
 function Root() {
-  const { lang } = Route.useLoaderData();
-
-  // On the server, i18n.ts initialises with 'en' (no document). The loader resolves
-  // the real language from the cookie, and this call corrects the singleton before the
-  // component tree renders. Resources are pre-loaded, so changeLanguage is synchronous.
-  // On the client, getInitialLanguage() already reads the cookie, so this is a no-op.
-  if (i18n.language !== lang) {
-    void i18n.changeLanguage(lang);
-  }
+  const { i18n: i18nInstance } = useTranslation();
+  const lang = i18nInstance.language;
 
   // One QueryClient per component instance = one per SSR request, one per browser session.
   // Module-scope instantiation shares a single cache across all requests, leaking one
@@ -79,7 +77,10 @@ function Root() {
 
 export const Route = createRootRoute({
   loader: async () => {
-    const lang = typeof window === 'undefined' ? await $getServerLanguage() : getClientLanguage();
+    const lang = globalThis.window === undefined ? await $getServerLanguage() : getClientLanguage();
+    if (i18n.language !== lang) {
+      void i18n.changeLanguage(lang);
+    }
     return { lang };
   },
   head: () => ({
