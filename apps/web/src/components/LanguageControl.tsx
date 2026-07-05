@@ -37,7 +37,7 @@ export function LanguageControl() {
 
   return (
     <Select value={lang} onValueChange={switchLanguage}>
-      <SelectTrigger showIcon={false} className="w-auto px-2 gap-1.5">
+      <SelectTrigger showIcon={false} aria-label={current.label} className="w-auto px-2 gap-1.5">
         <div className="flex flex-row items-center gap-1.5 text-sm">
           <span>{current.flag}</span>
           <span>{current.short}</span>

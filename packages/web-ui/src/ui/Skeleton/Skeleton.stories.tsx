@@ -56,7 +56,7 @@ export const TextLines: Story = {
 
 export const CardExample: Story = {
   render: () => (
-    <div aria-busy="true" aria-label="Loading card">
+    <div role="status" aria-busy="true" aria-label="Loading card">
       <Card className="w-72 p-4">
         <div className="flex items-start gap-3">
           <Skeleton shape="circle" className="size-10 shrink-0" />

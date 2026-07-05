@@ -7,7 +7,7 @@ export const textLinkVariants = cva('transition-colors duration-fast', {
   variants: {
     variant: {
       /** Inline link in body text — always accent-colored, underline on hover. */
-      default: 'text-accent-text hover:underline',
+      default: 'text-accent-text underline',
       /** Standalone link — muted by default, accent on hover. */
       subtle: 'text-text-muted hover:text-accent-text',
     },
