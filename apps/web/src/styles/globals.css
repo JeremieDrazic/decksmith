@@ -2,3 +2,8 @@
 @import '@decksmith/tokens/web/tokens.css';
 
 @source '../../../../packages/web-ui/src/**/*.{ts,tsx}';
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-on-accent);
+}

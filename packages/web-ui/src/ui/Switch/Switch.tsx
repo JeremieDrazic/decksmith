@@ -3,7 +3,10 @@ import * as React from 'react';
 
 import { cn } from '../../lib/cn';
 
-export type SwitchProps = SwitchPrimitive.Root.Props;
+export type SwitchProps = SwitchPrimitive.Root.Props & {
+  /** Optional icon rendered inside the thumb. Size it via className on the icon (e.g. size-2.5). */
+  thumbIcon?: React.ReactNode;
+};
 
 /**
  * A two-state toggle that represents an immediate on/off action.
@@ -16,7 +19,7 @@ export type SwitchProps = SwitchPrimitive.Root.Props;
  *   <Switch id="notif" name="notifications" />
  * </Field>
  */
-export function Switch({ className, ...props }: SwitchProps) {
+export function Switch({ className, thumbIcon, ...props }: SwitchProps) {
   return (
     <SwitchPrimitive.Root
       data-slot="switch"
@@ -36,10 +39,13 @@ export function Switch({ className, ...props }: SwitchProps) {
         className={cn(
           'size-4 rounded-full shrink-0',
           'bg-white shadow-sm' /* thumb is invariant white — contrast holds on all track tones */,
+          thumbIcon ? 'flex items-center justify-center' : null,
           'data-[checked]:translate-x-4',
           'transition-transform duration-fast'
         )}
-      />
+      >
+        {thumbIcon}
+      </SwitchPrimitive.Thumb>
     </SwitchPrimitive.Root>
   );
 }

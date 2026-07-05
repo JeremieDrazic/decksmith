@@ -1,5 +1,7 @@
 import { useForm } from '@tanstack/react-form';
-import { Link, createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
+
+import { makePageHead } from '../../lib/head/make-page-head';
 import { useTranslation } from 'react-i18next';
 
 import { useLogin } from '@decksmith/query';
@@ -16,6 +18,7 @@ import {
   Text,
 } from '@decksmith/web-ui';
 
+import { AppLink } from '../../components/AppLink';
 import { getFieldError } from '../../lib/form/get-field-error';
 import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 
@@ -80,12 +83,9 @@ function LoginPage() {
                   onBlur={field.handleBlur}
                 />
                 <div className="flex justify-end">
-                  <Link
-                    to="/forgot-password"
-                    className="text-xs text-text-muted transition-colors duration-fast hover:text-accent-text"
-                  >
+                  <AppLink to="/forgot-password" variant="subtle" className="text-sm">
                     {t('auth.login.forgotPassword')}
-                  </Link>
+                  </AppLink>
                 </div>
               </Field>
             )}
@@ -112,14 +112,13 @@ function LoginPage() {
 
       <Text as="p" size="sm" tone="muted" className="mt-6 text-center">
         {t('auth.login.noAccount')}{' '}
-        <Link to="/register" className="text-accent-text hover:underline">
-          {t('auth.login.createAccount')}
-        </Link>
+        <AppLink to="/register">{t('auth.login.createAccount')}</AppLink>
       </Text>
     </div>
   );
 }
 
 export const Route = createFileRoute('/_auth/login')({
+  head: () => makePageHead('Sign in'),
   component: LoginPage,
 });

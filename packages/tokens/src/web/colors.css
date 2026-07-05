@@ -27,6 +27,7 @@
   --accent-border: rgba(91, 79, 207, 0.25);
   --accent-text: #3d319a;
   --on-accent: #ffffff;
+  --accent-icon: #5b4fcf; /* static violet — icon on invariant-white surface (e.g. Switch thumb) */
 
   /* Brand amber — decorative only (logo, ornaments, dividers) */
   --brand: #c49a1a;
@@ -106,6 +107,7 @@
   --accent-border: rgba(232, 184, 75, 0.3);
   --accent-text: #e8b84b;
   --on-accent: #0f0e17;
+  --accent-icon: #5b4fcf; /* same as light — non-adaptive, always violet */
 
   /* Brand amber — decorative only (same as accent in dark, kept separate for semantic clarity) */
   --brand: #e8b84b;
@@ -181,6 +183,7 @@
   --color-accent-border: var(--accent-border);
   --color-accent-text: var(--accent-text);
   --color-on-accent: var(--on-accent);
+  --color-accent-icon: var(--accent-icon);
   --color-brand: var(--brand);
   --shadow-accent: var(--shadow-accent);
   --shadow-sm: var(--shadow-sm);

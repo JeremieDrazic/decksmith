@@ -43,5 +43,14 @@
   },
   "dashboard": {
     "title": "Dashboard"
+  },
+  "common": {
+    "theme": {
+      "dark": "Dark mode",
+      "light": "Light mode"
+    },
+    "footer": {
+      "madeBy": "Made with <heart/> by <author>Jérémie Drazic</author>"
+    }
   }
 }

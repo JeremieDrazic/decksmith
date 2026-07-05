@@ -5,6 +5,7 @@ import { cn } from '../../lib/cn';
 const textVariants = cva('', {
   variants: {
     size: {
+      xs: 'text-xs leading-xs',
       sm: 'text-sm leading-sm',
       base: 'text-base leading-base',
       lg: 'text-lg leading-lg',

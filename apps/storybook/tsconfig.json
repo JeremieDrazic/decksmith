@@ -1,5 +1,10 @@
 {
   "extends": "@decksmith/config/tsconfig/react.json",
-  "include": [".storybook/**/*.ts", ".storybook/**/*.tsx"],
+  "include": [
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
+    "../../web/src/**/*.stories.ts",
+    "../../web/src/**/*.stories.tsx"
+  ],
   "exclude": ["node_modules", "dist", "storybook-static"]
 }

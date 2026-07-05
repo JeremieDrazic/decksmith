@@ -11,6 +11,7 @@ clarification instead of guessing.
 @apps/docs/roadmap.md
 @apps/docs/context/project-state.md
 @apps/docs/design/DESIGN.md
+@.claude/PROFILE.md
 
 ---
 
