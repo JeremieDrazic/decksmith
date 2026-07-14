@@ -4,6 +4,58 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-14] — pnpm 11 migration: allowBuilds + CI=true in hook
+
+**Context:** Session 18 — user upgraded pnpm to v11.13.0 (via volta). Two breaking changes surfaced:
+(1) `pnpm.onlyBuiltDependencies` in `package.json` is no longer read — pnpm 11 deprecated it in
+favour of `allowBuilds` in `pnpm-workspace.yaml`; (2) pnpm 11 now requires TTY confirmation before
+purging the modules directory, which breaks in husky hooks (no TTY context).
+
+**Decisions:**
+
+- **`allowBuilds` replaces `onlyBuiltDependencies`** — moved to `pnpm-workspace.yaml` as a
+  `allowBuilds: { pkg: true }` map. Approved packages: `@prisma/engines`, `@swc/core`, `esbuild`,
+  `msw`, `prisma`, `unrs-resolver`. `@parcel/watcher` and `@prisma/client` dropped (no longer need
+  build scripts in pnpm 11).
+- **`export CI=true` in `.husky/pre-commit`** — pnpm 11 source:
+  `confirmModulesPurge: opts.confirmModulesPurge && !opts.ci`. Setting `CI=true` maps to
+  `opts.ci = true` (via `ci-info`), which short-circuits the TTY check. Adding `ci=true` to `.npmrc`
+  would affect all `pnpm` commands globally; hook-scoped env var is the right boundary.
+- **`confirmModulesPurge` is not a user-facing config key** — the pnpm error hint ("set
+  confirmModulesPurge to false") is misleading: the value is derived internally from
+  `!(autoConfirmAllPrompts || force)`, not settable in `.npmrc`.
+
+**Impact:** `pnpm-workspace.yaml`, `.husky/pre-commit`, root `package.json` (`engines.pnpm` bumped
+to `>=11.0.0`).
+
+---
+
+## [2026-07-14] — Service layer: ServiceError + exception mapper (see ADR-0024)
+
+**Context:** Session 18 — routes had repeated try/catch blocks that mapped Prisma/Supabase errors to
+`HttpError`. Each route handler had the same boilerplate. As the route count grows, this becomes a
+maintenance problem.
+
+**Decisions:**
+
+- **`ServiceError(code, message)` thrown by services, never `HttpError`** — services are
+  framework-agnostic; they don't know about HTTP. Throwing `HttpError` from a service would couple
+  business logic to the transport layer.
+- **`SERVICE_ERROR_STATUS` lookup table in `error-handler.ts`** — the Fastify global error handler
+  maps `ServiceError.code → HTTP status`. One place to maintain, zero try/catch in routes. Unknown
+  codes map to 500.
+- **Routes only try/catch when a side effect must run before re-throwing** — the only case is
+  `/refresh`: cookies must be cleared even on failure. Pattern:
+  `try { ... } catch (error) { clearCookies; throw error; }`.
+- **No DI, no repository pattern** — services call `prisma` singleton directly. Module-level mock
+  via `vi.mock('@decksmith/db')` handles tests. A repository layer would add indirection without
+  payoff at current scale.
+
+**Impact:** `packages/services/` (new package), `apps/api/src/plugins/error-handler.ts`,
+`apps/api/src/modules/auth/auth-routes.ts`, `apps/api/src/modules/user/user-routes.ts`.
+
+---
+
 ## [2026-07-14] — Cookie-based theme persistence (mirror of language pattern)
 
 **Context:** Session 17 — `ThemeProvider` read `localStorage` in a `useState` initializer, causing
