@@ -1,3 +1,7 @@
+# NODE_OPTIONS injected by Claude Code (cmux) points to a temp file that doesn't survive
+# into subprocesses — unset it so Node.js in lint/format tools starts clean.
+unset NODE_OPTIONS
+
 # Format staged files with oxfmt
 pnpm lint-staged
 

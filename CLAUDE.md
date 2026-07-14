@@ -169,6 +169,19 @@ dependencies compounds quickly and breaks things unexpectedly.
 
 ---
 
+## Testing Rules (non-negotiable)
+
+Every exported pure function gets a colocated `.test.ts` written **in the same session** as the
+implementation — never after the fact. This applies to all layers: `packages/domain`,
+`packages/utils`, `packages/web-ui`, `packages/api-client`, `apps/api` utilities.
+
+Minimum: happy path + at least 2 edge cases (absent input, invalid value, probable misuse).
+
+> Why: in session 17, `parseThemeFromCookieString` had no test. Its misuse in `$getServerTheme`
+> (raw value passed instead of a full cookie string) went undetected until E2E in the browser.
+
+---
+
 ## Working Process
 
 - Incremental, task-driven

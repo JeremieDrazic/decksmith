@@ -487,6 +487,37 @@ See ADR-0021 for the full icon sizing convention.
 
 ---
 
+## TanStack Router — `Route.useSearch()` inside a component causes `no-use-before-define`
+
+**`Route` is declared after the component** (per convention), so calling `Route.useSearch()` inside
+the component is a textual forward reference — the linter flags it even though function declarations
+are hoisted and it works at runtime.
+
+**Fix:** use `useSearch({ from })` from `@tanstack/react-router` instead of `Route.useSearch()`. The
+`from` option narrows the type to the route's validated search schema — same type safety, no forward
+reference.
+
+```tsx
+// ❌ triggers no-use-before-define — Route is declared below this component
+function LoginPage() {
+  const { redirectTo } = Route.useSearch();
+}
+export const Route = createFileRoute('/_auth/login')({ ... });
+
+// ✅ no forward reference — from narrows the type correctly
+import { useSearch } from '@tanstack/react-router';
+
+function LoginPage() {
+  const { redirectTo } = useSearch({ from: '/_auth/login' });
+}
+export const Route = createFileRoute('/_auth/login')({ ... });
+```
+
+Same fix applies to `Route.useLoaderData()` → `useLoaderData({ from })`, and
+`Route.useRouteContext()` → `useRouteContext({ from })`.
+
+---
+
 ## `'use client'` is a no-op in TanStack Start / Vite
 
 **Symptom:** Components in `packages/web-ui` accumulate `'use client';` directives at the top of the
@@ -556,3 +587,47 @@ visible styling — their Tailwind classes are never generated.
 
 Compare to `apps/storybook/.storybook/preview.css` which is also 4 levels deep and uses the same
 `../../../../` prefix.
+
+---
+
+## SSR — `useState` initializer reading `localStorage` causes hydration mismatch
+
+Never read `localStorage` (or any browser-only API) synchronously in a `useState` initializer. The
+server renders without that value → client hydrates with a different value → React hydration
+mismatch.
+
+```tsx
+// ❌ wrong — server sees null, client sees 'dark' → mismatch
+const [stored] = useLocalStorage<Theme>('decksmith-theme', null);
+
+// ✅ correct — pass the value from the SSR loader via a prop
+const [theme] = useState<Theme>(initialTheme ?? DEFAULT_THEME);
+```
+
+**Pattern:** store the preference in a cookie → root loader reads it server-side (`getCookie`) and
+client-side (`document.cookie` parse) → passes it as a prop → `useState` initializer is identical on
+both sides → no mismatch.
+
+This is the same pattern as language persistence (`LANGUAGE_COOKIE` / `$getServerLanguage`). Any
+user preference that affects SSR output should follow this model.
+
+---
+
+## Cookie parsing — `getCookie` vs `parseFromCookieString`
+
+`getCookie(key)` from `@tanstack/react-start/server` returns the cookie **value** directly
+(`'dark'`). `parseThemeFromCookieString` / `parseLangFromCookieString` expect a **full cookie
+string** (`'decksmith-theme=dark; lang=en'`). Passing a raw value to a parser returns the default
+silently.
+
+```ts
+// ❌ wrong — getCookie returns 'dark', not 'decksmith-theme=dark; ...'
+parseThemeFromCookieString(getCookie(THEME_COOKIE) ?? ''); // → DEFAULT_THEME always
+
+// ✅ correct — validate the raw value directly
+const stored = getCookie(THEME_COOKIE);
+return VALID_THEMES.includes(stored) ? stored : DEFAULT_THEME;
+
+// ✅ correct — pass document.cookie (the full string) on the client
+parseThemeFromCookieString(document.cookie);
+```

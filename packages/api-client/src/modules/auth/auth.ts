@@ -10,7 +10,9 @@ import type {
   ResetPasswordInput,
   ResetPasswordResponse,
 } from '@decksmith/schema/auth';
+import type { User } from '@decksmith/schema/user/user';
 
+import { isApiError } from '../../errors/errors.js';
 import type { Fetcher } from '../../fetcher/fetcher.js';
 
 /**
@@ -74,5 +76,29 @@ export function createAuthModule(fetcher: Fetcher) {
      */
     resetPassword: (input: ResetPasswordInput): Promise<ResetPasswordResponse> =>
       fetcher({ method: 'POST', path: '/api/v1/auth/reset-password', body: input }),
+
+    /**
+     * Return the currently authenticated user, or null if not logged in.
+     *
+     * A 401 response is a normal "not authenticated" state — not an error.
+     * Any other non-2xx response (500, network failure) still throws.
+     *
+     * Pass `headers` to forward the incoming `Cookie` header when calling
+     * from a server function during SSR (the server has no browser cookie jar).
+     *
+     * @param init - Optional extra headers (e.g. `{ cookie: '…' }` for SSR).
+     */
+    me: async (init?: { headers?: Record<string, string> }): Promise<User | null> => {
+      try {
+        return await fetcher<User>({
+          method: 'GET',
+          path: '/api/v1/auth/me',
+          headers: init?.headers,
+        });
+      } catch (error) {
+        if (isApiError(error) && error.statusCode === 401) return null;
+        throw error;
+      }
+    },
   };
 }

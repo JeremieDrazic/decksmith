@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { makePageHead } from '../../lib/head/make-page-head';
+import { makePageHead } from '../../../lib/head/make-page-head';
 
 function DashboardPage() {
   const { t } = useTranslation();
@@ -12,7 +12,7 @@ function DashboardPage() {
   );
 }
 
-export const Route = createFileRoute('/dashboard/')({
+export const Route = createFileRoute('/_authenticated/dashboard/')({
   head: () => makePageHead('Dashboard'),
   component: DashboardPage,
 });

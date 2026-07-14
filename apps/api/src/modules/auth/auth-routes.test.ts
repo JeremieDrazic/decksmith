@@ -238,6 +238,35 @@ describe('POST /api/v1/auth/forgot-password', () => {
 });
 
 // ---------------------------------------------------------------------------
+// GET /me
+// ---------------------------------------------------------------------------
+
+describe('GET /api/v1/auth/me', () => {
+  it('returns the user profile when authenticated', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(buildPrismaUser() as never);
+
+    const res = await asUser(getApp(), 'GET', '/api/v1/auth/me');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.json<{ id: string }>().id).toBe(USER_ID);
+  });
+
+  it('returns 401 when unauthenticated', async () => {
+    const res = await asGuest(getApp(), 'GET', '/api/v1/auth/me');
+    expect(res.statusCode).toBe(401);
+  });
+
+  it('returns 404 when the user profile is missing from the DB', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(null);
+
+    const res = await asUser(getApp(), 'GET', '/api/v1/auth/me');
+
+    expect(res.statusCode).toBe(404);
+    expect(res.json<{ code: string }>().code).toBe('USER_NOT_FOUND');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // POST /reset-password
 // ---------------------------------------------------------------------------
 
