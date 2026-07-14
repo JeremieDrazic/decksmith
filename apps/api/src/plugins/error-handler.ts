@@ -1,4 +1,5 @@
 import { INTERNAL_ERROR, REQUEST_ERROR, VALIDATION_ERROR } from '@decksmith/schema/errors/codes';
+import { isServiceError } from '@decksmith/services';
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
@@ -8,6 +9,21 @@ type ApiError = {
   error: string;
   code: string;
   message: string;
+};
+
+// Maps service-layer error codes to HTTP status codes.
+// Routes throw ServiceError with a code — this table decides the HTTP status.
+const SERVICE_ERROR_STATUS: Record<string, number> = {
+  EMAIL_ALREADY_TAKEN: 409,
+  INVALID_CREDENTIALS: 401,
+  SESSION_EXPIRED: 401,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  USER_NOT_FOUND: 404,
+  PREFERENCES_NOT_FOUND: 404,
+  USERNAME_TAKEN: 409,
+  REGISTRATION_FAILED: 400,
+  PASSWORD_RESET_FAILED: 400,
 };
 
 /**
@@ -33,7 +49,19 @@ export default fp(
         return reply.status(400).send(response);
       }
 
-      // Known HTTP errors (from @fastify/sensible or manual throw)
+      // Service errors — mapped to HTTP status via the code lookup table
+      if (isServiceError(rawError)) {
+        const status = SERVICE_ERROR_STATUS[rawError.code] ?? 500;
+        const response: ApiError = {
+          statusCode: status,
+          error: rawError.name,
+          code: rawError.code,
+          message: rawError.message,
+        };
+        return reply.status(status).send(response);
+      }
+
+      // Known HTTP errors (from createHttpError or Fastify internals)
       if (statusCode < 500) {
         const response: ApiError = {
           statusCode,

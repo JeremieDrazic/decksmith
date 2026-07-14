@@ -23,3 +23,11 @@ catalog:
   typescript: ^6.0.3
   vitest: ^4.1.9
   zod: ^4.4.3
+
+allowBuilds:
+  '@prisma/engines': true
+  '@swc/core': true
+  esbuild: true
+  msw: true
+  prisma: true
+  unrs-resolver: true

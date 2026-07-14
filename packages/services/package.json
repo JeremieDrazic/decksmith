@@ -1,0 +1,25 @@
+{
+  "name": "@decksmith/services",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "oxlint .",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@decksmith/db": "workspace:*",
+    "@decksmith/domain": "workspace:*",
+    "@decksmith/schema": "workspace:*",
+    "@decksmith/utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

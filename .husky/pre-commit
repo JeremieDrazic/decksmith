@@ -2,6 +2,9 @@
 # into subprocesses — unset it so Node.js in lint/format tools starts clean.
 unset NODE_OPTIONS
 
+# Hooks never have a TTY — tell pnpm to skip interactive prompts (e.g. modules purge confirmation).
+export CI=true
+
 # Format staged files with oxfmt
 pnpm lint-staged
 
