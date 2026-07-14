@@ -6,6 +6,7 @@ import {
   REGISTRATION_FAILED,
   SESSION_EXPIRED,
   UNAUTHORIZED,
+  USER_NOT_FOUND,
 } from '@decksmith/schema/errors/codes';
 import {
   ForgotPasswordInputSchema,
@@ -19,6 +20,7 @@ import {
   ResetPasswordInputSchema,
   ResetPasswordResponseSchema,
 } from '@decksmith/schema/auth';
+import { UserResponseSchema } from '@decksmith/schema/user/user';
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 
 import { toUserResponse } from '../user/user-mapper.js';
@@ -261,6 +263,33 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
       });
 
       return reply.send({ message: 'If this email is registered, a reset link has been sent.' });
+    }
+  );
+
+  // -------------------------------------------------------------------------
+  // GET /me — Return the currently authenticated user's profile
+  //
+  // Used by the frontend auth guard (beforeLoad) to verify the session on
+  // every navigation to a protected route. The authenticate preHandler reads
+  // the access_token cookie and populates req.user — if the token is absent
+  // or expired, authenticate throws before the handler runs (401 / SESSION_EXPIRED).
+  // -------------------------------------------------------------------------
+  app.get(
+    '/me',
+    {
+      preHandler: app.authenticate,
+      schema: {
+        response: { 200: UserResponseSchema },
+      },
+    },
+    async (req, reply) => {
+      const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+
+      if (!user) {
+        throw createHttpError(USER_NOT_FOUND, 'User profile not found', 404);
+      }
+
+      return reply.send(toUserResponse(user));
     }
   );
 

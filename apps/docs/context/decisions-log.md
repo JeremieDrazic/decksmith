@@ -4,6 +4,70 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-14] — Cookie-based theme persistence (mirror of language pattern)
+
+**Context:** Session 17 — `ThemeProvider` read `localStorage` in a `useState` initializer, causing
+an SSR hydration mismatch: the server rendered `null` (no `localStorage`), the client rendered
+`'dark'`, React logged a mismatch on `ThemeControl` (label text + Switch state). Several approaches
+were considered and rejected: `suppressHydrationWarning` patches (doesn't fix the root cause),
+`useEffect` (defers reconciliation, still a mismatch on first paint).
+
+**Decisions:**
+
+- **Cookie over localStorage for theme preference** — exactly mirrors the language cookie pattern
+  established in session 16. The root loader calls `getCookie(THEME_COOKIE)` server-side and passes
+  `initialTheme` to `ThemeProvider`. Server and client render the same `.dark` class → zero
+  mismatch.
+- **`VALID_THEMES` for raw `getCookie` validation** — `getCookie` returns the raw cookie value
+  (`'light'`), not the full cookie string (`'decksmith-theme=light'`). `parseThemeFromCookieString`
+  expects the full string (regex requires `key=value`). To avoid misuse, `$getServerTheme` validates
+  the raw value directly against `VALID_THEMES` without calling `parseThemeFromCookieString`.
+- **Default theme = `'dark'` (brand dark-first), `prefers-color-scheme` OS ignored pre-login** —
+  mirrors the language default (`'en'`, ignoring `Accept-Language`). OS preference will be honored
+  post-login via `UserPreferences.theme` (server knows the value). Client hints considered and
+  rejected (requires server config outside Vite, complicates the mental model).
+- **Anti-FOUC inline script eliminated** — since theme is derivable server-side, `.dark` is in the
+  initial HTML. `dangerouslySetInnerHTML` + `oxlint-disable react/no-danger` + 3
+  `suppressHydrationWarning` attributes all removed.
+- **No `js-cookie` dependency at 2 call sites** — 2
+  `oxlint-disable-next-line unicorn/no-document-cookie` comments are honest tools. Adding
+  `js-cookie` is worth it when a 3rd preference (`UserPreferences.theme`) joins from the API — at
+  that point a `resolvePreference` abstraction in `apps/web/src/lib/` makes sense.
+- **Testing rule codified in `CLAUDE.md`** — every exported pure function gets a colocated
+  `.test.ts` in the same session. Minimum: happy path + 2 edge cases. The `getCookie` vs
+  cookie-string bug would have been caught immediately by this rule.
+
+**Impact:** `packages/web-ui/src/hooks/use-theme/` (new `theme-cookie.ts` + `theme-cookie.test.ts`,
+rewritten `ThemeProvider.tsx`), `apps/web/src/routes/__root.tsx`, `apps/web/src/components/`,
+`CLAUDE.md`.
+
+---
+
+## [2026-07-14] — Auth guard: `beforeLoad` + SSR Cookie forwarding (see ADR-0023)
+
+**Context:** Session 17 — dashboard needed protection; unauthenticated users accessing `/dashboard`
+directly via URL (SSR) must be redirected before any content renders.
+
+**Decisions:**
+
+- **`beforeLoad` for SSR-safe guard** — TanStack Router `beforeLoad` runs during SSR and SPA
+  navigation before the component mounts. A client-side `useEffect` redirect would flash protected
+  content. `beforeLoad` never renders the route if the check fails.
+- **`$getMe` server function forwards Cookie header** — during SSR, the browser's session cookie is
+  on the incoming request, not in `document.cookie`. `getRequest()` from
+  `@tanstack/react-start/server` reads the raw request headers; we forward `Cookie` explicitly to
+  `apps/api` so Supabase Auth can verify the session server-to-server.
+- **`redirectTo` search param on `/login`** — login page reads `redirectTo` via `validateSearch` +
+  `useSearch({ from: '/_auth/login' })` and navigates there on success. If absent, defaults to
+  `/dashboard`. Standard pattern — preserves user intent across auth redirects.
+
+**Impact:** `apps/api/src/modules/auth/auth-routes.ts` (`GET /me`), `packages/api-client`
+(`auth.me()`, fetcher `headers?`), `apps/web/src/lib/auth/get-me.ts`,
+`apps/web/src/routes/_authenticated.tsx`, `apps/web/src/routes/_authenticated/dashboard/`,
+`apps/web/src/routes/_auth/login.tsx`, `apps/docs/adr/0023-auth-guard-ssr-beforeload.md`.
+
+---
+
 ## [2026-07-05] — Cookie-based i18n persistence + TextLink/AppLink split
 
 **Context:** Session 16 — eliminating FOUT on translated strings (SSR/client divergence when

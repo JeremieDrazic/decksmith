@@ -11,6 +11,7 @@ const mockClient = {
     refresh: vi.fn(),
     forgotPassword: vi.fn(),
     resetPassword: vi.fn(),
+    me: vi.fn(),
   },
   users: {
     getUser: vi.fn(),

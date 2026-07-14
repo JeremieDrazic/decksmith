@@ -6,6 +6,8 @@ type FetcherOptions = {
   method: HttpMethod;
   path: string;
   body?: unknown;
+  /** Extra headers to merge in — e.g. `Cookie` forwarded from an SSR request. */
+  headers?: Record<string, string>;
 };
 
 /**
@@ -18,9 +20,9 @@ type FetcherOptions = {
  */
 export function createFetcher(baseUrl: string) {
   return async function fetcher<T>(options: FetcherOptions): Promise<T> {
-    const { method, path, body } = options;
+    const { method, path, body, headers: extraHeaders } = options;
 
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = { ...extraHeaders };
     if (body !== undefined) {
       headers['Content-Type'] = 'application/json';
     }

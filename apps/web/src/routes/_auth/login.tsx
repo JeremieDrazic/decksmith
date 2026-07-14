@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
 
 import { makePageHead } from '../../lib/head/make-page-head';
 import { useTranslation } from 'react-i18next';
@@ -25,13 +25,14 @@ import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 function LoginPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { redirectTo } = useSearch({ from: '/_auth/login' });
   const { mutate: login, isPending, isError, errorCode } = useLogin();
 
   const form = useForm({
     defaultValues: { email: '', password: '' },
     onSubmit: ({ value }) => {
       login(value, {
-        onSuccess: () => void navigate({ to: '/dashboard' }),
+        onSuccess: () => void navigate({ to: redirectTo ?? '/dashboard' }),
       });
     },
   });
@@ -119,6 +120,9 @@ function LoginPage() {
 }
 
 export const Route = createFileRoute('/_auth/login')({
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirectTo: typeof search['redirectTo'] === 'string' ? search['redirectTo'] : undefined,
+  }),
   head: () => makePageHead('Sign in'),
   component: LoginPage,
 });

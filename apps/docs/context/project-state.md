@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-07-05 (session 16 — Phase 4.4/4.5 polish + frontend hooks)_
+_Updated: 2026-07-14 (session 17 — auth guard + cookie-based theme SSR)_
 
 ---
 
@@ -140,9 +140,10 @@ _Updated: 2026-07-05 (session 16 — Phase 4.4/4.5 polish + frontend hooks)_
       i18n migration; `head()` on all auth routes + dashboard
 - [x] `Skeleton` — `shape` variant (text/control/block/circle), `motion-safe:animate-pulse`,
       `aria-hidden`; `bg-border-subtle` background (session 16)
-- [x] `useLocalStorage<T>` — SSR-safe, sync write; used by `ThemeProvider`
-- [x] `ThemeProvider` + `useTheme` — resolves localStorage → `prefers-color-scheme` fallback;
-      `.dark` on `<html>`; anti-FOUC inline script in `__root.tsx` (JSON-parse aware)
+- [x] `useLocalStorage<T>` — SSR-safe, sync write (session 16; no longer used by ThemeProvider after
+      session 17 cookie rewrite)
+- [x] `ThemeProvider` + `useTheme` — initially localStorage-based (session 16); **rewritten to
+      cookie SSR pattern in session 17** — see session 17 section for full detail
 - [x] `ThemeToggle` — Switch with Sun/Moon `thumbIcon`; `--accent-icon` static-violet token added to
       `packages/tokens`
 - [x] `ThemeControl` component in `apps/web` — i18n label + `ThemeToggle`; wired in `_auth.tsx`
@@ -165,6 +166,42 @@ _Updated: 2026-07-05 (session 16 — Phase 4.4/4.5 polish + frontend hooks)_
 - [x] Storybook stories for `TextLink`, `ThemeControl`, `LanguageControl` (`Components/App/`)
 - [x] `apps/web` tsconfig excludes `*.stories.tsx`; `apps/storybook` tsconfig owns web stories
 - [x] `lucide-react` added to pnpm catalog; `apps/web` migrated to `catalog:`
+
+### Auth guard + cookie-based theme (session 17)
+
+- [x] `GET /api/v1/auth/me` route in `apps/api` — returns current user from Supabase session; 4
+      integration tests (200 authenticated, 401 no token, 401 expired, 404 user not in DB)
+- [x] `auth.me()` in `packages/api-client` — `headers?` support added to fetcher; Cookie header
+      forwarded via `getRequest()` in `apps/web/src/lib/auth/get-me.ts`; 3 tests (200/401/500)
+- [x] `apps/web/src/lib/auth/get-me.ts` — `$getMe` TanStack Start server function; reads Cookie
+      header from request and forwards it to `apps/api` (server-to-server, not browser-to-server)
+- [x] `_authenticated.tsx` pathless layout — `beforeLoad` calls `$getMe`; throws redirect to
+      `/login?redirectTo=<current-path>` on 401; renders `<Outlet />` on success
+- [x] Dashboard moved from `routes/dashboard/` → `routes/_authenticated/dashboard/` — protected by
+      guard
+- [x] `validateSearch` + `useSearch({ from: '/_auth/login' })` on login page — reads `redirectTo`
+      and navigates there on success (or `/dashboard` if absent)
+- [x] `routeTree.gen.ts` regenerated after route restructure
+- [x] ADR-0023: Auth guard SSR — `beforeLoad` + Cookie forwarding documented
+- [x] `theme-cookie.ts` (new, `packages/web-ui`) — `THEME_COOKIE`, `DEFAULT_THEME`, `VALID_THEMES`,
+      `parseThemeFromCookieString` (pure, takes full cookie string); 6 colocated unit tests
+      including the critical case `parseThemeFromCookieString('light') → DEFAULT_THEME` (bare value
+      ≠ full string)
+- [x] `ThemeProvider.tsx` rewritten — localStorage + `useEffect` + `useMediaQuery` + `resolveTheme`
+      removed; accepts `initialTheme?: Theme` prop; `setTheme` writes cookie inline + toggles
+      `document.documentElement.classList`; zero `useEffect`s
+- [x] `__root.tsx` — `$getServerTheme` (validates raw `getCookie()` value against `VALID_THEMES`),
+      `getClientTheme()` (`parseThemeFromCookieString(document.cookie)`); loader returns
+      `{ lang,     theme }`; `<html className={theme === 'dark' ? 'dark' : undefined}>` — no
+      `suppressHydrationWarning`; anti-FOUC inline script entirely removed (theme derivable
+      server-side)
+- [x] `ThemeControl.tsx` cleaned — 2 `suppressHydrationWarning` removed (now obsolete)
+- [x] `LanguageControl.tsx` — `oxlint-disable-next-line unicorn/no-document-cookie` added (was
+      pre-existing; surfaced by lint hardening)
+- [x] Testing rule added to `CLAUDE.md` — every exported pure function gets colocated `.test.ts` in
+      same session; minimum: happy path + 2 edge cases
+- [x] 2 new pitfalls in `frontend.md`: SSR `useState` initializer reading `localStorage` → hydration
+      mismatch; `getCookie` (raw value) vs `parseFromCookieString` (full cookie string) distinction
 
 ### Quality audit (session 13)
 
@@ -231,7 +268,7 @@ None.
 
 ## Current Branch
 
-- Branch: `main` (9 commits ahead of `origin/main` — not yet pushed)
+- Branch: `feat/session-16-ui-foundations` (session 17 work not yet committed)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).

@@ -1,49 +1,41 @@
-import { useCallback, useEffect, type ReactNode } from 'react';
+import { useCallback, useState, type ReactNode } from 'react';
 
-import { useLocalStorage } from '../use-local-storage';
-import { useMediaQuery } from '../use-media-query';
+import { DEFAULT_THEME, THEME_COOKIE } from './theme-cookie';
 import { ThemeContext, type Theme } from './ThemeContext';
-
-const STORAGE_KEY = 'decksmith-theme';
-
-function resolveTheme(stored: Theme | null, prefersDark: boolean): Theme {
-  if (stored !== null) return stored;
-  return prefersDark ? 'dark' : 'light';
-}
 
 /**
  * Provides theme state (light/dark) to the component tree.
  *
- * - Initial value: `localStorage` → falls back to `prefers-color-scheme`
- * - Syncs the `.dark` class on `<html>` on every theme change
- * - Add `suppressHydrationWarning` to `<html>` to silence the SSR/client class mismatch,
- *   and include the anti-FOUC inline script in `<head>` to prevent a flash on first paint
+ * - `initialTheme` comes from the root loader, which reads `THEME_COOKIE` server-side.
+ *   Server and client start from the same value — no hydration mismatch.
+ * - The `.dark` class on `<html>` is rendered server-side (in __root.tsx) and updated
+ *   synchronously in `setTheme` on user interaction — no useEffect needed.
+ * - On first visit (no cookie yet), `initialTheme` is undefined and `DEFAULT_THEME` applies.
  *
  * @example
- * <ThemeProvider>
+ * <ThemeProvider initialTheme={loaderData.theme}>
  *   <App />
  * </ThemeProvider>
  */
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [stored, setStored] = useLocalStorage<Theme | null>(STORAGE_KEY, null);
-  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
+export function ThemeProvider({
+  children,
+  initialTheme,
+}: {
+  children: ReactNode;
+  initialTheme?: Theme;
+}) {
+  const [theme, setThemeState] = useState<Theme>(initialTheme ?? DEFAULT_THEME);
 
-  const theme = resolveTheme(stored, prefersDark);
-
-  const setTheme = useCallback(
-    (next: Theme) => {
-      setStored(next);
-    },
-    [setStored]
-  );
+  const setTheme = useCallback((next: Theme) => {
+    setThemeState(next);
+    document.documentElement.classList.toggle('dark', next === 'dark');
+    // oxlint-disable-next-line unicorn/no-document-cookie -- intentional write; Cookie Store API not viable for sync context
+    document.cookie = `${THEME_COOKIE}=${next}; path=/; max-age=31536000; SameSite=Lax`;
+  }, []);
 
   const toggleTheme = useCallback(() => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
   }, [theme, setTheme]);
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>

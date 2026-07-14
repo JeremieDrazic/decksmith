@@ -51,7 +51,8 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 - ⬜ Enable Supabase Auth + OAuth providers (Google, GitHub)
 - ✅ Auth plugin in `apps/api` (JWT verification middleware)
-- ✅ Auth routes: register, login, logout, refresh, forgot-password, reset-password
+- ✅ Auth routes: register, login, logout, refresh, forgot-password, reset-password, `GET /me`
+  (session 17)
 - ✅ Zod schemas for auth DTOs in `packages/schema/src/auth/`
 - 🔄 RLS policies for user-owned tables _(written: `packages/db/sql/rls-policies.sql` + ADR-0022;
   not yet applied to Supabase — run `psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`)_
@@ -149,7 +150,8 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Storybook stories for `apps/web` components (`ThemeControl`, `LanguageControl`) in
   `Components/App/` (session 16)
 - ⬜ Email confirmation + password reset flow (reset-password page — blocked on OAuth/deep-link)
-- ⬜ Auth guard for protected routes
+- ✅ Auth guard for protected routes — `_authenticated` pathless layout, `beforeLoad` `$getMe` SSR
+  guard, dashboard moved under `_authenticated/`, `redirectTo` search param on `/login` (session 17)
 
 ### 4.5 packages/web-ui Foundation
 
@@ -188,8 +190,11 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Skeleton — 4 shapes (`text` / `control` / `block` / `circle`), `motion-safe:animate-pulse`,
   `aria-hidden`, dimension from caller `className` (session 16)
 - ✅ `useLocalStorage<T>` — SSR-safe hook, sync write (session 16)
-- ✅ `ThemeProvider`, `useTheme` — resolves localStorage → `prefers-color-scheme`; `ThemeToggle`
-  (Switch with Sun/Moon thumb icon, `--accent-icon` token) (session 16)
+- ✅ `ThemeProvider`, `useTheme` — initially localStorage-based (session 16); rewritten to
+  cookie-based SSR pattern in session 17 — `theme-cookie.ts` (`THEME_COOKIE`, `DEFAULT_THEME`,
+  `VALID_THEMES`, `parseThemeFromCookieString`), `initialTheme` prop, anti-FOUC inline script
+  eliminated; `ThemeToggle` (Switch with Sun/Moon thumb icon, `--accent-icon` token) (session 16)
+- ✅ `theme-cookie.ts` pure function + 6 colocated unit tests (session 17)
 - ✅ `useMediaQuery(query)` — `useSyncExternalStore`, reactive, SSR-safe; `useBreakpoint()` semantic
   shortcut (`isMobile` / `isTablet` / `isDesktop`); `BREAKPOINTS` const (session 16)
 - ✅ `useKeyboardShortcut(shortcuts, handler)` — wraps tinykeys, ref-stabilized callback, SSR-safe
