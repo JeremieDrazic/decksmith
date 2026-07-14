@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-07-14 (session 17 — auth guard + cookie-based theme SSR)_
+_Updated: 2026-07-14 (session 18 — service layer + pnpm 11 migration)_
 
 ---
 
@@ -27,7 +27,7 @@ _Updated: 2026-07-14 (session 17 — auth guard + cookie-based theme SSR)_
 - [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
 - [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
 - [x] Tests: `pnpm test` → ~150 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
-      3 utils · 3 json-merge · 9 web-ui)
+      6 utils · 9 web-ui) — json-merge tests now colocated in `packages/utils`
 - [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 6.0.3)
 - [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
@@ -110,6 +110,28 @@ _Updated: 2026-07-14 (session 17 — auth guard + cookie-based theme SSR)_
       fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
       removed; pitfall documented (Tailwind v4 layer-order conflict)
 - [x] Toast, Drawer — Base UI components complete (PR #38)
+
+### Service layer + pnpm 11 migration (session 18 — PR #44)
+
+- [x] `packages/services` scaffolded: `auth-service.ts`, `user-service.ts`, `errors.ts`
+      (`ServiceError`, `isServiceError`), `prisma-errors.ts` (`isUniqueConstraintError`)
+- [x] `ServiceError(code, message)` thrown by services — never `HttpError`; routes do not try/catch
+      except when a side effect must run before re-throwing (e.g. clearing cookies on `/refresh`)
+- [x] Exception mapper in `apps/api/src/plugins/error-handler.ts` — `SERVICE_ERROR_STATUS` lookup
+      table maps `ServiceError.code` to HTTP status; pattern avoids try/catch repetition in every
+      route
+- [x] `auth-routes.ts` refactored — removed all Prisma/Supabase imports; each handler is 2–3 lines
+- [x] `user-routes.ts` refactored — removed Prisma, `mergeJsonField`, `isUniqueConstraintError`
+- [x] `mergeJsonField` moved from `apps/api/src/utils/` to `packages/utils/src/json-merge/` (with
+      colocated test written first)
+- [x] `isUniqueConstraintError` moved from `apps/api/src/utils/` to `packages/services/src/`
+- [x] ADR-0024: service layer architecture documented — routes = HTTP glue, all orchestration in
+      services, unconditional rule, no DI, no repository pattern
+- [x] pnpm 11 migration: `onlyBuiltDependencies` replaced by `allowBuilds` in `pnpm-workspace.yaml`;
+      `engines.pnpm` bumped to `>=11.0.0`; `export CI=true` added to `.husky/pre-commit` (hooks have
+      no TTY — `CI=true` maps to `opts.ci` which bypasses `confirmModulesPurge` check in pnpm 11
+      source); turbo test `outputs: []` (removes spurious coverage dir warning)
+- [x] **PR #44 merged** — all session 18 work on `main`
 
 ### Phase 4.4 Auth UI (session 15 — PR #41)
 
@@ -268,7 +290,7 @@ None.
 
 ## Current Branch
 
-- Branch: `feat/session-16-ui-foundations` (session 17 work not yet committed)
+- Branch: `main` (PR #44 merged — session 18 complete)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).
