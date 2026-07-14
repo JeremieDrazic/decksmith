@@ -6,8 +6,8 @@
  *
  * Route prefix: /api/v1/auth
  *
- * Note on i18n: Zod error messages are currently hardcoded in English.
- * Phase 5 will replace them with error codes that the frontend translates.
+ * Note on i18n: Zod error messages are error codes (e.g. PASSWORD_TOO_SHORT).
+ * The frontend translates them via packages/i18n. See ADR-0025.
  *
  * @example
  * import { RegisterInputSchema, type RegisterInput } from '@decksmith/schema/auth';
@@ -40,10 +40,10 @@ import { UsernameSchema, UserResponseSchema } from '../user/user.js';
  */
 export const PasswordSchema = z
   .string()
-  .min(8, 'Password must be at least 8 characters')
-  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-  .regex(/[0-9]/, 'Password must contain at least one number');
+  .min(8, 'PASSWORD_TOO_SHORT')
+  .regex(/[A-Z]/, 'PASSWORD_MISSING_UPPERCASE')
+  .regex(/[a-z]/, 'PASSWORD_MISSING_LOWERCASE')
+  .regex(/[0-9]/, 'PASSWORD_MISSING_NUMBER');
 export type Password = z.infer<typeof PasswordSchema>;
 
 // =============================================================================

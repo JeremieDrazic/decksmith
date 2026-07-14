@@ -1,7 +1,5 @@
 import { useForm } from '@tanstack/react-form';
 import { createFileRoute, useNavigate, useSearch } from '@tanstack/react-router';
-
-import { makePageHead } from '../../lib/head/make-page-head';
 import { useTranslation } from 'react-i18next';
 
 import { useLogin } from '@decksmith/query';
@@ -20,10 +18,12 @@ import {
 
 import { AppLink } from '../../components/AppLink';
 import { getFieldError } from '../../lib/form/get-field-error';
+import { makePageHead } from '../../lib/head/make-page-head';
 import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 
 function LoginPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('auth');
+  const { t: tError } = useTranslation('errors');
   const navigate = useNavigate();
   const { redirectTo } = useSearch({ from: '/_auth/login' });
   const { mutate: login, isPending, isError, errorCode } = useLogin();
@@ -40,11 +40,11 @@ function LoginPage() {
   return (
     <div>
       <Text as="p" size="sm" tone="muted" className="mb-4 text-center">
-        {t('auth.login.subtitle')}
+        {t('login.subtitle')}
       </Text>
 
       <Heading as="h1" size="xl" weight="semibold">
-        {t('auth.login.title')}
+        {t('login.title')}
       </Heading>
       <Separator className="my-4" />
 
@@ -52,10 +52,10 @@ function LoginPage() {
         <FieldGroup>
           <form.Field name="email" validators={{ onChange: LoginInputSchema.shape.email }}>
             {(field) => {
-              const { hasError, errors } = getFieldError(field.state.meta);
+              const { hasError, errors } = getFieldError(field.state.meta, tError);
               return (
                 <Field invalid={hasError}>
-                  <FieldLabel htmlFor={field.name}>{t('auth.login.email')}</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t('login.email')}</FieldLabel>
                   <Input
                     id={field.name}
                     type="email"
@@ -74,7 +74,7 @@ function LoginPage() {
           <form.Field name="password">
             {(field) => (
               <Field>
-                <FieldLabel htmlFor={field.name}>{t('auth.login.password')}</FieldLabel>
+                <FieldLabel htmlFor={field.name}>{t('login.password')}</FieldLabel>
                 <Input
                   id={field.name}
                   type="password"
@@ -85,7 +85,7 @@ function LoginPage() {
                 />
                 <div className="flex justify-end">
                   <AppLink to="/forgot-password" variant="subtle" className="text-sm">
-                    {t('auth.login.forgotPassword')}
+                    {t('login.forgotPassword')}
                   </AppLink>
                 </div>
               </Field>
@@ -95,9 +95,7 @@ function LoginPage() {
 
         {isError ? (
           <FieldError className="mt-4 text-center">
-            {errorCode === 'INVALID_CREDENTIALS'
-              ? t('auth.login.invalidCredentials')
-              : t('auth.login.errorFallback')}
+            {tError(errorCode ?? 'REQUEST_ERROR')}
           </FieldError>
         ) : null}
 
@@ -105,15 +103,14 @@ function LoginPage() {
           type="submit"
           className="mt-6 w-full"
           isLoading={isPending}
-          loadingLabel={t('auth.login.loading')}
+          loadingLabel={t('login.loading')}
         >
-          {t('auth.login.submit')}
+          {t('login.submit')}
         </Button>
       </form>
 
       <Text as="p" size="sm" tone="muted" className="mt-6 text-center">
-        {t('auth.login.noAccount')}{' '}
-        <AppLink to="/register">{t('auth.login.createAccount')}</AppLink>
+        {t('login.noAccount')} <AppLink to="/register">{t('login.createAccount')}</AppLink>
       </Text>
     </div>
   );

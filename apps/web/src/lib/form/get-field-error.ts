@@ -1,4 +1,7 @@
+import type { I18nResources } from '@decksmith/i18n';
+
 type FieldMeta = { isTouched: boolean; errors: unknown[] };
+type ErrorKey = keyof I18nResources['errors'];
 
 function toMessage(e: unknown): string {
   if (typeof e === 'string') return e;
@@ -19,16 +22,17 @@ function toMessage(e: unknown): string {
  * Errors are only considered active after the user has interacted with the
  * field (`isTouched`), avoiding premature validation feedback on first render.
  *
- * TanStack Form v1 + Zod Standard Schema returns raw Zod issue objects
- * (not strings) — `toMessage` extracts `.message`, the only field needed
- * for display. Error codes and paths live in the schema, not here.
+ * Pass `t` (from `useTranslation('errors')`) to translate Zod error codes
+ * into localised strings before display.
  *
  * @param meta - `field.state.meta` from a TanStack Form field render prop.
+ * @param t - Optional translation function for error code → localised string.
  */
-export function getFieldError(meta: FieldMeta): { hasError: boolean; errors: string[] } {
+export function getFieldError(
+  meta: FieldMeta,
+  t?: (key: ErrorKey) => string
+): { hasError: boolean; errors: string[] } {
   const hasError = meta.isTouched && meta.errors.length > 0;
-  return {
-    hasError,
-    errors: hasError ? meta.errors.map(toMessage) : [],
-  };
+  const errors = hasError ? meta.errors.map(toMessage) : [];
+  return { hasError, errors: t ? errors.map((code) => t(code as ErrorKey)) : errors };
 }

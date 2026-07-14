@@ -1,0 +1,15 @@
+{
+  "home": {
+    "title": "Decksmith"
+  },
+  "dashboard": {
+    "title": "Tableau de bord"
+  },
+  "theme": {
+    "dark": "Mode sombre",
+    "light": "Mode clair"
+  },
+  "footer": {
+    "madeBy": "Fait avec <heart/> par <author>Jérémie Drazic</author>"
+  }
+}

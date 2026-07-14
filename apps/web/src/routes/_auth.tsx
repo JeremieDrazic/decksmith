@@ -7,7 +7,7 @@ import { LanguageControl } from '../components/LanguageControl';
 import { ThemeControl } from '../components/ThemeControl';
 
 function AuthLayout() {
-  useTranslation(); // subscribes to language changes so Trans re-renders on switch
+  useTranslation('common'); // subscribes to language changes so Trans re-renders on switch
 
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 py-12">
@@ -29,7 +29,8 @@ function AuthLayout() {
       <footer className="mt-8 flex flex-col items-center gap-2">
         <Text as="p" size="xs" tone="faint" className="flex items-center gap-1">
           <Trans
-            i18nKey="common.footer.madeBy"
+            i18nKey="footer.madeBy"
+            ns="common"
             components={{
               heart: (
                 <Heart className="size-3 fill-current stroke-none text-accent" aria-hidden="true" />

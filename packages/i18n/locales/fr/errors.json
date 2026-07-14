@@ -1,0 +1,22 @@
+{
+  "VALIDATION_ERROR": "Validation échouée. Veuillez vérifier vos données.",
+  "REQUEST_ERROR": "Une erreur est survenue. Veuillez réessayer.",
+  "INTERNAL_ERROR": "Une erreur inattendue est survenue. Veuillez réessayer.",
+  "INVALID_CREDENTIALS": "E-mail ou mot de passe incorrect.",
+  "UNAUTHORIZED": "Vous devez être connecté pour accéder à cette ressource.",
+  "EMAIL_ALREADY_TAKEN": "Un compte avec cette adresse e-mail existe déjà.",
+  "SESSION_EXPIRED": "Votre session a expiré. Veuillez vous reconnecter.",
+  "FORBIDDEN": "Vous n'avez pas la permission d'effectuer cette action.",
+  "REGISTRATION_FAILED": "Échec de la création du compte. Veuillez réessayer.",
+  "PASSWORD_RESET_FAILED": "Échec de la réinitialisation du mot de passe. Veuillez réessayer.",
+  "USER_NOT_FOUND": "Utilisateur introuvable.",
+  "USERNAME_TAKEN": "Ce nom d'utilisateur est déjà pris.",
+  "PREFERENCES_NOT_FOUND": "Préférences utilisateur introuvables.",
+  "PASSWORD_TOO_SHORT": "Le mot de passe doit contenir au moins 8 caractères.",
+  "PASSWORD_MISSING_UPPERCASE": "Le mot de passe doit contenir au moins une lettre majuscule.",
+  "PASSWORD_MISSING_LOWERCASE": "Le mot de passe doit contenir au moins une lettre minuscule.",
+  "PASSWORD_MISSING_NUMBER": "Le mot de passe doit contenir au moins un chiffre.",
+  "USERNAME_INVALID_FORMAT": "Le nom d'utilisateur doit commencer par une lettre et ne contenir que des lettres minuscules, des chiffres et des tirets bas.",
+  "HEX_COLOR_INVALID": "Doit être un code couleur hexadécimal valide (ex. : #3B82F6).",
+  "SLUG_INVALID": "Doit être un slug URL valide (lettres minuscules, chiffres, tirets)."
+}

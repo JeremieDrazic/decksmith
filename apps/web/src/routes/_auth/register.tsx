@@ -2,8 +2,6 @@ import { useForm } from '@tanstack/react-form';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { makePageHead } from '../../lib/head/make-page-head';
-
 import { useRegister } from '@decksmith/query';
 import { PasswordSchema, RegisterInputSchema } from '@decksmith/schema/auth';
 import {
@@ -21,10 +19,12 @@ import {
 
 import { AppLink } from '../../components/AppLink';
 import { getFieldError } from '../../lib/form/get-field-error';
+import { makePageHead } from '../../lib/head/make-page-head';
 import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 
 function RegisterPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('auth');
+  const { t: tError } = useTranslation('errors');
   const { mutate: register, isPending, isSuccess, isError, data, errorCode } = useRegister();
 
   const form = useForm({
@@ -38,10 +38,10 @@ function RegisterPage() {
     return (
       <div className="text-center">
         <Heading as="h1" size="xl" weight="semibold" className="mb-4">
-          {t('auth.register.title')}
+          {t('register.title')}
         </Heading>
         <Text as="p" tone="muted">
-          {t('auth.register.successMessage')}
+          {t('register.successMessage')}
         </Text>
       </div>
     );
@@ -50,7 +50,7 @@ function RegisterPage() {
   return (
     <div>
       <Heading as="h1" size="xl" weight="semibold">
-        {t('auth.register.title')}
+        {t('register.title')}
       </Heading>
       <Separator className="my-4" />
 
@@ -58,10 +58,10 @@ function RegisterPage() {
         <FieldGroup>
           <form.Field name="email" validators={{ onChange: RegisterInputSchema.shape.email }}>
             {(field) => {
-              const { hasError, errors } = getFieldError(field.state.meta);
+              const { hasError, errors } = getFieldError(field.state.meta, tError);
               return (
                 <Field invalid={hasError}>
-                  <FieldLabel htmlFor={field.name}>{t('auth.register.email')}</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t('register.email')}</FieldLabel>
                   <Input
                     id={field.name}
                     type="email"
@@ -79,10 +79,10 @@ function RegisterPage() {
 
           <form.Field name="password" validators={{ onChange: PasswordSchema }}>
             {(field) => {
-              const { hasError, errors } = getFieldError(field.state.meta);
+              const { hasError, errors } = getFieldError(field.state.meta, tError);
               return (
                 <Field invalid={hasError}>
-                  <FieldLabel htmlFor={field.name}>{t('auth.register.password')}</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t('register.password')}</FieldLabel>
                   <Input
                     id={field.name}
                     type="password"
@@ -92,7 +92,7 @@ function RegisterPage() {
                     onBlur={field.handleBlur}
                     aria-invalid={hasError ? true : undefined}
                   />
-                  <FieldDescription>{t('auth.register.passwordHint')}</FieldDescription>
+                  <FieldDescription>{t('register.passwordHint')}</FieldDescription>
                   <FieldError errors={errors} />
                 </Field>
               );
@@ -102,9 +102,7 @@ function RegisterPage() {
 
         {isError ? (
           <FieldError className="mt-4 text-center">
-            {errorCode === 'EMAIL_ALREADY_TAKEN'
-              ? t('auth.register.emailTaken')
-              : t('auth.register.errorFallback')}
+            {tError(errorCode ?? 'REQUEST_ERROR')}
           </FieldError>
         ) : null}
 
@@ -112,14 +110,14 @@ function RegisterPage() {
           type="submit"
           className="mt-6 w-full"
           isLoading={isPending}
-          loadingLabel={t('auth.register.loading')}
+          loadingLabel={t('register.loading')}
         >
-          {t('auth.register.submit')}
+          {t('register.submit')}
         </Button>
       </form>
 
       <Text as="p" size="sm" tone="muted" className="mt-6 text-center">
-        {t('auth.register.haveAccount')} <AppLink to="/login">{t('auth.register.signIn')}</AppLink>
+        {t('register.haveAccount')} <AppLink to="/login">{t('register.signIn')}</AppLink>
       </Text>
     </div>
   );

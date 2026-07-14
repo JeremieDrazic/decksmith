@@ -15,7 +15,7 @@ describe('PasswordSchema', () => {
     const result = PasswordSchema.safeParse('Abc123');
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toContain('8 characters');
+      expect(result.error.issues[0]?.message).toBe('PASSWORD_TOO_SHORT');
     }
   });
 
@@ -23,7 +23,7 @@ describe('PasswordSchema', () => {
     const result = PasswordSchema.safeParse('password1');
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toContain('uppercase');
+      expect(result.error.issues[0]?.message).toBe('PASSWORD_MISSING_UPPERCASE');
     }
   });
 
@@ -31,7 +31,7 @@ describe('PasswordSchema', () => {
     const result = PasswordSchema.safeParse('PASSWORD1');
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toContain('lowercase');
+      expect(result.error.issues[0]?.message).toBe('PASSWORD_MISSING_LOWERCASE');
     }
   });
 
@@ -39,7 +39,7 @@ describe('PasswordSchema', () => {
     const result = PasswordSchema.safeParse('Password');
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toContain('number');
+      expect(result.error.issues[0]?.message).toBe('PASSWORD_MISSING_NUMBER');
     }
   });
 });
