@@ -34,6 +34,7 @@ evolution history.
 | [0021](./0021-icon-sizing-convention.md)                  | Icon Sizing Convention in `packages/web-ui`       | Active | 2026-06-27 |
 | [0022](./0022-row-level-security.md)                      | Row Level Security Strategy                       | Active | 2026-06-30 |
 | [0023](./0023-auth-guard-ssr-beforeload.md)               | Auth Guard via beforeLoad + SSR Cookie Forwarding | Active | 2026-07-08 |
+| [0024](./0024-service-layer-architecture.md)              | Service Layer Architecture                        | Active | 2026-07-14 |
 
 ---
 
