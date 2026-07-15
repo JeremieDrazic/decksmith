@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-07-14 (session 18 — service layer + pnpm 11 migration)_
+_Updated: 2026-07-15 (session 19 — i18n strategy + packages/i18n)_
 
 ---
 
@@ -110,6 +110,29 @@ _Updated: 2026-07-14 (session 18 — service layer + pnpm 11 migration)_
       fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
       removed; pitfall documented (Tailwind v4 layer-order conflict)
 - [x] Toast, Drawer — Base UI components complete (PR #38)
+
+### i18n strategy (session 19 — PR #45)
+
+- [x] ADR-0025: i18n strategy decided — API sends codes, client translates; `Accept-Language` in API
+      rejected; hybrid approach rejected
+- [x] `packages/i18n` scaffolded: shared translation package (no runtime logic) — 3 feature
+      namespaces (`auth`, `common`, `errors`), EN + FR; `I18nResources` type exported for
+      react-i18next `CustomTypeOptions` augmentation
+- [x] `packages/schema` Zod messages replaced with stable codes: `PASSWORD_TOO_SHORT`,
+      `PASSWORD_MISSING_UPPERCASE`, `PASSWORD_MISSING_LOWERCASE`, `PASSWORD_MISSING_NUMBER`,
+      `USERNAME_INVALID_FORMAT`, `HEX_COLOR_INVALID`, `SLUG_INVALID` — contract tests updated to
+      assert codes (locale-independent)
+- [x] `apps/web/src/locales/` deleted — all strings now in `packages/i18n`
+- [x] `apps/web/src/i18n.ts` — multi-namespace init (`auth`/`common`/`errors`), `CustomTypeOptions`
+      augmentation inline (eslint-disable for `interface` required by declaration merging)
+- [x] Auth components migrated: `useTranslation('auth')` + short keys, `useTranslation('errors')`
+      for error display, `tError(errorCode ?? 'REQUEST_ERROR')` pattern
+- [x] `get-field-error.ts` — optional `t?: (key: ErrorKey) => string` param; `ErrorKey` imported
+      from `@decksmith/i18n`; cast isolated inside the function
+- [x] dep updates: `vitest`/`@vitest/coverage-v8` 4.1.9→4.1.10, `turbo` 2.10.0→2.10.5, `@types/node`
+      26.0.1→26.1.1, `oxlint` 1.71.0→1.73.0, `oxfmt` 0.56.0→0.58.0, `oxlint-tsgolint` 0.23.0→0.24.0
+      (TS 7 skipped — major)
+- [x] **PR #45 merged** — all session 19 work on `main`
 
 ### Service layer + pnpm 11 migration (session 18 — PR #44)
 
@@ -290,7 +313,7 @@ None.
 
 ## Current Branch
 
-- Branch: `main` (PR #44 merged — session 18 complete)
+- Branch: `main` (PR #45 merged — session 19 complete)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).

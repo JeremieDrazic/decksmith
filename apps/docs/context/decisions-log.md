@@ -4,6 +4,30 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-15] — getFieldError t param typed via ErrorKey, not string
+
+**Context:** Session 19 — adding an optional `t` param to `getFieldError` to translate Zod error
+codes. Typing `t` as `(key: string) => string` caused a TypeScript contravariance error:
+react-i18next's typed `t` (post-`CustomTypeOptions` augmentation) only accepts specific union keys,
+not `string`. **Decision:** Type the param as `t?: (key: ErrorKey) => string` where
+`ErrorKey = keyof I18nResources['errors']`, imported from `@decksmith/i18n`. The `as ErrorKey` cast
+stays inside `getFieldError`, call sites pass `tError` directly with no cast. **Impact:**
+`apps/web/src/lib/form/get-field-error.ts` imports from `@decksmith/i18n` — acceptable since the
+file is already in `apps/web` which depends on that package.
+
+---
+
+## [2026-07-15] — i18n namespace strategy: feature-based, all strings in packages/i18n
+
+**Context:** Session 19 — deciding where translations live and how to organize them. Two axes: (1)
+single vs multi-namespace, (2) apps/web-local vs shared package. **Decision:** All strings (web +
+future mobile) in `packages/i18n`, organized by feature namespace (`auth`, `common`, `errors`) — not
+by platform. Mobile-specific strings will be colocated in the same namespace when the time comes. No
+app-level locale files. **Impact:** `apps/web/src/locales/` deleted. `packages/i18n` is the single
+source of truth. Adding a language = add one folder in `packages/i18n`, no app changes.
+
+---
+
 ## [2026-07-14] — pnpm 11 migration: allowBuilds + CI=true in hook
 
 **Context:** Session 18 — user upgraded pnpm to v11.13.0 (via volta). Two breaking changes surfaced:
