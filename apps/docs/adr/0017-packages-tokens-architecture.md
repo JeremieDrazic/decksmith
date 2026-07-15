@@ -86,38 +86,29 @@ are written by hand in `packages/native-ui` and cross-referenced against `tokens
 
 #### Colours — Semantic (dark / light)
 
-| Token            | Dark                     | Light                   |
-| ---------------- | ------------------------ | ----------------------- | --------------------------------------------------------------- |
-| `bg`             | `#0f0e17`                | `#faf9f4`               |
-| `surface`        | `#1a1827`                | `#ffffff`               |
-| `surface-raised` | `#232135`                | `#f2f0e6`               |
-| `border`         | `#2e2b47`                | `#d5d0be`               |
-| `border-subtle`  | `#232135`                | `#e8e5d8`               |
-| `text`           | `#f0eef8`                | `#0f0e17`               |
-| `text-muted`     | `#a8a2cc`                | `#524d80`               |
-| `text-faint`     | `#524d80`                | `#7b75a8`               |
-| `accent`         | `#e8b84b`                | `#5b4fcf`               | Dark: amber · Light: violet                                     |
-| `accent-hover`   | `#c49a1a`                | `#4a3db0`               |                                                                 |
-| `accent-subtle`  | `rgba(232,184,75, 0.12)` | `rgba(91,79,207, 0.08)` |                                                                 |
-| `accent-border`  | `rgba(232,184,75, 0.3)`  | `rgba(91,79,207, 0.25)` |                                                                 |
-| `accent-text`    | `#e8b84b`                | `#3d319a`               | Darker in light mode — WCAG AA ✅                               |
-| `on-accent`      | `#0f0e17`                | `#ffffff`               | Mode-specific: dark on amber, white on violet                   |
-| `brand`          | `#e8b84b`                | `#c49a1a`               | Decorative only — logo, ornaments, separators                   |
-| `surface-hover`  | `#2a2840`                | `#ede9d8`               | Interactive surface on hover                                    |
-| `border-focus`   | `#e8b84b`                | `#5b4fcf`               | Focus ring — matches accent per mode                            |
-| `error`          | `#dc2626`                | `#dc2626`               | red-600, not red-500 — see evolution entry 2026-06-30           |
-| `error-hover`    | `#ef4444`                | `#ef4444`               | Hover / fill state only (transient — WCAG AA not required)      |
-| `error-subtle`   | `rgba(239,68,68,0.12)`   | `rgba(239,68,68,0.08)`  | Error field background                                          |
-| `error-text`     | `#ef4444`                | `#b91c1c`               | Error message text — WCAG AA ✅                                 |
-| `success`        | `#22c55e`                | `#22c55e`               |                                                                 |
-| `success-subtle` | `rgba(34,197,94,0.12)`   | `rgba(34,197,94,0.08)`  |                                                                 |
-| `success-text`   | `#22c55e`                | `#15803d`               | WCAG AA ✅                                                      |
-| `warning`        | `#f59e0b`                | `#d97706`               | Distinct from `accent` (`#e8b84b` golden — `warning` is orange) |
-| `warning-subtle` | `rgba(245,158,11,0.12)`  | `rgba(217,119,6,0.08)`  |                                                                 |
-| `warning-text`   | `#f59e0b`                | `#92400e`               | WCAG AA ✅                                                      |
-| `info`           | `#5b9cf6`                | `#2563eb`               | **Never substitute `mtg-blue` — different semantic meaning**    |
-| `info-subtle`    | `rgba(91,156,246,0.12)`  | `rgba(37,99,235,0.08)`  |                                                                 |
-| `info-text`      | `#5b9cf6`                | `#1d4ed8`               | WCAG AA ✅                                                      |
+| Token | Dark | Light | | ---------------- | ------------------------ | ----------------------- |
+--------------------------------------------------------------- | | `bg` | `#0f0e17` | `#faf9f4` | |
+`surface` | `#1a1827` | `#ffffff` | | `surface-raised` | `#232135` | `#f2f0e6` | | `border` |
+`#2e2b47` | `#d5d0be` | | `border-subtle` | `#232135` | `#e8e5d8` | | `text` | `#f0eef8` | `#0f0e17`
+| | `text-muted` | `#a8a2cc` | `#524d80` | | `text-faint` | `#524d80` | `#7b75a8` | | `accent` |
+`#e8b84b` | `#5b4fcf` | Dark: amber · Light: violet | | `accent-hover` | `#c49a1a` | `#4a3db0` | | |
+`accent-subtle` | `rgba(232,184,75, 0.12)` | `rgba(91,79,207, 0.08)` | | | `accent-border` |
+`rgba(232,184,75, 0.3)` | `rgba(91,79,207, 0.25)` | | | `accent-text` | `#e8b84b` | `#3d319a` |
+Darker in light mode — WCAG AA ✅ | | `on-accent` | `#0f0e17` | `#ffffff` | Mode-specific: dark on
+amber, white on violet | | `brand` | `#e8b84b` | `#c49a1a` | Decorative only — logo, ornaments,
+separators | | `surface-hover` | `#2a2840` | `#ede9d8` | Interactive surface on hover | |
+`border-focus` | `#e8b84b` | `#5b4fcf` | Focus ring — matches accent per mode | | `error` |
+`#dc2626` | `#dc2626` | red-600, not red-500 — see evolution entry 2026-06-30 | | `error-hover` |
+`#ef4444` | `#ef4444` | Hover / fill state only (transient — WCAG AA not required) | |
+`error-subtle` | `rgba(239,68,68,0.12)` | `rgba(239,68,68,0.08)` | Error field background | |
+`error-text` | `#ef4444` | `#b91c1c` | Error message text — WCAG AA ✅ | | `success` | `#22c55e` |
+`#22c55e` | | | `success-subtle` | `rgba(34,197,94,0.12)` | `rgba(34,197,94,0.08)` | | |
+`success-text` | `#22c55e` | `#15803d` | WCAG AA ✅ | | `warning` | `#f59e0b` | `#d97706` | Distinct
+from `accent` (`#e8b84b` golden — `warning` is orange) | | `warning-subtle` |
+`rgba(245,158,11,0.12)` | `rgba(217,119,6,0.08)` | | | `warning-text` | `#f59e0b` | `#92400e` | WCAG
+AA ✅ | | `info` | `#5b9cf6` | `#2563eb` | **Never substitute `mtg-blue` — different semantic
+meaning** | | `info-subtle` | `rgba(91,156,246,0.12)` | `rgba(37,99,235,0.08)` | | | `info-text` |
+`#5b9cf6` | `#1d4ed8` | WCAG AA ✅ |
 
 `accent-text` is darker in light mode (`#3d319a`) to pass WCAG AA on parchment. `on-accent` is
 mode-specific: dark text on amber button (luminance ~0.52, white would fail at 1.8:1), white text on

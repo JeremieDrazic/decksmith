@@ -126,9 +126,7 @@ export function validateDeckFormat(deck: DeckDTO, format: FormatDTO): Validation
   // Works offline if given deck + format data
   return {
     isValid: deck.cards.every((card) => format.legalCards.includes(card.id)),
-    errors: [
-      /* ... */
-    ],
+    errors: [/* ... */],
   };
 }
 
