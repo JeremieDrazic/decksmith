@@ -4,6 +4,56 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-15] — vi.hoisted() for mock class before vi.mock()
+
+**Context:** Session 20 — `prisma-errors.test.ts` needed a `PrismaClientKnownRequestError` mock
+class to test `instanceof` checks. Defining the class as a regular `const` above `vi.mock()` caused
+`ReferenceError: Cannot access '...' before initialization` because Vitest hoists `vi.mock()` to the
+top of the file before any other code executes. **Decision:** Use
+`vi.hoisted(() => { class Foo {} return { Foo }; })` — the callback runs before module evaluation,
+so the returned value is available when the `vi.mock()` factory executes. Applied in
+`prisma-errors.test.ts`. The shared `__mocks__/db.ts` doesn't have this issue (no hoisting needed in
+a plain module). **Impact:** `packages/services/src/prisma-errors.test.ts`,
+`packages/services/src/__mocks__/db.ts`.
+
+---
+
+## [2026-07-15] — PrismaClientKnownRequestError mock must match real constructor signature
+
+**Context:** Session 20 — `isUniqueConstraintError` uses
+`instanceof Prisma.PrismaClientKnownRequestError`. The `__mocks__/db.ts` initially defined the mock
+class as `constructor(code: string, _options?)`, but TypeScript type-checks constructor calls
+against the _original_ module type even when `vi.mock` is active. The real Prisma class requires
+`(message: string, { code, clientVersion })`. **Decision:** Mock class constructor matches the real
+signature — first arg is `message`, second is `{ code, clientVersion }`, with
+`this.code = options.code`. Call sites use
+`new Prisma.PrismaClientKnownRequestError('...', { code: 'P2002', clientVersion: '5.0.0' })`.
+**Impact:** `packages/services/src/__mocks__/db.ts`,
+`packages/services/src/user/user-service.test.ts`.
+
+---
+
+## [2026-07-15] — getFieldError t param typed via ErrorKey, not string
+
+**Context:** Session 19 — adding an optional `t` param to `getFieldError` to translate Zod error
+codes. Typing `t` as `(key: string) => string` caused a TypeScript contravariance error:
+react-i18next's typed `t` (post-`CustomTypeOptions` augmentation) only accepts specific union keys,
+not `string`. **Decision:** Type the param as `t?: (key: ErrorKey) => string` where
+`ErrorKey = keyof I18nResources['errors']`, imported from `@decksmith/i18n`. The `as ErrorKey` cast
+stays inside `getFieldError`, call sites pass `tError` directly with no cast. **Impact:**
+`apps/web/src/lib/form/get-field-error.ts` imports from `@decksmith/i18n`.
+
+---
+
+## [2026-07-15] — i18n namespace strategy: feature-based, all strings in packages/i18n
+
+**Context:** Session 19 — deciding where translations live and how to organize them. **Decision:**
+All strings (web + future mobile) in `packages/i18n`, organized by feature namespace (`auth`,
+`common`, `errors`) — not by platform. No app-level locale files. **Impact:**
+`apps/web/src/locales/` deleted. `packages/i18n` is the single source of truth.
+
+---
+
 ## [2026-07-14] — pnpm 11 migration: allowBuilds + CI=true in hook
 
 **Context:** Session 18 — user upgraded pnpm to v11.13.0 (via volta). Two breaking changes surfaced:
