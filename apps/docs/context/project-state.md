@@ -1,6 +1,6 @@
 # Project State
 
-_Updated: 2026-07-14 (session 18 — service layer + pnpm 11 migration)_
+_Updated: 2026-07-15 (session 20 — packages/services unit tests)_
 
 ---
 
@@ -26,8 +26,8 @@ _Updated: 2026-07-14 (session 18 — service layer + pnpm 11 migration)_
 - [x] Auth routes: `/api/v1/auth/` — all 6 routes implemented (merged in PR #14)
 - [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
 - [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
-- [x] Tests: `pnpm test` → ~150 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
-      6 utils · 9 web-ui) — json-merge tests now colocated in `packages/utils`
+- [x] Tests: `pnpm test` → 210 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
+      6 utils · 30 web-ui · 35 services) — `packages/services` fully tested (session 20)
 - [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 6.0.3)
 - [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
@@ -110,6 +110,42 @@ _Updated: 2026-07-14 (session 18 — service layer + pnpm 11 migration)_
       fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
       removed; pitfall documented (Tailwind v4 layer-order conflict)
 - [x] Toast, Drawer — Base UI components complete (PR #38)
+
+### packages/services unit tests (session 20 — PR #46)
+
+- [x] `packages/services/src/errors.test.ts` — `ServiceError` (4 tests) + `isServiceError` (3 tests)
+- [x] `packages/services/src/prisma-errors.test.ts` — `isUniqueConstraintError` (4 tests);
+      `vi.hoisted()` used to define mock class before `vi.mock()` hoisting
+- [x] `packages/services/src/auth/auth-service.test.ts` — all 7 functions (15 tests);
+      `registerUser`, `loginUser`, `logoutUser`, `refreshSession`, `requestPasswordReset`,
+      `resetPassword`, `getMe`
+- [x] `packages/services/src/user/user-service.test.ts` — all 4 functions (9 tests);
+      `mergeJsonField` shallow-merge verified via `notificationPreferences` JSON field
+- [x] `packages/services/src/__mocks__/db.ts` — shared mock: `prisma` + `supabase` `vi.fn()` stubs +
+      `PrismaClientKnownRequestError` mock class (constructor signature matches real Prisma for
+      TypeScript + `instanceof` correctness)
+- [x] Dep updates: `oxlint` 1.73→1.74, `oxfmt` 0.56→0.59, `oxlint-tsgolint` 0.23→0.24
+- [x] **PR #46 merged** — 35 services tests on `main`
+
+### i18n strategy + packages/i18n (session 19 — PR #45)
+
+- [x] ADR-0025: i18n strategy decided — API sends codes, client translates; `Accept-Language` in API
+      rejected; hybrid approach rejected
+- [x] `packages/i18n` scaffolded: shared translation package (no runtime logic) — 3 feature
+      namespaces (`auth`, `common`, `errors`), EN + FR; `I18nResources` type exported for
+      react-i18next `CustomTypeOptions` augmentation
+- [x] `packages/schema` Zod messages replaced with stable codes: `PASSWORD_TOO_SHORT`,
+      `PASSWORD_MISSING_UPPERCASE`, `PASSWORD_MISSING_LOWERCASE`, `PASSWORD_MISSING_NUMBER`,
+      `USERNAME_INVALID_FORMAT`, `HEX_COLOR_INVALID`, `SLUG_INVALID` — contract tests updated to
+      assert codes (locale-independent)
+- [x] `apps/web/src/locales/` deleted — all strings now in `packages/i18n`
+- [x] `apps/web/src/i18n.ts` — multi-namespace init (`auth`/`common`/`errors`), `CustomTypeOptions`
+      augmentation inline (eslint-disable for `interface` required by declaration merging)
+- [x] Auth components migrated: `useTranslation('auth')` + short keys, `useTranslation('errors')`
+      for error display, `tError(errorCode ?? 'REQUEST_ERROR')` pattern
+- [x] `get-field-error.ts` — optional `t?: (key: ErrorKey) => string` param; `ErrorKey` imported
+      from `@decksmith/i18n`; cast isolated inside the function
+- [x] **PR #45 merged** — all session 19 work on `main`
 
 ### Service layer + pnpm 11 migration (session 18 — PR #44)
 
@@ -290,7 +326,7 @@ None.
 
 ## Current Branch
 
-- Branch: `main` (PR #44 merged — session 18 complete)
+- Branch: `main` (PR #46 merged — session 20 complete; PR #45 = session 19)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).

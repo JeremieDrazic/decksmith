@@ -20,8 +20,9 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ 24 ADRs + 10 feature specs
 - ✅ Vitest infrastructure (shared config + sample test)
 - ✅ `.env.example`
-- ✅ `packages/services` scaffolded: `auth-service`, `user-service`, `ServiceError`, exception
-  mapper in `apps/api` error handler — routes = pure HTTP glue (session 18, ADR-0024)
+- ✅ `packages/services` scaffolded + tested: `auth-service`, `user-service`, `ServiceError`,
+  exception mapper in `apps/api` error handler — routes = pure HTTP glue (session 18, ADR-0024); 35
+  unit tests colocated (session 20)
 - ✅ pnpm 11 migration: `allowBuilds` in `pnpm-workspace.yaml`, `CI=true` in pre-commit hook
   (session 18)
 
@@ -214,11 +215,18 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 _Dependency: Phase 4.1 (apps/web initialized)_
 
-- ⬜ ADR: i18n strategy — Zod error codes vs hardcoded messages
-- ⬜ Replace hardcoded English strings in `packages/schema` Zod validators with error codes
+- ✅ ADR-0025: i18n strategy — API sends codes, client translates (session 19)
+- ✅ Replace hardcoded English strings in `packages/schema` Zod validators with error codes
+  (`PASSWORD_TOO_SHORT`, `USERNAME_INVALID_FORMAT`, `HEX_COLOR_INVALID`, `SLUG_INVALID`, etc.)
+  (session 19)
+- ✅ `packages/i18n` scaffolded: shared translation package (auth/common/errors namespaces, EN +
+  FR); `apps/web/src/locales/` deleted — all strings now in `packages/i18n`; multi-namespace init in
+  `apps/web/src/i18n.ts`; `get-field-error` extended with optional `t` param for inline field
+  translation (session 19)
 - ✅ i18n library in `apps/web` (`react-i18next`) with locale files (EN + FR baseline) — done in
   session 14; cookie-based SSR persistence + `Trans` component added session 16
-- ⬜ `Accept-Language` header support in `apps/api` (locale-aware error messages)
+- ✅ `Accept-Language` NOT needed in `apps/api` — ADR-0025 decision: API is locale-agnostic,
+  translation is a client concern
 - ⬜ i18n in `apps/mobile` (Expo Localization)
 
 ---
