@@ -6,9 +6,9 @@ import { Field, FieldLabel, ThemeToggle, useTheme } from '@decksmith/web-ui';
  * Wraps the `ThemeToggle` primitive with app-level i18n.
  */
 export function ThemeControl() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const { theme } = useTheme();
-  const label = theme === 'dark' ? t('common.theme.dark') : t('common.theme.light');
+  const label = theme === 'dark' ? t('theme.dark') : t('theme.light');
 
   return (
     <Field orientation="horizontal" className="items-center">

@@ -2,8 +2,6 @@ import { useForm } from '@tanstack/react-form';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-import { makePageHead } from '../../lib/head/make-page-head';
-
 import { useForgotPassword } from '@decksmith/query';
 import { ForgotPasswordInputSchema } from '@decksmith/schema/auth';
 import {
@@ -20,10 +18,12 @@ import {
 
 import { AppLink } from '../../components/AppLink';
 import { getFieldError } from '../../lib/form/get-field-error';
+import { makePageHead } from '../../lib/head/make-page-head';
 import { makeSubmitHandler } from '../../lib/form/make-submit-handler';
 
 function ForgotPasswordPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('auth');
+  const { t: tError } = useTranslation('errors');
   const { mutate: forgotPassword, isPending, isSuccess, isError } = useForgotPassword();
 
   const form = useForm({
@@ -37,10 +37,10 @@ function ForgotPasswordPage() {
     return (
       <div className="text-center">
         <Heading as="h1" size="xl" weight="semibold" className="mb-2">
-          {t('auth.forgotPassword.successTitle')}
+          {t('forgotPassword.successTitle')}
         </Heading>
         <Text as="p" tone="muted">
-          {t('auth.forgotPassword.successMessage')}
+          {t('forgotPassword.successMessage')}
         </Text>
       </div>
     );
@@ -49,22 +49,22 @@ function ForgotPasswordPage() {
   return (
     <div>
       <Heading as="h1" size="xl" weight="semibold">
-        {t('auth.forgotPassword.title')}
+        {t('forgotPassword.title')}
       </Heading>
       <Separator className="my-4" />
 
       <Text as="p" size="sm" tone="muted" className="mb-6">
-        {t('auth.forgotPassword.description')}
+        {t('forgotPassword.description')}
       </Text>
 
       <form onSubmit={makeSubmitHandler(form.handleSubmit)}>
         <FieldGroup>
           <form.Field name="email" validators={{ onChange: ForgotPasswordInputSchema.shape.email }}>
             {(field) => {
-              const { hasError, errors } = getFieldError(field.state.meta);
+              const { hasError, errors } = getFieldError(field.state.meta, tError);
               return (
                 <Field invalid={hasError}>
-                  <FieldLabel htmlFor={field.name}>{t('auth.forgotPassword.email')}</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>{t('forgotPassword.email')}</FieldLabel>
                   <Input
                     id={field.name}
                     type="email"
@@ -82,23 +82,21 @@ function ForgotPasswordPage() {
         </FieldGroup>
 
         {isError ? (
-          <FieldError className="mt-4 text-center">
-            {t('auth.forgotPassword.errorFallback')}
-          </FieldError>
+          <FieldError className="mt-4 text-center">{tError('REQUEST_ERROR')}</FieldError>
         ) : null}
 
         <Button
           type="submit"
           className="mt-6 w-full"
           isLoading={isPending}
-          loadingLabel={t('auth.forgotPassword.loading')}
+          loadingLabel={t('forgotPassword.loading')}
         >
-          {t('auth.forgotPassword.submit')}
+          {t('forgotPassword.submit')}
         </Button>
       </form>
 
       <Text as="p" size="sm" tone="muted" className="mt-6">
-        <AppLink to="/login">{t('auth.forgotPassword.back')}</AppLink>
+        <AppLink to="/login">{t('forgotPassword.back')}</AppLink>
       </Text>
     </div>
   );

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { makePageHead } from '../../../lib/head/make-page-head';
 
 function DashboardPage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   return (
     <main>
       <h1>{t('dashboard.title')}</h1>

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@decksmith/api-client": "workspace:*",
+    "@decksmith/i18n": "workspace:*",
     "@decksmith/query": "workspace:*",
     "@decksmith/schema": "workspace:*",
     "@decksmith/tokens": "workspace:*",

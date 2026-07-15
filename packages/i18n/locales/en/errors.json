@@ -1,0 +1,22 @@
+{
+  "VALIDATION_ERROR": "Validation failed. Please check your input.",
+  "REQUEST_ERROR": "Something went wrong. Please try again.",
+  "INTERNAL_ERROR": "An unexpected error occurred. Please try again.",
+  "INVALID_CREDENTIALS": "Invalid email or password.",
+  "UNAUTHORIZED": "You must be signed in to access this.",
+  "EMAIL_ALREADY_TAKEN": "An account with this email already exists.",
+  "SESSION_EXPIRED": "Your session has expired. Please sign in again.",
+  "FORBIDDEN": "You don't have permission to perform this action.",
+  "REGISTRATION_FAILED": "Registration failed. Please try again.",
+  "PASSWORD_RESET_FAILED": "Password reset failed. Please try again.",
+  "USER_NOT_FOUND": "User not found.",
+  "USERNAME_TAKEN": "This username is already taken.",
+  "PREFERENCES_NOT_FOUND": "User preferences not found.",
+  "PASSWORD_TOO_SHORT": "Password must be at least 8 characters.",
+  "PASSWORD_MISSING_UPPERCASE": "Password must contain at least one uppercase letter.",
+  "PASSWORD_MISSING_LOWERCASE": "Password must contain at least one lowercase letter.",
+  "PASSWORD_MISSING_NUMBER": "Password must contain at least one number.",
+  "USERNAME_INVALID_FORMAT": "Username must start with a letter and contain only lowercase letters, numbers, and underscores.",
+  "HEX_COLOR_INVALID": "Must be a valid hex color code (e.g., #3B82F6).",
+  "SLUG_INVALID": "Must be a URL-safe slug (lowercase letters, numbers, hyphens)."
+}

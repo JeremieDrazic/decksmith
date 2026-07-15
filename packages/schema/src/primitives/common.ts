@@ -156,7 +156,7 @@ export function createSortSchema<T extends string>(fields: readonly [T, ...T[]])
  * Used for tag colors, theme customization.
  */
 export const HexColorSchema = z.string().regex(/^#[0-9A-Fa-f]{6}$/, {
-  message: 'Must be a valid hex color code (e.g., #3B82F6)',
+  message: 'HEX_COLOR_INVALID',
 });
 export type HexColor = z.infer<typeof HexColorSchema>;
 
@@ -170,9 +170,7 @@ export const SlugSchema = z
   .string()
   .min(1)
   .max(100)
-  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-    message: 'Must be a URL-safe slug (lowercase letters, numbers, hyphens)',
-  });
+  .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, { message: 'SLUG_INVALID' });
 export type Slug = z.infer<typeof SlugSchema>;
 
 /**

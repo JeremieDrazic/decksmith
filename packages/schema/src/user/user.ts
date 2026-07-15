@@ -28,10 +28,7 @@ export const UsernameSchema = z
   .string()
   .min(3)
   .max(30)
-  .regex(/^[a-z][a-z0-9_]*$/, {
-    message:
-      'Username must start with a letter and contain only lowercase letters, numbers, and underscores',
-  });
+  .regex(/^[a-z][a-z0-9_]*$/, { message: 'USERNAME_INVALID_FORMAT' });
 export type Username = z.infer<typeof UsernameSchema>;
 
 /**

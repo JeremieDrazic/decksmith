@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 function HomePage() {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   return (
     <main>
       <h1>{t('home.title')}</h1>

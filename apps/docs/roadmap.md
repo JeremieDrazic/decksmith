@@ -17,9 +17,13 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ User CRUD routes (`/api/v1/users`)
 - ✅ Database seed script with faker.js _(note: `units`/`sortOrder`/notification fields fixed in
   session 13; auth.users orphan issue remains — see project-state.md)_
-- ✅ 22 ADRs + 10 feature specs
+- ✅ 24 ADRs + 10 feature specs
 - ✅ Vitest infrastructure (shared config + sample test)
 - ✅ `.env.example`
+- ✅ `packages/services` scaffolded: `auth-service`, `user-service`, `ServiceError`, exception
+  mapper in `apps/api` error handler — routes = pure HTTP glue (session 18, ADR-0024)
+- ✅ pnpm 11 migration: `allowBuilds` in `pnpm-workspace.yaml`, `CI=true` in pre-commit hook
+  (session 18)
 
 ---
 
