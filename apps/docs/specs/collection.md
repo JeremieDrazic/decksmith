@@ -409,13 +409,7 @@ function CardMesh({ imageUrl, isFoil }) {
   return (
     <mesh>
       <planeGeometry args={[63, 88]} />
-      <meshStandardMaterial
-        map={texture}
-        {...(isFoil &&
-          {
-            /* foil shader props */
-          })}
-      />
+      <meshStandardMaterial map={texture} {...(isFoil && {/* foil shader props */})} />
     </mesh>
   );
 }
