@@ -4,6 +4,16 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-18] — TypeScript 7.0.2 + oxlint-tsgolint 0.25.0
+
+**Context:** Session 21 dep sweep. TypeScript 6→7 was a major bump — upgraded without code changes
+because the codebase was already strict and well-typed. Prisma client regeneration (`db:generate`)
+was required after `pnpm install` to restore generated types (expected behaviour — Prisma always
+needs a generate step after install). All 210 tests pass, 0 typecheck errors. **Impact:**
+`pnpm-workspace.yaml` (catalog), `package.json` (root devDeps).
+
+---
+
 ## [2026-07-15] — vi.hoisted() for mock class before vi.mock()
 
 **Context:** Session 20 — `prisma-errors.test.ts` needed a `PrismaClientKnownRequestError` mock
