@@ -10,6 +10,8 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
+    "dev:api": "pnpm --filter @decksmith/api dev",
+    "dev:web": "pnpm --filter @decksmith/web dev",
     "test": "turbo run test",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",

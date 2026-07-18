@@ -48,9 +48,13 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 2.1 Environment & DB Connection
 
-- ✅ Verify Supabase project + connection string
-- ✅ Run `db:push` to sync Prisma schema to Supabase
-- ✅ Run seed script against live DB
+- ✅ Verify Supabase project + connection string _(recreated session 21 — original project deleted
+  after free-tier pause)_
+- ✅ Run `db:push` to sync Prisma schema to Supabase _(re-run 2026-07-18, new project)_
+- ✅ First real local run verified end-to-end: `pnpm dev:api` + `pnpm dev:web` → register + login +
+  dashboard in browser (session 21)
+- ✅ Run seed script against live DB _(note: seed creates orphaned profiles — use register API
+  instead for real auth testing)_
 
 ### 2.2 Auth (spec: `user-auth.md`)
 

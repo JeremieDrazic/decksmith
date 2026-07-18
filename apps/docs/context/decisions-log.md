@@ -4,6 +4,48 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-18] — Session Pooler port 5432 (not 6543) for Prisma 7
+
+**Context:** Supabase ORM quickstart shows two URLs: transaction-mode pooler (port 6543,
+`?pgbouncer=true`) and session-mode pooler (port 5432). Prisma 7 with `@prisma/adapter-pg` uses
+prepared statements, which PgBouncer (port 6543, transaction mode) does not support — queries fail
+silently or error. **Decision:** Always use port 5432 (session-mode pooler) in `DATABASE_URL` for
+both queries and migrations. Port 6543 is never used. **Impact:** `.env` root — documented in
+`.env.example` comment.
+
+---
+
+## [2026-07-18] — NODE_ENV=development required for local auth
+
+**Context:** `apps/api/src/config.ts` defaults `NODE_ENV` to `'production'` when the var is absent.
+Auth cookies are set with `secure: config.nodeEnv === 'production'` (`auth-routes.ts:42/50`).
+Without `NODE_ENV=development` in `.env`, cookies are `Secure`-flagged and silently rejected by the
+browser on `http://localhost` → login appears to fail with no visible error. **Decision:** Add
+`NODE_ENV=development` explicitly to `.env` for local development. **Impact:** `.env` root — first
+real local run was blocked by this until the fix.
+
+---
+
+## [2026-07-18] — Supabase email confirmation disabled for dev
+
+**Context:** New Supabase project defaults to email confirmation required. Decksmith dev has no SMTP
+configured and no email confirmation flow implemented yet (blocked on OAuth/deep-link spec).
+**Decision:** Disable "Confirm email" in Supabase → Authentication → Sign In / Providers → Email for
+the dev project. Must re-enable before production. **Impact:** Supabase dashboard only — no code
+change. The register response message ("Check your inbox") is a known UX mismatch for dev.
+
+---
+
+## [2026-07-18] — Supabase new key format (sb_publishable / sb_secret)
+
+**Context:** New Supabase projects now issue `sb_publishable_*` / `sb_secret_*` keys by default
+instead of legacy JWT keys (`eyJ…`). The legacy keys remain available and both formats work with
+`@supabase/supabase-js ^2.108.1`. **Decision:** Use the new `sb_` format keys (what the dashboard
+generates by default). Legacy JWTs are kept as fallback in the dashboard but not used in `.env`.
+**Impact:** `.env` — `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` use new format.
+
+---
+
 ## [2026-07-18] — TypeScript 7.0.2 + oxlint-tsgolint 0.25.0
 
 **Context:** Session 21 dep sweep. TypeScript 6→7 was a major bump — upgraded without code changes

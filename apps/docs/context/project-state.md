@@ -1,21 +1,22 @@
 # Project State
 
-_Updated: 2026-07-15 (session 20 — packages/services unit tests)_
+_Updated: 2026-07-18 (session 21 — Supabase recreation + first real local run)_
 
 ---
 
 ## Environment
 
-| Variable                    | Status                                                     |
-| --------------------------- | ---------------------------------------------------------- |
-| `DATABASE_URL`              | ✅ Configured (Supabase Session Pooler — IPv4 fallback)    |
-| Supabase project            | ✅ Active (`amsnscsignhhcderjczy.supabase.co`)             |
-| `SUPABASE_URL`              | ✅ Configured                                              |
-| `SUPABASE_ANON_KEY`         | ✅ Configured                                              |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured                                              |
-| `COOKIE_SECRET`             | ✅ Configured                                              |
-| Redis                       | Not needed yet                                             |
-| `.env.example`              | ✅ Updated (Session Pooler + COOKIE_SECRET + VITE_API_URL) |
+| Variable                    | Status                                                                       |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `DATABASE_URL`              | ✅ Configured (Session Pooler port 5432 — `wcvexyibmjkuzufbvuyh`, eu-west-1) |
+| Supabase project            | ✅ Active (`wcvexyibmjkuzufbvuyh.supabase.co`) — recreated session 21        |
+| `SUPABASE_URL`              | ✅ Configured                                                                |
+| `SUPABASE_ANON_KEY`         | ✅ Configured (`sb_publishable_*` format)                                    |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured (`sb_secret_*` format)                                         |
+| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret generated session 21)                     |
+| `NODE_ENV`                  | ✅ `development` — required for `secure: false` cookies on localhost         |
+| Redis                       | Not needed yet                                                               |
+| `.env.example`              | ✅ Updated (Session Pooler + COOKIE_SECRET + VITE_API_URL + NODE_ENV)        |
 
 ---
 
@@ -28,9 +29,13 @@ _Updated: 2026-07-15 (session 20 — packages/services unit tests)_
 - [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
 - [x] Tests: `pnpm test` → 210 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
       6 utils · 30 web-ui · 35 services) — `packages/services` fully tested (session 20)
-- [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 6.0.3)
-- [x] DB schema: synced to Supabase via Session Pooler (`db:push` ✅ 2026-03-17)
+- [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 7.0.2 — upgraded session 21)
+- [x] DB schema: synced to new Supabase project via Session Pooler (`db:push` ✅ 2026-07-18)
 - [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
+- [x] **First real local run (session 21)**: `pnpm dev:api` + `pnpm dev:web` → register + login +
+      `/me` + `/dashboard` verified end-to-end in browser; cookies auth working
+      (`NODE_ENV=development`)
+- [x] Root `package.json` scripts: `dev:api` + `dev:web` shortcuts added
 - [x] Design system docs: `apps/docs/design/` — identity, decisions, 7 screen mocks, DESIGN.md
 - [x] ADR-0015: Design System Architecture documented
 - [x] `CLAUDE.md`: `@apps/docs/design/DESIGN.md` imported + Design Rules section added
@@ -315,6 +320,10 @@ _Updated: 2026-07-15 (session 20 — packages/services unit tests)_
 - DB seed creates orphaned `User` profiles with no matching `auth.users` row — seed is usable for DB
   exploration but auth routes won't work for seeded users. Full fix requires creating Supabase auth
   users via `supabase.auth.admin.createUser()` before seeding profile rows.
+- No Docker setup yet — Postgres + Redis for local dev pending session 22 (Dockerization)
+- No CI image build yet — pending session 22
+- Supabase email confirmation is **disabled** in the new project (dev-only setting) — must re-enable
+  before production or when email confirmation flow is implemented
 
 ---
 
@@ -326,7 +335,7 @@ None.
 
 ## Current Branch
 
-- Branch: `main` (PR #46 merged — session 20 complete; PR #45 = session 19)
+- Branch: `main` (session 21 — Supabase recreation + first real local run)
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).
