@@ -1103,6 +1103,35 @@ Tailwind utilities.
 
 ---
 
+## [2026-07-18] — `tsx` at runtime for `apps/api` in Docker (deliberate, temporary)
+
+**Context:** All workspace packages (`packages/db`, `schema`, `services`, `utils`, `domain`) export
+their TypeScript source directly (`./src/index.ts`). There is no compilation pipeline for packages.
+This creates a problem for Docker: a compiled `apps/api` would import workspace packages at runtime,
+and Node.js cannot execute `.ts` files without a loader.
+
+**Options considered:**
+
+- Conditional exports (`development` / `default`) — divergence between dev and prod
+- tsup bundle — requires a custom esbuild plugin to remap `.js` → `.ts` imports (NodeNext
+  convention), which is a hack
+- Full tsc pipeline per package + Turborepo watch — correct, but a dedicated session of work
+- `tsx` at runtime — no compilation needed, esbuild-fast startup (~100ms), clean Docker setup
+
+**Decision:** Use `tsx` as the Node.js runtime loader in the Docker image for `apps/api`.
+Concretely: `tsx` moved to `dependencies` (not devDependencies), start script is
+`node --import tsx/esm src/index.ts`. This is a deliberate, documented choice — not a shortcut to
+forget.
+
+**Planned migration:** Session dedicated to "build pipeline" — each package gets a
+`tsconfig.build.json`, exports point to `dist/`, Turborepo watch recompiles on source change. Docker
+then uses pure compiled JS. This session should happen before Phase 3 (Scryfall) to avoid the
+pipeline work growing with more packages.
+
+**Impact:** `apps/api/package.json`. No impact on dev, typecheck, or tests.
+
+---
+
 ## [2026-06-22] — `radius-stamp` semantic token replaces `radius-sm` exception
 
 **Context:** The old rule used Tailwind's built-in `rounded-sm` with a required inline comment for

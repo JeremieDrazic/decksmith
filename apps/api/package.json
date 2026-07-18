@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "start": "node --import tsx/esm src/index.ts",
     "lint": "oxlint .",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
@@ -22,6 +23,7 @@
     "fastify": "catalog:",
     "fastify-plugin": "catalog:",
     "fastify-type-provider-zod": "catalog:",
+    "tsx": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -29,7 +31,6 @@
     "@types/node": "catalog:",
     "light-my-request": "^6.0.0",
     "pino-pretty": "catalog:",
-    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

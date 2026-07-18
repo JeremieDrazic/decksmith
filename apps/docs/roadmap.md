@@ -72,6 +72,29 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ `@fastify/rate-limit` with strict limits on auth endpoints
 - ✅ `@fastify/cors` configured for dev + prod origins
 
+### 2.4 Docker & CI/CD (session 22)
+
+- 🔄 `apps/web` production server: `nitro` plugin added, `node .output/server/index.mjs`
+  _(session 22)_
+- 🔄 `apps/api` Docker: `tsx` at runtime (deliberate temporary choice — see decisions-log
+  2026-07-18)
+- ⬜ `Dockerfile` for `apps/api` (multi-stage)
+- ⬜ `Dockerfile` for `apps/web` (multi-stage)
+- ⬜ `docker-compose.yml` — local dev infra (Postgres + Redis only, apps run natively)
+- ⬜ `.dockerignore`
+- ⬜ CI — GitHub Actions → build images → push GHCR
+- ⬜ Nginx — upstreams on VPS, Certbot HTTPS
+
+### 2.5 Build pipeline (before Phase 3)
+
+> Unblocks: proper compiled Docker images, faster cold starts, clean prod/dev parity.
+
+- ⬜ Each package (`utils`, `domain`, `schema`, `db`, `services`) gets `tsconfig.build.json` +
+  `build` script + exports pointing to `dist/`
+- ⬜ Turborepo watch pipeline: `pnpm dev:api` recompiles deps on source change
+- ⬜ `apps/api` migrated to `node dist/index.js` (remove `tsx` runtime dependency)
+- ⬜ Docker images updated to use compiled output
+
 ---
 
 ## Phase 3: Scryfall Integration (spec: `card-search.md`)

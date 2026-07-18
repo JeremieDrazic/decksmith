@@ -20,12 +20,12 @@
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
     "@supabase/supabase-js": "catalog:",
-    "dotenv": "catalog:"
+    "dotenv": "catalog:",
+    "prisma": "^7.8.0"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@faker-js/faker": "^10.4.0",
-    "prisma": "^7.8.0",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }
