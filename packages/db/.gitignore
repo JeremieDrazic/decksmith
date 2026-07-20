@@ -1,0 +1,3 @@
+# Prisma Client is generated from schema.prisma (prisma-client generator).
+# Not committed — regenerated on install (postinstall) and on every schema change.
+/src/generated/
