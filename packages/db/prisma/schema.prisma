@@ -23,8 +23,10 @@ datasource db {
 // GENERATOR: What code should Prisma create?
 // -----------------------------------------------------------------------------
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
 }
 
 // =============================================================================

@@ -3,7 +3,7 @@ import { FORBIDDEN, SESSION_EXPIRED, UNAUTHORIZED } from '@decksmith/schema/erro
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
 
-import { createHttpError } from '@/utils/http-errors/http-errors.js';
+import { createHttpError } from '../utils/http-errors/http-errors.js';
 
 /**
  * Auth plugin — exposes two preHandler decorators on the Fastify instance:

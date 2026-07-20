@@ -9,6 +9,9 @@ import { defineConfig } from 'vitest/config';
  *   export default mergeConfig(baseConfig, defineConfig({ test: { ... } }));
  */
 export default defineConfig({
+  resolve: {
+    conditions: ['source'],
+  },
   test: {
     globals: false,
     environment: 'node',

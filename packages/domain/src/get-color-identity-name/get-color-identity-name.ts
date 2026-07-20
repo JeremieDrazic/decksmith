@@ -1,5 +1,5 @@
-import type { ColorIdentity } from '../mana';
-import { sortColorIdentity } from '../sort-color-identity';
+import type { ColorIdentity } from '../mana.js';
+import { sortColorIdentity } from '../sort-color-identity/index.js';
 
 // Canonical MTG color combination names — sorted WUBRG key → lore name.
 // Mono: color names. Guilds: Ravnica. Shards: Alara. Clans/Wedges: Tarkir. Nephilim: Ravnica.

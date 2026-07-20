@@ -3,7 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "files": [
+    "dist",
+    "prisma",
+    "prisma.config.ts"
+  ],
   "scripts": {
+    "postinstall": "prisma generate",
+    "build": "tsc -p tsconfig.build.json",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate:dev": "prisma migrate dev",
@@ -14,18 +21,22 @@
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": {
+      "source": "./src/index.ts",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
-    "@supabase/supabase-js": "catalog:",
-    "dotenv": "catalog:",
-    "prisma": "^7.8.0"
+    "@supabase/supabase-js": "catalog:"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@faker-js/faker": "^10.4.0",
+    "dotenv": "catalog:",
+    "prisma": "^7.8.0",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }

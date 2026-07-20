@@ -1,1 +1,1 @@
-export { getColorIdentityName } from './get-color-identity-name';
+export { getColorIdentityName } from './get-color-identity-name.js';

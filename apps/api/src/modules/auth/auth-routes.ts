@@ -26,8 +26,8 @@ import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod';
 import { toRegisterResponse } from './auth-mapper.js';
 import { toUserResponse } from '../user/user-mapper.js';
 
-import { config } from '@/config.js';
-import { createHttpError } from '@/utils/http-errors/http-errors.js';
+import { config } from '../../config.js';
+import { createHttpError } from '../../utils/http-errors/http-errors.js';
 
 // ---------------------------------------------------------------------------
 // Cookie options
