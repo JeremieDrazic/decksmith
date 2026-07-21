@@ -48,9 +48,13 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 2.1 Environment & DB Connection
 
-- ✅ Verify Supabase project + connection string
-- ✅ Run `db:push` to sync Prisma schema to Supabase
-- ✅ Run seed script against live DB
+- ✅ Verify Supabase project + connection string _(recreated session 21 — original project deleted
+  after free-tier pause)_
+- ✅ Run `db:push` to sync Prisma schema to Supabase _(re-run 2026-07-18, new project)_
+- ✅ First real local run verified end-to-end: `pnpm dev:api` + `pnpm dev:web` → register + login +
+  dashboard in browser (session 21)
+- ✅ Run seed script against live DB _(note: seed creates orphaned profiles — use register API
+  instead for real auth testing)_
 
 ### 2.2 Auth (spec: `user-auth.md`)
 
@@ -67,6 +71,35 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 - ✅ `@fastify/rate-limit` with strict limits on auth endpoints
 - ✅ `@fastify/cors` configured for dev + prod origins
+
+### 2.4 Docker & CI/CD (session 22)
+
+- 🔄 `apps/web` production server: `nitro` plugin added, `node .output/server/index.mjs`
+  _(session 22)_
+- ✅ `apps/api` runs `node dist/index.js` (compiled — `tsx` runtime dropped)
+- ✅ `Dockerfile` for `apps/api` (multi-stage) — 1.76GB → 380MB via Prisma 7 `prisma-client`
+  generator + `pnpm deploy --no-optional`; boot + `/api/health` verified
+- ⬜ `Dockerfile` for `apps/web` (multi-stage) — **blocked**: nitro v3-beta (bundled by TanStack
+  Start) leaves `react` externalized and doesn't trace it into `.output`, so the "self-contained"
+  `node .output/server/index.mjs` fails with `Cannot find module 'react'`. Not cleanly fixable
+  downstream (`noExternals` inlines everything except react). Upstream: nitrojs/nitro#3905,
+  TanStack/router#2180, #5476. Revisit when nitro v3 stabilizes OR decide the web hosting strategy
+  (static SPA + nginx vs node server) as part of the VPS deployment design.
+- ⬜ `docker-compose.yml` — local dev infra (Postgres + Redis only, apps run natively)
+- ✅ `.dockerignore`
+- ⬜ CI — GitHub Actions → build images → push GHCR
+- ⬜ Nginx — upstreams on VPS, Certbot HTTPS
+
+### 2.5 Build pipeline (before Phase 3)
+
+> Unblocks: proper compiled Docker images, faster cold starts, clean prod/dev parity.
+
+- ✅ Each package (`utils`, `domain`, `schema`, `db`, `services`) gets `tsconfig.build.json` +
+  `build` script + exports pointing to `dist/`
+- ⬜ Turborepo watch pipeline: `pnpm dev:api` recompiles deps on source change _(not needed as-is:
+  `pnpm dev:api` runs `tsx --conditions=source`, reading deps' TS source directly — no dist watch)_
+- ✅ `apps/api` migrated to `node dist/index.js` (remove `tsx` runtime dependency)
+- ✅ Docker images updated to use compiled output (`apps/api`)
 
 ---
 

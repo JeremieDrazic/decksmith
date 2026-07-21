@@ -1,0 +1,9 @@
+{
+  "extends": "@decksmith/config/tsconfig/build.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src"
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

@@ -3,30 +3,106 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
     "lint": "oxlint .",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
-    "./auth": "./src/auth/index.ts",
-    "./errors/codes": "./src/errors/codes.ts",
-    "./primitives/enums": "./src/primitives/enums.ts",
-    "./primitives/common": "./src/primitives/common.ts",
-    "./card/card": "./src/card/card.ts",
-    "./card/card-print": "./src/card/card-print.ts",
-    "./card/prices": "./src/card/prices.ts",
-    "./user/user": "./src/user/user.ts",
-    "./user/preferences": "./src/user/preferences.ts",
-    "./collection/folder": "./src/collection/folder.ts",
-    "./collection/collection-entry": "./src/collection/collection-entry.ts",
-    "./deck/deck": "./src/deck/deck.ts",
-    "./deck/section": "./src/deck/section.ts",
-    "./deck/deck-card": "./src/deck/deck-card.ts",
-    "./tag/tag": "./src/tag/tag.ts",
-    "./content/craft-guide": "./src/content/craft-guide.ts",
-    "./recommendation/recommendation": "./src/recommendation/recommendation.ts",
-    "./recommendation/feedback": "./src/recommendation/feedback.ts"
+    "./auth": {
+      "source": "./src/auth/index.ts",
+      "import": "./dist/auth/index.js",
+      "types": "./dist/auth/index.d.ts"
+    },
+    "./errors/codes": {
+      "source": "./src/errors/codes.ts",
+      "import": "./dist/errors/codes.js",
+      "types": "./dist/errors/codes.d.ts"
+    },
+    "./primitives/enums": {
+      "source": "./src/primitives/enums.ts",
+      "import": "./dist/primitives/enums.js",
+      "types": "./dist/primitives/enums.d.ts"
+    },
+    "./primitives/common": {
+      "source": "./src/primitives/common.ts",
+      "import": "./dist/primitives/common.js",
+      "types": "./dist/primitives/common.d.ts"
+    },
+    "./card/card": {
+      "source": "./src/card/card.ts",
+      "import": "./dist/card/card.js",
+      "types": "./dist/card/card.d.ts"
+    },
+    "./card/card-print": {
+      "source": "./src/card/card-print.ts",
+      "import": "./dist/card/card-print.js",
+      "types": "./dist/card/card-print.d.ts"
+    },
+    "./card/prices": {
+      "source": "./src/card/prices.ts",
+      "import": "./dist/card/prices.js",
+      "types": "./dist/card/prices.d.ts"
+    },
+    "./user/user": {
+      "source": "./src/user/user.ts",
+      "import": "./dist/user/user.js",
+      "types": "./dist/user/user.d.ts"
+    },
+    "./user/preferences": {
+      "source": "./src/user/preferences.ts",
+      "import": "./dist/user/preferences.js",
+      "types": "./dist/user/preferences.d.ts"
+    },
+    "./collection/folder": {
+      "source": "./src/collection/folder.ts",
+      "import": "./dist/collection/folder.js",
+      "types": "./dist/collection/folder.d.ts"
+    },
+    "./collection/collection-entry": {
+      "source": "./src/collection/collection-entry.ts",
+      "import": "./dist/collection/collection-entry.js",
+      "types": "./dist/collection/collection-entry.d.ts"
+    },
+    "./deck/deck": {
+      "source": "./src/deck/deck.ts",
+      "import": "./dist/deck/deck.js",
+      "types": "./dist/deck/deck.d.ts"
+    },
+    "./deck/section": {
+      "source": "./src/deck/section.ts",
+      "import": "./dist/deck/section.js",
+      "types": "./dist/deck/section.d.ts"
+    },
+    "./deck/deck-card": {
+      "source": "./src/deck/deck-card.ts",
+      "import": "./dist/deck/deck-card.js",
+      "types": "./dist/deck/deck-card.d.ts"
+    },
+    "./tag/tag": {
+      "source": "./src/tag/tag.ts",
+      "import": "./dist/tag/tag.js",
+      "types": "./dist/tag/tag.d.ts"
+    },
+    "./content/craft-guide": {
+      "source": "./src/content/craft-guide.ts",
+      "import": "./dist/content/craft-guide.js",
+      "types": "./dist/content/craft-guide.d.ts"
+    },
+    "./recommendation/recommendation": {
+      "source": "./src/recommendation/recommendation.ts",
+      "import": "./dist/recommendation/recommendation.js",
+      "types": "./dist/recommendation/recommendation.d.ts"
+    },
+    "./recommendation/feedback": {
+      "source": "./src/recommendation/feedback.ts",
+      "import": "./dist/recommendation/feedback.js",
+      "types": "./dist/recommendation/feedback.d.ts"
+    }
   },
   "dependencies": {
     "zod": "catalog:"

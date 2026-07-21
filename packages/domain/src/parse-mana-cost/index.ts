@@ -1,1 +1,1 @@
-export { parseManaCost } from './parse-mana-cost';
+export { parseManaCost } from './parse-mana-cost.js';

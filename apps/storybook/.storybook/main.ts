@@ -20,6 +20,11 @@ const config: StorybookConfig = {
   viteFinal: (viteConfig) => {
     viteConfig.plugins ??= [];
     viteConfig.plugins.push(tailwindcss());
+    // Dual packages (@decksmith/domain, …) expose a "source" export condition pointing at their
+    // TS source alongside the compiled "import" → dist. Storybook never builds those packages, so
+    // resolve them from source; without this, Vite hits the dist entry (absent) and fails.
+    viteConfig.resolve ??= {};
+    viteConfig.resolve.conditions = ['source', 'module', 'browser', 'development|production'];
     return viteConfig;
   },
 };

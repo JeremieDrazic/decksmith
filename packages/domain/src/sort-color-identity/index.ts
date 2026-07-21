@@ -1,1 +1,1 @@
-export { sortColorIdentity } from './sort-color-identity';
+export { sortColorIdentity } from './sort-color-identity.js';

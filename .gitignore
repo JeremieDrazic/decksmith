@@ -8,6 +8,10 @@ dist
 build
 .turbo
 storybook-static
+.output
+
+# Prisma Client (generated from schema by the prisma-client generator — see packages/db)
+**/src/generated
 
 # VitePress
 **/.vitepress/cache

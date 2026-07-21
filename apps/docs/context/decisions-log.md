@@ -4,6 +4,58 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-18] — Session Pooler port 5432 (not 6543) for Prisma 7
+
+**Context:** Supabase ORM quickstart shows two URLs: transaction-mode pooler (port 6543,
+`?pgbouncer=true`) and session-mode pooler (port 5432). Prisma 7 with `@prisma/adapter-pg` uses
+prepared statements, which PgBouncer (port 6543, transaction mode) does not support — queries fail
+silently or error. **Decision:** Always use port 5432 (session-mode pooler) in `DATABASE_URL` for
+both queries and migrations. Port 6543 is never used. **Impact:** `.env` root — documented in
+`.env.example` comment.
+
+---
+
+## [2026-07-18] — NODE_ENV=development required for local auth
+
+**Context:** `apps/api/src/config.ts` defaults `NODE_ENV` to `'production'` when the var is absent.
+Auth cookies are set with `secure: config.nodeEnv === 'production'` (`auth-routes.ts:42/50`).
+Without `NODE_ENV=development` in `.env`, cookies are `Secure`-flagged and silently rejected by the
+browser on `http://localhost` → login appears to fail with no visible error. **Decision:** Add
+`NODE_ENV=development` explicitly to `.env` for local development. **Impact:** `.env` root — first
+real local run was blocked by this until the fix.
+
+---
+
+## [2026-07-18] — Supabase email confirmation disabled for dev
+
+**Context:** New Supabase project defaults to email confirmation required. Decksmith dev has no SMTP
+configured and no email confirmation flow implemented yet (blocked on OAuth/deep-link spec).
+**Decision:** Disable "Confirm email" in Supabase → Authentication → Sign In / Providers → Email for
+the dev project. Must re-enable before production. **Impact:** Supabase dashboard only — no code
+change. The register response message ("Check your inbox") is a known UX mismatch for dev.
+
+---
+
+## [2026-07-18] — Supabase new key format (sb_publishable / sb_secret)
+
+**Context:** New Supabase projects now issue `sb_publishable_*` / `sb_secret_*` keys by default
+instead of legacy JWT keys (`eyJ…`). The legacy keys remain available and both formats work with
+`@supabase/supabase-js ^2.108.1`. **Decision:** Use the new `sb_` format keys (what the dashboard
+generates by default). Legacy JWTs are kept as fallback in the dashboard but not used in `.env`.
+**Impact:** `.env` — `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` use new format.
+
+---
+
+## [2026-07-18] — TypeScript 7.0.2 + oxlint-tsgolint 0.25.0
+
+**Context:** Session 21 dep sweep. TypeScript 6→7 was a major bump — upgraded without code changes
+because the codebase was already strict and well-typed. Prisma client regeneration (`db:generate`)
+was required after `pnpm install` to restore generated types (expected behaviour — Prisma always
+needs a generate step after install). All 210 tests pass, 0 typecheck errors. **Impact:**
+`pnpm-workspace.yaml` (catalog), `package.json` (root devDeps).
+
+---
+
 ## [2026-07-15] — vi.hoisted() for mock class before vi.mock()
 
 **Context:** Session 20 — `prisma-errors.test.ts` needed a `PrismaClientKnownRequestError` mock
@@ -1048,6 +1100,35 @@ foreground contrast ratios WCAG AA verified (common 8.7:1, uncommon 5.7:1, rare 
 
 **Impact:** `packages/tokens/src/web/mtg.css`. Generates `bg-rarity-*` and `text-rarity-*-fg`
 Tailwind utilities.
+
+---
+
+## [2026-07-18] — `tsx` at runtime for `apps/api` in Docker (deliberate, temporary)
+
+**Context:** All workspace packages (`packages/db`, `schema`, `services`, `utils`, `domain`) export
+their TypeScript source directly (`./src/index.ts`). There is no compilation pipeline for packages.
+This creates a problem for Docker: a compiled `apps/api` would import workspace packages at runtime,
+and Node.js cannot execute `.ts` files without a loader.
+
+**Options considered:**
+
+- Conditional exports (`development` / `default`) — divergence between dev and prod
+- tsup bundle — requires a custom esbuild plugin to remap `.js` → `.ts` imports (NodeNext
+  convention), which is a hack
+- Full tsc pipeline per package + Turborepo watch — correct, but a dedicated session of work
+- `tsx` at runtime — no compilation needed, esbuild-fast startup (~100ms), clean Docker setup
+
+**Decision:** Use `tsx` as the Node.js runtime loader in the Docker image for `apps/api`.
+Concretely: `tsx` moved to `dependencies` (not devDependencies), start script is
+`node --import tsx/esm src/index.ts`. This is a deliberate, documented choice — not a shortcut to
+forget.
+
+**Planned migration:** Session dedicated to "build pipeline" — each package gets a
+`tsconfig.build.json`, exports point to `dist/`, Turborepo watch recompiles on source change. Docker
+then uses pure compiled JS. This session should happen before Phase 3 (Scryfall) to avoid the
+pipeline work growing with more packages.
+
+**Impact:** `apps/api/package.json`. No impact on dev, typecheck, or tests.
 
 ---
 

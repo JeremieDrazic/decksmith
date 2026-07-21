@@ -23,7 +23,10 @@ datasource db {
 // GENERATOR: What code should Prisma create?
 // -----------------------------------------------------------------------------
 generator client {
-  provider = "prisma-client-js" // Generate TypeScript/JavaScript client
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
 }
 
 // =============================================================================

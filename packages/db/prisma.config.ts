@@ -1,10 +1,16 @@
 import path from 'node:path';
 
 import { config } from 'dotenv';
-import { defineConfig, env } from 'prisma/config';
+import { defineConfig } from 'prisma/config';
 
 // Load .env from monorepo root
 config({ path: path.resolve(import.meta.dirname, '../../.env') });
+
+// `prisma generate` only reads the schema — it never connects — so it must not require a live
+// DATABASE_URL. Without this fallback, a fresh clone or CI (no .env yet) fails at `postinstall`.
+// Commands that DO connect (db push / migrate / studio) always run with a real DATABASE_URL loaded
+// above, so the placeholder never reaches them. This file is CLI-only — never read at runtime.
+const DATABASE_URL = process.env['DATABASE_URL'] ?? 'postgresql://placeholder:5432/placeholder';
 
 /**
  * Prisma configuration file (Prisma 7+).
@@ -24,8 +30,8 @@ export default defineConfig({
     seed: 'tsx prisma/seed.ts',
   },
 
-  // Database connection (loaded from environment)
+  // Database connection (loaded from environment; placeholder keeps `generate` env-free)
   datasource: {
-    url: env('DATABASE_URL'),
+    url: DATABASE_URL,
   },
 });
