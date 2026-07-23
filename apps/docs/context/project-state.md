@@ -1,6 +1,7 @@
 # Project State
 
-_Updated: 2026-07-18 (session 21 — Supabase recreation + first real local run)_
+_Updated: 2026-07-23 (session 23 — build pipeline + apps/api Docker image; Traefik reverse proxy
+live on the VPS)_
 
 ---
 
@@ -329,13 +330,32 @@ _Updated: 2026-07-18 (session 21 — Supabase recreation + first real local run)
 
 ## Open PRs
 
-None.
+- **#49** — `docs: reverse-proxy (Traefik) deployment — ADR-0026 + runbook` (docs only; awaiting
+  merge).
+
+---
+
+## Infrastructure (production)
+
+- **Reverse proxy live**: Traefik on the VPS owns 80/443, routes by Docker labels over a shared
+  `proxy` network, terminates TLS with a Let's Encrypt **wildcard** cert (ACME DNS-01, prod,
+  auto-renew). Host-nginx retired (stopped + disabled; kept on disk as rollback). See ADR-0026 +
+  `apps/docs/deployment/reverse-proxy.md`.
+- **DNS** moved to an API-capable provider (nameservers off the registrar); wildcard record → VPS,
+  so any subdomain resolves with no further DNS change.
+- **Traefik dashboard** protected by source-IP allowlist + basic auth.
+- **Pre-existing personal site** migrated behind Traefik (real cert, verified end-to-end).
+- Secrets (DNS token, ACME email, dashboard hash, allow-IP) live only in server-side `~/infra/.env`
+  — never committed.
+- **Not yet done**: CI → build images → push GHCR; Decksmith API deployed behind Traefik
+  (`app.<domain>/api`); `apps/web` image (blocked on nitro v3-beta).
 
 ---
 
 ## Current Branch
 
-- Branch: `main` (session 21 — Supabase recreation + first real local run)
+- Branch: `docs/deployment-traefik` (session 23). `main` has PR #48 merged (build pipeline +
+  apps/api Docker image, 1.76GB → 380MB).
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).
