@@ -127,7 +127,16 @@ export default defineConfig({
             text: 'ADR-0019: web-ui Component Architecture',
             link: '/adr/0019-web-ui-component-architecture',
           },
+          {
+            text: 'ADR-0026: Reverse Proxy (Traefik)',
+            link: '/adr/0026-reverse-proxy-traefik',
+          },
         ],
+      },
+      {
+        text: 'Deployment',
+        collapsed: false,
+        items: [{ text: 'Reverse Proxy (Traefik)', link: '/deployment/reverse-proxy' }],
       },
       {
         text: 'Feature Specs',

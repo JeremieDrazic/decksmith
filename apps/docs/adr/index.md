@@ -35,6 +35,8 @@ evolution history.
 | [0022](./0022-row-level-security.md)                      | Row Level Security Strategy                       | Active | 2026-06-30 |
 | [0023](./0023-auth-guard-ssr-beforeload.md)               | Auth Guard via beforeLoad + SSR Cookie Forwarding | Active | 2026-07-08 |
 | [0024](./0024-service-layer-architecture.md)              | Service Layer Architecture                        | Active | 2026-07-14 |
+| [0025](./0025-i18n-strategy.md)                           | Internationalisation Strategy                     | Active | 2026-07-14 |
+| [0026](./0026-reverse-proxy-traefik.md)                   | Reverse Proxy & Deployment Topology (Traefik)     | Active | 2026-07-21 |
 
 ---
 
