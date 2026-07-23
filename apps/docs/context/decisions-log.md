@@ -4,6 +4,24 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-23] — Prisma 7 `prisma-client` generator + `pnpm deploy --no-optional` (Docker image)
+
+**Context:** The `apps/api` production image was 1.76 GB. Two root causes: (1) the legacy
+`prisma-client-js` generator writes the client into `node_modules`, forcing fragile store surgery in
+the Dockerfile; (2) `@prisma/client` records the `prisma` CLI as an _optional_ peer, so
+`pnpm deploy --prod` shipped ~240 MB of CLI/studio/pglite tooling the runtime never imports.
+**Decision:** Migrate `packages/db` to the Prisma 7 `prisma-client` generator (client generated as
+`.ts` into `src/generated`, gitignored, regenerated via `postinstall`, compiled to `dist/` like any
+source); `prisma` + `dotenv` moved to devDependencies; `prisma.config.ts` falls back to a
+placeholder `DATABASE_URL` so `generate` needs no `.env` on a fresh clone/CI; the deploy step uses
+`pnpm deploy --prod --no-optional --ignore-scripts`. **Impact:** image 1.76 GB → 380 MB;
+`packages/db` (schema, config, package.json, client/index imports), `apps/api/Dockerfile`,
+`.dockerignore`, `.gitignore`. Verified: boots, `/api/health` 200, Prisma loads its WASM query
+compiler without the CLI. Also required `resolve.conditions: ['source', …]` in `apps/storybook`
+(and, later, `apps/web`) so bundlers resolve dual packages from TS source. (PR #48)
+
+---
+
 ## [2026-07-18] — Session Pooler port 5432 (not 6543) for Prisma 7
 
 **Context:** Supabase ORM quickstart shows two URLs: transaction-mode pooler (port 6543,

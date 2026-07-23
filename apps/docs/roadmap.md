@@ -88,7 +88,14 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ⬜ `docker-compose.yml` — local dev infra (Postgres + Redis only, apps run natively)
 - ✅ `.dockerignore`
 - ⬜ CI — GitHub Actions → build images → push GHCR
-- ⬜ Nginx — upstreams on VPS, Certbot HTTPS
+- ✅ Reverse proxy — **Traefik** adopted (ADR-0026 + `apps/docs/deployment/reverse-proxy.md`),
+  replaces host-nginx + per-project Certbot. Deployed on the VPS: owns 80/443, label-driven routing,
+  wildcard TLS via ACME DNS-01 (Let's Encrypt prod), dashboard behind IP-allowlist + basic auth. The
+  pre-existing personal site was migrated behind it (real cert, verified). Traefik v3.7+ required
+  (Docker Engine 29 dropped the API version older Traefik used)
+- ⬜ Deploy Decksmith API behind Traefik — `deploy/compose.yml` pulling the GHCR image, labels
+  `Host(app.<domain>) && PathPrefix(/api)` (same-origin with future web for cookie auth). Blocked on
+  the GHCR image-build step above
 
 ### 2.5 Build pipeline (before Phase 3)
 
