@@ -691,7 +691,7 @@ import cors from '@fastify/cors';
 fastify.register(cors, {
   origin: [
     'https://app.decksmith.com', // production
-    'http://localhost:5173', // development
+    'http://localhost:3001', // development
   ],
   credentials: true, // allow cookies
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
