@@ -30,6 +30,7 @@
     "@decksmith/config": "workspace:*",
     "@tailwindcss/vite": "^4.3.0",
     "@tanstack/react-query-devtools": "^5.101.0",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.0.2",

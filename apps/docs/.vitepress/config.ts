@@ -137,6 +137,10 @@ export default defineConfig({
             text: 'ADR-0026: Reverse Proxy (Traefik)',
             link: '/adr/0026-reverse-proxy-traefik',
           },
+          {
+            text: 'ADR-0027: Web Hosting (SSR Node)',
+            link: '/adr/0027-web-hosting-ssr-node-server',
+          },
         ],
       },
       {
