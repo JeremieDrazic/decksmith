@@ -324,9 +324,10 @@ Without this the script silently fails and the first paint flashes the wrong the
   TanStack Form. Added as a direct dep of `apps/web` (not the pnpm catalog) because no other package
   consumes forms today; will be promoted to catalog if `apps/mobile` or a shared package adopts it.
 - **Zod Standard Schema integration used (no adapter)** — TanStack Form v1 ships native support for
-  Zod v4 Standard Schema via `validators={{ onChange: ZodSchema }}`. No `@tanstack/zod-form-adapter`
-  needed. Raw Zod issue objects (`{origin, code, format, pattern, path, message}`) are returned in
-  `field.state.meta.errors` — `getFieldError()` extracts `.message` before rendering.
+  Zod v4 Standard Schema via <code v-pre>validators={{ onChange: ZodSchema }}</code>. No
+  `@tanstack/zod-form-adapter` needed. Raw Zod issue objects
+  (`{origin, code, format, pattern, path, message}`) are returned in `field.state.meta.errors` —
+  `getFieldError()` extracts `.message` before rendering.
 - **`getFieldError` and `makeSubmitHandler` placed in `apps/web/src/lib/form/`** — app-level
   utilities, not shared across packages. No colocated tests (apps/web has no Vitest config).
 

@@ -483,7 +483,6 @@ Added during session.end review — tokens missing from initial Session A pass:
 
 - [ADR-0015: Design System Architecture](./0015-design-system-architecture.md)
 - [ADR-0006: Testing Strategy — Storybook](./0006-testing-strategy-with-vitest.md)
-- [Token Preview](../design/token-preview.html)
 - [Utopia fluid type scale generator](https://utopia.fyi)
 - [Tailwind v4 CSS-first config](https://tailwindcss.com/docs/v4-upgrade)
-- [ADR for Style Dictionary (Phase 14)](./0014-mobile-setup.md) — to be created
+- ADR for Style Dictionary (Phase 14) — to be created
