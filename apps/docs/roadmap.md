@@ -74,28 +74,33 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 2.4 Docker & CI/CD (session 22)
 
-- 🔄 `apps/web` production server: `nitro` plugin added, `node .output/server/index.mjs`
-  _(session 22)_
+- ✅ `apps/web` production server: `node .output/server/index.mjs`, deployed behind Traefik at
+  `decksmith.<domain>/` (session 24, ADR-0027)
 - ✅ `apps/api` runs `node dist/index.js` (compiled — `tsx` runtime dropped)
 - ✅ `Dockerfile` for `apps/api` (multi-stage) — 1.76GB → 380MB via Prisma 7 `prisma-client`
   generator + `pnpm deploy --no-optional`; boot + `/api/health` verified
-- ⬜ `Dockerfile` for `apps/web` (multi-stage) — **blocked**: nitro v3-beta (bundled by TanStack
-  Start) leaves `react` externalized and doesn't trace it into `.output`, so the "self-contained"
-  `node .output/server/index.mjs` fails with `Cannot find module 'react'`. Not cleanly fixable
-  downstream (`noExternals` inlines everything except react). Upstream: nitrojs/nitro#3905,
-  TanStack/router#2180, #5476. Revisit when nitro v3 stabilizes OR decide the web hosting strategy
-  (static SPA + nginx vs node server) as part of the VPS deployment design.
+- ✅ `Dockerfile` for `apps/web` (multi-stage) — nitro v3-beta still leaves `react` externalized and
+  untraced (`Cannot find module 'react'`, nitrojs/nitro#4171: Base UI's `use-sync-external-store`
+  shim). Unblocked by shipping a pruned prod `node_modules` (`pnpm deploy --prod`) next to
+  `.output`, same technique as the API image (session 24, ADR-0027). Revisit for a bare
+  self-contained `.output` when the upstream Vite/rolldown fix — or nitro's `cjsRequireRewrite`
+  (nitro#4365) — ships published.
 - ⬜ `docker-compose.yml` — local dev infra (Postgres + Redis only, apps run natively)
-- ✅ `.dockerignore`
-- ⬜ CI — GitHub Actions → build images → push GHCR
+- ✅ `.dockerignore` — per-Dockerfile ignores (`apps/api`, `apps/web`, `deploy/statics`) replaced
+  the shared root file (session 24)
+- ✅ CI — `.github/workflows/deploy.yml`: build api + web + statics images → push GHCR (sha +
+  latest) → scp `deploy/compose.yml` + SSH `docker compose pull && up -d` (session 24)
 - ✅ Reverse proxy — **Traefik** adopted (ADR-0026 + `apps/docs/deployment/reverse-proxy.md`),
   replaces host-nginx + per-project Certbot. Deployed on the VPS: owns 80/443, label-driven routing,
   wildcard TLS via ACME DNS-01 (Let's Encrypt prod), dashboard behind IP-allowlist + basic auth. The
   pre-existing personal site was migrated behind it (real cert, verified). Traefik v3.7+ required
   (Docker Engine 29 dropped the API version older Traefik used)
-- ⬜ Deploy Decksmith API behind Traefik — `deploy/compose.yml` pulling the GHCR image, labels
-  `Host(app.<domain>) && PathPrefix(/api)` (same-origin with future web for cookie auth). Blocked on
-  the GHCR image-build step above
+- ✅ Deploy Decksmith behind Traefik — `deploy/compose.yml` pulls the GHCR images (api + web +
+  statics) on a single subdomain `decksmith.<domain>`, routed by path: `/api` (API), `/` (web SSR),
+  `/docs` (VitePress), `/design-system` (Storybook). Live + verified end-to-end (register/login,
+  same-origin cookies) (session 24, ADR-0026 updated)
+- ✅ Host docs + Storybook — one nginx image serving both static sites (`/docs`, `/design-system`);
+  GitHub Pages retired; VitePress base `/decksmith/` → `/docs/` (session 24)
 
 ### 2.5 Build pipeline (before Phase 3)
 
@@ -362,7 +367,8 @@ _Dependency: Phase 4.1 (apps/web initialized)_
 ## Phase 13: Documentation Site
 
 - ✅ `apps/docs/` with VitePress (docs live here directly)
-- ✅ GitHub Pages deployment via `.github/workflows/docs.yml`
+- ✅ Deployed at `decksmith.<domain>/docs` behind Traefik (session 24). _GitHub Pages
+  (`.github/workflows/docs.yml`) retired — replaced by the VPS static image._
 
 ---
 
