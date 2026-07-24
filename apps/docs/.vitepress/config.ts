@@ -5,6 +5,12 @@ export default defineConfig({
   description: 'Magic: The Gathering deck management — architecture, specs, and decisions',
   base: '/decksmith/',
 
+  // Internal dev-context notes (pitfalls per domain) are not part of the published
+  // site: they are working notes referenced by CLAUDE.md, full of raw JSX snippets
+  // ({{ }}, <Component />) that VitePress' Vue compiler would choke on. Excluded from
+  // the build rather than escaping every snippet.
+  srcExclude: ['**/context/pitfalls/**'],
+
   themeConfig: {
     logo: '🃏',
 

@@ -132,7 +132,6 @@ Tailwind v4 reads `@theme` and generates utility classes automatically — no JS
 
 - [identity.md](./identity.md) — full palette, typography scale, MTG touches
 - [decisions.md](./decisions.md) — all design decisions with rationale
-- [token-preview.html](./token-preview.html) — preview visuel des tokens (ouvrir dans le navigateur)
 - [screens/](./screens/) — ASCII mocks: auth, deck-list, deck-builder, collection, card-search,
   card-detail, settings
 - [ADR-0015](../adr/0015-design-system-architecture.md) — architectural decisions (tokens, theming,
