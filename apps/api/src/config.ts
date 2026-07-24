@@ -18,7 +18,7 @@ const EnvSchema = z.object({
       64,
       'COOKIE_SECRET must be at least 64 characters. Generate one with: openssl rand -base64 64'
     ),
-  CORS_ORIGIN: z.string().default('http://localhost:5173'),
+  CORS_ORIGIN: z.string().default('http://localhost:3001'),
 });
 
 const parsed = EnvSchema.safeParse(process.env);

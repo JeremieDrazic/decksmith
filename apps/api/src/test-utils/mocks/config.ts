@@ -4,5 +4,5 @@ export const config = {
   host: '0.0.0.0',
   databaseUrl: 'postgresql://test',
   cookieSecret: 'x'.repeat(64),
-  corsOrigin: 'http://localhost:5173',
+  corsOrigin: 'http://localhost:3001',
 };
