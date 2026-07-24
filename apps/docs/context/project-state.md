@@ -1,7 +1,7 @@
 # Project State
 
-_Updated: 2026-07-23 (session 23 — build pipeline + apps/api Docker image; Traefik reverse proxy
-live on the VPS)_
+_Updated: 2026-07-24 (session 24 — full deployment: API + web SSR + docs + Storybook live behind
+Traefik on a single subdomain; register/login verified end-to-end)_
 
 ---
 
@@ -116,6 +116,28 @@ live on the VPS)_
       fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
       removed; pitfall documented (Tailwind v4 layer-order conflict)
 - [x] Toast, Drawer — Base UI components complete (PR #38)
+
+### Full deployment (session 24 — PRs #51–#57)
+
+- [x] VitePress build repaired (PR #51): `<code v-pre>` for a `{{ }}` snippet; `srcExclude` for
+      `context/pitfalls/**`; dead links fixed (removed `.html` previews, added
+      `design/screens/index.md`)
+- [x] API online (PR #52): `deploy/compose.yml` + `.github/workflows/deploy.yml` (build → GHCR →
+      scp + SSH). `decksmith.<domain>/api/health` → 200. ADR-0026 topology updated (single
+      subdomain)
+- [x] Docs + Storybook online (PR #53): one nginx image, `/docs` + `/design-system`,
+      `absolute_redirect off` for correct redirects behind the proxy; GitHub Pages retired;
+      per-Dockerfile `.dockerignore` refactor (api + statics)
+- [x] Web SSR online (PR #54, ADR-0027): `apps/web/Dockerfile` ships prod `node_modules` next to
+      `.output` to work around nitro#4171 (`Cannot find module 'react'`); per-context API URL in
+      `api-client.ts` (browser relative `/api`, SSR `API_URL=http://api:3000` over `internal` net)
+- [x] `VITE_API_URL` turbo fix (PR #55): declared on the `build` task in `turbo.json` (strict env
+      mode dropped it → browser bundle baked `localhost:3000`); pitfall documented
+- [x] Root redirect + guest guard (PR #56): `/` → `/dashboard`|`/login`; `_auth` layout redirects
+      authenticated users away; `redirectTo` validated to internal paths only (open-redirect guard)
+- [x] Dev CORS/port alignment (PR #56): web dev pinned to 3001, API default `CORS_ORIGIN` → 3001
+- [x] Autofill styling (PR #57): `packages/tokens/src/web/base.css` restores font + themed color on
+      `:-webkit-autofill` (Chrome's hover-preview state stays as-is — not stylable)
 
 ### packages/services unit tests (session 20 — PR #46)
 
@@ -321,17 +343,21 @@ live on the VPS)_
 - DB seed creates orphaned `User` profiles with no matching `auth.users` row — seed is usable for DB
   exploration but auth routes won't work for seeded users. Full fix requires creating Supabase auth
   users via `supabase.auth.admin.createUser()` before seeding profile rows.
-- No Docker setup yet — Postgres + Redis for local dev pending session 22 (Dockerization)
-- No CI image build yet — pending session 22
+- No local dev Docker compose yet (Postgres + Redis) — apps still run natively against Supabase
+  cloud
 - Supabase email confirmation is **disabled** in the new project (dev-only setting) — must re-enable
   before production or when email confirmation flow is implemented
+- Deploy actions target Node 20 (deprecated by GitHub, forced to Node 24) — bump the Docker/checkout
+  actions in a future session
+- Storybook preview shows a brief light-theme flash on story change (FOUC) — cosmetic, future fix
+- Postgres log noise: `42P01`/`3F000` on `supabase_migrations.schema_migrations` (we use Prisma
+  `db:push`, not the Supabase CLI migrations) — to investigate
 
 ---
 
 ## Open PRs
 
-- **#49** — `docs: reverse-proxy (Traefik) deployment — ADR-0026 + runbook` (docs only; awaiting
-  merge).
+- None — all session 24 PRs merged (#51–#57).
 
 ---
 
@@ -347,15 +373,26 @@ live on the VPS)_
 - **Pre-existing personal site** migrated behind Traefik (real cert, verified end-to-end).
 - Secrets (DNS token, ACME email, dashboard hash, allow-IP) live only in server-side `~/infra/.env`
   — never committed.
-- **Not yet done**: CI → build images → push GHCR; Decksmith API deployed behind Traefik
-  (`app.<domain>/api`); `apps/web` image (blocked on nitro v3-beta).
+- **Decksmith deployed (session 24)**: all three images (`decksmith-api`, `decksmith-web`,
+  `decksmith-statics`) built + pushed to GHCR by `.github/workflows/deploy.yml`, then pulled on the
+  VPS via `~/apps/decksmith/compose.yml`. Single subdomain `decksmith.<domain>`, path-routed: `/api`
+  (API), `/` (web SSR), `/docs` (VitePress), `/design-system` (Storybook). GHCR packages public
+  (inherit repo visibility). Register/login verified end-to-end (same-origin cookies).
+- **Deploy pipeline**: CI builds images → `scp deploy/compose.yml` + SSH
+  `docker compose pull && up -d`. GitHub secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` (dedicated
+  ed25519 deploy key). The deployed commit SHA is pinned in `~/apps/decksmith/.env` as `IMAGE_TAG`.
+- **Server-side `~/apps/decksmith/.env`** (never committed): `DECKSMITH_HOST`, `CORS_ORIGIN`,
+  `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `COOKIE_SECRET` (prod-specific),
+  `IMAGE_TAG`. `NODE_ENV` unset → defaults to `production` (secure cookies, correct behind Traefik's
+  `trustProxy`).
 
 ---
 
 ## Current Branch
 
-- Branch: `docs/deployment-traefik` (session 23). `main` has PR #48 merged (build pipeline +
-  apps/api Docker image, 1.76GB → 380MB).
+- Branch: `docs/session-24`. `main` has all session 24 PRs merged (#51–#57): docs build fix,
+  API/web/statics deployment, VITE_API_URL turbo fix, root redirect + guest guard, dev CORS/port
+  alignment (3001), input autofill fix.
 
 > Dependency versions are in the individual `package.json` files. The version table was removed from
 > this file (it was always stale and duplicated package.json).

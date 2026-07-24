@@ -4,6 +4,38 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-24] — Session 24 deployment mechanics (non-ADR decisions)
+
+**Context:** Bringing all of Decksmith online behind the existing Traefik proxy (topology + web
+hosting are covered by ADR-0026 / ADR-0027; these are the supporting infra choices). **Decision:**
+
+- **CI deploys via SSH.** `.github/workflows/deploy.yml` (main-only) builds images, pushes to GHCR,
+  then `scp`s `deploy/compose.yml` and runs `docker compose pull && up -d` over SSH. A dedicated
+  ed25519 key (`VPS_SSH_KEY` + `VPS_HOST`/`VPS_USER` secrets) is used, not a personal key.
+- **Deterministic image tag.** Images are tagged `:<sha>` + `:latest`; the deploy persists
+  `IMAGE_TAG=<sha>` into the server `.env`, so a manual `up -d` reuses the exact deployed SHA.
+- **GHCR images public** (inherit repo visibility) — the VPS pulls anonymously, no registry login.
+- **One combined nginx image** serves both static sites (`/docs` + `/design-system`) — a single
+  router with two `PathPrefix`es, `absolute_redirect off` so directory redirects stay relative
+  behind the TLS proxy. Artifacts are built in the CI runner, not inside Docker.
+- **Per-Dockerfile `.dockerignore`.** The shared root `.dockerignore` was replaced by
+  `apps/api/Dockerfile.dockerignore`, `apps/web/Dockerfile.dockerignore` (deny-lists) and
+  `deploy/statics.Dockerfile.dockerignore` (allow-list) — each image declares its own build context.
+- **`VITE_API_URL` declared in `turbo.json` `build` env.** Turbo strict env mode dropped it, so the
+  browser bundle baked `localhost:3000`; declaring it forwards it to Vite and keys the cache.
+- **Web dev server pinned to 3001** (framework default 3000 collides with the API); API default
+  `CORS_ORIGIN` aligned to `http://localhost:3001`. Dev-only — prod reads `CORS_ORIGIN` from `.env`.
+- **`redirectTo` validated to internal paths only** (leading `/`) — open-redirect guard, applied on
+  the `_auth` layout so login inherits it.
+
+**Impact:** `deploy/` (compose + Dockerfile.statics + nginx.conf + dockerignores),
+`.github/workflows/deploy.yml`, deletion of `.github/workflows/docs.yml`, `apps/web/Dockerfile` +
+`Dockerfile.dockerignore`, `apps/api/Dockerfile.dockerignore`, `turbo.json`,
+`apps/web/vite.config.ts`, `apps/api/src/config.ts`, `apps/web/src/routes/{index,_auth}.tsx`,
+`packages/tokens/src/web/base.css`. (PRs #51–#57)
+
+---
+
 ## [2026-07-23] — Prisma 7 `prisma-client` generator + `pnpm deploy --no-optional` (Docker image)
 
 **Context:** The `apps/api` production image was 1.76 GB. Two root causes: (1) the legacy
