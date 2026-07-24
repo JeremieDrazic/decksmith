@@ -24,6 +24,22 @@ services:
       - traefik.http.routers.decksmith-api.tls.certresolver=le
       - traefik.http.services.decksmith-api.loadbalancer.server.port=3000
 
+  # Web SSR server (TanStack Start / node). Reaches the API in-cluster over `internal`;
+  # the browser hits /api same-origin (relative), so cookies stay same-origin.
+  web:
+    image: ghcr.io/jeremiedrazic/decksmith-web:${IMAGE_TAG:-latest}
+    container_name: decksmith-web
+    restart: unless-stopped
+    environment:
+      - API_URL=http://api:3000
+    networks: [proxy, internal]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.decksmith-web.rule=Host(`${DECKSMITH_HOST}`)
+      - traefik.http.routers.decksmith-web.entrypoints=websecure
+      - traefik.http.routers.decksmith-web.tls.certresolver=le
+      - traefik.http.services.decksmith-web.loadbalancer.server.port=3000
+
   # Static sites (VitePress docs + Storybook) served by nginx on port 80.
   statics:
     image: ghcr.io/jeremiedrazic/decksmith-statics:${IMAGE_TAG:-latest}
@@ -42,6 +58,6 @@ networks:
   # Shared with the Traefik stack — how the proxy discovers and reaches this container.
   proxy:
     external: true
-  # Project-private network for future service-to-service calls (web → api in PR 2),
+  # Project-private network for service-to-service calls (web → api),
   # isolated from the shared proxy network's DNS namespace.
   internal: {}

@@ -43,6 +43,32 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  build-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          # Empty VITE_API_URL → browser bundle uses same-origin relative /api.
+          build-args: |
+            VITE_API_URL=
+          tags: |
+            ghcr.io/jeremiedrazic/decksmith-web:${{ github.sha }}
+            ghcr.io/jeremiedrazic/decksmith-web:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   build-statics:
     runs-on: ubuntu-latest
     steps:
@@ -79,7 +105,7 @@ jobs:
           cache-to: type=gha,mode=max
 
   deploy:
-    needs: [build-api, build-statics]
+    needs: [build-api, build-web, build-statics]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

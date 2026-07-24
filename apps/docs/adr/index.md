@@ -37,6 +37,7 @@ evolution history.
 | [0024](./0024-service-layer-architecture.md)              | Service Layer Architecture                        | Active | 2026-07-14 |
 | [0025](./0025-i18n-strategy.md)                           | Internationalisation Strategy                     | Active | 2026-07-14 |
 | [0026](./0026-reverse-proxy-traefik.md)                   | Reverse Proxy & Deployment Topology (Traefik)     | Active | 2026-07-21 |
+| [0027](./0027-web-hosting-ssr-node-server.md)             | Web Hosting — TanStack Start SSR Node Server      | Active | 2026-07-24 |
 
 ---
 
