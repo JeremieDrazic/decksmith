@@ -6,7 +6,10 @@
 -- Run this file once via the Supabase SQL Editor or psql:
 --   psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql
 --
--- This file is idempotent (IF NOT EXISTS + OR REPLACE) — safe to re-run.
+-- This file is idempotent — safe to re-run. Postgres does NOT support
+-- `CREATE POLICY IF NOT EXISTS` or `CREATE OR REPLACE POLICY`, so each policy is
+-- dropped (IF EXISTS) and recreated. `ALTER TABLE ... ENABLE ROW LEVEL SECURITY`
+-- is itself idempotent.
 --
 -- IMPORTANT: These policies are enforced for the `authenticated` role (PostgREST
 -- direct access). Our API uses the service_role key which bypasses RLS by design.
@@ -25,7 +28,8 @@
 ALTER TABLE "users" ENABLE ROW LEVEL SECURITY;
 
 -- SELECT: a user can only read their own row.
-CREATE POLICY IF NOT EXISTS "users_select_own" ON "users"
+DROP POLICY IF EXISTS "users_select_own" ON "users";
+CREATE POLICY "users_select_own" ON "users"
   FOR SELECT
   TO authenticated
   USING (auth.uid()::text = id);
@@ -33,7 +37,8 @@ CREATE POLICY IF NOT EXISTS "users_select_own" ON "users"
 -- UPDATE: a user can only update their own row.
 -- USING filters which rows can be targeted; WITH CHECK validates the new values.
 -- Both are required for UPDATE to prevent a user from updating their own id.
-CREATE POLICY IF NOT EXISTS "users_update_own" ON "users"
+DROP POLICY IF EXISTS "users_update_own" ON "users";
+CREATE POLICY "users_update_own" ON "users"
   FOR UPDATE
   TO authenticated
   USING (auth.uid()::text = id)
@@ -50,13 +55,15 @@ CREATE POLICY IF NOT EXISTS "users_update_own" ON "users"
 ALTER TABLE "user_preferences" ENABLE ROW LEVEL SECURITY;
 
 -- SELECT: a user can only read their own preferences row.
-CREATE POLICY IF NOT EXISTS "user_preferences_select_own" ON "user_preferences"
+DROP POLICY IF EXISTS "user_preferences_select_own" ON "user_preferences";
+CREATE POLICY "user_preferences_select_own" ON "user_preferences"
   FOR SELECT
   TO authenticated
   USING (auth.uid()::text = user_id);
 
 -- UPDATE: a user can only update their own preferences row.
-CREATE POLICY IF NOT EXISTS "user_preferences_update_own" ON "user_preferences"
+DROP POLICY IF EXISTS "user_preferences_update_own" ON "user_preferences";
+CREATE POLICY "user_preferences_update_own" ON "user_preferences"
   FOR UPDATE
   TO authenticated
   USING (auth.uid()::text = user_id)

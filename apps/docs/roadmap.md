@@ -63,8 +63,9 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Auth routes: register, login, logout, refresh, forgot-password, reset-password, `GET /me`
   (session 17)
 - ✅ Zod schemas for auth DTOs in `packages/schema/src/auth/`
-- 🔄 RLS policies for user-owned tables _(written: `packages/db/sql/rls-policies.sql` + ADR-0022;
-  not yet applied to Supabase — run `psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`)_
+- ✅ RLS policies for user-owned tables (`users`, `user_preferences`) —
+  `packages/db/sql/rls-policies.sql` + ADR-0022; applied to Supabase via the SQL Editor (session 25;
+  4 policies verified on the `authenticated` role, defense-in-depth — the API bypasses RLS)
 - ✅ Auto-create `UserPreferences` on signup (nested Prisma write in register route)
 
 ### 2.3 Rate Limiting & CORS
