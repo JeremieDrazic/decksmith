@@ -631,3 +631,26 @@ return VALID_THEMES.includes(stored) ? stored : DEFAULT_THEME;
 // ✅ correct — pass document.cookie (the full string) on the client
 parseThemeFromCookieString(document.cookie);
 ```
+
+## Turbo strict env — `VITE_*` build vars must be declared in `turbo.json`
+
+Turborepo (v2, strict env mode by default) only passes environment variables to a task if they are
+declared in `turbo.json`. When the build runs through `turbo` (as the Docker image does:
+`pnpm turbo build --filter=...@decksmith/web`), an undeclared `VITE_API_URL` never reaches Vite, so
+`import.meta.env.VITE_API_URL` is baked as `undefined` and the client falls back — e.g. to
+`http://localhost:3000`, which then fails in production (`ERR_CONNECTION_REFUSED`).
+
+Symptom is invisible in a local `vite build` (that bypasses turbo) and in an SSR-only smoke test
+(the home route makes no API call) — it only surfaces when the browser bundle issues an API request.
+
+```jsonc
+// turbo.json — declare the var on the build task so turbo forwards it AND keys the cache on it
+"build": {
+  "dependsOn": ["^build"],
+  "outputs": ["dist/**", "build/**", "storybook-static/**", ".vitepress/dist/**"],
+  "env": ["VITE_API_URL"]
+}
+```
+
+Verify the baked value in the client bundle: `import.meta.env` should contain `VITE_API_URL:""`
+(empty → same-origin relative `/api`), not `VITE_API_URL:void 0`.
