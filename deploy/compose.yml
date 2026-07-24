@@ -24,6 +24,20 @@ services:
       - traefik.http.routers.decksmith-api.tls.certresolver=le
       - traefik.http.services.decksmith-api.loadbalancer.server.port=3000
 
+  # Static sites (VitePress docs + Storybook) served by nginx on port 80.
+  statics:
+    image: ghcr.io/jeremiedrazic/decksmith-statics:${IMAGE_TAG:-latest}
+    container_name: decksmith-statics
+    restart: unless-stopped
+    networks: [proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.decksmith-statics.rule=Host(`${DECKSMITH_HOST}`) &&
+        (PathPrefix(`/docs`) || PathPrefix(`/design-system`))
+      - traefik.http.routers.decksmith-statics.entrypoints=websecure
+      - traefik.http.routers.decksmith-statics.tls.certresolver=le
+      - traefik.http.services.decksmith-statics.loadbalancer.server.port=80
+
 networks:
   # Shared with the Traefik stack — how the proxy discovers and reaches this container.
   proxy:

@@ -1,0 +1,8 @@
+# Per-Dockerfile ignore (BuildKit): replaces the root .dockerignore for this build.
+# The root file excludes apps/docs, **/dist and **/storybook-static (kept out of the API
+# image) — exactly the artifacts we need here. Allow-list only those two, ignore everything
+# else, so the build context stays tiny.
+*
+!apps/docs/.vitepress/dist
+!apps/storybook/storybook-static
+!deploy/statics.nginx.conf
