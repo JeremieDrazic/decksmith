@@ -1,6 +1,6 @@
 # ADR-0026: Reverse Proxy & Deployment Topology (Traefik)
 
-**Last Updated:** 2026-07-21  
+**Last Updated:** 2026-07-24  
 **Status:** Active  
 **Context:** Decksmith
 
@@ -44,8 +44,8 @@ Adopt **Traefik** as a containerized, label-driven reverse proxy that owns ports
   container. Application containers do **not** publish host ports; Traefik reaches them over the
   shared network by container name. This removes host-port allocation entirely.
 - Each application declares its routing and TLS intent through **Docker labels** on its own
-  container (a host rule `api.<domain>`, the HTTPS entrypoint, and the ACME certificate resolver).
-  There is no central per-project config file to edit.
+  container (a host rule — optionally narrowed by a path prefix — the HTTPS entrypoint, and the ACME
+  certificate resolver). There is no central per-project config file to edit.
 - **Automatic TLS** via Let's Encrypt (ACME) is built into Traefik: certificate issuance and renewal
   are handled by the proxy, replacing per-project Certbot.
 
@@ -58,8 +58,11 @@ site needs migrating — deliberately the cheapest possible moment.
 ### DNS
 
 A **wildcard record** `*.<domain>` → VPS is used so that any new subdomain resolves without touching
-DNS. Traefik dispatches requests by `Host` header. Decksmith uses `api.<domain>` for the API;
-`app.<domain>` is reserved for the web front end when it ships.
+DNS. Traefik dispatches requests by `Host` header, and — within a host — by path prefix. Decksmith
+lives under a **single subdomain** `decksmith.<domain>`, split by path: `/api` → API, `/` → web,
+`/docs` → VitePress, `/design-system` → Storybook. Traefik's default router priority (longest rule
+wins) makes the path-scoped routers outrank the bare-host web router with no explicit priority
+needed.
 
 ### Images
 
@@ -113,6 +116,20 @@ proxy network and its image tag.
   the proxy is cheap to recreate.
 
 ## Evolution History
+
+### 2026-07-24: Single-subdomain, path-based topology
+
+- Replaced the multi-subdomain shape (`api.<domain>` + reserved `app.<domain>`) with a **single
+  subdomain** `decksmith.<domain>`, routed by path prefix: `/api` (API), `/` (web), `/docs`
+  (VitePress), `/design-system` (Storybook).
+- **Why:** the web front end and API share one origin, so browser auth cookies are same-origin (no
+  cross-subdomain cookie handling); one host means one certificate and one mental model; fewer
+  subdomains to reason about. Traefik's longest-rule-wins priority routes path-scoped services ahead
+  of the bare-host web router automatically.
+- First concrete deployment lands with this change: CI builds `apps/api` → GHCR, then deploys the
+  container behind Traefik via `deploy/compose.yml` (labels `Host(...) && PathPrefix(/api)`).
+- Since the API path prefix (`/api`) matches the routes Fastify already serves, **no StripPrefix**
+  middleware is used — Traefik forwards the path unchanged.
 
 ### 2026-07-21: Initial decision
 

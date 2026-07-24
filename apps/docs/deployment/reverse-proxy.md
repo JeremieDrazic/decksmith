@@ -23,7 +23,8 @@ proxy that fronts every project on the VPS, how it is operated, and how to add a
         ┌───────────┼──────────────────────┐
         ▼           ▼                       ▼
   personal site   decksmith-api        (future projects…)
-  Host(<domain>)  Host(app.<domain>)   Host(x.<domain>)
+  Host(<domain>)  Host(decksmith       Host(x.<domain>)
+                  .<domain>)
                   && PathPrefix(/api)
 ```
 
@@ -110,11 +111,13 @@ To put an API under a project subdomain (same origin as its web app — ideal fo
 `PathPrefix` to the rule instead of a new subdomain:
 
 ```
-traefik.http.routers.<name>.rule=Host(`app.<domain>`) && PathPrefix(`/api`)
+traefik.http.routers.<name>.rule=Host(`decksmith.<domain>`) && PathPrefix(`/api`)
 ```
 
-This is the planned shape for Decksmith: `app.<domain>/api/*` → API container, `app.<domain>/` → web
-(when the web image ships).
+This is the shape for Decksmith — a single subdomain split by path: `decksmith.<domain>/api/*` → API
+container, `decksmith.<domain>/` → web (when the web image ships), `decksmith.<domain>/docs` +
+`/design-system` → static docs + Storybook. Traefik routes the longest matching rule first, so the
+path-scoped routers win over the bare-host web router automatically.
 
 ---
 
