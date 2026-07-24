@@ -1,0 +1,33 @@
+# Decksmith deployment stack — runs on the VPS at ~/apps/decksmith/compose.yml
+#
+# The VPS never builds: images are built + pushed to GHCR by CI (.github/workflows/deploy.yml),
+# then pulled here. IMAGE_TAG (the deployed commit SHA) and DECKSMITH_HOST live in the sibling
+# .env file, which is NEVER committed (secrets + real domain).
+#
+# Traefik (shared, in ~/infra/) owns ports 80/443 and routes to these containers by reading their
+# labels off the shared `proxy` network. See ADR-0026 + apps/docs/deployment/reverse-proxy.md.
+
+# Fixed project name → deterministic network/resource names regardless of the directory it runs from.
+name: decksmith
+
+services:
+  api:
+    image: ghcr.io/jeremiedrazic/decksmith-api:${IMAGE_TAG:-latest}
+    container_name: decksmith-api
+    restart: unless-stopped
+    env_file: .env
+    networks: [proxy, internal]
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.decksmith-api.rule=Host(`${DECKSMITH_HOST}`) && PathPrefix(`/api`)
+      - traefik.http.routers.decksmith-api.entrypoints=websecure
+      - traefik.http.routers.decksmith-api.tls.certresolver=le
+      - traefik.http.services.decksmith-api.loadbalancer.server.port=3000
+
+networks:
+  # Shared with the Traefik stack — how the proxy discovers and reaches this container.
+  proxy:
+    external: true
+  # Project-private network for future service-to-service calls (web → api in PR 2),
+  # isolated from the shared proxy network's DNS namespace.
+  internal: {}
