@@ -1,7 +1,7 @@
 # Project State
 
-_Updated: 2026-07-24 (session 24 — full deployment: API + web SSR + docs + Storybook live behind
-Traefik on a single subdomain; register/login verified end-to-end)_
+_Updated: 2026-07-24 (session 25 — tooling deps bumped; RLS policies applied to Supabase. Session
+24: full deployment behind Traefik on a single subdomain, register/login verified end-to-end)_
 
 ---
 
