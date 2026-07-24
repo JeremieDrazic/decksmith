@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress';
 export default defineConfig({
   title: 'Decksmith',
   description: 'Magic: The Gathering deck management — architecture, specs, and decisions',
-  base: '/decksmith/',
+  base: '/docs/',
 
   // Internal dev-context notes (pitfalls per domain) are not part of the published
   // site: they are working notes referenced by CLAUDE.md, full of raw JSX snippets

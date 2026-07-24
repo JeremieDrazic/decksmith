@@ -1,3 +1,7 @@
+# Per-Dockerfile ignore for the API image (BuildKit reads <dockerfile>.dockerignore).
+# Deny-list: the builder stage needs the workspace source, so keep everything except
+# host installs, build artifacts, secrets, and repo meta.
+
 # Never copy host installs or build artifacts into the image —
 # the builder stage produces its own via pnpm install + turbo build.
 **/node_modules
