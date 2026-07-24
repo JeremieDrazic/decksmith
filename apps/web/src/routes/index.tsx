@@ -1,15 +1,18 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-function HomePage() {
-  const { t } = useTranslation('common');
-  return (
-    <main>
-      <h1>{t('home.title')}</h1>
-    </main>
-  );
-}
+import { $getMe } from '../lib/auth/get-me';
 
+/**
+ * The root path has no landing page (yet): it redirects based on auth state —
+ * `/dashboard` when signed in, `/login` otherwise. Runs in `beforeLoad` so the
+ * decision happens server-side (via the cookie-reading `$getMe`), before render.
+ *
+ * Deep links to protected routes are handled separately by the `_authenticated`
+ * guard, which preserves the origin path via `redirectTo`.
+ */
 export const Route = createFileRoute('/')({
-  component: HomePage,
+  beforeLoad: async () => {
+    const user = await $getMe();
+    throw redirect({ to: user ? '/dashboard' : '/login' });
+  },
 });

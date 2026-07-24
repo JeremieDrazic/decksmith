@@ -1,10 +1,11 @@
-import { Link, Outlet, createFileRoute } from '@tanstack/react-router';
+import { Link, Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 import { Heart } from 'lucide-react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Logo, Mark, Text, TextLink } from '@decksmith/web-ui';
 
 import { LanguageControl } from '../components/LanguageControl';
 import { ThemeControl } from '../components/ThemeControl';
+import { $getMe } from '../lib/auth/get-me';
 
 function AuthLayout() {
   useTranslation('common'); // subscribes to language changes so Trans re-renders on switch
@@ -73,5 +74,18 @@ function AuthLayout() {
 }
 
 export const Route = createFileRoute('/_auth')({
+  // Only accept internal paths (leading slash) — guards against open-redirect via ?redirectTo=.
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirectTo:
+      typeof search['redirectTo'] === 'string' && search['redirectTo'].startsWith('/')
+        ? search['redirectTo']
+        : undefined,
+  }),
+  // Guest guard: an already-authenticated user has no reason to see the auth pages.
+  // Send them to where they were headed (redirectTo) or the dashboard.
+  beforeLoad: async ({ search }) => {
+    const user = await $getMe();
+    if (user) throw redirect({ to: search.redirectTo ?? '/dashboard' });
+  },
   component: AuthLayout,
 });
