@@ -1,7 +1,8 @@
 # Project State
 
-_Updated: 2026-07-24 (session 24 — full deployment: API + web SSR + docs + Storybook live behind
-Traefik on a single subdomain; register/login verified end-to-end)_
+_Updated: 2026-07-25 (session 26 — collab retrospective). This file describes the **current** state
+only: environment, what works today, blockers, and what's next. Per-session history lives in
+`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
 
@@ -14,316 +15,39 @@ Traefik on a single subdomain; register/login verified end-to-end)_
 | `SUPABASE_URL`              | ✅ Configured                                                                |
 | `SUPABASE_ANON_KEY`         | ✅ Configured (`sb_publishable_*` format)                                    |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured (`sb_secret_*` format)                                         |
-| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret generated session 21)                     |
+| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret)                                          |
 | `NODE_ENV`                  | ✅ `development` — required for `secure: false` cookies on localhost         |
 | Redis                       | Not needed yet                                                               |
-| `.env.example`              | ✅ Updated (Session Pooler + COOKIE_SECRET + VITE_API_URL + NODE_ENV)        |
+| `.env.example`              | ✅ Up to date (Session Pooler + COOKIE_SECRET + VITE_API_URL + NODE_ENV)     |
 
 ---
 
-## What's Working
+## What's Working (today)
 
-- [x] API server: `pnpm --filter @decksmith/api dev` → `localhost:3000`
-- [x] User CRUD routes: `/api/v1/users` responding
-- [x] Auth routes: `/api/v1/auth/` — all 6 routes implemented (merged in PR #14)
-- [x] Lint: `pnpm lint` → `oxlint .` (0 errors)
-- [x] Format: `pnpm format:check` → oxfmt (0 errors, markdown included)
-- [x] Tests: `pnpm test` → 210 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
-      6 utils · 30 web-ui · 35 services) — `packages/services` fully tested (session 20)
-- [x] Typecheck: `pnpm typecheck` → 0 errors (TypeScript 7.0.2 — upgraded session 21)
-- [x] DB schema: synced to new Supabase project via Session Pooler (`db:push` ✅ 2026-07-18)
-- [x] Supabase client: `supabase.auth.admin.listUsers()` responding from `packages/db`
-- [x] **First real local run (session 21)**: `pnpm dev:api` + `pnpm dev:web` → register + login +
-      `/me` + `/dashboard` verified end-to-end in browser; cookies auth working
-      (`NODE_ENV=development`)
-- [x] Root `package.json` scripts: `dev:api` + `dev:web` shortcuts added
-- [x] Design system docs: `apps/docs/design/` — identity, decisions, 7 screen mocks, DESIGN.md
-- [x] ADR-0015: Design System Architecture documented
-- [x] `CLAUDE.md`: `@apps/docs/design/DESIGN.md` imported + Design Rules section added
-- [x] VitePress docs site: Design System section in sidebar and nav
-- [x] ADR-0016: TanStack Start adoption decision documented (SSR/CSR hybrid, no backend in apps/web)
-- [x] Phase 4.0.5 complete: Sessions A–D done → ADR-0017, ADR-0018, ADR-0019, test-strategy.md
-- [x] Token system complete: all semantic tokens locked including status triplets + interactive
-      states
-- [x] `packages/tokens` scaffolded: primitives → semantic → web/tokens.css + native stub
-- [x] `apps/web` scaffolded: TanStack Start v1, Tailwind v4, TanStack Query, react-i18next
-- [x] Base routes: `/` (SSR), `/login`, `/register` (pathless `_auth/` layout), `/dashboard`
-- [x] `apps/docs/context/pitfalls/frontend.md` created, referenced in `CLAUDE.md`
-- [x] Oxlint rules hardened: `no-use-before-define`, React critical rules, jsx-a11y baseline
-- [x] `*.gen.ts` excluded from both oxlint and oxfmt (generated files)
-- [x] `apps/web` dev server confirmed working: `pnpm --filter @decksmith/web dev` → `localhost:5173`
-- [x] `packages/api-client` scaffolded: `createFetcher`, `createAuthModule`, `createUsersModule`,
-      `createApiClient` — 15 tests (MSW) — PR #23
-- [x] `packages/test-utils` scaffolded: MSW server lifecycle, `createQueryWrapper`, `buildUser`,
-      `buildUserPreferences` factories
-- [x] `packages/query` scaffolded: `ApiClientProvider`, `useUser`, `useUserPreferences` — 8 tests —
-      PR #23
-- [x] `apps/storybook` scaffolded: Storybook 10, `@storybook/addon-themes`, `withThemeByClassName`
-      decorator for runtime dark/light switching
-- [x] Design System token pages: Colors, Typography, Spacing, Radius, Shadows, Motion — co-located
-      in `packages/web-ui/src/design-system/` with auto-title from directory
-- [x] Semantic shadow tokens locked: `shadow-popover`, `shadow-card`, `shadow-overlay`,
-      `shadow-accent` — violet-tinted light mode, rim-light dark mode
-- [x] Shadow tokens propagated to all skill components (Card, Dialog, Toast, Tooltip, ui_kits)
-- [x] `InputGroup` — composite input: `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`
-      (inline + block), `InputGroupButton`, `InputGroupText`; focus ring + error state via
-      `[&:has(...)]` Tailwind v4 pattern
-- [x] `Field` — `FieldGroup`, `FieldLabel` (Eyebrow style: font-mono uppercase tracking-wide),
-      `FieldDescription`, `FieldError` (TanStack Form: `(string | undefined)[]`, dedup via Set)
-- [x] Button polish: `hover:shadow-accent` on primary,
-      `active:translate-y-px active:duration-instant` press effect, destructive redesign (subtle →
-      filled on hover), Separator `elaborate` prop
-- [x] 3 new pitfalls documented in `apps/docs/context/pitfalls/frontend.md`: Tailwind v4 scanner
-      new-file bug, `has-[...]` vs `[&:has(...)]`, SVG descendant combinator in Button children
-- [x] Storybook CI: `@storybook/test-runner` + `axe-playwright` — build → serve → `test-storybook`
-      in `.github/workflows/ci.yml`; `playwright` as direct devDep in `apps/storybook` (pnpm binary
-      isolation); `test-runner.ts` injects axe + respects `parameters.a11y.disable` per story
-- [x] ToggleGroup `aria-orientation` fixed: `role="toolbar"` override on `<ToggleGroupPrimitive>`
-      (Base UI renders `role="group"` which doesn't allow `aria-orientation`)
-- [x] `packages/utils` scaffolded: `noop` function (`function noop(): void { return; }`) — avoids
-      `no-empty-function` + `no-useless-undefined` lint conflicts; colocated `noop.test.ts` with 3
-      tests; used in `use-prefers-reduced-motion.ts` (renamed from camelCase for `filename-case`)
-- [x] All axe CI violations resolved: 6 DS pages + Text/Tones disabled (intentional low contrast),
-      Field/Disabled + InputGroup/Disabled disabled (WCAG 1.4.3 exemption), Button/Loading ghost got
-      `loadingLabel`, Input/Error + Textarea/Error + InputGroup/ErrorState got `aria-label`
-- [x] Surface — bare elevation primitive (`surface` / `raised` variants, configurable padding)
-- [x] Card, ButtonCard, LinkCard — semantic card family (PR #30); hover: lift −2px, border-accent,
-      accent glow, no bg shift; a11y: focus ring, press state, keyboard nav
-- [x] Badge, Tag — status badges + removable Tag with close button (PR #30)
-- [x] Select — Base UI dropdown picker: groups, multi-select, error state, align-item-with-trigger
-      (PR #30)
-- [x] `packages/tokens` worldclass audit (PR #30): dead TS layer (`primitives/`, `semantic/`,
-      `native/`, `index.ts`) deleted — `tokens.css` is now the single source of truth; font
-      fallbacks hardened; shadow scale comment corrected; ADR-0017 updated
-- [x] pitfall doc: `text-text-faint` fails axe-core contrast on real DOM nodes (PR #31)
-- [x] `packages/domain` scaffolded: `MtgColor`, `ColorIdentity`, `SnowMana`, `VariableMana` types;
-      `parseManaCost`, `sortColorIdentity`, `getColorIdentityName` — 30 unit tests (PR #32)
-- [x] MTG primitives in `packages/web-ui`: `ManaIcon` (pure SVG icon), `HybridManaSymbol`
-      (self-contained hybrid pip, diagonal `∕` split via SVG clipPath triangles + `useId()` ID
-      sanitization), `ManaSymbol` (router), `ManaCost` (pip row from cost string), `ColorIdentity`
-      (WUBRG-sorted + `role="img"` + aria-label lore name) — Storybook stories `Components/MTG/…`
-      (PR #32)
-- [x] Floating components (PR #36): `Dialog`, `AlertDialog`, `DropdownMenu`, `ContextMenu`,
-      `Tooltip`, `Popover` — all via `@base-ui/react`; Storybook stories + axe CI
-- [x] Form primitives (PR #36): `Checkbox`, `Radio`, `Switch` — Base UI, Storybook stories + axe CI
-- [x] `Kbd`, `KbdCmd`, `KbdOpt`, `KbdShift`, `KbdDel`, `KbdEnter` — keyboard shortcut badges (PR
-      #36)
-- [x] `NavigationButton` (close/back/forward semantic variants) + `DeleteButton` + `useArmedState`
-      hook — armed delete pattern: first click arms, second click confirms, auto-resets on timeout
-      (PR #36)
-- [x] Icon sizing refactor (PR #36): three-table system — `ICON_IN_CONTROL` (icon fills square tap
-      target), `ICON_INLINE` (icon beside text label), `ICON_SIZE` (self-rendered); ADR-0021; bug
-      fixed: `IconToggle lg` showed 16px icon in 44px square; `toggleBaseClasses` flat size-4
-      removed; pitfall documented (Tailwind v4 layer-order conflict)
-- [x] Toast, Drawer — Base UI components complete (PR #38)
+**Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
+7): 0 errors. `pnpm test`: 210 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
+6 utils · 30 web-ui · 35 services). Storybook CI runs play functions + axe on every story.
 
-### Full deployment (session 24 — PRs #51–#57)
+**Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
+(register, login, logout, refresh, forgot/reset-password, `GET /me`), Zod type provider, error
+handler with `ServiceError` exception mapper (ADR-0024), auth plugin (`app.authenticate`), rate
+limiting + CORS. All orchestration in `packages/services`; routes are HTTP glue.
 
-- [x] VitePress build repaired (PR #51): `<code v-pre>` for a `{{ }}` snippet; `srcExclude` for
-      `context/pitfalls/**`; dead links fixed (removed `.html` previews, added
-      `design/screens/index.md`)
-- [x] API online (PR #52): `deploy/compose.yml` + `.github/workflows/deploy.yml` (build → GHCR →
-      scp + SSH). `decksmith.<domain>/api/health` → 200. ADR-0026 topology updated (single
-      subdomain)
-- [x] Docs + Storybook online (PR #53): one nginx image, `/docs` + `/design-system`,
-      `absolute_redirect off` for correct redirects behind the proxy; GitHub Pages retired;
-      per-Dockerfile `.dockerignore` refactor (api + statics)
-- [x] Web SSR online (PR #54, ADR-0027): `apps/web/Dockerfile` ships prod `node_modules` next to
-      `.output` to work around nitro#4171 (`Cannot find module 'react'`); per-context API URL in
-      `api-client.ts` (browser relative `/api`, SSR `API_URL=http://api:3000` over `internal` net)
-- [x] `VITE_API_URL` turbo fix (PR #55): declared on the `build` task in `turbo.json` (strict env
-      mode dropped it → browser bundle baked `localhost:3000`); pitfall documented
-- [x] Root redirect + guest guard (PR #56): `/` → `/dashboard`|`/login`; `_auth` layout redirects
-      authenticated users away; `redirectTo` validated to internal paths only (open-redirect guard)
-- [x] Dev CORS/port alignment (PR #56): web dev pinned to 3001, API default `CORS_ORIGIN` → 3001
-- [x] Autofill styling (PR #57): `packages/tokens/src/web/base.css` restores font + themed color on
-      `:-webkit-autofill` (Chrome's hover-preview state stays as-is — not stylable)
+**Database** — Prisma 7 schema (16 models) synced to Supabase via session pooler; Supabase client
+working from `packages/db`. RLS policies applied and verified (4 policies on the `authenticated`
+role — defense-in-depth, the API bypasses RLS; ADR-0022, session 25).
 
-### packages/services unit tests (session 20 — PR #46)
+**Frontend** — `pnpm dev:web` → `localhost:3001`. TanStack Start SSR: auth pages (login, register,
+forgot-password), `_authenticated` guard (`beforeLoad` + SSR cookie forwarding, ADR-0023),
+dashboard, root redirect by auth state. Cookie-based theme + language (SSR-safe, no FOUC/FOUT), i18n
+EN + FR from `packages/i18n` (ADR-0025).
 
-- [x] `packages/services/src/errors.test.ts` — `ServiceError` (4 tests) + `isServiceError` (3 tests)
-- [x] `packages/services/src/prisma-errors.test.ts` — `isUniqueConstraintError` (4 tests);
-      `vi.hoisted()` used to define mock class before `vi.mock()` hoisting
-- [x] `packages/services/src/auth/auth-service.test.ts` — all 7 functions (15 tests);
-      `registerUser`, `loginUser`, `logoutUser`, `refreshSession`, `requestPasswordReset`,
-      `resetPassword`, `getMe`
-- [x] `packages/services/src/user/user-service.test.ts` — all 4 functions (9 tests);
-      `mergeJsonField` shallow-merge verified via `notificationPreferences` JSON field
-- [x] `packages/services/src/__mocks__/db.ts` — shared mock: `prisma` + `supabase` `vi.fn()` stubs +
-      `PrismaClientKnownRequestError` mock class (constructor signature matches real Prisma for
-      TypeScript + `instanceof` correctness)
-- [x] Dep updates: `oxlint` 1.73→1.74, `oxfmt` 0.56→0.59, `oxlint-tsgolint` 0.23→0.24
-- [x] **PR #46 merged** — 35 services tests on `main`
+**Packages** — `tokens` (tokens.css single source of truth), `web-ui` (~40 components + hooks, all
+Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
+codes), `api-client`, `query`, `services`, `test-utils`, `utils`, `i18n`, `db`. Build pipeline
+compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 
-### i18n strategy + packages/i18n (session 19 — PR #45)
-
-- [x] ADR-0025: i18n strategy decided — API sends codes, client translates; `Accept-Language` in API
-      rejected; hybrid approach rejected
-- [x] `packages/i18n` scaffolded: shared translation package (no runtime logic) — 3 feature
-      namespaces (`auth`, `common`, `errors`), EN + FR; `I18nResources` type exported for
-      react-i18next `CustomTypeOptions` augmentation
-- [x] `packages/schema` Zod messages replaced with stable codes: `PASSWORD_TOO_SHORT`,
-      `PASSWORD_MISSING_UPPERCASE`, `PASSWORD_MISSING_LOWERCASE`, `PASSWORD_MISSING_NUMBER`,
-      `USERNAME_INVALID_FORMAT`, `HEX_COLOR_INVALID`, `SLUG_INVALID` — contract tests updated to
-      assert codes (locale-independent)
-- [x] `apps/web/src/locales/` deleted — all strings now in `packages/i18n`
-- [x] `apps/web/src/i18n.ts` — multi-namespace init (`auth`/`common`/`errors`), `CustomTypeOptions`
-      augmentation inline (eslint-disable for `interface` required by declaration merging)
-- [x] Auth components migrated: `useTranslation('auth')` + short keys, `useTranslation('errors')`
-      for error display, `tError(errorCode ?? 'REQUEST_ERROR')` pattern
-- [x] `get-field-error.ts` — optional `t?: (key: ErrorKey) => string` param; `ErrorKey` imported
-      from `@decksmith/i18n`; cast isolated inside the function
-- [x] **PR #45 merged** — all session 19 work on `main`
-
-### Service layer + pnpm 11 migration (session 18 — PR #44)
-
-- [x] `packages/services` scaffolded: `auth-service.ts`, `user-service.ts`, `errors.ts`
-      (`ServiceError`, `isServiceError`), `prisma-errors.ts` (`isUniqueConstraintError`)
-- [x] `ServiceError(code, message)` thrown by services — never `HttpError`; routes do not try/catch
-      except when a side effect must run before re-throwing (e.g. clearing cookies on `/refresh`)
-- [x] Exception mapper in `apps/api/src/plugins/error-handler.ts` — `SERVICE_ERROR_STATUS` lookup
-      table maps `ServiceError.code` to HTTP status; pattern avoids try/catch repetition in every
-      route
-- [x] `auth-routes.ts` refactored — removed all Prisma/Supabase imports; each handler is 2–3 lines
-- [x] `user-routes.ts` refactored — removed Prisma, `mergeJsonField`, `isUniqueConstraintError`
-- [x] `mergeJsonField` moved from `apps/api/src/utils/` to `packages/utils/src/json-merge/` (with
-      colocated test written first)
-- [x] `isUniqueConstraintError` moved from `apps/api/src/utils/` to `packages/services/src/`
-- [x] ADR-0024: service layer architecture documented — routes = HTTP glue, all orchestration in
-      services, unconditional rule, no DI, no repository pattern
-- [x] pnpm 11 migration: `onlyBuiltDependencies` replaced by `allowBuilds` in `pnpm-workspace.yaml`;
-      `engines.pnpm` bumped to `>=11.0.0`; `export CI=true` added to `.husky/pre-commit` (hooks have
-      no TTY — `CI=true` maps to `opts.ci` which bypasses `confirmModulesPurge` check in pnpm 11
-      source); turbo test `outputs: []` (removes spurious coverage dir warning)
-- [x] **PR #44 merged** — all session 18 work on `main`
-
-### Phase 4.4 Auth UI (session 15 — PR #41)
-
-- [x] `.claude/skills/decksmith-design/` deleted — obsolete skill superseded by `packages/web-ui`
-- [x] `useLogin`, `useRegister`, `useForgotPassword` mutation hooks in `packages/query` (18 tests)
-- [x] `getErrorCode` utility in `packages/query/src/lib/` — `ErrorCode | undefined` from Query error
-- [x] `apps/web/src/lib/api-client.ts` — `apiClient` singleton (`VITE_API_URL` env var)
-- [x] `ApiClientProvider` wired in `apps/web/src/routes/__root.tsx`
-- [x] `@source '../../../../packages/web-ui/src/**/*.{ts,tsx}'` in `globals.css` (4 levels up from
-      file)
-- [x] `@vitejs/plugin-react` added to `vite.config.ts` (required for React Refresh in dev mode)
-- [x] Auth layout `_auth.tsx` — full-screen bg, animated logo lockup (Mark + wordmark), responsive
-      card
-- [x] Login page (`_auth/login.tsx`) — email + password, `INVALID_CREDENTIALS` inline error, links
-- [x] Register page (`_auth/register.tsx`) — email + password, `EMAIL_ALREADY_TAKEN` error, success
-      state
-- [x] Forgot Password page (`_auth/forgot-password.tsx`) — email, success confirmation state
-- [x] `getFieldError` + `makeSubmitHandler` utilities in `apps/web/src/lib/form/`
-- [x] `en.json` extended with full auth namespace (login · register · forgotPassword)
-- [x] 2 pitfalls documented: Zod issue objects in TanStack Form errors, `@source` relative path
-- [x] `decisions-log.md` updated with `@tanstack/react-form` adoption entry
-
-### Phase 4.4 + 4.5 polish (session 16)
-
-- [x] Adaptive SVG favicon — diamond mark, amber dark / violet light via
-      `@media prefers-color-scheme`
-- [x] `makePageHead()` helper in `apps/web/src/lib/head/` — `"<page> · Decksmith"`, greppable for
-      i18n migration; `head()` on all auth routes + dashboard
-- [x] `Skeleton` — `shape` variant (text/control/block/circle), `motion-safe:animate-pulse`,
-      `aria-hidden`; `bg-border-subtle` background (session 16)
-- [x] `useLocalStorage<T>` — SSR-safe, sync write (session 16; no longer used by ThemeProvider after
-      session 17 cookie rewrite)
-- [x] `ThemeProvider` + `useTheme` — initially localStorage-based (session 16); **rewritten to
-      cookie SSR pattern in session 17** — see session 17 section for full detail
-- [x] `ThemeToggle` — Switch with Sun/Moon `thumbIcon`; `--accent-icon` static-violet token added to
-      `packages/tokens`
-- [x] `ThemeControl` component in `apps/web` — i18n label + `ThemeToggle`; wired in `_auth.tsx`
-      (fixed top-right)
-- [x] Cookie-based language persistence — `LANGUAGE_COOKIE`, `parseLangFromCookieString` exported
-      from `i18n.ts`; root loader reads cookie via `createServerFn` → `getCookie` server-side, no
-      FOUT on translated strings; `LanguageControl` writes cookie on switch, `mounted` pattern
-      removed
-- [x] `TextLink` (`packages/web-ui`) — `default` / `subtle` variants, exports `textLinkVariants`;
-      `AppLink` (`apps/web`) wraps TanStack Router `Link`; replaces bare `Link` in all auth pages
-- [x] `Text size="xs"` added
-- [x] `useMediaQuery(query)` — `useSyncExternalStore`, reactive on threshold crossing, SSR-safe;
-      `useBreakpoint()` (`isMobile`/`isTablet`/`isDesktop`); `BREAKPOINTS` const; 9 tests
-- [x] `useKeyboardShortcut(shortcuts, handler)` — tinykeys, ref-stabilized callback, SSR-safe; 6
-      tests
-- [x] Auth footer — `Trans` + Heart icon + GitHub/Docs/Storybook links, EN/FR; `useTranslation()` in
-      `AuthLayout` for re-render on language switch
-- [x] `::selection` in `globals.css` — `--color-accent` / `--color-on-accent` (amber dark, violet
-      light)
-- [x] Storybook stories for `TextLink`, `ThemeControl`, `LanguageControl` (`Components/App/`)
-- [x] `apps/web` tsconfig excludes `*.stories.tsx`; `apps/storybook` tsconfig owns web stories
-- [x] `lucide-react` added to pnpm catalog; `apps/web` migrated to `catalog:`
-
-### Auth guard + cookie-based theme (session 17)
-
-- [x] `GET /api/v1/auth/me` route in `apps/api` — returns current user from Supabase session; 4
-      integration tests (200 authenticated, 401 no token, 401 expired, 404 user not in DB)
-- [x] `auth.me()` in `packages/api-client` — `headers?` support added to fetcher; Cookie header
-      forwarded via `getRequest()` in `apps/web/src/lib/auth/get-me.ts`; 3 tests (200/401/500)
-- [x] `apps/web/src/lib/auth/get-me.ts` — `$getMe` TanStack Start server function; reads Cookie
-      header from request and forwards it to `apps/api` (server-to-server, not browser-to-server)
-- [x] `_authenticated.tsx` pathless layout — `beforeLoad` calls `$getMe`; throws redirect to
-      `/login?redirectTo=<current-path>` on 401; renders `<Outlet />` on success
-- [x] Dashboard moved from `routes/dashboard/` → `routes/_authenticated/dashboard/` — protected by
-      guard
-- [x] `validateSearch` + `useSearch({ from: '/_auth/login' })` on login page — reads `redirectTo`
-      and navigates there on success (or `/dashboard` if absent)
-- [x] `routeTree.gen.ts` regenerated after route restructure
-- [x] ADR-0023: Auth guard SSR — `beforeLoad` + Cookie forwarding documented
-- [x] `theme-cookie.ts` (new, `packages/web-ui`) — `THEME_COOKIE`, `DEFAULT_THEME`, `VALID_THEMES`,
-      `parseThemeFromCookieString` (pure, takes full cookie string); 6 colocated unit tests
-      including the critical case `parseThemeFromCookieString('light') → DEFAULT_THEME` (bare value
-      ≠ full string)
-- [x] `ThemeProvider.tsx` rewritten — localStorage + `useEffect` + `useMediaQuery` + `resolveTheme`
-      removed; accepts `initialTheme?: Theme` prop; `setTheme` writes cookie inline + toggles
-      `document.documentElement.classList`; zero `useEffect`s
-- [x] `__root.tsx` — `$getServerTheme` (validates raw `getCookie()` value against `VALID_THEMES`),
-      `getClientTheme()` (`parseThemeFromCookieString(document.cookie)`); loader returns
-      `{ lang,     theme }`; `<html className={theme === 'dark' ? 'dark' : undefined}>` — no
-      `suppressHydrationWarning`; anti-FOUC inline script entirely removed (theme derivable
-      server-side)
-- [x] `ThemeControl.tsx` cleaned — 2 `suppressHydrationWarning` removed (now obsolete)
-- [x] `LanguageControl.tsx` — `oxlint-disable-next-line unicorn/no-document-cookie` added (was
-      pre-existing; surfaced by lint hardening)
-- [x] Testing rule added to `CLAUDE.md` — every exported pure function gets colocated `.test.ts` in
-      same session; minimum: happy path + 2 edge cases
-- [x] 2 new pitfalls in `frontend.md`: SSR `useState` initializer reading `localStorage` → hydration
-      mismatch; `getCookie` (raw value) vs `parseFromCookieString` (full cookie string) distinction
-
-### Quality audit (session 13)
-
-- [x] IDOR fix: `preHandler: app.authenticate` + `assertOwnership(req, params.id)` on all 4 user
-      routes (GET/PATCH `/:id`, GET/PATCH `/:id/preferences`) — ADR-0022
-- [x] `COOKIE_SECRET` length validation: config startup fails if secret < 64 chars
-- [x] Auth plugin order fixed: `error` checked before `data.user` → `SESSION_EXPIRED` now reachable
-      (previously dead branch)
-- [x] `apps/api` test infrastructure: `test-utils/` with `mocks/db.ts`, `mocks/config.ts`,
-      `factories/auth-user.ts`, `server.ts`, `inject.ts` — shared across all route tests
-- [x] `apps/api` auth route tests: 16 integration tests (all 6 routes) via Fastify inject + mocked
-      Supabase/Prisma
-- [x] `apps/api` user route tests: 15 integration tests including IDOR protection cases (401
-      unauthenticated, 403 wrong user) and correct ownership checks
-- [x] `packages/schema` contract tests: 42 `safeParse` boundary tests — auth (10), user (13),
-      primitives (19)
-- [x] `DisplayNameSchema` trim bug fixed: `.min(1).max(50).trim()` → `.trim().min(1).max(50)` (was
-      silently accepting whitespace-only strings)
-- [x] CI `db:generate` step added to `test` job (`DATABASE_URL=postgresql://localhost:5432/dummy`) —
-      prevents "Missing DATABASE_URL" failures when packages import Prisma client
-- [x] `seed.ts` fixed: `units: 'in'` → `'inches'`, `sortOrder` → `sortDirection`, `email`/`push` →
-      `emailOnPdfReady`; orphan-profile caveat documented in code comment
-- [x] `test-strategy.md` reconciled with actual CI: current (mocked DB, single `test` job) vs
-      aspirational (Docker PostgreSQL, split jobs) clearly distinguished
-- [x] `data-model.md` spec drift annotated: `Tag.type`, Card FTS index, CardPrint `(language)` and
-      `(oracle_id, language)` indexes marked ⚠️ Planned with target phase
-- [x] `decisions-log.md` fully translated to English: Sessions A/B/C, Supabase pooler, `User.id`,
-      Auth API-proxied entries
-- [x] `inject.ts` typecheck fix: `ReturnType<FastifyInstance['inject']>` resolves to
-      `LightMyRequestChain` (TypeScript picks the last overload — zero-arg variant); fixed to
-      `Promise<LightMyRequestResponse>` imported directly from `light-my-request`
-- [x] Vague 5 — magic values centralized: `@utility opacity-disabled` in `layout.css` (replaces 23×
-      `opacity-[0.38]`); `--shadow-pip` CSS var in `mtg.css` (replaces duplicated rgba in
-      `ManaSymbol` + `HybridManaSymbol`); 21 `'use client'` directives removed (no-op in Vite);
-      tooling cleanup (pnpm catalog, CI pnpm version, turbo globalDependencies)
-- [x] **PR #39 merged** — all session 13 quality audit work (vagues 1–5) now on `main`
+**Production** — fully deployed, see Infrastructure below.
 
 ---
 
@@ -331,158 +55,65 @@ Traefik on a single subdomain; register/login verified end-to-end)_
 
 - `apps/worker`, `apps/mobile` are empty shells
 - OAuth providers (Google, GitHub) not yet enabled in Supabase dashboard
-- Prisma client must be regenerated locally after `pnpm install`
-  (`pnpm --filter @decksmith/db db:generate`)
-- `routeTree.gen.ts` must be regenerated after adding/changing routes
-  (`pnpm --filter @decksmith/web dev`, then Ctrl-C)
-- `packages/query` does not yet have `useCardSearch` — blocked on Phase 3 (Scryfall)
-- `apps/api` tests use mocked Prisma/Supabase (not real DB) — pending Docker PostgreSQL service in
-  CI (see `test-strategy.md` aspirational CI section)
-- DB seed creates orphaned `User` profiles with no matching `auth.users` row — seed is usable for DB
-  exploration but auth routes won't work for seeded users. Full fix requires creating Supabase auth
-  users via `supabase.auth.admin.createUser()` before seeding profile rows.
-- No local dev Docker compose yet (Postgres + Redis) — apps still run natively against Supabase
-  cloud
-- Supabase email confirmation is **disabled** in the new project (dev-only setting) — must re-enable
-  before production or when email confirmation flow is implemented
-- Deploy actions target Node 20 (deprecated by GitHub, forced to Node 24) — bump the Docker/checkout
-  actions in a future session
-- Storybook preview shows a brief light-theme flash on story change (FOUC) — cosmetic, future fix
+- Supabase email confirmation **disabled** (dev-only) — re-enable before production or when the
+  email confirmation flow is implemented
+- DB seed creates orphaned `User` profiles (no matching `auth.users` row) — usable for DB
+  exploration, not for auth testing; full fix needs `supabase.auth.admin.createUser()` before
+  seeding
+- `apps/api` tests use mocked Prisma/Supabase — real-DB CI (Docker PostgreSQL) pending, see
+  `test-strategy.md`
+- No local dev docker-compose (Postgres + Redis) — apps run natively against Supabase cloud
+- `packages/query` has no `useCardSearch` — blocked on Phase 3 (Scryfall)
+- Deploy workflow actions target deprecated Node 20 — bump in a future session
+- Storybook preview: brief light-theme flash on story change (cosmetic)
 - Postgres log noise: `42P01`/`3F000` on `supabase_migrations.schema_migrations` (we use Prisma
-  `db:push`, not the Supabase CLI migrations) — to investigate
+  `db:push`, not Supabase CLI migrations) — to investigate
+
+**Dev gotchas** — after `pnpm install`, regenerate the Prisma client
+(`pnpm --filter @decksmith/db db:generate`); after route changes, regenerate `routeTree.gen.ts`
+(start `pnpm dev:web`, then Ctrl-C).
+
+---
+
+## Next Up
+
+- Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
+  flow (blocked on OAuth/deep-link spec)
+- Phase 3: Scryfall integration (`packages/scryfall`, worker sync job, card API) — **pair mode:
+  Jérémie writes the domain/normalization logic** (collab retro 2026-07-25)
+- Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
 
 ---
 
 ## Open PRs
 
-- None — all session 24 PRs merged (#51–#57).
+- `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
 
 ---
 
 ## Infrastructure (production)
 
-- **Reverse proxy live**: Traefik on the VPS owns 80/443, routes by Docker labels over a shared
-  `proxy` network, terminates TLS with a Let's Encrypt **wildcard** cert (ACME DNS-01, prod,
-  auto-renew). Host-nginx retired (stopped + disabled; kept on disk as rollback). See ADR-0026 +
-  `apps/docs/deployment/reverse-proxy.md`.
-- **DNS** moved to an API-capable provider (nameservers off the registrar); wildcard record → VPS,
-  so any subdomain resolves with no further DNS change.
-- **Traefik dashboard** protected by source-IP allowlist + basic auth.
-- **Pre-existing personal site** migrated behind Traefik (real cert, verified end-to-end).
-- Secrets (DNS token, ACME email, dashboard hash, allow-IP) live only in server-side `~/infra/.env`
-  — never committed.
-- **Decksmith deployed (session 24)**: all three images (`decksmith-api`, `decksmith-web`,
-  `decksmith-statics`) built + pushed to GHCR by `.github/workflows/deploy.yml`, then pulled on the
-  VPS via `~/apps/decksmith/compose.yml`. Single subdomain `decksmith.<domain>`, path-routed: `/api`
-  (API), `/` (web SSR), `/docs` (VitePress), `/design-system` (Storybook). GHCR packages public
-  (inherit repo visibility). Register/login verified end-to-end (same-origin cookies).
-- **Deploy pipeline**: CI builds images → `scp deploy/compose.yml` + SSH
-  `docker compose pull && up -d`. GitHub secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` (dedicated
-  ed25519 deploy key). The deployed commit SHA is pinned in `~/apps/decksmith/.env` as `IMAGE_TAG`.
+- **Live** at `decksmith.<domain>`, path-routed behind Traefik: `/api` (API), `/` (web SSR), `/docs`
+  (VitePress), `/design-system` (Storybook). Register/login verified end-to-end (same-origin
+  cookies).
+- **Traefik** owns 80/443 on the VPS, label-driven routing over the shared `proxy` network, wildcard
+  TLS via ACME DNS-01 (auto-renew). ADR-0026 + `apps/docs/deployment/reverse-proxy.md`.
+- **Deploy pipeline**: `.github/workflows/deploy.yml` builds 3 GHCR images (api / web / statics) →
+  scp `deploy/compose.yml` + SSH `docker compose pull && up -d`. Deployed SHA pinned as `IMAGE_TAG`
+  in the server `.env`. Secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` (dedicated ed25519 key). GHCR
+  images public.
 - **Server-side `~/apps/decksmith/.env`** (never committed): `DECKSMITH_HOST`, `CORS_ORIGIN`,
-  `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `COOKIE_SECRET` (prod-specific),
-  `IMAGE_TAG`. `NODE_ENV` unset → defaults to `production` (secure cookies, correct behind Traefik's
-  `trustProxy`).
+  `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `COOKIE_SECRET`, `IMAGE_TAG`.
+  `NODE_ENV` unset → `production` (secure cookies, `trustProxy`).
+- **DNS**: wildcard record → VPS via API-capable provider. Traefik dashboard behind IP-allowlist +
+  basic auth. Infra secrets live only in server-side `~/infra/.env`.
 
 ---
 
 ## Current Branch
 
-- Branch: `docs/session-24`. `main` has all session 24 PRs merged (#51–#57): docs build fix,
-  API/web/statics deployment, VITE_API_URL turbo fix, root redirect + guest guard, dev CORS/port
-  alignment (3001), input autofill fix.
-
-> Dependency versions are in the individual `package.json` files. The version table was removed from
-> this file (it was always stale and duplicated package.json).
-
----
-
-## Phase 2.2 Auth — Implementation Progress
-
-Steps completed:
-
-- [x] ADR-0014 created: API-proxied auth decision documented
-- [x] Prisma schema: `User.id` no longer auto-generated, `username`/`displayName` nullable
-- [x] Prisma schema: `CardTag` cascade fixed, 3 missing indexes added
-- [x] `db:push` to Supabase ✅
-- [x] `@supabase/supabase-js` added to `packages/db`, singleton client created + tested
-- [x] Auth Zod DTOs in `packages/schema/src/auth/` — all endpoints covered
-- [x] `@fastify/cookie`, `@fastify/cors`, `@fastify/rate-limit` installed + configured in `apps/api`
-- [x] Auth plugin `apps/api/src/plugins/auth.ts` — `fastify.authenticate` preHandler decorator
-- [x] Auth routes: register, login, logout, refresh, forgot-password, reset-password
-- [x] Auth mapper: `toRegisterResponse` (AuthUser → RegisterResponse DTO)
-- [x] Pitfalls doc system: `apps/docs/context/pitfalls/` (fastify, supabase, typescript, frontend)
-- [x] PR #14 merged to `main`
-
-Steps remaining:
-
-- [ ] Enable OAuth providers in Supabase dashboard (Google, GitHub)
-- [ ] Apply RLS policies (`psql "$DATABASE_URL" -f packages/db/sql/rls-policies.sql`)
-- [x] Integration tests for auth + user routes (done in session 13)
-
----
-
-## Phase 4.1 apps/web — Complete
-
-- [x] TanStack Start v1 (`@tanstack/react-start` 1.168.25) initialized with `vite.config.ts`
-- [x] Tailwind v4 wired via `@tailwindcss/vite` + `@import` in `globals.css`
-- [x] `packages/tokens` wired: `globals.css` imports `@decksmith/tokens/web/tokens.css`
-- [x] TanStack Query configured: per-request `QueryClient` via `useState` initializer in
-      `__root.tsx` (SSR cache leak fix — session 13), `staleTime: 30_000`
-- [x] react-i18next configured: `src/i18n.ts` + `src/locales/en.json`
-- [x] Base routes: `/` (SSR), `/_auth/login` → `/login`, `/_auth/register` → `/register`,
-      `/dashboard/`
-- [x] Pathless layout `_auth.tsx` for shared auth page wrapper
-- [x] `routeTree.gen.ts` generated (TanStack Router codegen)
-- [x] `src/declarations.d.ts` for CSS module imports
-- [x] `ScrollRestoration` deprecated component replaced by `scrollRestoration: true` router option
-
----
-
-## Phase 4.0.5 Sessions — Complete
-
-- [x] Session A: `packages/tokens` architecture locked → ADR-0017
-- [x] Session B: frontend library stack validated → ADR-0018
-- [x] Session C: `packages/web-ui` component architecture + definition of done → ADR-0019
-- [x] Session D: global testing strategy → `apps/docs/context/test-strategy.md` + ADR-0006 updated
-
----
-
-## Phase 4.2 packages/api-client — Complete
-
-- [x] `createFetcher(baseUrl)` — internal partial application, `credentials: 'include'` on every
-      request
-- [x] `ApiError` class + `isApiError` guard + `ErrorCode` union in `errors/errors.ts`
-- [x] `ErrorCode` derived via `import type { X }` + `typeof X` (no string duplication from
-      `packages/schema`)
-- [x] `createAuthModule(fetcher)` — 6 methods (register, login, logout, refresh, forgotPassword,
-      resetPassword)
-- [x] `createUsersModule(fetcher)` — 4 methods (getUser, updateUser, getUserPreferences,
-      updateUserPreferences)
-- [x] `createApiClient(baseUrl)` factory + `ApiClient` inferred type in `index.ts`
-- [x] Two exports only: `"."` and `"./errors"` — fetcher + modules are internal
-- [x] 15 tests with MSW (happy path + error + network failure per module)
-
-## packages/test-utils — Complete (new package)
-
-- [x] MSW `setupServer()` + Vitest lifecycle (`beforeAll`, `afterEach`, `afterAll`) in `server.ts`
-- [x] `createQueryWrapper()` — fresh `QueryClient({ retry: false })` per test suite
-- [x] `buildUser(overrides?)` factory
-- [x] `buildUserPreferences(overrides?)` factory
-- [x] Three exports: `"./server"`, `"./query-wrapper"`, `"./factories/user"`,
-      `"./factories/preferences"`
-
-## Phase 4.3 packages/query — Complete
-
-- [x] `ApiClientProvider` + `useApiClient` React Context in `context/context.tsx`
-- [x] `useUser(id)` — TanStack Query hook, `enabled: !!id`, `errorCode: ErrorCode | undefined`
-- [x] `useUserPreferences(id)` — same pattern, key nested under `['user', id, 'preferences']`
-- [x] `useLogin` — mutation, `onSuccess` seeds user cache via `queryClient.setQueryData`
-- [x] `useRegister` — mutation, exposes `isSuccess` for email confirmation state
-- [x] `useForgotPassword` — mutation, exposes `isSuccess` for confirmation state
-- [x] `getErrorCode` — `packages/query/src/lib/` — extracts `ErrorCode | undefined` from Query error
-- [x] 18 tests (2 context + 3 use-user + 3 use-user-preferences + 3 use-login + 2 use-register + 2
-      use-forgot-password + 3 get-error-code)
+- `docs/collab-retro` — retrospective deliverables (retro doc, PROFILE/WORKFLOW/session.end
+  amendments, this file condensed).
 
 ---
 
@@ -490,3 +121,5 @@ Steps remaining:
 
 - Profile completion state: what happens when a user has no `username`/`displayName` yet? A redirect
   to an onboarding screen is needed but not yet specced.
+
+> Dependency versions live in the individual `package.json` files — never duplicated here.

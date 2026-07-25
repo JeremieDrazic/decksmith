@@ -21,7 +21,19 @@ Outputs a briefing: where we are, what's next, any blockers + outdated deps.
 /session.end
 ```
 
-Updates ROADMAP, project-state, decisions-log, suggests commit message.
+Updates ROADMAP, project-state, decisions-log, suggests commit message. Includes a retention check
+(2–3 questions on concepts introduced — see the collab retro 2026-07-25).
+
+---
+
+## Pair-Programming Zones (collab retro 2026-07-25)
+
+Who types the code depends on the zone — explanation depth is always full. See `.claude/PROFILE.md`
+§ Mode pair-programming:
+
+- **High-learning** (`packages/domain`, `packages/services`, `packages/scryfall`, auth, DB schema):
+  Jérémie writes, Claude designs/guides/reviews.
+- **Ship-first** (devops, tooling, config, repetitive UI): Claude writes.
 
 ---
 
@@ -29,9 +41,9 @@ Updates ROADMAP, project-state, decisions-log, suggests commit message.
 
 1. Read the relevant spec in `apps/docs/specs/<feature>.md`
 2. `/module.scaffold <name>` — generates routes + mapper, registers in v1-routes
-3. Write domain logic in `packages/domain` if needed → `domain-reviewer`
-4. `api-reviewer` — validates DTO usage, mapper, error codes, JSDoc
-5. `test-writer` — generates unit tests for domain logic, integration stubs for routes
+3. Write domain logic in `packages/domain` if needed (high-learning zone — Jérémie writes)
+4. Tests are written in the same session as the implementation (CLAUDE.md testing rule)
+5. Optional second pass, on demand: `domain-reviewer`, `api-reviewer`, `test-writer`
 6. `/roadmap.update` when done
 
 ---
@@ -41,10 +53,10 @@ Updates ROADMAP, project-state, decisions-log, suggests commit message.
 1. Read the relevant spec in `apps/docs/specs/<feature>.md`
 2. `/cto-advisor` if architecture is unclear before starting
 3. Build components using `packages/web-ui` base components
-4. `ux-reviewer` → `ui-reviewer` → `a11y-reviewer`
-5. `frontend-reviewer` — validates TanStack Query/Router usage, no business logic in components
-6. `test-writer` — generates Storybook stories or Vitest tests
-7. `/roadmap.update` when done
+4. Storybook stories + Vitest tests written with the implementation
+5. Optional second pass, on demand: `ux-reviewer`, `ui-reviewer`, `a11y-reviewer`,
+   `frontend-reviewer`
+6. `/roadmap.update` when done
 
 ---
 
@@ -53,7 +65,7 @@ Updates ROADMAP, project-state, decisions-log, suggests commit message.
 1. `db-reviewer` — validates cascade rules, indexes, naming conventions
 2. Run `pnpm --filter @decksmith/db db:generate`
 3. Update seed script if new models are added
-4. Update `apps/apps/docs/context/decisions-log.md` if it's a structural change
+4. Update `apps/docs/context/decisions-log.md` if it's a structural change
 5. If significant → `/adr.create` or `/adr.update`
 
 ---
@@ -61,7 +73,7 @@ Updates ROADMAP, project-state, decisions-log, suggests commit message.
 ## Adding a New Dependency
 
 - **Significant** (Redis, BullMQ, Three.js, Expo, major framework): `/adr.create` first
-- **Minor utility**: add to `apps/apps/docs/context/decisions-log.md`
+- **Minor utility**: add to `apps/docs/context/decisions-log.md`
 - Always use the pnpm catalog for shared deps: `pnpm-workspace.yaml`
 - Never add silently
 
@@ -97,7 +109,8 @@ implement — advises.
 ## Reference
 
 - Skills detail: `apps/docs/skills-and-agents.md`
-- ADRs: `apps/apps/docs/adr/index.md`
+- ADRs: `apps/docs/adr/index.md`
 - Specs: `apps/docs/specs/`
 - Roadmap: `apps/docs/roadmap.md`
-- Project state: `apps/apps/docs/context/project-state.md`
+- Project state: `apps/docs/context/project-state.md`
+- Retrospectives: `apps/docs/context/retrospectives/`

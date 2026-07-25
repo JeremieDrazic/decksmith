@@ -45,6 +45,26 @@ max, une recommandation, le principal trade-off. Pas un exposé. Pas d'analyse d
 
 ---
 
+## Mode pair-programming (rétro 2026-07-25)
+
+Les zones décident **qui tape le code** — jamais la profondeur des explications, qui reste complète
+partout (rôle sparring partner : Jérémie a besoin de tous les tenants et aboutissants).
+
+- **Zones haute pédagogie — Jérémie écrit, Claude conçoit/guide/review :** `packages/domain`,
+  `packages/services`, `packages/scryfall`, auth, schéma DB. Claude explique le design et
+  l'approche, Jérémie implémente, Claude débloque et review en direct.
+- **Zones ship-first — Claude écrit, explications complètes maintenues :** devops, tooling, config,
+  UI répétitive.
+
+**Récupération active :** avant de retoucher du code auth ou DB, Jérémie explique d'abord le
+fonctionnement existant ; Claude corrige les trous. Ne pas ré-expliquer d'office.
+
+**Fin de session :** 2-3 questions de rétention sur les concepts introduits (voir `session.end`).
+Les ratés rejoignent le backlog de consolidation dans
+`apps/docs/context/retrospectives/2026-07-25-collab-retro.md`.
+
+---
+
 ## Règles de code
 
 | Règle                                   | Détail                                                       |
