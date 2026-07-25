@@ -4,6 +4,7 @@ import rateLimit from '@fastify/rate-limit';
 import sensible from '@fastify/sensible';
 import Fastify from 'fastify';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import { RATE_LIMITED } from '@decksmith/schema/errors/codes';
 
 import { config } from './config.js';
 import authPlugin from './plugins/auth.js';
@@ -38,6 +39,14 @@ export async function buildServer() {
   await app.register(rateLimit, {
     max: 100,
     timeWindow: '1 minute',
+    // Give 429 responses a typed code so the client shows "too many attempts"
+    // (via i18n) instead of the generic REQUEST_ERROR fallback.
+    errorResponseBuilder: (_request, context) => ({
+      statusCode: 429,
+      error: 'Too Many Requests',
+      code: RATE_LIMITED,
+      message: `Too many requests. Retry in ${context.after}.`,
+    }),
   });
   await app.register(sensible);
   await app.register(errorHandler);

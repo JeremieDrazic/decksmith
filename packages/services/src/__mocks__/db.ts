@@ -13,6 +13,7 @@ export const supabase = {
       getUserById: vi.fn(),
       signOut: vi.fn(),
       updateUserById: vi.fn(),
+      deleteUser: vi.fn(),
     },
   },
 };

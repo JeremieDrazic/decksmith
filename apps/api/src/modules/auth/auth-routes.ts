@@ -106,7 +106,13 @@ const authRoutes: FastifyPluginCallbackZod = (app, _opts, done) => {
       schema: { response: { 200: LogoutResponseSchema } },
     },
     async (req, reply) => {
-      await logoutUser(req.user.id);
+      try {
+        await logoutUser(req.user.id);
+      } catch (error) {
+        // Global sign-out failed (e.g. Supabase outage). Log it for monitoring, but
+        // still clear cookies and return 200 — the user IS logged out of this browser.
+        req.log.error({ error }, 'global sign-out failed during logout');
+      }
       reply.clearCookie('access_token', { path: '/' });
       reply.clearCookie('refresh_token', { path: '/api/v1/auth/refresh' });
       return reply.send({ message: 'Logged out successfully.' });

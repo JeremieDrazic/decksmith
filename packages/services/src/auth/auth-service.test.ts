@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@decksmith/db', () => import('../__mocks__/db.js'));
 
-import { prisma, supabase, SUPABASE_USER_ALREADY_EXISTS } from '@decksmith/db';
+import { prisma, Prisma, supabase, SUPABASE_USER_ALREADY_EXISTS } from '@decksmith/db';
 import {
   getMe,
   loginUser,
@@ -78,6 +78,30 @@ describe('registerUser', () => {
 
     expect(result).toEqual({ id: 'user-id-123', email: 'user@example.com' });
     expect(prisma.user.create).toHaveBeenCalledOnce();
+  });
+
+  it('rolls back the auth account and throws USERNAME_TAKEN when the profile write hits a unique constraint', async () => {
+    vi.mocked(supabase.auth.signUp).mockResolvedValue({
+      data: { user: buildAuthUser(), session: null },
+      error: null,
+    } as never);
+    vi.mocked(prisma.user.create).mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: 'x',
+      })
+    );
+    vi.mocked(supabase.auth.admin.deleteUser).mockResolvedValue({
+      data: null,
+      error: null,
+    } as never);
+
+    await expect(
+      registerUser({ email: 'user@example.com', password: 'Password123', username: 'taken' })
+    ).rejects.toMatchObject({ code: 'USERNAME_TAKEN' });
+
+    // Compensation: the orphaned Supabase auth account must be deleted.
+    expect(supabase.auth.admin.deleteUser).toHaveBeenCalledWith('user-id-123');
   });
 
   it('throws EMAIL_ALREADY_TAKEN when email is already registered', async () => {
@@ -178,6 +202,14 @@ describe('logoutUser', () => {
     await logoutUser('user-id-123');
 
     expect(supabase.auth.admin.signOut).toHaveBeenCalledWith('user-id-123', 'global');
+  });
+
+  it('throws when supabase sign-out fails (not swallowed)', async () => {
+    vi.mocked(supabase.auth.admin.signOut).mockResolvedValue({
+      error: { message: 'Supabase down' },
+    } as never);
+
+    await expect(logoutUser('user-id-123')).rejects.toThrow();
   });
 });
 

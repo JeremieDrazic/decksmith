@@ -1,5 +1,11 @@
-import { INTERNAL_ERROR, REQUEST_ERROR, VALIDATION_ERROR } from '@decksmith/schema/errors/codes';
-import { isServiceError } from '@decksmith/services';
+import {
+  INTERNAL_ERROR,
+  INVALID_REFERENCE,
+  REQUEST_ERROR,
+  RESOURCE_NOT_FOUND,
+  VALIDATION_ERROR,
+} from '@decksmith/schema/errors/codes';
+import { isForeignKeyError, isRecordNotFoundError, isServiceError } from '@decksmith/services';
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
@@ -59,6 +65,25 @@ export default fp(
           message: rawError.message,
         };
         return reply.status(status).send(response);
+      }
+
+      // Known Prisma errors that escaped the service layer — map to client errors
+      // instead of a misleading 500 (the request was invalid, not the server).
+      if (isRecordNotFoundError(rawError)) {
+        return reply.status(404).send({
+          statusCode: 404,
+          error: 'Not Found',
+          code: RESOURCE_NOT_FOUND,
+          message: 'The requested resource was not found.',
+        });
+      }
+      if (isForeignKeyError(rawError)) {
+        return reply.status(409).send({
+          statusCode: 409,
+          error: 'Conflict',
+          code: INVALID_REFERENCE,
+          message: 'A referenced resource does not exist.',
+        });
       }
 
       // Known HTTP errors (from createHttpError or Fastify internals)
