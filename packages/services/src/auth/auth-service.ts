@@ -3,15 +3,19 @@ import type { PrismaUser } from '@decksmith/db';
 import type { RegisterInput } from '@decksmith/schema/auth';
 import {
   EMAIL_ALREADY_TAKEN,
+  INTERNAL_ERROR,
   INVALID_CREDENTIALS,
   PASSWORD_RESET_FAILED,
   REGISTRATION_FAILED,
   SESSION_EXPIRED,
   UNAUTHORIZED,
+  USERNAME_TAKEN,
   USER_NOT_FOUND,
 } from '@decksmith/schema/errors/codes';
+import { noop } from '@decksmith/utils';
 
 import { ServiceError } from '../errors.js';
+import { isUniqueConstraintError } from '../prisma-errors.js';
 
 /**
  * Creates a Supabase auth account and the corresponding Prisma user profile.
@@ -39,21 +43,34 @@ export async function registerUser(input: RegisterInput): Promise<{ id: string; 
     throw new ServiceError(REGISTRATION_FAILED, 'Registration failed. Please try again.');
   }
 
-  await prisma.user.create({
-    data: {
-      id: data.user.id,
-      email,
-      username: username ?? null,
-      preferences: {
-        create: {
-          language: 'en',
-          units: 'mm',
-          defaultCurrency: 'eur',
-          theme: 'system',
+  try {
+    await prisma.user.create({
+      data: {
+        id: data.user.id,
+        email,
+        username: username ?? null,
+        preferences: {
+          create: {
+            language: 'en',
+            units: 'mm',
+            defaultCurrency: 'eur',
+            theme: 'system',
+          },
         },
       },
-    },
-  });
+    });
+  } catch (error) {
+    // The Supabase auth account exists but the profile write failed (e.g. a taken
+    // username → P2002). Compensate by deleting the orphaned auth account, otherwise
+    // the email is permanently blocked and a login would fail with "profile not found".
+    // Best effort: ignore a cleanup failure (the caller still gets a clear error).
+    await supabase.auth.admin.deleteUser(data.user.id).catch(noop);
+
+    if (isUniqueConstraintError(error)) {
+      throw new ServiceError(USERNAME_TAKEN, 'Username is already taken');
+    }
+    throw new ServiceError(REGISTRATION_FAILED, 'Registration failed. Please try again.');
+  }
 
   return { id: data.user.id, email: data.user.email ?? email };
 }
@@ -94,7 +111,12 @@ export async function loginUser(
  * @param userId - The Supabase user ID
  */
 export async function logoutUser(userId: string): Promise<void> {
-  await supabase.auth.admin.signOut(userId, 'global');
+  const { error } = await supabase.auth.admin.signOut(userId, 'global');
+  if (error) {
+    // Surface the failure instead of swallowing it. The route logs it and still
+    // ends the local session — the global sign-out just didn't reach every device.
+    throw new ServiceError(INTERNAL_ERROR, 'Global sign-out failed');
+  }
 }
 
 /**

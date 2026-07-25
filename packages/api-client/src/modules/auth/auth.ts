@@ -96,7 +96,13 @@ export function createAuthModule(fetcher: Fetcher) {
           headers: init?.headers,
         });
       } catch (error) {
-        if (isApiError(error) && error.statusCode === 401) return null;
+        // 401 = not authenticated. 404 = the Supabase session is valid but the
+        // user's profile row is gone (e.g. deleted account). Both mean "no usable
+        // session" → return null so the route guards redirect to /login instead of
+        // letting an ApiError bubble to the router's error boundary (a crash screen).
+        if (isApiError(error) && (error.statusCode === 401 || error.statusCode === 404)) {
+          return null;
+        }
         throw error;
       }
     },

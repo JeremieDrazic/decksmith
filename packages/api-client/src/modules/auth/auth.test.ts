@@ -96,6 +96,26 @@ describe('auth.me', () => {
     expect(result).toBeNull();
   });
 
+  it('returns null on 404 (valid session but profile row deleted)', async () => {
+    server.use(
+      http.get(`${BASE_URL}/api/v1/auth/me`, () =>
+        HttpResponse.json(
+          {
+            statusCode: 404,
+            error: 'Not Found',
+            code: 'USER_NOT_FOUND',
+            message: 'User profile not found.',
+          },
+          { status: 404 }
+        )
+      )
+    );
+
+    const result = await auth.me();
+
+    expect(result).toBeNull();
+  });
+
   it('throws ApiError on unexpected server errors', async () => {
     server.use(
       http.get(`${BASE_URL}/api/v1/auth/me`, () =>

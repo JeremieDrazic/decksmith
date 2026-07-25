@@ -59,3 +59,12 @@ export const USERNAME_TAKEN = 'USERNAME_TAKEN';
 
 /** The requested user preferences record does not exist. */
 export const PREFERENCES_NOT_FOUND = 'PREFERENCES_NOT_FOUND';
+
+/** A record targeted by an update or delete no longer exists (maps Prisma P2025 → 404). */
+export const RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
+
+/** A write referenced a parent row that does not exist (maps Prisma P2003 → 409). */
+export const INVALID_REFERENCE = 'INVALID_REFERENCE';
+
+/** Too many requests — the rate limiter rejected the call (HTTP 429). */
+export const RATE_LIMITED = 'RATE_LIMITED';

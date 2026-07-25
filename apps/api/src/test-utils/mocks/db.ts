@@ -33,4 +33,14 @@ export const prisma = {
 
 export const SUPABASE_USER_ALREADY_EXISTS = 'user_already_exists';
 
-export const Prisma = {};
+class PrismaClientKnownRequestError extends Error {
+  readonly code: string;
+
+  constructor(message: string, options: { code: string; clientVersion: string }) {
+    super(message);
+    this.code = options.code;
+    this.name = 'PrismaClientKnownRequestError';
+  }
+}
+
+export const Prisma = { PrismaClientKnownRequestError };
