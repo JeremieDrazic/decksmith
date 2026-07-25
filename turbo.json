@@ -10,7 +10,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", "build/**", "storybook-static/**", ".vitepress/dist/**"],
+      "outputs": ["dist/**", "build/**", "storybook-static/**", ".vitepress/dist/**", ".output/**"],
       "env": ["VITE_API_URL"]
     },
     "dev": {
