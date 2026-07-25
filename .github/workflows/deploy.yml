@@ -1,61 +1,91 @@
 name: Deploy
 
-# Release pipeline (main-only). CI (ci.yml) stays the PR-gating quality workflow;
-# this one builds images, pushes them to GHCR, and redeploys the VPS over SSH.
+# Release pipeline. Runs after the CI workflow SUCCEEDS on main (workflow_run +
+# a success gate) — a commit that fails CI can never deploy. workflow_dispatch
+# stays for manual re-runs (e.g. after flipping a GHCR package to public).
+#
+# On a workflow_run trigger, github.sha is main's HEAD at trigger time (which may
+# have moved on); the commit that actually passed CI is workflow_run.head_sha.
+# DEPLOY_SHA resolves to that exact commit (falling back to github.sha on manual
+# dispatch), and every job checks out + tags it, so we never deploy an untested SHA.
+#
+# Third-party actions are pinned to immutable commit SHAs (tag in the comment):
+# the appleboy actions receive the VPS SSH key and the docker actions push to GHCR,
+# so a mutable tag repointed at malicious code would be a supply-chain hole.
 on:
-  push:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
     branches: [main]
-  workflow_dispatch: # manual re-run (e.g. after flipping a new GHCR package to public)
+  workflow_dispatch:
 
 # Never cancel a deploy mid-flight — queue runs instead, to avoid a half-applied VPS state.
 concurrency:
   group: deploy
   cancel-in-progress: false
 
-permissions:
-  contents: read
-  packages: write # required for the built-in GITHUB_TOKEN to push to GHCR
+# Permissions are declared per job (least privilege), not workflow-wide:
+# the build jobs push to GHCR; the deploy job (which holds the VPS SSH key) gets none.
+
+env:
+  # The commit being deployed (see header comment).
+  DEPLOY_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
 
 jobs:
   build-api:
+    # Run on manual dispatch, or only when the triggering CI run succeeded.
+    if:
+      github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # push the image to GHCR
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push API image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           file: apps/api/Dockerfile
           push: true
           tags: |
-            ghcr.io/jeremiedrazic/decksmith-api:${{ github.sha }}
+            ghcr.io/jeremiedrazic/decksmith-api:${{ env.DEPLOY_SHA }}
             ghcr.io/jeremiedrazic/decksmith-api:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   build-web:
+    if:
+      github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # push the image to GHCR
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push web image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           file: apps/web/Dockerfile
@@ -64,17 +94,24 @@ jobs:
           build-args: |
             VITE_API_URL=
           tags: |
-            ghcr.io/jeremiedrazic/decksmith-web:${{ github.sha }}
+            ghcr.io/jeremiedrazic/decksmith-web:${{ env.DEPLOY_SHA }}
             ghcr.io/jeremiedrazic/decksmith-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   build-statics:
+    if:
+      github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # push the image to GHCR
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
           cache: 'pnpm'
@@ -83,23 +120,23 @@ jobs:
       - run: pnpm --filter @decksmith/docs build
       - run: pnpm --filter @decksmith/storybook build
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
 
       - name: Log in to GHCR
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push statics image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
         with:
           context: .
           file: deploy/statics.Dockerfile
           push: true
           tags: |
-            ghcr.io/jeremiedrazic/decksmith-statics:${{ github.sha }}
+            ghcr.io/jeremiedrazic/decksmith-statics:${{ env.DEPLOY_SHA }}
             ghcr.io/jeremiedrazic/decksmith-statics:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -107,12 +144,18 @@ jobs:
   deploy:
     needs: [build-api, build-web, build-statics]
     runs-on: ubuntu-latest
+    # Least privilege: this job holds the VPS SSH key — no package/write access,
+    # so a compromised step here cannot also tamper with GHCR images.
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
 
       # Keep the VPS copy of compose.yml in sync with the repo on every deploy.
       - name: Sync compose file to VPS
-        uses: appleboy/scp-action@v1
+        uses: appleboy/scp-action@ff85246acaad7bdce478db94a363cd2bf7c90345 # v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -123,7 +166,7 @@ jobs:
 
       # Pin the deployed commit SHA in the server .env, then pull + restart.
       - name: Pull and restart
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
@@ -136,4 +179,4 @@ jobs:
             docker compose pull
             docker compose up -d
         env:
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ env.DEPLOY_SHA }}

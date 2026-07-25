@@ -26,7 +26,7 @@ Write the updated file.
 
 ### Step 3: Update project-state.md
 
-Read `apps/apps/docs/context/project-state.md`.
+Read `apps/docs/context/project-state.md`.
 
 Update:
 
@@ -48,7 +48,7 @@ Examples of things that belong here:
 - A config option set a certain way
 - A pattern adopted that isn't obvious from the code
 
-If yes: append to `apps/apps/docs/context/decisions-log.md` using this format:
+If yes: append to `apps/docs/context/decisions-log.md` using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — [Short decision title]
@@ -61,7 +61,19 @@ packages / behavior changed?
 
 Place the new entry at the **top** (newest-first order).
 
-### Step 5: Suggest a commit message
+### Step 5: Retention check (collab retro 2026-07-25)
+
+Pick 2–3 concepts that were introduced or significantly exercised this session (backend, DB, auth,
+architecture, infra — not routine UI work). Ask Jérémie to explain each one in his own words, one
+question at a time, in French.
+
+- **Explains correctly** → move on.
+- **Fuzzy or missed** → give the short correct explanation, then add the concept to the
+  consolidation backlog in `apps/docs/context/retrospectives/2026-07-25-collab-retro.md` (P2 by
+  default).
+- **No new concepts this session** (pure UI polish, docs) → say so and skip the step.
+
+### Step 6: Suggest a commit message
 
 Run:
 
@@ -82,7 +94,7 @@ Example: `chore(claude): add session skills and subagents`
 
 Ask: "Should I commit now?"
 
-### Step 6: Output the wrap-up
+### Step 7: Output the wrap-up
 
 ```
 Session wrapped.

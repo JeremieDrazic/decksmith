@@ -10,11 +10,20 @@
 # Fixed project name → deterministic network/resource names regardless of the directory it runs from.
 name: decksmith
 
+# Cap container logs so they can't fill the shared VPS disk: 3 files × 10 MB max per container.
+# `&default-logging` defines a reusable block; each service references it with `*default-logging`.
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: '10m'
+    max-file: '3'
+
 services:
   api:
     image: ghcr.io/jeremiedrazic/decksmith-api:${IMAGE_TAG:-latest}
     container_name: decksmith-api
     restart: unless-stopped
+    logging: *default-logging
     env_file: .env
     networks: [proxy, internal]
     labels:
@@ -30,6 +39,7 @@ services:
     image: ghcr.io/jeremiedrazic/decksmith-web:${IMAGE_TAG:-latest}
     container_name: decksmith-web
     restart: unless-stopped
+    logging: *default-logging
     environment:
       - API_URL=http://api:3000
     networks: [proxy, internal]
@@ -45,6 +55,7 @@ services:
     image: ghcr.io/jeremiedrazic/decksmith-statics:${IMAGE_TAG:-latest}
     container_name: decksmith-statics
     restart: unless-stopped
+    logging: *default-logging
     networks: [proxy]
     labels:
       - traefik.enable=true

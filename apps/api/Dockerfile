@@ -3,7 +3,7 @@
 #   docker build -f apps/api/Dockerfile -t decksmith-api .
 
 # ── builder ──────────────────────────────────────────────────────────────────
-FROM node:22-alpine AS builder
+FROM node:22.23.1-alpine3.24 AS builder
 RUN corepack enable
 WORKDIR /app
 
@@ -58,7 +58,7 @@ RUN pnpm deploy --filter @decksmith/api --prod --no-optional --ignore-scripts --
 # ── runner ───────────────────────────────────────────────────────────────────
 # Plain node:22-alpine — no corepack/pnpm at runtime, only `node`.
 # The runner receives only /deploy: the pnpm global store stays in the builder stage.
-FROM node:22-alpine AS runner
+FROM node:22.23.1-alpine3.24 AS runner
 WORKDIR /app
 COPY --from=builder --chown=node:node /deploy .
 
