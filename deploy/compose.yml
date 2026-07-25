@@ -32,6 +32,7 @@ services:
       - traefik.http.routers.decksmith-api.entrypoints=websecure
       - traefik.http.routers.decksmith-api.tls.certresolver=le
       - traefik.http.services.decksmith-api.loadbalancer.server.port=3000
+      - traefik.http.routers.decksmith-api.middlewares=decksmith-security
 
   # Web SSR server (TanStack Start / node). Reaches the API in-cluster over `internal`;
   # the browser hits /api same-origin (relative), so cookies stay same-origin.
@@ -49,8 +50,14 @@ services:
       - traefik.http.routers.decksmith-web.entrypoints=websecure
       - traefik.http.routers.decksmith-web.tls.certresolver=le
       - traefik.http.services.decksmith-web.loadbalancer.server.port=3000
+      - traefik.http.routers.decksmith-web.middlewares=decksmith-security
+      # Shared security-headers middleware — defined here, referenced by all Decksmith routers.
+      - traefik.http.middlewares.decksmith-security.headers.stsSeconds=31536000
+      - traefik.http.middlewares.decksmith-security.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.decksmith-security.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.decksmith-security.headers.referrerPolicy=strict-origin-when-cross-origin
 
-  # Static sites (VitePress docs + Storybook) served by nginx on port 80.
+  # Static sites (VitePress docs + Storybook) served by unprivileged nginx on port 8080.
   statics:
     image: ghcr.io/jeremiedrazic/decksmith-statics:${IMAGE_TAG:-latest}
     container_name: decksmith-statics
@@ -63,7 +70,8 @@ services:
         (PathPrefix(`/docs`) || PathPrefix(`/design-system`))
       - traefik.http.routers.decksmith-statics.entrypoints=websecure
       - traefik.http.routers.decksmith-statics.tls.certresolver=le
-      - traefik.http.services.decksmith-statics.loadbalancer.server.port=80
+      - traefik.http.services.decksmith-statics.loadbalancer.server.port=8080
+      - traefik.http.routers.decksmith-statics.middlewares=decksmith-security
 
 networks:
   # Shared with the Traefik stack — how the proxy discovers and reaches this container.
