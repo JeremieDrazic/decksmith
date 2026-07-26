@@ -162,7 +162,7 @@ export type MoveCardToSectionInput = z.infer<typeof MoveCardToSectionInputSchema
  */
 export const ReorderCardsInputSchema = z.object({
   /** Card IDs in new order */
-  cardIds: z.array(UuidSchema).min(1),
+  cardIds: z.array(UuidSchema).min(1).max(100),
 });
 export type ReorderCardsInput = z.infer<typeof ReorderCardsInputSchema>;
 

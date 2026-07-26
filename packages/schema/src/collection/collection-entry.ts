@@ -264,7 +264,7 @@ export type RemoveFromCollectionInput = z.infer<typeof RemoveFromCollectionInput
  */
 export const BulkMoveToFolderInputSchema = z.object({
   /** Entry IDs to move */
-  entryIds: z.array(UuidSchema).min(1),
+  entryIds: z.array(UuidSchema).min(1).max(200),
 
   /** Target folder ID (null to unfiled) */
   folderId: UuidSchema.nullable(),
@@ -276,10 +276,10 @@ export type BulkMoveToFolderInput = z.infer<typeof BulkMoveToFolderInputSchema>;
  */
 export const BulkAddTagsInputSchema = z.object({
   /** Entry IDs to tag */
-  entryIds: z.array(UuidSchema).min(1),
+  entryIds: z.array(UuidSchema).min(1).max(200),
 
   /** Tag IDs to add */
-  tagIds: z.array(UuidSchema).min(1),
+  tagIds: z.array(UuidSchema).min(1).max(50),
 });
 export type BulkAddTagsInput = z.infer<typeof BulkAddTagsInputSchema>;
 
