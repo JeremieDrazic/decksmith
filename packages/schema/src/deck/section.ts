@@ -138,7 +138,7 @@ export type UpdateDeckSectionInput = z.infer<typeof UpdateDeckSectionInputSchema
  */
 export const ReorderSectionsInputSchema = z.object({
   /** Section IDs in new order */
-  sectionIds: z.array(UuidSchema).min(1),
+  sectionIds: z.array(UuidSchema).min(1).max(50),
 });
 export type ReorderSectionsInput = z.infer<typeof ReorderSectionsInputSchema>;
 

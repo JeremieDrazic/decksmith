@@ -12,6 +12,10 @@ const EnvSchema = z.object({
   // Set NODE_ENV=development in .env for local development.
   NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
   DATABASE_URL: z.string().min(1),
+  // Required by packages/db (Supabase client). Validated here so a missing value fails at
+  // startup with a clear message, not with a deep stack trace from inside the db package.
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   COOKIE_SECRET: z
     .string()
     .min(
