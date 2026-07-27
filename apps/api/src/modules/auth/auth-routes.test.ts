@@ -197,6 +197,10 @@ describe('POST /api/v1/auth/refresh', () => {
 
     expect(res.statusCode).toBe(401);
     expect(res.json<{ code: string }>().code).toBe('SESSION_EXPIRED');
+    // Stale cookies must be cleared so the client stops retrying with a dead token.
+    const cookies = (res.headers['set-cookie'] as string[]) ?? [];
+    expect(cookies.some((c) => c.startsWith('access_token=;'))).toBe(true);
+    expect(cookies.some((c) => c.startsWith('refresh_token=;'))).toBe(true);
   });
 
   it('returns 200 and sets new cookies on valid refresh token', async () => {

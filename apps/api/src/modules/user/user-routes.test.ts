@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('@decksmith/db', () => import('@/test-utils/mocks/db.js'));
 vi.mock('@/config.js', () => import('@/test-utils/mocks/config.js'));
 
-import { prisma, supabase } from '@decksmith/db';
+import { prisma, Prisma, supabase } from '@decksmith/db';
 import { asGuest, asUser } from '@/test-utils/inject.js';
 import { buildPrismaPreferences } from '@/test-utils/factories/prisma-preferences.js';
 import { buildPrismaUser } from '@/test-utils/factories/prisma-user.js';
@@ -88,6 +88,40 @@ describe('PATCH /api/v1/users/:id', () => {
     });
     expect(res.statusCode).toBe(404);
   });
+
+  it('returns 200 with the updated profile', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(buildPrismaUser() as never);
+    vi.mocked(prisma.user.update).mockResolvedValue(
+      buildPrismaUser({ username: 'newname' }) as never
+    );
+
+    const res = await asUser(getApp(), 'PATCH', `/api/v1/users/${USER_ID}`, {
+      username: 'newname',
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.json<{ id: string; username: string }>()).toMatchObject({
+      id: USER_ID,
+      username: 'newname',
+    });
+  });
+
+  it('returns 409 USERNAME_TAKEN when the username is already taken', async () => {
+    vi.mocked(prisma.user.findUnique).mockResolvedValue(buildPrismaUser() as never);
+    vi.mocked(prisma.user.update).mockRejectedValue(
+      new Prisma.PrismaClientKnownRequestError('Unique constraint failed', {
+        code: 'P2002',
+        clientVersion: 'x',
+      })
+    );
+
+    const res = await asUser(getApp(), 'PATCH', `/api/v1/users/${USER_ID}`, {
+      username: 'taken',
+    });
+
+    expect(res.statusCode).toBe(409);
+    expect(res.json<{ code: string }>().code).toBe('USERNAME_TAKEN');
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -132,5 +166,24 @@ describe('PATCH /api/v1/users/:id/preferences', () => {
       language: 'fr',
     });
     expect(res.statusCode).toBe(403);
+  });
+
+  it('returns 200 with the updated preferences', async () => {
+    vi.mocked(prisma.userPreferences.findUnique).mockResolvedValue(
+      buildPrismaPreferences({ userId: USER_ID }) as never
+    );
+    vi.mocked(prisma.userPreferences.update).mockResolvedValue(
+      buildPrismaPreferences({ userId: USER_ID, language: 'fr' }) as never
+    );
+
+    const res = await asUser(getApp(), 'PATCH', `/api/v1/users/${USER_ID}/preferences`, {
+      language: 'fr',
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.json<{ userId: string; language: string }>()).toMatchObject({
+      userId: USER_ID,
+      language: 'fr',
+    });
   });
 });
