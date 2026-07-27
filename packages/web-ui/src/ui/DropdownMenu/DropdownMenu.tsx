@@ -278,6 +278,9 @@ export function DeleteMenuItem({
     <DropdownMenuItem
       closeOnClick={armed}
       data-state={armed ? 'arming' : 'idle'}
+      // Announce the armed state to screen readers (WCAG 4.1.2 / 4.1.3) — the accessible
+      // name switches to the confirm label, so the change isn't purely visual.
+      aria-label={armed ? confirmLabel : undefined}
       onClick={handleArmOrConfirm}
       className={cn(
         'text-error-text',

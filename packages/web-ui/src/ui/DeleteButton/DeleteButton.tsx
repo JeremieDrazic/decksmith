@@ -46,6 +46,9 @@ export function DeleteButton({
     <Button
       variant="destructive"
       data-state={armed ? 'arming' : 'idle'}
+      // Announce the armed state to screen readers: the accessible name switches to the
+      // confirm label so the state change isn't purely visual (WCAG 4.1.2 / 4.1.3).
+      aria-label={armed ? confirmLabel : undefined}
       startIcon={armed ? <Trash aria-hidden="true" /> : <Trash2 aria-hidden="true" />}
       onClick={handleArmOrConfirm}
       className={cn(

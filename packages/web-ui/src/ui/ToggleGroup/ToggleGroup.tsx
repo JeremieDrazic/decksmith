@@ -6,8 +6,21 @@ import * as React from 'react';
 import { cn } from '../../lib/cn';
 import { toggleVariants } from '../Toggle/Toggle';
 
+/** Gap between items, on Tailwind's spacing scale (0 = attached, ButtonGroup-like). */
+export type ToggleGroupSpacing = 0 | 1 | 2 | 3 | 4;
+
+// Static Tailwind classes per spacing step — avoids a runtime CSS var, which the
+// "no CSS vars in components" rule prohibits (Tailwind can't see a dynamic var).
+const GAP_CLASS: Record<ToggleGroupSpacing, string> = {
+  0: 'gap-0',
+  1: 'gap-1',
+  2: 'gap-2',
+  3: 'gap-3',
+  4: 'gap-4',
+};
+
 type ToggleGroupContextValue = VariantProps<typeof toggleVariants> & {
-  spacing?: number;
+  spacing?: ToggleGroupSpacing;
   orientation?: 'horizontal' | 'vertical';
 };
 
@@ -20,7 +33,7 @@ const ToggleGroupContext = React.createContext<ToggleGroupContextValue>({
 
 export type ToggleGroupProps = ToggleGroupPrimitive.Props &
   VariantProps<typeof toggleVariants> & {
-    spacing?: number;
+    spacing?: ToggleGroupSpacing;
     orientation?: 'horizontal' | 'vertical';
   };
 
@@ -57,10 +70,9 @@ export function ToggleGroup({
       data-size={size}
       data-spacing={spacing}
       data-orientation={orientation}
-      style={{ '--gap': spacing } as React.CSSProperties}
       className={cn(
         'group/toggle-group flex w-fit flex-row items-center',
-        'gap-[--spacing(var(--gap))]',
+        GAP_CLASS[spacing],
         'rounded-interactive',
         'data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch',
         className
