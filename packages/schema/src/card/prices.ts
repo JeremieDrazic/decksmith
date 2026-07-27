@@ -70,17 +70,27 @@ export type ParsedPrice = z.infer<typeof ParsedPriceSchema>;
  * @param price - Price string (e.g., "12.99") or null
  * @returns Number or null
  *
+ * Returns null for anything that isn't a clean, non-negative number — including
+ * negatives (which would violate ParsedPriceSchema.nonnegative()) and partial
+ * matches like "12.99abc" (Number.parseFloat would silently accept those).
+ *
  * @example
- * parsePrice("12.99") // 12.99
- * parsePrice(null)    // null
- * parsePrice("")      // null
+ * parsePrice("12.99")    // 12.99
+ * parsePrice(null)       // null
+ * parsePrice("")         // null
+ * parsePrice("-1.50")    // null (negative)
+ * parsePrice("12.99abc") // null (not a clean number)
  */
 export function parsePrice(price: PriceValue): ParsedPrice {
   if (price === null || price === '') {
     return null;
   }
-  const parsed = Number.parseFloat(price);
-  return Number.isNaN(parsed) ? null : parsed;
+  // Number() (unlike parseFloat) rejects trailing garbage → NaN for "12.99abc".
+  const parsed = Number(price);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return null;
+  }
+  return parsed;
 }
 
 /**
