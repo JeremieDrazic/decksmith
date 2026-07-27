@@ -57,6 +57,10 @@
   --error-text: #b91c1c;
   --on-error: #ffffff;
 
+  /* Control thumb — invariant white in both themes (Switch/Toggle knob): contrast holds on
+     every track tone, so it is intentionally NOT overridden in .dark. */
+  --control-thumb: #ffffff;
+
   /* Status — success */
   --success: #22c55e;
   --success-subtle: rgba(34, 197, 94, 0.08);
@@ -199,6 +203,7 @@
   --color-error-subtle: var(--error-subtle);
   --color-error-text: var(--error-text);
   --color-on-error: var(--on-error);
+  --color-control-thumb: var(--control-thumb);
   --color-success: var(--success);
   --color-success-subtle: var(--success-subtle);
   --color-success-text: var(--success-text);

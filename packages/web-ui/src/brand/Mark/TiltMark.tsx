@@ -98,17 +98,19 @@ export function TiltMark({ size, ...a11y }: TiltMarkProps) {
       onPointerLeave={() => {
         const wrapper = wrapperRef.current;
         if (!wrapper) return;
+        // Motion tokens auto-zero under prefers-reduced-motion (motion.css), so the reset
+        // transition disappears for users who opted out — no explicit guard needed here.
         wrapper.style.transform = 'rotateX(0deg) rotateY(0deg)';
-        wrapper.style.transition = 'transform 0.5s ease-out';
+        wrapper.style.transition = 'transform var(--duration-story) var(--ease-out)';
         for (const [ref, z] of ZMAP) {
           if (!ref.current) continue;
           ref.current.style.transform = `translateZ(${z}px)`;
-          ref.current.style.transition = 'transform 0.5s ease-out';
+          ref.current.style.transition = 'transform var(--duration-story) var(--ease-out)';
         }
         const glare = glareRef.current;
         if (glare) {
           glare.style.opacity = '0';
-          glare.style.transition = 'opacity 0.5s ease-out';
+          glare.style.transition = 'opacity var(--duration-story) var(--ease-out)';
         }
       }}
     >

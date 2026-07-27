@@ -234,6 +234,7 @@ export type {
 } from './ui/ContextMenu';
 
 export {
+  DeleteMenuItem,
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -247,6 +248,7 @@ export {
   DropdownMenuTrigger,
 } from './ui/DropdownMenu';
 export type {
+  DeleteMenuItemProps,
   DropdownMenuCheckboxItemProps,
   DropdownMenuContentProps,
   DropdownMenuGroupLabelProps,

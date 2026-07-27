@@ -38,7 +38,7 @@ export function Switch({ className, thumbIcon, ...props }: SwitchProps) {
         data-slot="switch-thumb"
         className={cn(
           'size-4 rounded-full shrink-0',
-          'bg-white shadow-sm' /* thumb is invariant white — contrast holds on all track tones */,
+          'bg-control-thumb shadow-sm' /* invariant white token — contrast holds on all track tones */,
           thumbIcon ? 'flex items-center justify-center' : null,
           'data-[checked]:translate-x-4',
           'transition-transform duration-fast'

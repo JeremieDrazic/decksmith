@@ -122,26 +122,14 @@ export function InputGroupAddon({
 const inputGroupButtonVariants = cva(['flex items-center gap-2 shadow-none'], {
   variants: {
     size: {
-      sm: [
-        'h-7 px-2 text-xs',
-        'rounded-[calc(var(--radius-interactive)-2px)]',
-        '[&_svg:not([class*="size-"])]:size-3.5',
-      ],
-      'icon-sm': [
-        'size-7 p-0',
-        'rounded-[calc(var(--radius-interactive)-2px)]',
-        '[&_svg:not([class*="size-"])]:size-3.5',
-      ],
+      sm: ['h-7 px-2 text-xs', 'rounded-inner-sm', '[&_svg:not([class*="size-"])]:size-3.5'],
+      'icon-sm': ['size-7 p-0', 'rounded-inner-sm', '[&_svg:not([class*="size-"])]:size-3.5'],
       xs: [
         'h-5 gap-1 px-1.5 text-xs',
-        'rounded-[calc(var(--radius-interactive)-3px)]',
+        'rounded-inner-xs',
         '[&_svg:not([class*="size-"])]:size-3.5',
       ],
-      'icon-xs': [
-        'size-5 p-0',
-        'rounded-[calc(var(--radius-interactive)-3px)]',
-        '[&_svg:not([class*="size-"])]:size-3',
-      ],
+      'icon-xs': ['size-5 p-0', 'rounded-inner-xs', '[&_svg:not([class*="size-"])]:size-3'],
     },
   },
   defaultVariants: {
