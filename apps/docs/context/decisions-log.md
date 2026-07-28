@@ -4,6 +4,20 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-28] — API docs: @fastify/swagger + Scalar, generated from Zod schemas
+
+**Context:** the API had no browsable documentation. We already declare Zod schemas per route
+(`fastify-type-provider-zod`), so an OpenAPI spec can be generated for free. **Decision:** add
+`@fastify/swagger` (spec generation via the provider's `jsonSchemaTransform`) + Scalar
+(`@scalar/fastify-api-reference`, a modern reference UI with a request playground) over the classic
+Swagger-UI. Served at `/api/reference` (path-prefixed so Traefik routes it; public, no auth).
+Registered before the route plugins so swagger captures every route. Tooling dependency → logged
+here, no ADR. **Impact:** `apps/api/package.json`, `apps/api/src/plugins/docs.ts`,
+`apps/api/src/server.ts`. The OpenAPI `info.version` is hardcoded `0.0.0` until the release system
+(#73) wires the real version. Closes #71.
+
+---
+
 ## [2026-07-24] — Session 24 deployment mechanics (non-ADR decisions)
 
 **Context:** Bringing all of Decksmith online behind the existing Traefik proxy (topology + web
