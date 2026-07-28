@@ -3,11 +3,11 @@ import { getColorIdentityName } from './get-color-identity-name';
 
 describe('getColorIdentityName', () => {
   it('returns mono-color names', () => {
-    expect(getColorIdentityName(['w'])).toBe('White');
-    expect(getColorIdentityName(['u'])).toBe('Blue');
-    expect(getColorIdentityName(['b'])).toBe('Black');
-    expect(getColorIdentityName(['r'])).toBe('Red');
-    expect(getColorIdentityName(['g'])).toBe('Green');
+    expect(getColorIdentityName(['W'])).toBe('White');
+    expect(getColorIdentityName(['U'])).toBe('Blue');
+    expect(getColorIdentityName(['B'])).toBe('Black');
+    expect(getColorIdentityName(['R'])).toBe('Red');
+    expect(getColorIdentityName(['G'])).toBe('Green');
   });
 
   it('returns colorless for empty identity', () => {
@@ -15,39 +15,39 @@ describe('getColorIdentityName', () => {
   });
 
   it('returns Colorless for explicit colorless', () => {
-    expect(getColorIdentityName(['c'])).toBe('Colorless');
+    expect(getColorIdentityName(['C'])).toBe('Colorless');
   });
 
   it('returns guild names regardless of input order', () => {
-    expect(getColorIdentityName(['w', 'u'])).toBe('Azorius');
-    expect(getColorIdentityName(['u', 'w'])).toBe('Azorius');
-    expect(getColorIdentityName(['b', 'r'])).toBe('Rakdos');
-    expect(getColorIdentityName(['g', 'u'])).toBe('Simic');
+    expect(getColorIdentityName(['W', 'U'])).toBe('Azorius');
+    expect(getColorIdentityName(['U', 'W'])).toBe('Azorius');
+    expect(getColorIdentityName(['B', 'R'])).toBe('Rakdos');
+    expect(getColorIdentityName(['G', 'U'])).toBe('Simic');
   });
 
   it('returns shard names', () => {
-    expect(getColorIdentityName(['b', 'u', 'w'])).toBe('Esper');
-    expect(getColorIdentityName(['r', 'b', 'u'])).toBe('Grixis');
-    expect(getColorIdentityName(['w', 'g', 'r'])).toBe('Naya');
+    expect(getColorIdentityName(['B', 'U', 'W'])).toBe('Esper');
+    expect(getColorIdentityName(['R', 'B', 'U'])).toBe('Grixis');
+    expect(getColorIdentityName(['W', 'G', 'R'])).toBe('Naya');
   });
 
   it('returns clan/wedge names', () => {
-    expect(getColorIdentityName(['g', 'w', 'b'])).toBe('Abzan');
-    expect(getColorIdentityName(['r', 'u', 'w'])).toBe('Jeskai');
-    expect(getColorIdentityName(['u', 'g', 'b'])).toBe('Sultai');
+    expect(getColorIdentityName(['G', 'W', 'B'])).toBe('Abzan');
+    expect(getColorIdentityName(['R', 'U', 'W'])).toBe('Jeskai');
+    expect(getColorIdentityName(['U', 'G', 'B'])).toBe('Sultai');
   });
 
   it('returns nephilim names', () => {
-    expect(getColorIdentityName(['r', 'w', 'u', 'b'])).toBe('Yore-Tiller');
-    expect(getColorIdentityName(['g', 'u', 'b', 'r'])).toBe('Glint-Eye');
+    expect(getColorIdentityName(['R', 'W', 'U', 'B'])).toBe('Yore-Tiller');
+    expect(getColorIdentityName(['G', 'U', 'B', 'R'])).toBe('Glint-Eye');
   });
 
   it('returns Five-Color for WUBRG', () => {
-    expect(getColorIdentityName(['w', 'u', 'b', 'r', 'g'])).toBe('Five-Color');
-    expect(getColorIdentityName(['g', 'r', 'b', 'u', 'w'])).toBe('Five-Color');
+    expect(getColorIdentityName(['W', 'U', 'B', 'R', 'G'])).toBe('Five-Color');
+    expect(getColorIdentityName(['G', 'R', 'B', 'U', 'W'])).toBe('Five-Color');
   });
 
-  it('returns uppercase key fallback for unknown combinations', () => {
-    expect(getColorIdentityName(['w', 'c'])).toBe('WC');
+  it('returns the sorted key fallback for unknown combinations', () => {
+    expect(getColorIdentityName(['W', 'C'])).toBe('WC');
   });
 });
