@@ -106,6 +106,27 @@ implement — advises.
 
 ---
 
+## Where Information Lives (GitHub vs docs)
+
+Split by the **nature** of the information, not by convenience. One source of truth per level —
+never duplicate the same list in two places.
+
+| Information                                          | Home                                                                             | Why                                                                     |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Actionable tasks, tech debt, bugs, features to build | **GitHub Issues + Milestones + Project**                                         | they have a lifecycle (open → closed), discussion, PR links             |
+| Macro roadmap (the phases)                           | **`apps/docs/roadmap.md`** — points to milestones, doesn't duplicate task detail | @imported into CLAUDE.md → always in Claude's context; big-picture view |
+| Current state + blockers                             | **`apps/docs/context/project-state.md`** (actionable blockers → open an issue)   | session brief                                                           |
+| Decisions, architecture, the "why"                   | **ADRs + `decisions-log.md`**                                                    | reference knowledge, versioned with the code                            |
+
+Rules:
+
+- A new **task or debt** → open a GitHub issue (label + milestone), not a memory file or a `.md`
+  bullet.
+- A new **decision or rationale** → ADR or `decisions-log.md` (versioned with the code).
+- `roadmap.md` stays the macro fil directeur and links to milestones for the granular todo.
+
+---
+
 ## Reference
 
 - Skills detail: `apps/docs/skills-and-agents.md`
@@ -113,4 +134,5 @@ implement — advises.
 - Specs: `apps/docs/specs/`
 - Roadmap: `apps/docs/roadmap.md`
 - Project state: `apps/docs/context/project-state.md`
+- Issues / milestones / project: GitHub (see roadmap milestones for the active todo)
 - Retrospectives: `apps/docs/context/retrospectives/`
