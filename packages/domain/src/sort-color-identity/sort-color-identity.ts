@@ -2,22 +2,22 @@ import type { ColorIdentity, MtgColor } from '../mana.js';
 
 function getOrder(color: MtgColor): number {
   switch (color) {
-    case 'w': {
+    case 'W': {
       return 0;
     }
-    case 'u': {
+    case 'U': {
       return 1;
     }
-    case 'b': {
+    case 'B': {
       return 2;
     }
-    case 'r': {
+    case 'R': {
       return 3;
     }
-    case 'g': {
+    case 'G': {
       return 4;
     }
-    case 'c': {
+    case 'C': {
       return 5;
     }
   }

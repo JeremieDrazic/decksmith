@@ -8,7 +8,7 @@ const meta = {
   title: 'Components/MTG/ColorIdentity',
   component: ColorIdentity,
   parameters: { layout: 'centered' },
-  args: { identity: ['w', 'u'], size: 'md' },
+  args: { identity: ['W', 'U'], size: 'md' },
 } satisfies Meta<typeof ColorIdentity>;
 
 export default meta;
@@ -54,11 +54,11 @@ export const Mono: Story = {
   render: () => (
     <IdentityTable
       rows={[
-        { identity: ['w'] },
-        { identity: ['u'] },
-        { identity: ['b'] },
-        { identity: ['r'] },
-        { identity: ['g'] },
+        { identity: ['W'] },
+        { identity: ['U'] },
+        { identity: ['B'] },
+        { identity: ['R'] },
+        { identity: ['G'] },
       ]}
     />
   ),
@@ -68,16 +68,16 @@ export const Guilds: Story = {
   render: () => (
     <IdentityTable
       rows={[
-        { identity: ['w', 'u'] },
-        { identity: ['u', 'b'] },
-        { identity: ['b', 'r'] },
-        { identity: ['r', 'g'] },
-        { identity: ['w', 'g'] },
-        { identity: ['w', 'b'] },
-        { identity: ['u', 'r'] },
-        { identity: ['b', 'g'] },
-        { identity: ['w', 'r'] },
-        { identity: ['u', 'g'] },
+        { identity: ['W', 'U'] },
+        { identity: ['U', 'B'] },
+        { identity: ['B', 'R'] },
+        { identity: ['R', 'G'] },
+        { identity: ['W', 'G'] },
+        { identity: ['W', 'B'] },
+        { identity: ['U', 'R'] },
+        { identity: ['B', 'G'] },
+        { identity: ['W', 'R'] },
+        { identity: ['U', 'G'] },
       ]}
     />
   ),
@@ -87,32 +87,32 @@ export const ShardsAndClans: Story = {
   render: () => (
     <IdentityTable
       rows={[
-        { identity: ['w', 'u', 'b'] },
-        { identity: ['u', 'b', 'r'] },
-        { identity: ['b', 'r', 'g'] },
-        { identity: ['w', 'r', 'g'] },
-        { identity: ['w', 'u', 'g'] },
-        { identity: ['w', 'b', 'g'] },
-        { identity: ['w', 'u', 'r'] },
-        { identity: ['u', 'b', 'g'] },
-        { identity: ['w', 'b', 'r'] },
-        { identity: ['u', 'r', 'g'] },
+        { identity: ['W', 'U', 'B'] },
+        { identity: ['U', 'B', 'R'] },
+        { identity: ['B', 'R', 'G'] },
+        { identity: ['W', 'R', 'G'] },
+        { identity: ['W', 'U', 'G'] },
+        { identity: ['W', 'B', 'G'] },
+        { identity: ['W', 'U', 'R'] },
+        { identity: ['U', 'B', 'G'] },
+        { identity: ['W', 'B', 'R'] },
+        { identity: ['U', 'R', 'G'] },
       ]}
     />
   ),
 };
 
 export const FiveColor: Story = {
-  render: () => <IdentityTable rows={[{ identity: ['w', 'u', 'b', 'r', 'g'] }]} />,
+  render: () => <IdentityTable rows={[{ identity: ['W', 'U', 'B', 'R', 'G'] }]} />,
 };
 
 export const Sizes: Story = {
   render: () => (
     <IdentityTable
       rows={[
-        { identity: ['w', 'u', 'b', 'r', 'g'], size: 'sm' },
-        { identity: ['w', 'u', 'b', 'r', 'g'], size: 'md' },
-        { identity: ['w', 'u', 'b', 'r', 'g'], size: 'lg' },
+        { identity: ['W', 'U', 'B', 'R', 'G'], size: 'sm' },
+        { identity: ['W', 'U', 'B', 'R', 'G'], size: 'md' },
+        { identity: ['W', 'U', 'B', 'R', 'G'], size: 'lg' },
       ]}
     />
   ),

@@ -1,15 +1,21 @@
-import type { MtgColor } from '@decksmith/domain';
+/**
+ * Lowercase color key for the mana-symbol RENDERER — indexes MANA_PATHS (SVG glyphs) and the
+ * FILL/FILL_FG class maps. Deliberately distinct from domain `MtgColor` (uppercase card color
+ * IDENTITY): this is a presentation glyph key, not identity data, so it stays lowercase alongside
+ * the other lowercase mana-symbol keys ('x', 'wp', '2w', …) that `parseManaCost` produces.
+ */
+export type ManaGlyphColor = 'w' | 'u' | 'b' | 'r' | 'g' | 'c';
 
 export type SplitDef = {
   type: 'split';
-  left: MtgColor;
-  right: MtgColor;
+  left: ManaGlyphColor;
+  right: ManaGlyphColor;
   label: string;
 };
 
 export type PhyrexianDef = {
   type: 'phyrexian';
-  color: MtgColor;
+  color: ManaGlyphColor;
   label: string;
 };
 

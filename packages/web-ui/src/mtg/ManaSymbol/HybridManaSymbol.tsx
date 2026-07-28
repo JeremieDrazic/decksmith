@@ -2,8 +2,7 @@ import { useId } from 'react';
 import { cva } from 'class-variance-authority';
 import { cn } from '../../lib/cn';
 import { MANA_PATHS } from '../ManaIcon/mana-paths';
-import type { MtgColor } from '@decksmith/domain';
-import type { HybridDef } from '../ManaIcon/hybrid-defs';
+import type { HybridDef, ManaGlyphColor } from '../ManaIcon/hybrid-defs';
 
 type HybridManaSymbolProps = {
   def: HybridDef;
@@ -11,7 +10,7 @@ type HybridManaSymbolProps = {
   className?: string;
 };
 
-const FILL: Record<MtgColor, string> = {
+const FILL: Record<ManaGlyphColor, string> = {
   w: 'fill-mtg-white',
   u: 'fill-mtg-blue',
   b: 'fill-mtg-black',
@@ -20,7 +19,7 @@ const FILL: Record<MtgColor, string> = {
   c: 'fill-mtg-colorless',
 };
 
-const FILL_FG: Record<MtgColor, string> = {
+const FILL_FG: Record<ManaGlyphColor, string> = {
   w: 'fill-mtg-white-fg',
   u: 'fill-mtg-blue-fg',
   b: 'fill-mtg-black-fg',
