@@ -8,6 +8,7 @@ import { RATE_LIMITED } from '@decksmith/schema/errors/codes';
 
 import { config } from './config.js';
 import authPlugin from './plugins/auth.js';
+import docs from './plugins/docs.js';
 import errorHandler from './plugins/error-handler.js';
 import health from './plugins/health.js';
 import v1Routes from './plugins/v1-routes.js';
@@ -51,6 +52,9 @@ export async function buildServer() {
   await app.register(sensible);
   await app.register(errorHandler);
   await app.register(authPlugin);
+
+  // API docs — must be registered before the routes so @fastify/swagger captures them.
+  await app.register(docs);
 
   // Routes
   await app.register(health);

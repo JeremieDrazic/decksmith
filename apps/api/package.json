@@ -23,6 +23,8 @@
     "@fastify/cors": "catalog:",
     "@fastify/rate-limit": "^11.0.0",
     "@fastify/sensible": "catalog:",
+    "@fastify/swagger": "^9.8.1",
+    "@scalar/fastify-api-reference": "^1.63.0",
     "dotenv": "catalog:",
     "fastify": "catalog:",
     "fastify-plugin": "catalog:",
