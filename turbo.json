@@ -11,7 +11,8 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "build/**", "storybook-static/**", ".vitepress/dist/**", ".output/**"],
-      "env": ["VITE_API_URL", "VITE_SENTRY_DSN", "VITE_APP_VERSION"]
+      "env": ["VITE_API_URL", "VITE_SENTRY_DSN", "VITE_APP_VERSION"],
+      "passThroughEnv": ["SENTRY_AUTH_TOKEN", "SENTRY_URL"]
     },
     "dev": {
       "cache": false,

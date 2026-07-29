@@ -26,6 +26,7 @@ catalog:
 
 allowBuilds:
   '@prisma/engines': true
+  '@sentry/cli': true
   '@swc/core': true
   esbuild: true
   msw: true

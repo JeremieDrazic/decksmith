@@ -14,6 +14,9 @@ export function initSentry(): void {
 
   Sentry.init({
     dsn,
+    // Must match the release the source maps are uploaded under at build time
+    // (@sentry/vite-plugin, same VITE_APP_VERSION), so GlitchTip can un-minify stacks.
+    release: import.meta.env['VITE_APP_VERSION'] || undefined,
     tracesSampleRate: 0.01, // 1% of transactions
   });
 }
