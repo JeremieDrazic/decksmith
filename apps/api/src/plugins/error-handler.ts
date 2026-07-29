@@ -6,6 +6,7 @@ import {
   VALIDATION_ERROR,
 } from '@decksmith/schema/errors/codes';
 import { isForeignKeyError, isRecordNotFoundError, isServiceError } from '@decksmith/services';
+import * as Sentry from '@sentry/node';
 import type { FastifyError, FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
@@ -97,8 +98,11 @@ export default fp(
         return reply.status(statusCode).send(response);
       }
 
-      // Unexpected server errors — log full details, expose nothing
+      // Unexpected server errors — log full details, report to Sentry/GlitchTip, expose nothing.
+      // Only 5xx reach here; 4xx (validation, auth, mapped Prisma errors) returned above are
+      // expected and intentionally NOT sent, to keep the error tracker free of noise.
       app.log.error(error);
+      Sentry.captureException(rawError);
       const response: ApiError = {
         statusCode: 500,
         error: 'Internal Server Error',

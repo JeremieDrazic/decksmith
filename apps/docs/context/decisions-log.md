@@ -4,6 +4,25 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-29] — Error tracking: Sentry SDK → self-hosted GlitchTip
+
+**Context:** no visibility on production exceptions (API or web). **Decision:** the standard Sentry
+SDK (`@sentry/node`, `@sentry/react`) pointed at a **self-hosted GlitchTip** (Sentry-protocol,
+simpler UI, data on our VPS — see #72). GlitchTip runs in `~/infra/glitchtip/` (shared infra, NOT
+the repo): all-in-one container (`SERVER_ROLE=all_in_one`) + Postgres + Valkey behind Traefik at a
+generic subdomain. **App wiring:** API inits Sentry via `src/instrument.ts` (imported first) and
+reports only 5xx in the error handler (4xx are expected, kept out to avoid noise); web inits via
+`lib/sentry.ts`, gated to browser + production builds. Both no-op in dev. DSNs: API reads
+`SENTRY_DSN` from the server `.env`; web bakes `VITE_SENTRY_DSN` at build time (public in the
+bundle, so passed as a build-arg from a CI secret — its value carries the real monitoring domain,
+kept out of the repo). `VITE_SENTRY_DSN` declared in `turbo.json` build env (Turbo strict-env would
+otherwise drop it — same gotcha as `VITE_API_URL`). **Impact:** `apps/api` (instrument, index,
+error-handler, package.json), `apps/web` (lib/sentry, router, Dockerfile, package.json),
+`.github/workflows/ deploy.yml`, `turbo.json`, `.env.example`. Source-map upload (de-minified web
+stacks) is a follow-up. Closes #72.
+
+---
+
 ## [2026-07-28] — API docs: @fastify/swagger + Scalar, generated from Zod schemas
 
 **Context:** the API had no browsable documentation. We already declare Zod schemas per route
