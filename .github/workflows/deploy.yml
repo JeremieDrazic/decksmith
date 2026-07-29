@@ -91,8 +91,10 @@ jobs:
           file: apps/web/Dockerfile
           push: true
           # Empty VITE_API_URL → browser bundle uses same-origin relative /api.
+          # VITE_SENTRY_DSN from a secret (contains the real monitoring domain — not in the repo).
           build-args: |
             VITE_API_URL=
+            VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
           tags: |
             ghcr.io/jeremiedrazic/decksmith-web:${{ env.DEPLOY_SHA }}
             ghcr.io/jeremiedrazic/decksmith-web:latest

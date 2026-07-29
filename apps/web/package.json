@@ -17,6 +17,7 @@
     "@decksmith/schema": "workspace:*",
     "@decksmith/tokens": "workspace:*",
     "@decksmith/web-ui": "workspace:*",
+    "@sentry/react": "^10.68.0",
     "@tanstack/react-form": "^1.33.0",
     "@tanstack/react-query": "^5.101.0",
     "@tanstack/react-router": "^1.170.15",

@@ -1,3 +1,5 @@
+import './instrument.js'; // MUST be first — initialises Sentry before anything else loads
+
 import { config } from './config.js';
 import { buildServer } from './server.js';
 
