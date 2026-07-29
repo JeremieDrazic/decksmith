@@ -47,7 +47,17 @@ ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
 # Deployed version (semantic-release), shown in the web footer. Empty in local builds.
 ARG VITE_APP_VERSION=""
 ENV VITE_APP_VERSION=$VITE_APP_VERSION
-RUN pnpm turbo build --filter=...@decksmith/web
+# GlitchTip source-map upload (@sentry/vite-plugin, runs during the build below).
+# SENTRY_URL carries the monitoring domain, but that's already public via the client
+# DSN baked into the browser bundle, so a plain build-arg is fine.
+ARG SENTRY_URL=""
+ENV SENTRY_URL=$SENTRY_URL
+# The AUTH TOKEN is a real credential AND this image is public, so it must never land
+# in an image layer: pass it as a BuildKit secret, mounted only for this RUN. Missing
+# secret (local build) → empty token → the plugin disables itself (no upload).
+RUN --mount=type=secret,id=sentry_auth_token \
+    SENTRY_AUTH_TOKEN="$(cat /run/secrets/sentry_auth_token 2>/dev/null || true)" \
+    pnpm turbo build --filter=...@decksmith/web
 
 # Self-contained production node_modules alongside .output.
 # nitro externalizes `react` without tracing it into .output (nitrojs/nitro#4171: Base UI's
