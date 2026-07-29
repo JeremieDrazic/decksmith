@@ -24,11 +24,17 @@ Adopt **semantic-release** as a `release` job at the head of the deploy pipeline
 
 - **What it does:** derives the SemVer version from the conventional commits since the last tag
   (`feat` → minor, `fix` → patch, `BREAKING CHANGE` → major), creates the **git tag** and a **GitHub
-  Release** with generated notes. Plugins: `commit-analyzer`, `release-notes-generator`, `github`.
-- **No repo commit:** we deliberately omit `@semantic-release/git` and `@semantic-release/npm`. The
-  tool pushes a tag and a release only — never a commit to `main`. Since CI triggers on _branches_,
-  not _tags_, creating a tag cannot re-trigger CI. No `[skip ci]` hack needed. The changelog lives
-  in the GitHub Releases, not a committed file.
+  Release** with generated notes, and **bumps the root `package.json`** to the new version. Plugins:
+  `commit-analyzer`, `release-notes-generator`, `exec` (`pnpm pkg set version`), `github`, `git`.
+- **Root `package.json` bump:** the version is written to the **root** `package.json` only (the
+  workspace packages stay `0.0.0` — they are `private`, never published, so their `version` field is
+  irrelevant; the root serves as the repo's single human-readable version reference). This is a
+  deliberate reversal of the original tag-only design — see Evolution History.
+- **One `[skip ci]` commit:** writing the bump means semantic-release pushes a
+  `chore(release): x.y.z` commit to `main`. That commit carries `[skip ci]` in its message, so
+  GitHub skips the CI workflow for it — and since the deploy is gated on CI, the deploy does not
+  re-fire either. This is the standard, well-understood loop-breaker (`main` has no branch
+  protection, so the default `GITHUB_TOKEN` can push directly).
 - **Version propagation:** the `release` job exposes the version as a job output. The build jobs tag
   the images with it (alongside the SHA) and bake it in via build-args — `APP_VERSION` for the API
   (surfaced at `GET /api/version`) and `VITE_APP_VERSION` for the web (shown in the footer, mono
@@ -44,8 +50,9 @@ Adopt **semantic-release** as a `release` job at the head of the deploy pipeline
   bumping, no drift. The deploy still pins the exact tested SHA.
 - **Explicit data contracts** — the version is exposed through a stable endpoint (`/api/version`)
   and the footer, not guessed.
-- **Clarity over cleverness** — the tag-only approach (no repo commit) removes the classic
-  semantic-release CI-loop footgun entirely, rather than papering over it with `[skip ci]`.
+- **Single source of version truth** — the root `package.json` always reflects the latest release,
+  so the version is visible in the repo, not only in the tag list. The `[skip ci]` marker keeps the
+  CI-loop closed with a single, well-understood convention.
 - **Maintainability** — conventional commits were already the norm; this makes them load-bearing and
   self-documenting via the generated release notes.
 
@@ -72,18 +79,33 @@ Adopt **semantic-release** as a `release` job at the head of the deploy pipeline
   `BREAKING CHANGE`). Mitigation: the history is auditable and tags are cheap to correct.
 - `@semantic-release/github` posting comments needs `issues`/`pull-requests: write`. Accepted for
   the traceability benefit (PR ↔ shipped version); can be disabled later to drop those scopes.
+- The `chore(release)` commit pushes to `main`. If `main` ever gains branch protection requiring PRs
+  or status checks, the default `GITHUB_TOKEN` push would be rejected — a PAT or a protection
+  exception for the release bot would then be needed. Not an issue today (no protection).
 
 ## Alternatives Considered
 
 - **Version = SHA only (status quo).** Simple, but no human-readable version, no changelog, no
   release history. Rejected: the goal is precisely to surface a real version.
-- **semantic-release committing the changelog + version bump to the repo**
-  (`@semantic-release/git`). Standard, but the commit re-triggers CI → needs `[skip ci]` and careful
-  loop handling. Rejected in favour of the tag-only approach, which sidesteps the loop by
-  construction.
+- **Tag-only, no repo commit** (the original design). Sidesteps the CI loop by construction (CI
+  triggers on branches, not tags), but leaves the repo's `package.json` files stuck at `0.0.0` — the
+  version lives only in the tag list. Rejected on review: we want the version visible in the repo
+  itself (root `package.json`). The `[skip ci]` commit is a small, standard price for that.
+- **Bumping every workspace `package.json`.** Rejected: the packages are `private` and never
+  published, so their `version` is meaningless churn. Only the root is bumped.
 - **Manual tagging / CalVer.** Less tooling, but reintroduces manual bookkeeping and drift.
 
 ## Evolution History
+
+### 2026-07-29: Bump the root `package.json`
+
+- Before merging: added the root `package.json` version bump. semantic-release now also runs
+  `@semantic-release/exec` (`pnpm pkg set version`) + `@semantic-release/git` to commit the bump as
+  `chore(release): x.y.z [skip ci]`. The `[skip ci]` marker keeps CI (and therefore the deploy) from
+  re-firing on the release commit.
+- **Reason:** the version should be visible in the repo, not only in the tag list. Only the root is
+  bumped — workspace packages are `private`/unpublished, so their `version` is left at `0.0.0`.
+- `main` has no branch protection, so the default `GITHUB_TOKEN` pushes the commit directly.
 
 ### 2026-07-29: Initial decision
 

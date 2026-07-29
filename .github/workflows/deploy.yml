@@ -6,11 +6,11 @@ name: Deploy
 #
 # Order: release → build-{api,web,statics} → deploy.
 # The `release` job runs semantic-release first: it computes the SemVer version
-# from the conventional commits, creates the git tag + GitHub Release, and exposes
-# the version. semantic-release pushes NO commit to main (tag + release only), and
-# CI triggers on branches not tags, so this never loops back into CI. The build jobs
-# tag the images with that version (alongside the SHA) and bake it into the app so
-# /api/version and the web footer show it.
+# from the conventional commits, creates the git tag + GitHub Release, bumps the root
+# package.json, and exposes the version. semantic-release pushes ONE commit to main
+# (chore(release): x.y.z) marked [skip ci], so GitHub skips CI for it and this never
+# loops back into the deploy. The build jobs tag the images with that version
+# (alongside the SHA) and bake it into the app so /api/version and the web footer show it.
 #
 # On a workflow_run trigger, github.sha is main's HEAD at trigger time (which may
 # have moved on); the commit that actually passed CI is workflow_run.head_sha.
@@ -57,10 +57,21 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch || github.ref_name }}
           fetch-depth: 0
 
+      # pnpm is needed by the release: @semantic-release/exec runs `pnpm pkg set version`
+      # to bump the root package.json (@semantic-release/git then commits it, [skip ci]).
+      - uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+
       - id: semrel
         uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
           semantic_version: 25
+          # exec + git are not bundled with semantic-release; declare them here.
+          extra_plugins: |
+            @semantic-release/exec@7
+            @semantic-release/git@11
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
