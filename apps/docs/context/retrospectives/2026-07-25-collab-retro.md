@@ -132,6 +132,13 @@ concepts introduced in pair mode score ✅ at the next self-assessment.
 
 **Success criterion:** at next retro, P1 items are ✅ and no P2 item has degraded to ❌.
 
+- **Added 2026-07-29 (P2) — build-arg vs BuildKit secret:** a build-arg is baked into the image
+  layers (readable via `docker history`); on a **public** GHCR image that leaks the value, so a
+  credential (the Sentry auth token) must go through `--mount=type=secret` (mounted only for the
+  `RUN`, never persisted). The DSN is fine as a build-arg — it's public by design (ends up in the
+  browser bundle). The distinction is "baked into a public image", not "front vs back". Next time we
+  touch the Docker/CI build, Jérémie explains the difference first.
+
 ### E3 — Retention check at session end
 
 `session.end` gains a step: 2–3 questions on the concepts introduced during the session. Misses join

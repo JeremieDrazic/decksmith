@@ -116,6 +116,25 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ---
 
+## Phase 2.6: Observability & Release (foundations, pre-Scryfall)
+
+> Tracked as GitHub milestone "Foundations (pre-Scryfall)". Config for self-hosted services lives on
+> the VPS (`~/infra/*`), never in the repo.
+
+- ✅ API docs — `@fastify/swagger` (OpenAPI from Zod) + Scalar UI at `/api/reference` (#71)
+- ✅ Error tracking — self-hosted **GlitchTip** (Sentry protocol); `@sentry/node` (API) +
+  `@sentry/react` (web), prod-only, no-op in dev (#72)
+- ✅ Web source maps — `@sentry/vite-plugin` uploads `hidden` maps to GlitchTip per release (token
+  as a BuildKit secret; de-minified stacks) (#79)
+- ✅ Automated releases — **semantic-release** at the head of the deploy pipeline: tag + GitHub
+  Release + root `package.json` bump, version at `/api/version` + web footer (ADR-0028, #77). Live
+  at v1.1.0
+- ✅ Uptime — **Better Stack** (external) monitoring `/api/health` + web root
+- ✅ Infra dashboard — self-hosted **Homepage** at `dashboard.<domain>` behind Traefik basic auth
+- ⬜ Release-pipeline optim — release job on the critical path adds ~4 min/deploy (backlog, #78)
+
+---
+
 ## Phase 3: Scryfall Integration (spec: `card-search.md`)
 
 ### 3.1 packages/scryfall

@@ -1,7 +1,7 @@
 # Project State
 
-_Updated: 2026-07-25 (session 26 — collab retrospective). This file describes the **current** state
-only: environment, what works today, blockers, and what's next. Per-session history lives in
+_Updated: 2026-07-29 (foundations — observability & release). This file describes the **current**
+state only: environment, what works today, blockers, and what's next. Per-session history lives in
 `decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
@@ -49,6 +49,12 @@ compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 
 **Production** — fully deployed, see Infrastructure below.
 
+**Observability & Release** — API docs (Scalar) at `/api/reference`; error tracking via self-hosted
+GlitchTip (`@sentry/node` + `@sentry/react`, prod-only, no-op in dev), web stacks de-minified via
+source maps uploaded to GlitchTip per release; automated SemVer releases (semantic-release,
+ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.1.0`); external uptime (Better
+Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
+
 ---
 
 ## What's NOT Working / Blockers
@@ -77,11 +83,14 @@ compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 
 ## Next Up
 
+- **Phase 3: Scryfall integration** (`packages/scryfall`, worker sync job, card API) — **pair mode:
+  Jérémie writes the domain/normalization logic** (collab retro 2026-07-25). Start with 3.1:
+  bulk-data client, Scryfall → `Card`/`CardPrint` normalization, in-memory cache, Zod schemas.
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
-- Phase 3: Scryfall integration (`packages/scryfall`, worker sync job, card API) — **pair mode:
-  Jérémie writes the domain/normalization logic** (collab retro 2026-07-25)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
+- Follow-up: source-map E2E validation — trigger a real prod web error, confirm GlitchTip shows
+  `file:line` instead of minified output
 
 ---
 
@@ -107,13 +116,21 @@ compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
   `NODE_ENV` unset → `production` (secure cookies, `trustProxy`).
 - **DNS**: wildcard record → VPS via API-capable provider. Traefik dashboard behind IP-allowlist +
   basic auth. Infra secrets live only in server-side `~/infra/.env`.
+- **Observability**: self-hosted **GlitchTip** (error tracking) at `monitoring.<domain>` in
+  `~/infra/glitchtip/`; **Better Stack** (external uptime) on `/api/health` + web root; **Homepage**
+  infra dashboard at `dashboard.<domain>` in `~/infra/homepage/` (basic auth, reuses the Traefik
+  dashboard middleware). All observability config lives on the VPS, never in the repo.
+- **Releases**: semantic-release heads the deploy pipeline (ADR-0028) — git tag + GitHub Release +
+  root `package.json` bump (`chore(release) [skip ci]`), version baked into images and surfaced at
+  `/api/version` + web footer. CI secrets added: `VITE_SENTRY_DSN`, `SENTRY_URL`,
+  `SENTRY_AUTH_TOKEN`.
 
 ---
 
 ## Current Branch
 
-- `docs/collab-retro` — retrospective deliverables (retro doc, PROFILE/WORKFLOW/session.end
-  amendments, this file condensed).
+- `main` — foundations (observability & release) complete; live at **v1.1.0**. PRs #71/#72/#77/#79
+  merged; #78 (release-pipeline optim) in backlog.
 
 ---
 
