@@ -64,6 +64,9 @@ COPY --from=builder --chown=node:node /deploy .
 
 ENV NODE_ENV=production
 ENV PORT=3000
+# Deployed version (semantic-release), surfaced at /api/version. Empty in local builds.
+ARG APP_VERSION=""
+ENV APP_VERSION=$APP_VERSION
 USER node
 EXPOSE 3000
 

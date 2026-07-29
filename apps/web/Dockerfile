@@ -44,6 +44,9 @@ ENV VITE_API_URL=$VITE_API_URL
 # Sentry/GlitchTip DSN, baked into the browser bundle (public by nature). Empty in dev/local builds.
 ARG VITE_SENTRY_DSN=""
 ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
+# Deployed version (semantic-release), shown in the web footer. Empty in local builds.
+ARG VITE_APP_VERSION=""
+ENV VITE_APP_VERSION=$VITE_APP_VERSION
 RUN pnpm turbo build --filter=...@decksmith/web
 
 # Self-contained production node_modules alongside .output.

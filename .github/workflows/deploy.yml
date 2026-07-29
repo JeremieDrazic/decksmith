@@ -4,10 +4,18 @@ name: Deploy
 # a success gate) — a commit that fails CI can never deploy. workflow_dispatch
 # stays for manual re-runs (e.g. after flipping a GHCR package to public).
 #
+# Order: release → build-{api,web,statics} → deploy.
+# The `release` job runs semantic-release first: it computes the SemVer version
+# from the conventional commits, creates the git tag + GitHub Release, and exposes
+# the version. semantic-release pushes NO commit to main (tag + release only), and
+# CI triggers on branches not tags, so this never loops back into CI. The build jobs
+# tag the images with that version (alongside the SHA) and bake it into the app so
+# /api/version and the web footer show it.
+#
 # On a workflow_run trigger, github.sha is main's HEAD at trigger time (which may
 # have moved on); the commit that actually passed CI is workflow_run.head_sha.
 # DEPLOY_SHA resolves to that exact commit (falling back to github.sha on manual
-# dispatch), and every job checks out + tags it, so we never deploy an untested SHA.
+# dispatch), and the build/deploy jobs check it out, so we never deploy an untested SHA.
 #
 # Third-party actions are pinned to immutable commit SHAs (tag in the comment):
 # the appleboy actions receive the VPS SSH key and the docker actions push to GHCR,
@@ -24,18 +32,53 @@ concurrency:
   group: deploy
   cancel-in-progress: false
 
-# Permissions are declared per job (least privilege), not workflow-wide:
-# the build jobs push to GHCR; the deploy job (which holds the VPS SSH key) gets none.
+# Permissions are declared per job (least privilege), not workflow-wide.
 
 env:
   # The commit being deployed (see header comment).
   DEPLOY_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
 
 jobs:
-  build-api:
+  release:
     # Run on manual dispatch, or only when the triggering CI run succeeded.
     if:
       github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create the git tag + GitHub Release
+      issues: write # semantic-release comments on released issues…
+      pull-requests: write # …and PRs
+    outputs:
+      version: ${{ steps.resolve.outputs.version }}
+    steps:
+      # Release from the branch (main), with full history + tags for semantic-release.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.workflow_run.head_branch || github.ref_name }}
+          fetch-depth: 0
+
+      - id: semrel
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
+        with:
+          semantic_version: 25
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Effective version to stamp: the new release if one was published, otherwise the
+      # latest existing tag (e.g. a docs-only push), or 0.0.0 before the first release.
+      - id: resolve
+        run: |
+          if [ "${{ steps.semrel.outputs.new_release_published }}" = "true" ]; then
+            version="${{ steps.semrel.outputs.new_release_version }}"
+          else
+            version="$(git describe --tags --abbrev=0 2>/dev/null || echo 0.0.0)"
+            version="${version#v}"
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Stamping version: $version"
+
+  build-api:
+    needs: [release]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -60,15 +103,17 @@ jobs:
           context: .
           file: apps/api/Dockerfile
           push: true
+          build-args: |
+            APP_VERSION=${{ needs.release.outputs.version }}
           tags: |
             ghcr.io/jeremiedrazic/decksmith-api:${{ env.DEPLOY_SHA }}
+            ghcr.io/jeremiedrazic/decksmith-api:${{ needs.release.outputs.version }}
             ghcr.io/jeremiedrazic/decksmith-api:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   build-web:
-    if:
-      github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    needs: [release]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -95,15 +140,16 @@ jobs:
           build-args: |
             VITE_API_URL=
             VITE_SENTRY_DSN=${{ secrets.VITE_SENTRY_DSN }}
+            VITE_APP_VERSION=${{ needs.release.outputs.version }}
           tags: |
             ghcr.io/jeremiedrazic/decksmith-web:${{ env.DEPLOY_SHA }}
+            ghcr.io/jeremiedrazic/decksmith-web:${{ needs.release.outputs.version }}
             ghcr.io/jeremiedrazic/decksmith-web:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   build-statics:
-    if:
-      github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    needs: [release]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -139,6 +185,7 @@ jobs:
           push: true
           tags: |
             ghcr.io/jeremiedrazic/decksmith-statics:${{ env.DEPLOY_SHA }}
+            ghcr.io/jeremiedrazic/decksmith-statics:${{ needs.release.outputs.version }}
             ghcr.io/jeremiedrazic/decksmith-statics:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max

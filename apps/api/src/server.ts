@@ -12,6 +12,7 @@ import docs from './plugins/docs.js';
 import errorHandler from './plugins/error-handler.js';
 import health from './plugins/health.js';
 import v1Routes from './plugins/v1-routes.js';
+import version from './plugins/version.js';
 
 /** Create a configured Fastify instance without starting it. */
 export async function buildServer() {
@@ -58,6 +59,7 @@ export async function buildServer() {
 
   // Routes
   await app.register(health);
+  await app.register(version);
   await app.register(v1Routes);
 
   return app;

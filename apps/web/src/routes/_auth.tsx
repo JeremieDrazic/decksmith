@@ -11,6 +11,9 @@ import { parseInternalRedirect } from '../lib/redirect/parse-internal-redirect';
 function AuthLayout() {
   useTranslation('common'); // subscribes to language changes so Trans re-renders on switch
 
+  // Baked in at build time (semantic-release version); absent in local dev.
+  const version = import.meta.env['VITE_APP_VERSION'];
+
   return (
     <div className="min-h-screen bg-bg flex flex-col items-center justify-center px-4 py-12">
       <div className="fixed top-4 right-4 flex items-center gap-3">
@@ -69,6 +72,11 @@ function AuthLayout() {
             Storybook
           </TextLink>
         </Text>
+        {version ? (
+          <Text as="p" size="xs" tone="faint" mono>
+            v{version}
+          </Text>
+        ) : null}
       </footer>
     </div>
   );

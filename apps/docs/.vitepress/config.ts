@@ -141,6 +141,10 @@ export default defineConfig({
             text: 'ADR-0027: Web Hosting (SSR Node)',
             link: '/adr/0027-web-hosting-ssr-node-server',
           },
+          {
+            text: 'ADR-0028: Release & Versioning',
+            link: '/adr/0028-release-versioning',
+          },
         ],
       },
       {

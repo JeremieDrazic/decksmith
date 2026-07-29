@@ -38,6 +38,7 @@ evolution history.
 | [0025](./0025-i18n-strategy.md)                           | Internationalisation Strategy                     | Active | 2026-07-14 |
 | [0026](./0026-reverse-proxy-traefik.md)                   | Reverse Proxy & Deployment Topology (Traefik)     | Active | 2026-07-21 |
 | [0027](./0027-web-hosting-ssr-node-server.md)             | Web Hosting — TanStack Start SSR Node Server      | Active | 2026-07-24 |
+| [0028](./0028-release-versioning.md)                      | Release & Versioning — semantic-release           | Active | 2026-07-29 |
 
 ---
 
