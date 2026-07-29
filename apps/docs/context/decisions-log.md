@@ -4,6 +4,39 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-29] — Infra dashboard (Homepage) + external uptime (Better Stack)
+
+**Context:** no single landing page for the VPS services, and no uptime alerting. **Decision:**
+**Homepage** (gethomepage) self-hosted at `dashboard.<domain>`, config on the VPS in
+`~/infra/homepage/` (never in the repo — references the real domain). Exposed via Traefik on the
+shared `proxy` network, TLS from the existing `*.<domain>` wildcard; protected by the Traefik
+dashboard's basic-auth middleware only (`dashboard-auth@docker`, no IP allowlist → reachable while
+travelling). Pure-black theme via `custom.css` overriding `--bg-color` (Homepage's real background
+mechanism, not `body`/`bg-theme-*`). Uptime is **Better Stack** (external SaaS, deliberately NOT
+self-hosted — an uptime monitor must live off-box to alert when the VPS itself is down); free tier,
+monitors `/api/health` + web root, email alerts. **Impact:** VPS `~/infra/homepage/*` only (no repo
+files). See memory `project_homepage_dashboard`.
+
+---
+
+## [2026-07-29] — Web source-map upload to GlitchTip
+
+**Context:** browser errors in GlitchTip pointed at minified `index-*.js` lines (unreadable); the
+error-tracking work (#72) left source maps as a follow-up. **Decision:** `@sentry/vite-plugin` (last
+plugin in `apps/web/vite.config.ts`) + `build.sourcemap: 'hidden'` — generates maps with no
+`sourceMappingURL` in the shipped JS, uploads them to GlitchTip tagged with the release, then
+deletes the `.map` files (nothing served publicly). Runtime side: `lib/sentry.ts` now reports
+`release: VITE_APP_VERSION`, matching the upload (debug-id based). Disabled unless
+`SENTRY_AUTH_TOKEN` is set → dev/local builds no-op. **Security:** the web image is public, so the
+token is a **BuildKit secret** (`--mount=type=secret`), never a build-arg;
+`SENTRY_URL`/`SENTRY_AUTH_TOKEN` forwarded via `turbo.json` `passThroughEnv` (strict-env would drop
+them) without polluting the cache key. `@sentry/cli` build allowed in `pnpm-workspace.yaml`;
+org/project = `jerem`/`decksmith-web`. **Impact:** `apps/web` (sentry.ts, vite.config.ts,
+Dockerfile, package.json), `deploy.yml`, `turbo.json`, `pnpm-workspace.yaml`. Verified in prod
+(release 1.1.0). Closes #79.
+
+---
+
 ## [2026-07-29] — Error tracking: Sentry SDK → self-hosted GlitchTip
 
 **Context:** no visibility on production exceptions (API or web). **Decision:** the standard Sentry
