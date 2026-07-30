@@ -4,6 +4,54 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-30] — Phase 3.1 `packages/scryfall` scoping (pre-implementation)
+
+**Context:** kicking off Phase 3 (Scryfall). Scoping session — no code — to settle the package's
+boundaries and normalization model before writing anything. Spec `card-search.md` predates several
+architecture rules and contains drift (worker calling Prisma directly; `createMany` wrongly
+presented as an upsert; `colors`/`color_identity` conflated; multi-face cards unaddressed). Decided
+each open question, mentor/pair mode (Jérémie will write the normalization logic).
+
+**Decision:**
+
+1. **Bulk strategy** — use Scryfall's `default_cards` dump (one row per print → feeds both `Card`
+   and `CardPrint`). Downloaded, **streamed** (not `JSON.parse`'d whole), normalized, written to
+   Postgres, then discarded — the file is never persisted; **Postgres is the sole store**. EN first,
+   FR deferred (needs a wider dump/pass). Daily download + scheduling belong to 3.2 (worker), not
+   3.1.
+2. **Colors** — store both `colors` (casting cost) **and** `colorIdentity` (all colors anywhere on
+   the card, needed for Commander in Phase 7). Adds `Card.colorIdentity String[]`.
+3. **Multi-face cards** — **option B** (mirror Scryfall's structure), adapted to our oracle/print
+   split: new **`CardFace`** table holding the _oracle_ part of each face (name, manaCost, typeLine,
+   oracleText, colors, index), linked to `Card`; per-face _images_ kept in `CardPrint.imageUris`
+   JSON as `{ front, back }` (no `CardPrintFace` table — an image has no queryable structure). Add
+   `Card.layout` (`normal` / `transform` / `split` / `token` / …) — drives both face-reading and
+   at-query filtering.
+4. **Non-card filtering** — keep large, filter at usage (reversible) rather than dropping at
+   ingestion. Pure, tested `isCollectibleCard`: keep only `games` including `paper`; **drop**
+   digital-only, oversized/memorabilia, and `art_series` (the last has no `type_line`/`cmc`, would
+   force nullable columns on 99% of real cards); **keep** tokens and emblems (proxy use case; a
+   later "counts toward deck size?" function reads `layout`).
+5. **In-memory cache** — **removed from 3.1**, moved to 3.2: nothing costly is re-queried yet; the
+   only real cache (last bulk `updated_at` to skip re-downloads) is sync-tracking state that lives
+   in the DB, owned by the worker.
+6. **Worker → DB (deferred question)** — 3.2's worker will write to Postgres; whether it imports
+   `packages/db` (Prisma) directly or goes through the API is an **ADR to write in 3.2**, not
+   settled here. The "Prisma never outside the API" rule was written for `apps/web`; the worker is a
+   backend.
+
+**Boundary confirmed:** normalization is **pure but stays in `packages/scryfall`** (it knows an
+external provider — not reusable MTG domain logic), calling `packages/domain` pure helpers
+(`parseManaCost`, `sortColorIdentity`). `packages/domain` stays Scryfall-agnostic.
+
+**Impact:** docs only this session — `roadmap.md` (3.1 replanned: ADR + schema migration precede the
+5 items; cache line moved to 3.2; worker→DB ADR added to 3.2), `project-state.md` (Next Up +
+branch). Next session's order: **ADR (multi-face card modeling) → Prisma migration
+(`Card.colorIdentity`, `Card.layout`, `CardFace`, `imageUris` convention) + `db-reviewer` → `schema`
+DTOs → normalization**.
+
+---
+
 ## [2026-07-29] — Infra dashboard (Homepage) + external uptime (Better Stack)
 
 **Context:** no single landing page for the VPS services, and no uptime alerting. **Decision:**

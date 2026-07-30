@@ -1,8 +1,9 @@
 # Project State
 
-_Updated: 2026-07-29 (foundations — observability & release). This file describes the **current**
-state only: environment, what works today, blockers, and what's next. Per-session history lives in
-`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-07-30 (Phase 3.1 scoping — `packages/scryfall` architecture decisions, no code yet).
+This file describes the **current** state only: environment, what works today, blockers, and what's
+next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
+`retrospectives/`._
 
 ---
 
@@ -83,9 +84,13 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3: Scryfall integration** (`packages/scryfall`, worker sync job, card API) — **pair mode:
-  Jérémie writes the domain/normalization logic** (collab retro 2026-07-25). Start with 3.1:
-  bulk-data client, Scryfall → `Card`/`CardPrint` normalization, in-memory cache, Zod schemas.
+- **Phase 3.1 scoped (2026-07-30)** — architecture decided (see decisions-log): bulk `default_cards`
+  streamed then discarded (Postgres = sole persistence, EN first); `colors` + `colorIdentity`;
+  multi-face model **option B** (`CardFace` table + `{front,back}` image JSON + `layout` field);
+  non-card filtering (drop digital/oversized/art_series, keep tokens/emblems); in-memory cache
+  deferred to 3.2. **Next concrete step: ADR (multi-face card modeling) → Prisma migration +
+  `db-reviewer` → `schema` DTOs → normalization in `packages/scryfall`.** Pair mode: Jérémie writes
+  the domain/normalization logic (collab retro 2026-07-25).
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -129,8 +134,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `main` — foundations (observability & release) complete; live at **v1.1.0**. PRs #71/#72/#77/#79
-  merged; #78 (release-pipeline optim) in backlog.
+- `docs/scryfall-3.1-scoping` — Phase 3.1 scoping (docs only). Based on `main` @ `d09198b`
+  (foundations wrap-up #80 merged; live at **v1.1.0**). #78 (release-pipeline optim) in backlog.
 
 ---
 

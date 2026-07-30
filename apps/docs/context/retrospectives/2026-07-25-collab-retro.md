@@ -139,6 +139,15 @@ concepts introduced in pair mode score ✅ at the next self-assessment.
   browser bundle). The distinction is "baked into a public image", not "front vs back". Next time we
   touch the Docker/CI build, Jérémie explains the difference first.
 
+- **Added 2026-07-30 (P2) — oracle/print split vs Scryfall's flat `card_faces`:** Scryfall bundles a
+  face's rules identity (name/cost/text = oracle) and its image (print-specific) together in
+  `card_faces`. Our model splits oracle (`Card`) from print (`CardPrint`), so a face can't be copied
+  wholesale — its oracle bits go to a `CardFace` table (linked to `Card`), its two images stay in
+  the **single** `CardPrint.imageUris` JSON as `{front, back}` (a double-faced card is still ONE
+  physical print = ONE `CardPrint` row; `CardPrint` has no link to `CardFace`). Jérémie's miss:
+  thought the two face images landed in separate `CardPrint` rows linked to `CardFace`. Re-check
+  when we build the `CardFace` migration/normalization.
+
 ### E3 — Retention check at session end
 
 `session.end` gains a step: 2–3 questions on the concepts introduced during the session. Misses join
