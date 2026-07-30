@@ -139,10 +139,17 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 3.1 packages/scryfall
 
-- ⬜ Bulk data download client
-- ⬜ Card normalization (Scryfall → `Card` + `CardPrint` Prisma models)
-- ⬜ In-memory caching layer
+- ✅ Scoping + décisions d'archi (2026-07-30) — bulk `default_cards`, `colors` + `colorIdentity`,
+  multi-faces option B (table `CardFace` + images `{front,back}` en JSON + champ `layout`), filtrage
+  non-cartes (on retire digital/oversized/art_series, on garde tokens/emblems), cache repoussé en
+  3.2. Voir decisions-log.
+- ⬜ ADR : modélisation cartes multi-faces + champs Scryfall (`db-reviewer` → `db:push`)
+- ⬜ Migration Prisma : `Card.colorIdentity`, `Card.layout`, table `CardFace`, convention
+  `CardPrint.imageUris` `{front,back}`
+- ⬜ Bulk data download client (streaming)
+- ⬜ Card normalization (Scryfall → `Card` + `CardPrint` + `CardFace`)
 - ⬜ Zod schemas for Scryfall API responses
+- ⬜ `isCollectibleCard` filter (pur, testé)
 - ⬜ Unit tests for normalization logic
 
 ### 3.2 Initial Data Sync (apps/worker)
@@ -150,6 +157,8 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ⬜ BullMQ + Redis setup in `apps/worker`
 - ⬜ `scryfall-sync` job + daily cron schedule
 - ⬜ Incremental update handling
+- ⬜ In-memory caching layer (déplacé depuis 3.1 — suivi de sync + métadonnées bulk)
+- ⬜ ADR : worker → DB (Prisma direct vs via API)
 
 ### 3.3 Card API
 
