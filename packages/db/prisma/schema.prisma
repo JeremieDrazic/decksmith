@@ -87,15 +87,17 @@ model UserPreferences {
 /// Card oracle data. Represents the canonical rules text (shared across all printings).
 /// The oracleId comes from Scryfall and is the primary identifier.
 model Card {
-  oracleId    String   @id @map("oracle_id")
-  name        String
-  manaCost    String?  @map("mana_cost")
-  typeLine    String   @map("type_line")
-  oracleText  String?  @map("oracle_text")
-  colors      String[] // Postgres array - stores ["W", "U"] etc.
-  cmc         Float
-  legalities  Json // { "commander": "legal", "standard": "not_legal", ... }
-  scryfallUri String   @map("scryfall_uri")
+  oracleId      String   @id @map("oracle_id")
+  name          String
+  manaCost      String?  @map("mana_cost")
+  typeLine      String?  @map("type_line")
+  oracleText    String?  @map("oracle_text")
+  colors        String[] // Postgres array - stores ["W", "U"] etc.
+  colorIdentity String[] @map("color_identity")
+  cmc           Float
+  layout        String
+  legalities    Json // { "commander": "legal", "standard": "not_legal", ... }
+  scryfallUri   String   @map("scryfall_uri")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -103,6 +105,7 @@ model Card {
   // Relations
   prints   CardPrint[]
   cardTags CardTag[]
+  faces    CardFace[]
 
   @@map("cards")
 }
@@ -138,6 +141,24 @@ model CardPrint {
   // Composite unique: same card in same set with same number and language
   @@unique([oracleId, setCode, collectorNumber, language])
   @@map("card_prints")
+}
+
+/// The oracle data of a single face of a multi-face card (transform, split, modal_dfc, adventure…).
+/// Only created when Scryfall returns `card_faces[]`. Single-face cards store their data on Card.
+model CardFace {
+  id         String   @id @default(uuid())
+  oracleId   String   @map("oracle_id")
+  faceIndex  Int      @map("face_index") // Position in Scryfall's card_faces[] — 0 = front, 1 = back
+  name       String
+  manaCost   String?  @map("mana_cost")
+  typeLine   String?  @map("type_line")
+  oracleText String?  @map("oracle_text")
+  colors     String[] // This face's colours (may differ per face)
+
+  card Card @relation(fields: [oracleId], references: [oracleId], onDelete: Cascade)
+
+  @@unique([oracleId, faceIndex]) // Scryfall gives no per-face ID; (oracle, position) is the natural key
+  @@map("card_faces")
 }
 
 // =============================================================================

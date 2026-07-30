@@ -43,6 +43,39 @@ export const LegalitiesSchema = z.record(z.string(), LegalityStatusSchema);
 export type Legalities = z.infer<typeof LegalitiesSchema>;
 
 // =============================================================================
+// CARD FACE
+// =============================================================================
+
+/**
+ * A single face of a multi-face card (transform, split, modal DFC, adventure…).
+ *
+ * Only multi-face cards expose faces. A normal single-face card returns an empty
+ * `faces` array and carries its rules data on the Card itself.
+ *
+ * @see CardResponseSchema (the `faces` field)
+ */
+export const CardFaceSchema = z.object({
+  /** Position in the card's face order — 0 = front, 1 = back */
+  faceIndex: z.number().int().nonnegative(),
+
+  /** This face's name (e.g., "Insectile Aberration") */
+  name: z.string(),
+
+  /** This face's mana cost, or null (e.g., the back of a transform card) */
+  manaCost: z.string().nullable(),
+
+  /** This face's type line, or null */
+  typeLine: z.string().nullable(),
+
+  /** This face's rules text, or null */
+  oracleText: z.string().nullable(),
+
+  /** This face's colours (may differ from the other face) */
+  colors: z.array(ColorSchema),
+});
+export type CardFace = z.infer<typeof CardFaceSchema>;
+
+// =============================================================================
 // CARD SCHEMAS
 // =============================================================================
 
@@ -64,16 +97,35 @@ export const CardResponseSchema = z.object({
   manaCost: z.string().nullable(),
 
   /** Type line (e.g., "Creature — Human Wizard") */
-  typeLine: z.string(),
+  typeLine: z.string().nullable(),
 
   /** Rules text (oracle text) */
   oracleText: z.string().nullable(),
 
-  /** Color identity array (e.g., ["U", "R"] for Izzet) */
+  /** Casting-cost colours (e.g., ["U", "R"] for Izzet) */
   colors: z.array(ColorSchema),
+
+  /**
+   * Colour identity — every colour on the card (mana cost, rules text, colour
+   * indicator), not just the casting cost. Drives Commander legality. May be
+   * wider than `colors`: a card with a colourless cost but a coloured activated
+   * ability is colourless in `colors` yet coloured in `colorIdentity`.
+   */
+  colorIdentity: z.array(ColorSchema),
 
   /** Converted mana cost / mana value */
   cmc: z.number().nonnegative(),
+
+  /**
+   * Scryfall layout — tells consumers how to read the card. "normal" for
+   * single-face; "transform" / "modal_dfc" / "split" / "adventure" / "token" / …
+   * otherwise. Kept a free string so a new Scryfall layout never breaks
+   * deserialization (unknown → treat as single-face).
+   */
+  layout: z.string(),
+
+  /** Per-face oracle data. Empty for single-face cards (layout "normal"). */
+  faces: z.array(CardFaceSchema),
 
   /** Format legalities */
   legalities: LegalitiesSchema,

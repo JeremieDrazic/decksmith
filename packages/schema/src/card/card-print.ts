@@ -52,6 +52,22 @@ export const ImageUrisSchema = z.object({
 });
 export type ImageUris = z.infer<typeof ImageUrisSchema>;
 
+/**
+ * Per-face image set for a print.
+ *
+ * A print always has a `front`; two-sided layouts (transform, modal_dfc,
+ * double_faced_token, reversible_card, battle) also carry a `back`. Single-image
+ * layouts (normal, split, flip, adventure) omit `back`.
+ */
+export const CardImagesSchema = z.object({
+  /** Front face images (always present) */
+  front: ImageUrisSchema,
+
+  /** Back face images — only for two-sided layouts */
+  back: ImageUrisSchema.optional(),
+});
+export type CardImages = z.infer<typeof CardImagesSchema>;
+
 // =============================================================================
 // CARD PRINT SCHEMAS
 // =============================================================================
@@ -80,8 +96,8 @@ export const CardPrintResponseSchema = z.object({
   /** Illustration ID - unique per artwork */
   illustrationId: UuidSchema.nullable(),
 
-  /** Image URLs for different sizes */
-  imageUris: ImageUrisSchema.nullable(),
+  /** Per-face image URLs (front always, back for two-sided layouts) */
+  imageUris: CardImagesSchema.nullable(),
 
   /** Card rarity in this set */
   rarity: RaritySchema,
@@ -146,6 +162,7 @@ export const CardEmbedSchema = CardResponseSchema.pick({
   typeLine: true,
   oracleText: true,
   cmc: true,
+  faces: true,
 });
 export type CardEmbed = z.infer<typeof CardEmbedSchema>;
 
