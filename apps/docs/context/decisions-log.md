@@ -4,6 +4,22 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-31] — Scryfall response schemas live in `packages/scryfall`, not `packages/schema`
+
+**Context:** implementing ADR-0029. Its follow-up #2 loosely bundled "the Scryfall response schemas"
+into the `packages/schema` work. On closer reading that conflicts with the boundary confirmed at
+Phase 3.1 scoping (decisions-log 2026-07-30): normalization "knows an external provider → stays in
+`packages/scryfall`". **Decision:** `packages/schema` holds only **API-facing DTOs** (what _our_ API
+returns — `CardResponseSchema`, `CardFaceSchema`, `CardImagesSchema`). The Zod schemas that
+**validate Scryfall's raw bulk payload** are provider knowledge and live in `packages/scryfall`,
+colocated with the normalization that consumes them — keeping the shared contracts package free of
+any Scryfall coupling. **Impact:** this session only touched `packages/schema` DTOs; the Scryfall
+input schemas move to the `packages/scryfall` scaffold (next branch). Also refined two DTO calls:
+`layout` kept `z.string()` and `faceIndex` kept `.int().nonnegative()` (not enum / `0|1` literals) —
+forward-compat, an unforeseen layout or face count degrades instead of throwing at the API boundary.
+
+---
+
 ## [2026-07-30] — Phase 3.1 `packages/scryfall` scoping (pre-implementation)
 
 **Context:** kicking off Phase 3 (Scryfall). Scoping session — no code — to settle the package's

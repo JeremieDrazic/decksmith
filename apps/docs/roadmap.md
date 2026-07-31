@@ -143,12 +143,15 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   multi-faces option B (table `CardFace` + images `{front,back}` en JSON + champ `layout`), filtrage
   non-cartes (on retire digital/oversized/art_series, on garde tokens/emblems), cache repoussé en
   3.2. Voir decisions-log.
-- ⬜ ADR : modélisation cartes multi-faces + champs Scryfall (`db-reviewer` → `db:push`)
-- ⬜ Migration Prisma : `Card.colorIdentity`, `Card.layout`, table `CardFace`, convention
-  `CardPrint.imageUris` `{front,back}`
+- ✅ ADR-0029 : modélisation cartes multi-faces + champs Scryfall (PR #82)
+- ✅ Migration Prisma : `Card.colorIdentity`, `Card.layout`, table `CardFace` (clé
+  `(oracleId, faceIndex)`, cascade), `Card.typeLine` nullable, convention `CardPrint.imageUris`
+  `{front,back}` — `db-reviewer` passé, `db:push` appliqué (PR #82)
+- ✅ DTOs API (`packages/schema`) : `CardResponseSchema` (colorIdentity/layout/faces[]),
+  `CardFaceSchema`, `CardImagesSchema` `{front, back?}` (PR #82)
 - ⬜ Bulk data download client (streaming)
 - ⬜ Card normalization (Scryfall → `Card` + `CardPrint` + `CardFace`)
-- ⬜ Zod schemas for Scryfall API responses
+- ⬜ Zod schemas for Scryfall API responses (dans `packages/scryfall` — connaissance provider)
 - ⬜ `isCollectibleCard` filter (pur, testé)
 - ⬜ Unit tests for normalization logic
 
