@@ -148,6 +148,21 @@ concepts introduced in pair mode score ✅ at the next self-assessment.
   thought the two face images landed in separate `CardPrint` rows linked to `CardFace`. Re-check
   when we build the `CardFace` migration/normalization.
 
+- **Added 2026-07-31 (P2) — left-prefix composite index:** a composite index `(oracleId, faceIndex)`
+  is sorted by `oracleId` first, then `faceIndex` within each — like a phone book by surname then
+  first name. It serves any query on a **left prefix** of its columns (`oracleId` alone ✅,
+  `(oracleId, faceIndex)` ✅) but **not** a trailing column alone (`faceIndex` alone ❌ — those rows
+  are scattered). Hence no separate `@@index([oracleId])` is needed alongside
+  `@@unique([oracleId, faceIndex])`. Jérémie's miss: didn't parse the question — concept was new.
+
+- **Added 2026-07-31 (P2) — `onDelete` direction (Cascade vs Restrict):** the rule fires when the
+  **parent** (`Card`) is deleted, deciding the fate of its **children** — it never triggers on
+  deleting the child. `Cascade` (on `CardFace`): deleting a `Card` sweeps its faces away (nothing
+  else depends on them). `Restrict` (on `CardPrint`): deleting a `Card` is **blocked** while prints
+  exist, because user data (`CollectionEntry`/`DeckCard`) references them. Deciding question: "who
+  depends on this child?" Jérémie's miss: reversed the direction (thought it governed deleting the
+  child). Re-check at the collection/deck CRUD (Phase 6/7).
+
 ### E3 — Retention check at session end
 
 `session.end` gains a step: 2–3 questions on the concepts introduced during the session. Misses join

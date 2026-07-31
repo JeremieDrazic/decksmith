@@ -1,9 +1,9 @@
 # Project State
 
-_Updated: 2026-07-30 (Phase 3.1 scoping — `packages/scryfall` architecture decisions, no code yet).
-This file describes the **current** state only: environment, what works today, blockers, and what's
-next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
-`retrospectives/`._
+_Updated: 2026-07-31 (Phase 3.1 — ADR-0029 multi-face modeling + Prisma migration + schema DTOs; #82
+merged, released v1.2.0). This file describes the **current** state only: environment, what works
+today, blockers, and what's next. Per-session history lives in `decisions-log.md`, the merged PRs,
+and git — see also `retrospectives/`._
 
 ---
 
@@ -34,9 +34,10 @@ next. Per-session history lives in `decisions-log.md`, the merged PRs, and git �
 handler with `ServiceError` exception mapper (ADR-0024), auth plugin (`app.authenticate`), rate
 limiting + CORS. All orchestration in `packages/services`; routes are HTTP glue.
 
-**Database** — Prisma 7 schema (16 models) synced to Supabase via session pooler; Supabase client
-working from `packages/db`. RLS policies applied and verified (4 policies on the `authenticated`
-role — defense-in-depth, the API bypasses RLS; ADR-0022, session 25).
+**Database** — Prisma 7 schema (17 models — `CardFace` added for multi-face cards, ADR-0029) synced
+to Supabase via session pooler; Supabase client working from `packages/db`. RLS policies applied and
+verified (4 policies on the `authenticated` role — defense-in-depth, the API bypasses RLS; ADR-0022,
+session 25).
 
 **Frontend** — `pnpm dev:web` → `localhost:3001`. TanStack Start SSR: auth pages (login, register,
 forgot-password), `_authenticated` guard (`beforeLoad` + SSR cookie forwarding, ADR-0023),
@@ -53,7 +54,7 @@ compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 **Observability & Release** — API docs (Scalar) at `/api/reference`; error tracking via self-hosted
 GlitchTip (`@sentry/node` + `@sentry/react`, prod-only, no-op in dev), web stacks de-minified via
 source maps uploaded to GlitchTip per release; automated SemVer releases (semantic-release,
-ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.1.0`); external uptime (Better
+ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.2.0`); external uptime (Better
 Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ---
@@ -84,13 +85,15 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.1 scoped (2026-07-30)** — architecture decided (see decisions-log): bulk `default_cards`
-  streamed then discarded (Postgres = sole persistence, EN first); `colors` + `colorIdentity`;
-  multi-face model **option B** (`CardFace` table + `{front,back}` image JSON + `layout` field);
-  non-card filtering (drop digital/oversized/art_series, keep tokens/emblems); in-memory cache
-  deferred to 3.2. **Next concrete step: ADR (multi-face card modeling) → Prisma migration +
-  `db-reviewer` → `schema` DTOs → normalization in `packages/scryfall`.** Pair mode: Jérémie writes
-  the domain/normalization logic (collab retro 2026-07-25).
+- **Phase 3.1 — modeling done (PR #82 merged, released v1.2.0)** — ADR-0029 (multi-face card
+  modeling) written; Prisma migration applied (`Card.colorIdentity`, `Card.layout`, `CardFace` table
+  keyed `(oracleId, faceIndex)` with cascade, `Card.typeLine` nullable,
+  `CardPrint.imageUris {front,back}` convention) — `db-reviewer` passed, `db:push` on Supabase; API
+  DTOs updated in `packages/schema` (`CardFaceSchema`, `CardImagesSchema`, `faces[]` on
+  `CardResponseSchema`). **Next concrete step: scaffold `packages/scryfall` → Scryfall response Zod
+  schemas (provider knowledge, live there not in `schema`) → normalization (`card_faces[]` →
+  `CardFace[]`, `{front,back}` images, `colorIdentity`) + `isCollectibleCard`.** Pair mode: Jérémie
+  writes the normalization logic (collab retro 2026-07-25).
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -101,6 +104,7 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
+- `docs/session-3.1-wrap` — session docs wrap-up (roadmap + state + retro) for the merged #82
 - `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
 
 ---
@@ -134,8 +138,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `docs/scryfall-3.1-scoping` — Phase 3.1 scoping (docs only). Based on `main` @ `d09198b`
-  (foundations wrap-up #80 merged; live at **v1.1.0**). #78 (release-pipeline optim) in backlog.
+- `docs/session-3.1-wrap` — session docs wrap-up. Based on `main` @ `b6db937` (#82 multi-face
+  modeling merged as `1bd8253`, released **v1.2.0**).
 
 ---
 
