@@ -4,6 +4,23 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-07-31] — `normalizeCard` output contract: local types + all image sizes
+
+**Context:** implementing `normalizeCard` in `packages/scryfall`. Two shape questions the scoping
+left open. **Decisions:** (1) **Output = local plain types** (`NormalizedCard` / `NormalizedPrint` /
+`NormalizedFace` / `NormalizedCardBundle`), not `Prisma.*CreateInput` — explicit data contract, zero
+Prisma coupling in `scryfall`; the 3.2 worker maps the bundle to DB writes. Plain `type`, not Zod:
+validate untrusted input at the boundary, trust what our own code builds. (2) **Store every image
+size, not just `normal`** — the bulk dump is streamed then discarded (Postgres is the sole store),
+so any size not captured is lost until the next full re-sync. `NormalizedImageUris` mirrors
+Scryfall's 6 sizes (camelCase), all **optional** (Scryfall may omit; the API DTO promises all six to
+clients, but storage must tell the truth). `CardPrint.imageUris` stays `{ front, back? }` with
+`back` present only when faces carry their own images (transform/mdfc/reversible) — a
+split/adventure has two faces but one shared image. **Impact:**
+`packages/scryfall/src/normalize-card/`.
+
+---
+
 ## [2026-07-31] — Scryfall response schemas live in `packages/scryfall`, not `packages/schema`
 
 **Context:** implementing ADR-0029. Its follow-up #2 loosely bundled "the Scryfall response schemas"

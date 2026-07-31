@@ -1,9 +1,10 @@
 # Project State
 
-_Updated: 2026-07-31 (Phase 3.1 — ADR-0029 multi-face modeling + Prisma migration + schema DTOs; #82
-merged, released v1.2.0). This file describes the **current** state only: environment, what works
-today, blockers, and what's next. Per-session history lives in `decisions-log.md`, the merged PRs,
-and git — see also `retrospectives/`._
+_Updated: 2026-07-31 (Phase 3.1 — `packages/scryfall` scaffolded: raw Scryfall Zod schemas +
+`normalizeCard` + `isCollectibleCard`, 11 tests; on branch `feat/scryfall-scaffold`). This file
+describes the **current** state only: environment, what works today, blockers, and what's next.
+Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
+`retrospectives/`._
 
 ---
 
@@ -26,8 +27,9 @@ and git — see also `retrospectives/`._
 ## What's Working (today)
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
-7): 0 errors. `pnpm test`: 210 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
-6 utils · 30 web-ui · 35 services). Storybook CI runs play functions + axe on every story.
+7): 0 errors. `pnpm test`: 221 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
+6 utils · 30 web-ui · 35 services · 11 scryfall). Storybook CI runs play functions + axe on every
+story.
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
 (register, login, logout, refresh, forgot/reset-password, `GET /me`), Zod type provider, error
@@ -46,7 +48,8 @@ EN + FR from `packages/i18n` (ADR-0025).
 
 **Packages** — `tokens` (tokens.css single source of truth), `web-ui` (~40 components + hooks, all
 Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
-codes), `api-client`, `query`, `services`, `test-utils`, `utils`, `i18n`, `db`. Build pipeline
+codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard`, provider
+knowledge), `api-client`, `query`, `services`, `test-utils`, `utils`, `i18n`, `db`. Build pipeline
 compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 
 **Production** — fully deployed, see Infrastructure below.
@@ -85,15 +88,14 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.1 — modeling done (PR #82 merged, released v1.2.0)** — ADR-0029 (multi-face card
-  modeling) written; Prisma migration applied (`Card.colorIdentity`, `Card.layout`, `CardFace` table
-  keyed `(oracleId, faceIndex)` with cascade, `Card.typeLine` nullable,
-  `CardPrint.imageUris {front,back}` convention) — `db-reviewer` passed, `db:push` on Supabase; API
-  DTOs updated in `packages/schema` (`CardFaceSchema`, `CardImagesSchema`, `faces[]` on
-  `CardResponseSchema`). **Next concrete step: scaffold `packages/scryfall` → Scryfall response Zod
-  schemas (provider knowledge, live there not in `schema`) → normalization (`card_faces[]` →
-  `CardFace[]`, `{front,back}` images, `colorIdentity`) + `isCollectibleCard`.** Pair mode: Jérémie
-  writes the normalization logic (collab retro 2026-07-25).
+- **Phase 3.1 — `packages/scryfall` scaffolded (branch `feat/scryfall-scaffold`)** — raw Scryfall
+  Zod schemas (`ScryfallCard`/`ScryfallCardFace`/`ScryfallImageUris`, snake_case wire format,
+  permissive scalars), `normalizeCard` (→ `{ card, print, faces }` bundle of local `Normalized*`
+  types, no Prisma coupling; per-face vs shared image detection; all sizes kept),
+  `isCollectibleCard` (drops digital/oversized/memorabilia/art_series), 11 colocated tests. **Next
+  concrete step: bulk data download client (streaming) — stream the `default_cards` dump, `.parse()`
+  each row, filter with `isCollectibleCard`, `normalizeCard`, hand off to the worker (3.2).** Then
+  3.2: BullMQ + Redis worker, worker→DB ADR (Prisma direct vs via API).
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -104,7 +106,7 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- `docs/session-3.1-wrap` — session docs wrap-up (roadmap + state + retro) for the merged #82
+- `feat/scryfall-scaffold` — `packages/scryfall` scaffold (raw schemas + normalization + filter)
 - `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
 
 ---
@@ -138,8 +140,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `docs/session-3.1-wrap` — session docs wrap-up. Based on `main` @ `b6db937` (#82 multi-face
-  modeling merged as `1bd8253`, released **v1.2.0**).
+- `feat/scryfall-scaffold` — `packages/scryfall` (raw schemas + `normalizeCard` +
+  `isCollectibleCard` + 11 tests). Based on `main` @ `64cd555` (#83 session docs merged; live at
+  **v1.2.0**).
 
 ---
 
