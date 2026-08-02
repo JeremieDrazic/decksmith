@@ -149,11 +149,18 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   `{front,back}` — `db-reviewer` passé, `db:push` appliqué (PR #82)
 - ✅ DTOs API (`packages/schema`) : `CardResponseSchema` (colorIdentity/layout/faces[]),
   `CardFaceSchema`, `CardImagesSchema` `{front, back?}` (PR #82)
+- ✅ `packages/scryfall` scaffolded (package.json, tsconfig.build, single `.` export)
+- ✅ Zod schemas for Scryfall API responses — raw snake_case payload validation in
+  `packages/scryfall/src/schemas/` (`ScryfallCard` / `ScryfallCardFace` / `ScryfallImageUris`),
+  provider knowledge (not in `schema`)
+- ✅ Card normalization (Scryfall → `Card` + `CardPrint` + `CardFace`) — `normalizeCard` returns a
+  `{ card, print, faces }` bundle of local `Normalized*` types (no Prisma coupling); per-face vs
+  shared image detection; all image sizes kept (snake→camel)
+- ✅ `isCollectibleCard` filter (pur, testé) — drops digital-only / oversized / memorabilia /
+  art_series; keeps tokens + emblems
+- ✅ Unit tests for normalization logic — 11 colocated tests (single-face, transform, split; filter
+  drops)
 - ⬜ Bulk data download client (streaming)
-- ⬜ Card normalization (Scryfall → `Card` + `CardPrint` + `CardFace`)
-- ⬜ Zod schemas for Scryfall API responses (dans `packages/scryfall` — connaissance provider)
-- ⬜ `isCollectibleCard` filter (pur, testé)
-- ⬜ Unit tests for normalization logic
 
 ### 3.2 Initial Data Sync (apps/worker)
 
