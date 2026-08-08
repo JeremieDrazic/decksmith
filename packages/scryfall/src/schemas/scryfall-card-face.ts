@@ -18,6 +18,10 @@ export const ScryfallCardFaceSchema = z.object({
   type_line: z.string().optional(),
   oracle_text: z.string().optional(),
   colors: z.array(z.string()).optional(),
+  power: z.string().optional(),
+  toughness: z.string().optional(),
+  loyalty: z.string().optional(),
+  defense: z.string().optional(),
   image_uris: ScryfallImageUrisSchema.optional(),
 });
 

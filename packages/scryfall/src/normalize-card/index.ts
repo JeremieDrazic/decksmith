@@ -41,6 +41,12 @@ export function normalizeCard(raw: ScryfallCard): NormalizedCardBundle {
     scryfallUri: raw.scryfall_uri,
     colors: raw.colors || [],
     colorIdentity: sortColorIdentity(raw.color_identity as ColorIdentity),
+    power: raw.power,
+    toughness: raw.toughness,
+    loyalty: raw.loyalty,
+    defense: raw.defense,
+    keywords: raw.keywords ?? [],
+    producedMana: raw.produced_mana ?? [],
   };
 
   // Where the images physically live decides front/back — not the face count.
@@ -59,8 +65,7 @@ export function normalizeCard(raw: ScryfallCard): NormalizedCardBundle {
     setCode: raw.set,
     collectorNumber: raw.collector_number,
     rarity: raw.rarity,
-    foil: raw.foil,
-    nonfoil: raw.nonfoil,
+    finishes: raw.finishes,
     prices: raw.prices,
     language: raw.lang ?? 'en',
     localizedName: raw.printed_name,
@@ -76,6 +81,10 @@ export function normalizeCard(raw: ScryfallCard): NormalizedCardBundle {
     typeLine: face.type_line,
     oracleText: face.oracle_text,
     colors: face?.colors || [],
+    power: face.power,
+    toughness: face.toughness,
+    loyalty: face.loyalty,
+    defense: face.defense,
   }));
 
   return { card, print, faces };

@@ -16,8 +16,14 @@ export type NormalizedCard = {
   manaCost?: string;
   typeLine?: string;
   oracleText?: string;
+  power?: string;
+  toughness?: string;
+  loyalty?: string;
+  defense?: string;
   colors: string[];
   colorIdentity: string[];
+  keywords: string[];
+  producedMana: string[];
   cmc: number;
   layout: string;
   legalities: Record<string, string>;
@@ -47,8 +53,7 @@ export type NormalizedPrint = {
   illustrationId?: string;
   imageUris?: { front: NormalizedImageUris; back?: NormalizedImageUris };
   rarity: string;
-  foil: boolean;
-  nonfoil: boolean;
+  finishes: string[];
   prices?: Record<string, string | null>;
   language: string;
   localizedName?: string;
@@ -65,6 +70,10 @@ export type NormalizedFace = {
   typeLine?: string;
   oracleText?: string;
   colors: string[];
+  power?: string;
+  toughness?: string;
+  loyalty?: string;
+  defense?: string;
 };
 
 /** The full result of normalizing one Scryfall row. */

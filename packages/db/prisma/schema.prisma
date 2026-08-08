@@ -92,8 +92,14 @@ model Card {
   manaCost      String?  @map("mana_cost")
   typeLine      String?  @map("type_line")
   oracleText    String?  @map("oracle_text")
+  power         String?  // P/T/loyalty/defense are strings ("*", "1+*", "X") — never parse to int
+  toughness     String?
+  loyalty       String?  // Planeswalker starting loyalty
+  defense       String?  // Battle defense
   colors        String[] // Postgres array - stores ["W", "U"] etc.
   colorIdentity String[] @map("color_identity")
+  keywords      String[] // Aggregated keyword abilities (Flying, Trample…) — card-level in Scryfall
+  producedMana  String[] @map("produced_mana") // Colours this card can produce (lands, mana rocks)
   cmc           Float
   layout        String
   legalities    Json // { "commander": "legal", "standard": "not_legal", ... }
@@ -121,8 +127,7 @@ model CardPrint {
   illustrationId  String?   @map("illustration_id")
   imageUris       Json?     @map("image_uris")
   rarity          String
-  foil            Boolean
-  nonfoil         Boolean
+  finishes        String[] // ["nonfoil","foil","etched"] — replaces legacy foil/nonfoil booleans
   prices          Json // { "usd": "1.50", "usdFoil": "3.00", ... }
   pricesUpdatedAt DateTime? @map("prices_updated_at")
   language        String    @default("en")
@@ -154,6 +159,10 @@ model CardFace {
   typeLine   String?  @map("type_line")
   oracleText String?  @map("oracle_text")
   colors     String[] // This face's colours (may differ per face)
+  power      String?  // Per-face gameplay stats (string) — may differ front vs back
+  toughness  String?
+  loyalty    String?
+  defense    String?
 
   card Card @relation(fields: [oracleId], references: [oracleId], onDelete: Cascade)
 

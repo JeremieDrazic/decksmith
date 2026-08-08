@@ -72,6 +72,18 @@ export const CardFaceSchema = z.object({
 
   /** This face's colours (may differ from the other face) */
   colors: z.array(ColorSchema),
+
+  /** This face's power, or null — string ("*", "1+*"), never a number */
+  power: z.string().nullable(),
+
+  /** This face's toughness, or null */
+  toughness: z.string().nullable(),
+
+  /** This face's starting loyalty (planeswalker face), or null */
+  loyalty: z.string().nullable(),
+
+  /** This face's defense (battle face), or null */
+  defense: z.string().nullable(),
 });
 export type CardFace = z.infer<typeof CardFaceSchema>;
 
@@ -102,6 +114,18 @@ export const CardResponseSchema = z.object({
   /** Rules text (oracle text) */
   oracleText: z.string().nullable(),
 
+  /** Power, or null — string ("*", "1+*", "X"), never a number */
+  power: z.string().nullable(),
+
+  /** Toughness, or null */
+  toughness: z.string().nullable(),
+
+  /** Starting loyalty (planeswalker), or null */
+  loyalty: z.string().nullable(),
+
+  /** Defense (battle), or null */
+  defense: z.string().nullable(),
+
   /** Casting-cost colours (e.g., ["U", "R"] for Izzet) */
   colors: z.array(ColorSchema),
 
@@ -112,6 +136,12 @@ export const CardResponseSchema = z.object({
    * ability is colourless in `colors` yet coloured in `colorIdentity`.
    */
   colorIdentity: z.array(ColorSchema),
+
+  /** Keyword abilities (e.g., ["Flying", "Trample"]) — aggregated across faces */
+  keywords: z.array(z.string()),
+
+  /** Colours of mana this card can produce (lands, mana rocks) */
+  producedMana: z.array(ColorSchema),
 
   /** Converted mana cost / mana value */
   cmc: z.number().nonnegative(),
