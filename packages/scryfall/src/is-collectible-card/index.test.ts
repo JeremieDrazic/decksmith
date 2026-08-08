@@ -16,8 +16,7 @@ const base: ScryfallCard = {
   set: 'lea',
   collector_number: '161',
   rarity: 'common',
-  foil: false,
-  nonfoil: true,
+  finishes: ['nonfoil'],
   games: ['paper', 'mtgo'],
   set_type: 'core',
 };

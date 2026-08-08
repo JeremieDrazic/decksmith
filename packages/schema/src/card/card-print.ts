@@ -102,11 +102,8 @@ export const CardPrintResponseSchema = z.object({
   /** Card rarity in this set */
   rarity: RaritySchema,
 
-  /** Can this print be foil? */
-  foil: z.boolean(),
-
-  /** Can this print be non-foil? */
-  nonfoil: z.boolean(),
+  /** Available finishes for this print (e.g., ["nonfoil", "foil", "etched"]) */
+  finishes: z.array(z.string()),
 
   /** Current market prices */
   prices: PricesSchema,

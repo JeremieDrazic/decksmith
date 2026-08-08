@@ -20,8 +20,7 @@ const lightningBolt: ScryfallCard = {
   set: 'lea',
   collector_number: '161',
   rarity: 'common',
-  foil: false,
-  nonfoil: true,
+  finishes: ['nonfoil'],
   image_uris: {
     small: 'https://img/small.jpg',
     normal: 'https://img/normal.jpg',
@@ -50,8 +49,8 @@ const delver: ScryfallCard = {
   set: 'isd',
   collector_number: '51',
   rarity: 'common',
-  foil: true,
-  nonfoil: true,
+  finishes: ['nonfoil', 'foil'],
+  keywords: ['Flying'],
   prices: { usd: '0.25' },
   lang: 'en',
   games: ['paper'],
@@ -63,6 +62,8 @@ const delver: ScryfallCard = {
       type_line: 'Creature — Human Wizard',
       oracle_text: 'At the beginning of your upkeep, look at the top card…',
       colors: ['U'],
+      power: '1',
+      toughness: '1',
       image_uris: { small: 'https://f0/small.jpg', normal: 'https://f0/normal.jpg' },
     },
     {
@@ -71,6 +72,8 @@ const delver: ScryfallCard = {
       type_line: 'Creature — Human Insect',
       oracle_text: 'Flying',
       colors: ['U'],
+      power: '3',
+      toughness: '2',
       image_uris: { small: 'https://f1/small.jpg', normal: 'https://f1/normal.jpg' },
     },
   ],
@@ -89,8 +92,7 @@ const fireIce: ScryfallCard = {
   set: 'apc',
   collector_number: '128',
   rarity: 'uncommon',
-  foil: true,
-  nonfoil: true,
+  finishes: ['nonfoil', 'foil'],
   image_uris: { small: 'https://split/small.jpg', normal: 'https://split/normal.jpg' },
   prices: {},
   lang: 'en',
@@ -110,9 +112,13 @@ describe('normalizeCard', () => {
       expect(card.manaCost).toBe('{R}');
       expect(card.colors).toEqual(['R']);
       expect(card.colorIdentity).toEqual(['R']);
+      expect(card.power).toBeUndefined();
+      expect(card.keywords).toEqual([]);
+      expect(card.producedMana).toEqual([]);
 
       expect(print.imageUris?.front.normal).toBe('https://img/normal.jpg');
       expect(print.imageUris?.back).toBeUndefined();
+      expect(print.finishes).toEqual(['nonfoil']);
 
       expect(faces).toEqual([]);
     });
@@ -124,6 +130,7 @@ describe('normalizeCard', () => {
 
       expect(card.manaCost).toBeUndefined();
       expect(card.colors).toEqual([]);
+      expect(card.keywords).toEqual(['Flying']);
     });
 
     it('reads front and back from each face image set', () => {
@@ -131,6 +138,7 @@ describe('normalizeCard', () => {
 
       expect(print.imageUris?.front.normal).toBe('https://f0/normal.jpg');
       expect(print.imageUris?.back?.normal).toBe('https://f1/normal.jpg');
+      expect(print.finishes).toEqual(['nonfoil', 'foil']);
     });
 
     it('emits one CardFace per face, indexed and sharing the oracle id', () => {
@@ -141,8 +149,11 @@ describe('normalizeCard', () => {
         faceIndex: 0,
         name: 'Delver of Secrets',
         oracleId: delver.oracle_id,
+        power: '1',
+        toughness: '1',
       });
       expect(faces[1]?.manaCost).toBeUndefined();
+      expect(faces[1]?.power).toBe('3');
     });
   });
 

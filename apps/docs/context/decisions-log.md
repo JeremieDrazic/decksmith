@@ -4,6 +4,41 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-08-03] — Phase 3.1 field mini-scope: gameplay stats + `finishes` (extends ADR-0029)
+
+**Context:** the initial 3.1 model kept a minimal field set. Before writing the bulk download
+client, a mini-scope of the fields the search + deck-stats features will need — because we discard
+the dump (Postgres is the sole store), so adding a field later costs a Prisma migration **plus a
+full re-sync**. Batching them now avoids per-feature churn. Scoped only "gameplay stats +
+`finishes`"; the rest (print cosmetics, external IDs like `tcgplayer_id`/`cardmarket_id`,
+`all_parts`, `edhrec_rank`) is deferred to its owning phase (Pricing, Recommendations, …).
+
+**Decisions:**
+
+1. **Gameplay stats — placement follows ADR-0029** (per-face data lives on `CardFace`, `Card`
+   carries the single-face/combined value). All stored as **String** (Scryfall sends `"*"`, `"1+*"`,
+   `"X"` — never parse to int):
+   - `power`, `toughness`, `loyalty`, `defense` → nullable **on both `Card` and `CardFace`** (a
+     creature front + planeswalker back have different stats).
+   - `keywords` (`String[]`) and `producedMana` (`String[]`, colours a card can produce — deck
+     manabase analysis) → **`Card` only**: Scryfall aggregates these at card level, not per face.
+   - `color_indicator` → **skipped**: it only helps derive the colour of a mana-costless face, and
+     we already store per-face `colors` — redundant.
+
+2. **`finishes` replaces the legacy `foil`/`nonfoil` booleans.** Scryfall sends
+   `finishes: ["nonfoil","foil","etched"]`; the booleans can't represent _etched_. Since there is
+   **no data in the DB yet**, this is the moment for a clean swap rather than keeping both
+   (guaranteed drift). `CardPrint.foil`/`nonfoil` → **`CardPrint.finishes String[]`**.
+
+**Impact (implementation, next branch — order per ADR-0029):** Prisma migration (`Card` +
+power/toughness/loyalty/defense/keywords/producedMana; `CardFace` + power/toughness/loyalty/
+defense; `CardPrint` foil/nonfoil → finishes) + `db-reviewer` + `db:push`; `packages/schema` DTOs
+(`CardResponseSchema`, `CardFaceSchema`, `CardPrintResponseSchema`); `packages/scryfall` raw schemas
+
+- `normalizeCard` + tests. Then the bulk download client.
+
+---
+
 ## [2026-07-31] — `normalizeCard` output contract: local types + all image sizes
 
 **Context:** implementing `normalizeCard` in `packages/scryfall`. Two shape questions the scoping
