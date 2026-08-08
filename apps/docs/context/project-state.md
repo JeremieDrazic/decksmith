@@ -1,10 +1,9 @@
 # Project State
 
-_Updated: 2026-07-31 (Phase 3.1 — `packages/scryfall` scaffolded: raw Scryfall Zod schemas +
-`normalizeCard` + `isCollectibleCard`, 11 tests; on branch `feat/scryfall-scaffold`). This file
-describes the **current** state only: environment, what works today, blockers, and what's next.
-Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
-`retrospectives/`._
+_Updated: 2026-08-03 (Phase 3.1 — field extension: gameplay stats + `finishes` across Prisma /
+schema DTOs / scryfall + tests; on branch `feat/scryfall-field-extension`). This file describes the
+**current** state only: environment, what works today, blockers, and what's next. Per-session
+history lives in `decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
 
@@ -27,9 +26,9 @@ Per-session history lives in `decisions-log.md`, the merged PRs, and git — see
 ## What's Working (today)
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
-7): 0 errors. `pnpm test`: 221 passing (30 domain · 42 schema · 31 api · 15 api-client · 18 query ·
-6 utils · 30 web-ui · 35 services · 11 scryfall). Storybook CI runs play functions + axe on every
-story.
+7): 0 errors. `pnpm test`: 257 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
+6 utils · 41 web-ui · 37 services · 14 web · 11 scryfall). Storybook CI runs play functions + axe on
+every story.
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
 (register, login, logout, refresh, forgot/reset-password, `GET /me`), Zod type provider, error
@@ -88,14 +87,15 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.1 — `packages/scryfall` scaffolded (branch `feat/scryfall-scaffold`)** — raw Scryfall
-  Zod schemas (`ScryfallCard`/`ScryfallCardFace`/`ScryfallImageUris`, snake_case wire format,
-  permissive scalars), `normalizeCard` (→ `{ card, print, faces }` bundle of local `Normalized*`
-  types, no Prisma coupling; per-face vs shared image detection; all sizes kept),
-  `isCollectibleCard` (drops digital/oversized/memorabilia/art_series), 11 colocated tests. **Next
-  concrete step: bulk data download client (streaming) — stream the `default_cards` dump, `.parse()`
-  each row, filter with `isCollectibleCard`, `normalizeCard`, hand off to the worker (3.2).** Then
-  3.2: BullMQ + Redis worker, worker→DB ADR (Prisma direct vs via API).
+- **Phase 3.1 — field extension done (branch `feat/scryfall-field-extension`)** — gameplay stats
+  (`power`/`toughness`/`loyalty`/`defense` on `Card` + `CardFace`, stored as String; `keywords` +
+  `producedMana` on `Card`) and `CardPrint.finishes String[]` replacing `foil`/`nonfoil`, applied
+  across Prisma (db:push'd) + schema DTOs + `packages/scryfall` (raw schemas, `normalizeCard`,
+  types, tests). `db-reviewer` passed. Follow-up #85 (collection/deck `foil` → `finish` enum); GIN
+  index on `Card.keywords` deferred to 3.3. **Next concrete step: bulk data download client
+  (streaming) — stream the `default_cards` dump, `ScryfallCardSchema.parse()` each row, filter with
+  `isCollectibleCard`, `normalizeCard`, hand off to the worker (3.2).** Then 3.2: BullMQ + Redis
+  worker, worker→DB ADR (Prisma direct vs via API).
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -106,7 +106,7 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- `feat/scryfall-scaffold` — `packages/scryfall` scaffold (raw schemas + normalization + filter)
+- `feat/scryfall-field-extension` — gameplay stats + `finishes` across Prisma / schema / scryfall
 - `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
 
 ---
@@ -140,8 +140,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `feat/scryfall-scaffold` — `packages/scryfall` (raw schemas + `normalizeCard` +
-  `isCollectibleCard` + 11 tests). Based on `main` @ `64cd555` (#83 session docs merged; live at
+- `feat/scryfall-field-extension` — field extension (gameplay stats + `finishes`) across Prisma /
+  schema DTOs / scryfall + tests. Based on `main` @ `6dd0a1c` (#84 scryfall scaffold merged; live at
   **v1.2.0**).
 
 ---

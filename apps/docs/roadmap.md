@@ -160,10 +160,11 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   art_series; keeps tokens + emblems
 - ✅ Unit tests for normalization logic — 11 colocated tests (single-face, transform, split; filter
   drops)
-- ⬜ Field extension (mini-scope 2026-08-03, extends ADR-0029) — gameplay stats
+- ✅ Field extension (mini-scope 2026-08-03, extends ADR-0029) — gameplay stats
   (`power`/`toughness`/`loyalty`/`defense` on `Card` + `CardFace`; `keywords`/`producedMana` on
-  `Card`) + `CardPrint.finishes` replacing `foil`/`nonfoil`. Prisma migration + `db-reviewer` →
-  schema DTOs → scryfall raw schemas + normalization + tests
+  `Card`) + `CardPrint.finishes` replacing `foil`/`nonfoil`. Prisma migration + `db-reviewer` +
+  `db:push` → schema DTOs → scryfall raw schemas + normalization + tests. Follow-up #85
+  (collection/deck `foil` boolean → `finish` enum). GIN index on `Card.keywords` deferred to 3.3
 - ⬜ Bulk data download client (streaming)
 
 ### 3.2 Initial Data Sync (apps/worker)
