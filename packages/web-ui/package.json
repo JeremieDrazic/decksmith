@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@base-ui/react": "^1.5.0",
+    "@base-ui/react": "^1.7.0",
     "@decksmith/domain": "workspace:*",
     "@decksmith/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
@@ -28,12 +28,12 @@
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@decksmith/tokens": "workspace:*",
-    "@storybook/react-vite": "^10.4.3",
+    "@storybook/react-vite": "^10.5.7",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "jsdom": "catalog:",
-    "storybook": "^10.4.3",
+    "storybook": "^10.5.7",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
