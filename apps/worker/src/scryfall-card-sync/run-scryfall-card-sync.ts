@@ -3,6 +3,7 @@ import { fetchBulkStream, getBulkDataInfo, streamNormalizedCards } from '@decksm
 import { chunkAsyncIterable } from '@decksmith/utils';
 
 import { groupChunk } from './group-chunk.js';
+import { createSyncReporter } from './sync-reporter.js';
 import { upsertChunk } from './upsert-chunk.js';
 
 // Scryfall's bulk type we ingest; also the SyncState key. A future prices or
@@ -27,6 +28,7 @@ const CHUNK_SIZE = 200;
  *   BullMQ job is marked failed and retried by the queue.
  */
 export async function runScryfallCardSync(): Promise<void> {
+  const reporter = createSyncReporter();
   const info = await getBulkDataInfo();
   const dumpUpdatedAt = new Date(info.updatedAt);
 
@@ -39,7 +41,7 @@ export async function runScryfallCardSync(): Promise<void> {
       where: { source: SYNC_SOURCE },
       data: { status: 'skipped' },
     });
-    console.info(`[scryfall-card-sync] dump unchanged (${info.updatedAt}) — skipping`);
+    reporter.unchanged(info.updatedAt);
     return;
   }
 
@@ -48,22 +50,23 @@ export async function runScryfallCardSync(): Promise<void> {
     create: { source: SYNC_SOURCE, status: 'running' },
     update: { status: 'running', lastError: null },
   });
+  reporter.start(info);
 
   try {
     const byteStream = await fetchBulkStream(info.downloadUri);
 
-    let invalidRows = 0;
     const cards = streamNormalizedCards(byteStream, {
       onInvalidRow: (error, index) => {
-        invalidRows += 1;
-        console.warn(`[scryfall-card-sync] skipped invalid row ${index}:`, error);
+        reporter.recordInvalid(index, error);
       },
     });
 
     const seenOracleIds = new Set<string>();
 
     for await (const batch of chunkAsyncIterable(cards, CHUNK_SIZE)) {
-      await upsertChunk(groupChunk(batch, seenOracleIds));
+      const grouped = groupChunk(batch, seenOracleIds);
+      await upsertChunk(grouped);
+      reporter.recordChunk(batch.length, grouped.cards.length);
     }
 
     await prisma.syncState.update({
@@ -77,15 +80,14 @@ export async function runScryfallCardSync(): Promise<void> {
       },
     });
 
-    console.info(
-      `[scryfall-card-sync] done — ${seenOracleIds.size} cards upserted, ${invalidRows} invalid rows skipped`
-    );
+    reporter.done();
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     await prisma.syncState.update({
       where: { source: SYNC_SOURCE },
       data: { status: 'failed', lastError: message },
     });
+    reporter.failed(message);
     throw error;
   }
 }
