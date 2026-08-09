@@ -9,7 +9,7 @@ const BULK_DATA_URL = 'https://api.scryfall.com/bulk-data/default_cards';
  * User-Agent risks being throttled or blocked. See their API guidelines.
  */
 const REQUEST_HEADERS = {
-  'User-Agent': 'Decksmith/1.0',
+  'User-Agent': 'Decksmith/1.0 (+https://github.com/JeremieDrazic/decksmith)',
   Accept: 'application/json',
 };
 
