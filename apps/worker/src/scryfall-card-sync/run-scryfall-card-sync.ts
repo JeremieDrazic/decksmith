@@ -9,9 +9,10 @@ import { upsertChunk } from './upsert-chunk.js';
 // rulings sync would use a different source string against the same table.
 const SYNC_SOURCE = 'default_cards';
 
-// Rows per transaction. Tunable: large enough to amortize round-trips to
-// Supabase, small enough to keep each transaction short and progress granular.
-const CHUNK_SIZE = 500;
+// Rows per transaction. Kept modest so each per-row-upsert transaction stays
+// well under its time budget (see upsert-chunk) and progress stays granular.
+// Raise substantially once bulk INSERT … ON CONFLICT lands (follow-up issue).
+const CHUNK_SIZE = 200;
 
 /**
  * Runs one Scryfall card sync: skip when the upstream dump is unchanged,

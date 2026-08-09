@@ -42,5 +42,11 @@ export async function upsertChunk(chunk: GroupedChunk): Promise<void> {
     });
   });
 
-  await prisma.$transaction([...cardOps, ...faceOps, ...printOps]);
+  // Per-row upserts over the network are slow, so a chunk's transaction can run
+  // past Prisma's 5s default. Raise the budget (and the pool-acquire wait) until
+  // the bulk INSERT … ON CONFLICT rewrite lands (see follow-up issue).
+  await prisma.$transaction([...cardOps, ...faceOps, ...printOps], {
+    timeout: 60_000,
+    maxWait: 15_000,
+  });
 }
