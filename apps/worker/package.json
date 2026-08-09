@@ -1,0 +1,33 @@
+{
+  "name": "@decksmith/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "NODE_OPTIONS='--conditions=source' tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "lint": "oxlint .",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@decksmith/db": "workspace:*",
+    "@decksmith/scryfall": "workspace:*",
+    "@decksmith/utils": "workspace:*",
+    "bullmq": "^6.0.9",
+    "dotenv": "catalog:",
+    "ioredis": "^6.0.0",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@decksmith/config": "workspace:*",
+    "@types/node": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

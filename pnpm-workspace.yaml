@@ -29,6 +29,7 @@ allowBuilds:
   '@sentry/cli': true
   '@swc/core': true
   esbuild: true
+  msgpackr-extract: false # optional native accel for bullmq's msgpackr; JS fallback is fine
   msw: true
   prisma: true
   unrs-resolver: true
