@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitepress';
+import { withMermaid } from 'vitepress-plugin-mermaid';
 
-export default defineConfig({
+export default withMermaid({
   title: 'Decksmith',
   description: 'Magic: The Gathering deck management — architecture, specs, and decisions',
   base: '/docs/',
@@ -180,6 +180,62 @@ export default defineConfig({
 
     footer: {
       message: 'Built with VitePress',
+    },
+  },
+
+  // Mermaid theme — Decksmith accent (violet) layered onto Mermaid's own light/dark
+  // themes. Colors only: the docs site has no font customization yet, so fontFamily
+  // is left unset rather than reference an Outfit that isn't actually loaded here.
+  // TODO(#89): once Outfit is self-hosted for apps/docs, add
+  // themeVariables.fontFamily: "'Outfit', system-ui, sans-serif" here.
+  //
+  // Dark mode: vitepress-plugin-mermaid always forces mermaid's built-in "dark" theme
+  // when <html class="dark"> (see node_modules/vitepress-plugin-mermaid/dist/Mermaid.vue
+  // — `if (hasDarkClass) mermaidConfig.theme = "dark"` runs unconditionally), layering
+  // themeVariables on top rather than replacing it. Two consequences shaped this config:
+  //
+  // 1. No *TextColor override below. An earlier version hardcoded light-mode text hexes
+  //    (e.g. '#0f0e17') — since the dark override only swaps the theme *name*, that
+  //    near-black text was still painted literally on the dark theme's near-black
+  //    background (illegible). Leaving text colors unset lets each built-in theme (base
+  //    for light, dark for dark) apply its own already-contrast-correct default instead.
+  // 2. No solid opaque fills (e.g. '#f2f0e6' surface-raised) — same failure mode: a
+  //    light-toned box under dark mode's light-toned default text is just as illegible
+  //    the other way round. Every fill below is a translucent violet tint instead, so it
+  //    reads as a soft accent over whichever page background shows through, in both modes.
+  //
+  // Net effect: violet (Decksmith's light-mode accent) is used as the single non-adaptive
+  // diagram accent in both themes, rather than swapping to amber for dark like the rest
+  // of the app does — same simplification already applied to `--accent-icon` in
+  // packages/tokens/src/web/colors.css ("static violet — non-adaptive"). Full per-theme
+  // fidelity would need patching the plugin; not worth it for diagram accents.
+  mermaid: {
+    theme: 'base',
+    themeVariables: {
+      fontSize: '15px',
+      background: 'transparent',
+      primaryColor: 'rgba(91, 79, 207, 0.12)',
+      primaryBorderColor: '#5b4fcf',
+      lineColor: '#5b4fcf',
+      secondaryColor: 'rgba(91, 79, 207, 0.06)',
+      tertiaryColor: 'rgba(91, 79, 207, 0.04)',
+
+      // Sequence diagrams
+      actorBkg: 'rgba(91, 79, 207, 0.12)',
+      actorBorder: '#5b4fcf',
+      actorLineColor: 'rgba(91, 79, 207, 0.35)',
+      signalColor: '#5b4fcf',
+      labelBoxBkgColor: 'rgba(91, 79, 207, 0.12)',
+      labelBoxBorderColor: '#5b4fcf',
+      noteBkgColor: 'rgba(91, 79, 207, 0.12)',
+      noteBorderColor: '#5b4fcf',
+      activationBkgColor: 'rgba(91, 79, 207, 0.16)',
+      activationBorderColor: 'rgba(91, 79, 207, 0.4)',
+    },
+    sequence: {
+      actorFontSize: 15,
+      messageFontSize: 15,
+      noteFontSize: 14,
     },
   },
 });
