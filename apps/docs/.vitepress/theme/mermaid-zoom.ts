@@ -20,15 +20,15 @@ async function openOverlay(sourceSvg: SVGSVGElement) {
   // here since nothing looks it up via getElementById.
   const svg = sourceSvg.cloneNode(true) as SVGSVGElement;
   svg.classList.add('mermaid-zoom-svg');
-  backdrop.appendChild(svg);
+  backdrop.append(svg);
 
   const closeButton = document.createElement('button');
   closeButton.className = 'mermaid-zoom-close';
   closeButton.setAttribute('aria-label', 'Close diagram zoom');
   closeButton.textContent = '×';
-  backdrop.appendChild(closeButton);
+  backdrop.append(closeButton);
 
-  document.body.appendChild(backdrop);
+  document.body.append(backdrop);
   document.body.style.overflow = 'hidden';
 
   const instance = svgPanZoom(svg, {
@@ -40,23 +40,28 @@ async function openOverlay(sourceSvg: SVGSVGElement) {
     maxZoom: 10,
   });
 
-  const close = () => {
+  const keydownController = new AbortController();
+
+  function close() {
     instance.destroy();
     backdrop.remove();
     document.body.style.overflow = '';
-    document.removeEventListener('keydown', onKeydown);
+    keydownController.abort();
     closeOverlay = null;
-  };
-
-  function onKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') close();
   }
+
+  document.addEventListener(
+    'keydown',
+    (event) => {
+      if (event.key === 'Escape') close();
+    },
+    { signal: keydownController.signal }
+  );
 
   backdrop.addEventListener('click', (event) => {
     if (event.target === backdrop) close();
   });
   closeButton.addEventListener('click', close);
-  document.addEventListener('keydown', onKeydown);
 
   closeOverlay = close;
 }
@@ -71,11 +76,11 @@ function ensureZoomBadge(mermaidEl: Element) {
   badge.className = 'mermaid-zoom-badge';
   badge.setAttribute('aria-hidden', 'true');
   badge.innerHTML = ZOOM_BADGE_ICON;
-  mermaidEl.appendChild(badge);
+  mermaidEl.append(badge);
 }
 
 function watchMermaidDiagrams() {
-  document.querySelectorAll('.mermaid').forEach(ensureZoomBadge);
+  for (const mermaidEl of document.querySelectorAll('.mermaid')) ensureZoomBadge(mermaidEl);
 
   // Mermaid.vue fully replaces its own innerHTML (v-html) on every re-render
   // — including on dark/light toggle, which it watches for independently —
@@ -93,7 +98,7 @@ function watchMermaidDiagrams() {
       for (const node of mutation.addedNodes) {
         if (!(node instanceof Element)) continue;
         if (node.matches('.mermaid')) ensureZoomBadge(node);
-        else node.querySelectorAll('.mermaid').forEach(ensureZoomBadge);
+        else for (const mermaidEl of node.querySelectorAll('.mermaid')) ensureZoomBadge(mermaidEl);
       }
     }
   });
@@ -109,7 +114,7 @@ function watchMermaidDiagrams() {
  * only renders the <svg> — so that part still needs the observer above.
  */
 export function setupMermaidZoom() {
-  if (typeof window === 'undefined') return;
+  if (globalThis.window === undefined) return;
 
   watchMermaidDiagrams();
 
