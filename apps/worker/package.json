@@ -1,31 +1,33 @@
 {
-  "name": "@decksmith/scryfall",
+  "name": "@decksmith/worker",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "files": [
     "dist"
   ],
-  "exports": {
-    ".": {
-      "source": "./src/index.ts",
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "dev": "NODE_OPTIONS='--conditions=source' tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "sync:once": "NODE_OPTIONS='--conditions=source' tsx src/sync-once.ts",
     "lint": "oxlint .",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@decksmith/domain": "workspace:*",
+    "@decksmith/db": "workspace:*",
+    "@decksmith/scryfall": "workspace:*",
+    "@decksmith/utils": "workspace:*",
+    "bullmq": "^6.0.9",
+    "dotenv": "catalog:",
+    "ioredis": "^6.0.0",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@types/node": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

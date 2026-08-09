@@ -3,18 +3,24 @@
  * risks being throttled or blocked. See their API guidelines.
  */
 const REQUEST_HEADERS = {
-  'User-Agent': 'Decksmith/1.0',
+  'User-Agent': 'Decksmith/1.0 (+https://github.com/JeremieDrazic/decksmith)',
 };
 
 /**
- * Downloads a Scryfall bulk dump and returns its raw byte stream, ready to feed
- * to {@link streamNormalizedCards} — the file is never buffered in full.
+ * Downloads a Scryfall bulk dump and returns its decompressed byte stream, ready
+ * to feed to {@link streamNormalizedCards} — the file is never buffered in full.
  *
- * The download URI comes from {@link getBulkDataInfo}; this function is a thin
- * network layer on purpose, so parsing stays testable without hitting the wire.
+ * The dump is served as gzipped JSONL (`.jsonl.gz`) with `Content-Type:
+ * application/gzip` and no `Content-Encoding`, so `fetch` does not decompress it
+ * for us. We pipe the body through a `DecompressionStream('gzip')`, keeping the
+ * whole thing streaming — decompression happens chunk by chunk, in step with the
+ * downstream parser's backpressure.
  *
- * @param downloadUri - The dump's `download_uri` from the bulk-data metadata
- * @returns The response body as a stream of bytes
+ * The download URI comes from {@link getBulkDataInfo}; this stays a thin network
+ * layer on purpose, so parsing stays testable without hitting the wire.
+ *
+ * @param downloadUri - The dump's `jsonl_download_uri` from the bulk-data metadata
+ * @returns The decompressed response body as a stream of bytes
  * @throws If the request fails (non-2xx status) or the response has no body
  */
 export async function fetchBulkStream(downloadUri: string): Promise<ReadableStream<Uint8Array>> {
@@ -29,5 +35,5 @@ export async function fetchBulkStream(downloadUri: string): Promise<ReadableStre
     throw new Error('Scryfall bulk download returned no body');
   }
 
-  return res.body;
+  return res.body.pipeThrough(new DecompressionStream('gzip'));
 }

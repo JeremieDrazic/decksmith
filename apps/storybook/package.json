@@ -16,18 +16,18 @@
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@decksmith/tokens": "workspace:*",
-    "@storybook/addon-a11y": "^10.4.3",
-    "@storybook/addon-docs": "^10.4.3",
-    "@storybook/addon-themes": "^10.4.3",
-    "@storybook/react-vite": "^10.4.3",
+    "@storybook/addon-a11y": "^10.5.7",
+    "@storybook/addon-docs": "^10.5.7",
+    "@storybook/addon-themes": "^10.5.7",
+    "@storybook/react-vite": "^10.5.7",
     "@storybook/test-runner": "^0.24.4",
-    "@tailwindcss/vite": "^4.3.0",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "axe-playwright": "^2.2.2",
-    "playwright": "^1.61.0",
-    "storybook": "^10.4.3",
+    "playwright": "^1.62.1",
+    "storybook": "^10.5.7",
     "typescript": "catalog:",
-    "vite": "^8.0.16"
+    "vite": "^8.2.1"
   }
 }

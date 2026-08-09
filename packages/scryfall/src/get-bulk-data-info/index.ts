@@ -9,7 +9,7 @@ const BULK_DATA_URL = 'https://api.scryfall.com/bulk-data/default_cards';
  * User-Agent risks being throttled or blocked. See their API guidelines.
  */
 const REQUEST_HEADERS = {
-  'User-Agent': 'Decksmith/1.0',
+  'User-Agent': 'Decksmith/1.0 (+https://github.com/JeremieDrazic/decksmith)',
   Accept: 'application/json',
 };
 
@@ -36,8 +36,8 @@ export async function getBulkDataInfo(): Promise<BulkDataInfo> {
   const raw = ScryfallBulkDataSchema.parse(await res.json());
 
   return {
-    downloadUri: raw.download_uri,
+    downloadUri: raw.jsonl_download_uri,
     updatedAt: raw.updated_at,
-    size: raw.size,
+    size: raw.compressed_size,
   };
 }

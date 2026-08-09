@@ -173,11 +173,33 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 3.2 Initial Data Sync (apps/worker)
 
-- ⬜ BullMQ + Redis setup in `apps/worker`
-- ⬜ `scryfall-sync` job + daily cron schedule
-- ⬜ Incremental update handling
-- ⬜ In-memory caching layer (déplacé depuis 3.1 — suivi de sync + métadonnées bulk)
-- ⬜ ADR : worker → DB (Prisma direct vs via API)
+- ✅ ADR : worker → DB — **Prisma direct** (ADR-0030). Worker = pair backend, écrit les tables de
+  référence uniquement (Card/CardPrint/CardFace), zéro règle métier, préserve le streaming de 3.1.
+- ✅ ADR : job queue — **BullMQ + Redis auto-hébergé** (ADR-0031). Redis en conteneur (compose
+  minimal en dev, service interne en prod), Upstash abandonné (facturation à la commande × polling
+  BullMQ).
+- ✅ BullMQ + Redis setup in `apps/worker` — `@decksmith/worker` réel (bullmq + ioredis), factory de
+  connexion Redis (`maxRetriesPerRequest: null`), `docker-compose.yml` dev (Redis seul), script
+  `dev:backend` (Redis + api + worker en parallèle via turbo). Boot vérifié en local.
+- ✅ `scryfall-card-sync` job + daily cron — `Queue` + `Worker` BullMQ, `upsertJobScheduler` (cron
+  `0 6 * * *`), concurrency 1 (pas de chevauchement), retries idempotent-safe. Déclencheur one-shot
+  `sync:once` (sans Redis) pour l'ingestion manuelle.
+- ✅ Incremental update handling — check `getBulkDataInfo().updatedAt` vs `SyncState` (comparaison
+  par instant), skip si inchangé.
+- ✅ Sync-state persistence (`SyncState` — source/status/lastDumpUpdatedAt/lastSyncedAt/
+  lastCardCount/lastError ; ADR-0031, migration `db:push`).
+- ✅ Batch upsert (Card/CardPrint/CardFace) — `groupChunk` pur (dédup par oracleId, ordre FK) +
+  `upsertChunk` (transaction par chunk, upsert sur clés naturelles = idempotent).
+  `chunkAsyncIterable` dans `packages/utils`.
+- ✅ Fix Scryfall JSONL — l'API a migré `default_cards` vers du **gzip JSONL** (`.jsonl.gz`,
+  `jsonl_download_uri`/`compressed_size`) ; client 3.1 adapté (`DecompressionStream` + parsing JSONL
+  via `readline`). Chemin de **lecture prouvé en réel**.
+- ⏳ **Validation end-to-end du chemin d'écriture — en attente.** P2028 (timeout transaction)
+  contourné (chunk 200 + timeout 60 s ; vrai fix bulk `ON CONFLICT` → #96). Puis bloqué par un
+  challenge bot Cloudflare de Scryfall (403, temporaire, non lié au code). À relancer
+  (`pnpm worker:sync:once`) une fois l'IP déflaggée.
+- ⬜ Déploiement du worker en prod (4ᵉ image Docker api/web/statics/**worker** + Redis conteneur
+  interne) — follow-up ADR-0031.
 
 ### 3.3 Card API
 
@@ -378,7 +400,7 @@ _Dependency: Phase 4.1 (apps/web initialized)_
 
 ### 9.2 Worker Infrastructure
 
-- ⬜ Redis (Docker for dev, Upstash for production)
+- ⬜ Redis — self-hosted container (introduit en Phase 3.2, ADR-0031 ; Upstash abandonné)
 - ⬜ BullMQ PDF job
 
 ### 9.3 PDF API + UI

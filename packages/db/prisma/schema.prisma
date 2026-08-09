@@ -170,6 +170,23 @@ model CardFace {
   @@map("card_faces")
 }
 
+/// Bookkeeping for the worker's data-sync jobs (ADR-0031). One row per sync source
+/// ("default_cards", later "prices", "rulings"). Lets `scryfall-sync` skip a run when the
+/// upstream dump has not changed since the last successful sync (incremental sync).
+model SyncState {
+  source            String    @id // e.g. "default_cards"
+  status            String? // "success" | "running" | "skipped" | "failed"
+  lastDumpUpdatedAt DateTime? @map("last_dump_updated_at") // Scryfall updatedAt of the last processed dump
+  lastSyncedAt      DateTime? @map("last_synced_at") // When a run last succeeded
+  lastCardCount     Int?      @map("last_card_count") // Only set on a run that upserted
+  lastError         String?   @map("last_error") // Failure message when status = "failed"
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("sync_state")
+}
+
 // =============================================================================
 // DECK MODELS
 // =============================================================================

@@ -4,6 +4,31 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-08-09] — Scryfall migrated bulk data to gzipped JSONL — client reworked
+
+**Context:** The first real Phase 3.2 worker run surfaced that Scryfall's `/bulk-data/default_cards`
+now serves **gzipped JSONL** (`.jsonl.gz`, fields `jsonl_download_uri` / `compressed_size`), not the
+JSON array (`download_uri` / `size`) the 3.1 client assumed. The 3.1 tests were mocked, so the drift
+was latent until first live integration.
+
+**Decision:** rework the three `packages/scryfall` bricks (signatures unchanged, so the worker is
+untouched):
+
+- `getBulkDataInfo` reads `jsonl_download_uri` / `compressed_size`.
+- `fetchBulkStream` pipes the body through `DecompressionStream('gzip')` — the file is served
+  `Content-Type: application/gzip` with **no** `Content-Encoding`, so `fetch` does not
+  auto-decompress.
+- `streamNormalizedCards` parses **JSONL line-by-line via Node's built-in `readline`**
+  (`Readable.fromWeb`), replacing `@streamparser/json-whatwg` (now removed). Chosen over a
+  hand-rolled line buffer: readline is the canonical, official way to read a stream by lines.
+  **Supersedes** the streaming-JSON-array decision below.
+
+**Impact:** `packages/scryfall` (3 functions + tests), `@streamparser/json-whatwg` dependency
+dropped. Read path verified against the live API. **Lesson:** verify an external API's real response
+shape against the live endpoint before building on it — mocks alone hid this for a whole phase.
+
+---
+
 ## [2026-08-09] — Bulk download client + `@streamparser/json-whatwg` (streaming JSON)
 
 **Context:** Phase 3.1's last step — the client that turns Scryfall's `default_cards` bulk dump into

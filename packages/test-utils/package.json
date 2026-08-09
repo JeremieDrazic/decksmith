@@ -19,13 +19,13 @@
   },
   "dependencies": {
     "@decksmith/schema": "workspace:*",
-    "msw": "^2.14.6"
+    "msw": "^2.15.0"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
-    "@tanstack/react-query": "^5.101.0",
-    "@types/react": "^19.1.8",
-    "react": "^19.2.7",
+    "@tanstack/react-query": "^5.101.4",
+    "@types/react": "^19.2.18",
+    "react": "^19.2.8",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

@@ -1,9 +1,10 @@
 # Project State
 
-_Updated: 2026-08-09 (Phase 3.1 **complete** — bulk download client (streaming) in
-`packages/scryfall`; on branch `feat/scryfall-bulk-client`). This file describes the **current**
-state only: environment, what works today, blockers, and what's next. Per-session history lives in
-`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-08-09 (Phase 3.2 **code-complete** — `apps/worker` `scryfall-card-sync` job (BullMQ +
+Redis, ADR-0030/0031); write-path end-to-end validation pending a Scryfall Cloudflare unblock. On
+branch `feat/scryfall-sync-worker`). This file describes the **current** state only: environment,
+what works today, blockers, and what's next. Per-session history lives in `decisions-log.md`, the
+merged PRs, and git — see also `retrospectives/`._
 
 ---
 
@@ -26,31 +27,38 @@ state only: environment, what works today, blockers, and what's next. Per-sessio
 ## What's Working (today)
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
-7): 0 errors. `pnpm test`: 266 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
-6 utils · 41 web-ui · 37 services · 14 web · 20 scryfall). Storybook CI runs play functions + axe on
-every story.
+7): 0 errors. `pnpm test`: 276 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
+11 utils · 41 web-ui · 37 services · 14 web · 20 scryfall · 5 worker). Storybook CI runs play
+functions + axe on every story.
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
 (register, login, logout, refresh, forgot/reset-password, `GET /me`), Zod type provider, error
 handler with `ServiceError` exception mapper (ADR-0024), auth plugin (`app.authenticate`), rate
 limiting + CORS. All orchestration in `packages/services`; routes are HTTP glue.
 
-**Database** — Prisma 7 schema (17 models — `CardFace` added for multi-face cards, ADR-0029) synced
-to Supabase via session pooler; Supabase client working from `packages/db`. RLS policies applied and
-verified (4 policies on the `authenticated` role — defense-in-depth, the API bypasses RLS; ADR-0022,
-session 25).
+**Database** — Prisma 7 schema (18 models — `SyncState` added for worker sync bookkeeping, ADR-0031;
+`CardFace` for multi-face cards, ADR-0029) synced to Supabase via session pooler; Supabase client
+working from `packages/db`. RLS policies applied and verified (4 policies on the `authenticated`
+role — defense-in-depth, the API bypasses RLS; ADR-0022, session 25).
 
 **Frontend** — `pnpm dev:web` → `localhost:3001`. TanStack Start SSR: auth pages (login, register,
 forgot-password), `_authenticated` guard (`beforeLoad` + SSR cookie forwarding, ADR-0023),
 dashboard, root redirect by auth state. Cookie-based theme + language (SSR-safe, no FOUC/FOUT), i18n
 EN + FR from `packages/i18n` (ADR-0025).
 
+**Worker** — `apps/worker` (`pnpm dev:worker`, or `pnpm dev:backend` for Redis + api + worker):
+`scryfall-card-sync` job on BullMQ (daily cron, concurrency 1, idempotent retries), writing
+`Card`/`CardPrint`/`CardFace` via Prisma directly (ADR-0030). Composes the 3.1 bricks →
+`chunkAsyncIterable` → `groupChunk` (dedup, FK order) → `upsertChunk` (per-chunk transaction). Redis
+via `docker-compose.yml` (dev). Boot verified; one-off trigger `pnpm worker:sync:once`.
+
 **Packages** — `tokens` (tokens.css single source of truth), `web-ui` (~40 components + hooks, all
 Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
-codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard` + bulk download
-client: `getBulkDataInfo` / `fetchBulkStream` / `streamNormalizedCards`, provider knowledge),
-`api-client`, `query`, `services`, `test-utils`, `utils`, `i18n`, `db`. Build pipeline compiles
-packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
+codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard` + bulk client:
+`getBulkDataInfo` / `fetchBulkStream` (gzip) / `streamNormalizedCards` (JSONL via readline),
+provider knowledge), `api-client`, `query`, `services`, `test-utils`, `utils` (+
+`chunkAsyncIterable`), `i18n`, `db`. Build pipeline compiles packages to `dist/`; `apps/api` runs
+compiled `node dist/index.js`.
 
 **Production** — fully deployed, see Infrastructure below.
 
@@ -64,7 +72,11 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## What's NOT Working / Blockers
 
-- `apps/worker`, `apps/mobile` are empty shells
+- **Phase 3.2 write-path validation pending** — `pnpm worker:sync:once` reaches Scryfall then gets a
+  Cloudflare bot challenge (403, `cf-mitigated: challenge`) on `api.scryfall.com`, triggered by the
+  day's repeated automated requests. Not a code bug (read path proven in isolation); clears after an
+  IP cooldown — retry later. The DB write path itself is untested end-to-end until then.
+- `apps/mobile` is an empty shell
 - OAuth providers (Google, GitHub) not yet enabled in Supabase dashboard
 - Supabase email confirmation **disabled** (dev-only) — re-enable before production or when the
   email confirmation flow is implemented
@@ -73,7 +85,11 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
   seeding
 - `apps/api` tests use mocked Prisma/Supabase — real-DB CI (Docker PostgreSQL) pending, see
   `test-strategy.md`
-- No local dev docker-compose (Postgres + Redis) — apps run natively against Supabase cloud
+- Dev docker-compose now exists but Redis-only (Postgres stays on Supabase cloud); needs OrbStack/
+  Docker running for the worker
+- Batch upsert is per-row-in-transaction (slow, ~15 min for the full dump); bulk
+  `INSERT … ON CONFLICT` optimization tracked in #96 (P2028 timeout worked around with chunk 200 +
+  60 s budget)
 - `packages/query` has no `useCardSearch` — blocked on Phase 3 (Scryfall)
 - Deploy workflow actions target deprecated Node 20 — bump in a future session
 - Storybook preview: brief light-theme flash on story change (cosmetic)
@@ -88,17 +104,15 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.1 complete (branch `feat/scryfall-bulk-client`)** — bulk download client shipped:
-  `getBulkDataInfo` (metadata), `fetchBulkStream` (dump bytes), `streamNormalizedCards` (async
-  generator via `@streamparser/json-whatwg`, backpressure, `onInvalidRow` skip+report). Network
-  isolated from parsing; the file is never buffered whole. Public surface of `packages/scryfall`
-  complete. Also fixed the silently-broken scryfall build (tsconfig `node` preset + `.js`
-  extensions); CI-build-gate follow-up #91. Deferred: `foil`→`finish` enum #85, GIN index on
-  `Card.keywords` → 3.3.
-- **Next concrete step: Phase 3.2 (`apps/worker`)** — BullMQ + Redis setup, `scryfall-sync` job that
-  composes the 3 bricks (`getBulkDataInfo` → compare `updatedAt` → `fetchBulkStream` →
-  `streamNormalizedCards` → batch upsert), daily cron, incremental handling. **ADR first: worker→DB
-  (Prisma direct vs via API)** + ADR for BullMQ/Redis (significant deps).
+- **Immediate: finish Phase 3.2 validation** — once Scryfall's Cloudflare challenge clears, run
+  `pnpm worker:sync:once` to validate the write path end-to-end (expect ~15 min), then verify
+  `cards`/`card_prints`/`sync_state` in `pnpm db:studio` (`status = success`, `lastCardCount`).
+- **Then #96** — bulk `INSERT … ON CONFLICT` upsert (removes the P2028 workaround, ~seconds instead
+  of ~15 min). First ticket next session.
+- **Phase 3.2 tail** — deploy the worker in prod (4th Docker image + internal Redis container,
+  ADR-0031 follow-up).
+- **Phase 3.3 (Card API)** — `GET /cards/search` + `/cards/:id` + autocomplete; GIN index on
+  `Card.keywords`; `foil`→`finish` enum (#85).
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -109,8 +123,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- `feat/scryfall-bulk-client` — bulk download client (streaming) + scryfall build fix (not yet
-  pushed / no PR opened)
+- `feat/scryfall-sync-worker` — Phase 3.2 worker + ADR-0030/0031 + SyncState + Scryfall JSONL fix
+  (PR opened this session; includes the `chore/deps-safe-bumps` commit)
 - `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
 
 ---
@@ -144,8 +158,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `feat/scryfall-bulk-client` — bulk download client (streaming) + scryfall build fix + `.types.ts`
-  convention. Based on `main` @ `08af255` (#90 field extension merged; live at **v1.4.0**).
+- `feat/scryfall-sync-worker` — Phase 3.2 worker (ADR-0030/0031, `SyncState`, batch upsert),
+  Scryfall gzipped-JSONL fix, safe dep bumps. Based on `main` @ `a160f6c` (#92 bulk client merged;
+  live at **v1.4.0**). 8 commits; PR opened this session.
 
 ---
 

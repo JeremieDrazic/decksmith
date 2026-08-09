@@ -1,0 +1,22 @@
+# Local dev infrastructure. Only Redis lives here — Postgres runs on Supabase
+# cloud (apps connect natively), so this file is deliberately minimal.
+#
+#   Start:  docker compose up -d redis
+#   Stop:   docker compose down
+#
+# The prod Redis (deploy/compose.yml, on the VPS) uses the same image for
+# dev/prod parity, but adds a password and stays on the internal network only
+# (ADR-0031). No auth here since it binds to localhost.
+services:
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    # Enable AOF persistence so queue state survives a container restart.
+    command: redis-server --appendonly yes
+
+volumes:
+  redis-data:

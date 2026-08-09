@@ -163,6 +163,23 @@ concepts introduced in pair mode score ✅ at the next self-assessment.
   depends on this child?" Jérémie's miss: reversed the direction (thought it governed deleting the
   child). Re-check at the collection/deck CRUD (Phase 6/7).
 
+- **Added 2026-08-09 (P2) — BullMQ scheduler / queue / worker roles + worker lifecycle:** three
+  distinct pieces, not two. The **scheduler** (`upsertJobScheduler` + cron) is what "wakes at 6h"
+  and **produces** a job; the **queue** is just the mailbox (a Redis list) where the job waits — it
+  does nothing on its own; the **worker** watches the queue and executes. And `new Worker(...)`
+  needs no `.start()` — its constructor opens the Redis connection and launches the background poll
+  loop, so the object existing _is_ the work running. Jérémie's miss: merged scheduler into "the
+  queue wakes up", and skipped the no-`.start()` lifecycle. Re-check at Phase 9 (PDF worker).
+
+- **Added 2026-08-09 (P2) — the two concerns behind "Prisma never outside the API" (ADR-0030):** (1)
+  **Prisma is server-only** — it must never reach a _client bundle_; that's the real reason
+  `apps/web` (which ships code to the browser) is blocked. (2) **DTO contract** — HTTP consumers get
+  stable DTOs, not raw models. The worker is server-side (no bundle) and a backend peer in the same
+  trust zone (not an HTTP consumer), so neither applies. Jérémie's miss: got concern #2
+  (internal/external) + the "pointless hop" harm, but missed concern #1 (server-only / client
+  bundle) — the one that specifically explains why `apps/web` is blocked. Re-check at Phase 3.3
+  (Card API) or any new `packages/db` consumer.
+
 ### E3 — Retention check at session end
 
 `session.end` gains a step: 2–3 questions on the concepts introduced during the session. Misses join
