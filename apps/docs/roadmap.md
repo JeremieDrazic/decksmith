@@ -165,7 +165,11 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   `Card`) + `CardPrint.finishes` replacing `foil`/`nonfoil`. Prisma migration + `db-reviewer` +
   `db:push` → schema DTOs → scryfall raw schemas + normalization + tests. Follow-up #85
   (collection/deck `foil` boolean → `finish` enum). GIN index on `Card.keywords` deferred to 3.3
-- ⬜ Bulk data download client (streaming)
+- ✅ Bulk data download client (streaming) — `getBulkDataInfo` (metadata) + `fetchBulkStream` (dump
+  bytes) + `streamNormalizedCards` (async generator via `@streamparser/json-whatwg`, backpressure,
+  `onInvalidRow` skip+report). Network isolated from parsing; 3 bricks, no Prisma/batch/cron (that's
+  3.2). Also fixed the silently-broken scryfall build (tsconfig `node` preset + `.js` extensions) →
+  CI-build-gate follow-up #91. **3.1 complete.**
 
 ### 3.2 Initial Data Sync (apps/worker)
 

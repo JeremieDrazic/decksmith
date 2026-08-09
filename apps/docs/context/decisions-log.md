@@ -4,6 +4,54 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-08-09] — Bulk download client + `@streamparser/json-whatwg` (streaming JSON)
+
+**Context:** Phase 3.1's last step — the client that turns Scryfall's `default_cards` bulk dump into
+normalized cards. The dump is a single JSON array (~2 GB, ~90k rows); `JSON.parse` would buffer all
+the bytes then materialize a 90k-object array at once → memory blowup. We need to parse
+incrementally and process one card at a time.
+
+**Decision — dependency:** add `@streamparser/json-whatwg` (v0.0.23), a streaming JSON parser
+exposed as a WHATWG `TransformStream`. Chosen over `stream-json`: **zero runtime dependencies**, and
+it consumes `fetch().body` (a WHATWG `ReadableStream`) directly — `stream-json` speaks the legacy
+Node streams API and would need a `Readable.fromWeb(...)` adapter. Logged here, **not an ADR**: a
+scoped parsing utility, not an infra/runtime brick (unlike Redis/BullMQ).
+
+**Decision — architecture:** three bricks, network deliberately isolated from parsing so the
+pipeline is testable without hitting the wire:
+
+- `getBulkDataInfo()` → `{ downloadUri, updatedAt, size }` (metadata endpoint — cheap)
+- `fetchBulkStream(uri)` → `ReadableStream<Uint8Array>` (thin fetch of the dump)
+- `streamNormalizedCards(bytes)` → `AsyncGenerator<NormalizedCardBundle>` (parse → validate → filter
+  → normalize)
+
+The output contract is an **async generator** yielding one bundle at a time → backpressure for free:
+the parser only advances when the consumer pulls, so a slow DB write upstream (3.2) pauses parsing
+instead of flooding memory. Invalid rows are **skipped and reported via an
+`onInvalidRow(error, index)` callback** (never thrown per-row — one bad card can't abort a 90k sync;
+a pure lib reports, it doesn't log); non-collectible cards are skipped silently. A **stream-level**
+failure (network drop, structurally broken JSON) throws and propagates — that's fatal, unlike a bad
+row.
+
+**3.1 / 3.2 boundary:** `packages/scryfall` produces the normalized stream and knows Scryfall
+(endpoints, wire format). The worker (3.2) composes the three bricks, batches, and persists via
+Prisma. `updatedAt` is the incremental hook — the metadata call is cheap, so the worker can skip the
+2 GB download when the dump hasn't changed.
+
+**Tooling fix (same branch):** `packages/scryfall/tsconfig.json` extended `base.json` (`bundler`, no
+node types) while its `tsconfig.build.json` used `node.json` (`NodeNext`). The two disagreed, and
+`pnpm build` was **silently broken on `main`** — `normalize-card` had relative imports missing the
+`.js` extension, which only `NodeNext` rejects, and CI runs lint/typecheck/test but **not** package
+builds. Fixed: `tsconfig.json` now extends `node.json`, `@types/node` added as a devDep, `.js`
+extensions added. Follow-up: a GitHub issue to add package builds to the CI gate.
+
+**Impact:** `packages/scryfall/` — new `get-bulk-data-info/`, `fetch-bulk-stream/`,
+`stream-normalized-cards/`, `schemas/scryfall-bulk-data.ts`; `tsconfig.json`; `package.json`
+(`@streamparser/json-whatwg`, `@types/node`). Bulk client public surface complete; consumed by the
+worker in 3.2.
+
+---
+
 ## [2026-08-03] — Phase 3.1 field mini-scope: gameplay stats + `finishes` (extends ADR-0029)
 
 **Context:** the initial 3.1 model kept a minimal field set. Before writing the bulk download

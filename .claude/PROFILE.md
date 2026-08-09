@@ -67,18 +67,19 @@ Les ratés rejoignent le backlog de consolidation dans
 
 ## Règles de code
 
-| Règle                                   | Détail                                                       |
-| --------------------------------------- | ------------------------------------------------------------ |
-| `type` pas `interface`                  | `export type Foo = ...` toujours                             |
-| Base UI, pas Radix                      | `@base-ui/react` — cf. ADR-0018                              |
-| Pas de `var(--...)` dans les composants | Classes Tailwind uniquement — jamais de CSS vars arbitraires |
-| Rendu conditionnel                      | `x ? <El /> : null` — jamais `x && <El />`                   |
-| Un export par fichier                   | Pas de `shared.ts` / barrel de utils                         |
-| Consts à usage unique                   | Colocalisées dans le composant, pas dans un lib partagé      |
-| Playground en premier                   | Premier export dans chaque `*.stories.tsx`, avant Default    |
-| Jamais éditer les fichiers générés      | `routeTree.gen.ts`, `*.gen.ts` → régénérer via le dev server |
-| Semantic tokens uniquement              | Jamais de hex hardcodé dans les composants                   |
-| Pas de commentaires évidents            | Seulement quand le WHY est non-évident                       |
+| Règle                                   | Détail                                                              |
+| --------------------------------------- | ------------------------------------------------------------------- |
+| `type` pas `interface`                  | `export type Foo = ...` toujours                                    |
+| Base UI, pas Radix                      | `@base-ui/react` — cf. ADR-0018                                     |
+| Pas de `var(--...)` dans les composants | Classes Tailwind uniquement — jamais de CSS vars arbitraires        |
+| Rendu conditionnel                      | `x ? <El /> : null` — jamais `x && <El />`                          |
+| Un export par fichier                   | Pas de `shared.ts` / barrel de utils                                |
+| Fichier type-only → `.types.ts`         | `<concept>.types.ts` (kebab du type PascalCase) — jamais `types.ts` |
+| Consts à usage unique                   | Colocalisées dans le composant, pas dans un lib partagé             |
+| Playground en premier                   | Premier export dans chaque `*.stories.tsx`, avant Default           |
+| Jamais éditer les fichiers générés      | `routeTree.gen.ts`, `*.gen.ts` → régénérer via le dev server        |
+| Semantic tokens uniquement              | Jamais de hex hardcodé dans les composants                          |
+| Pas de commentaires évidents            | Seulement quand le WHY est non-évident                              |
 
 ---
 

@@ -1,13 +1,13 @@
 import { sortColorIdentity, type ColorIdentity } from '@decksmith/domain';
-import type { ScryfallCard } from '../schemas/scryfall-card';
+import type { ScryfallCard } from '../schemas/scryfall-card.js';
 import type {
   NormalizedCard,
   NormalizedCardBundle,
   NormalizedFace,
   NormalizedImageUris,
   NormalizedPrint,
-} from './normalized-card';
-import type { ScryfallImageUris } from '../schemas/scryfall-image-uris';
+} from './normalized-card.types.js';
+import type { ScryfallImageUris } from '../schemas/scryfall-image-uris.js';
 
 /** Maps Scryfall's snake_case image sizes to our camelCase shape. */
 function toImageUris(uris: ScryfallImageUris): NormalizedImageUris {

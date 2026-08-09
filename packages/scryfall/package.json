@@ -21,10 +21,12 @@
   },
   "dependencies": {
     "@decksmith/domain": "workspace:*",
+    "@streamparser/json-whatwg": "^0.0.23",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
+    "@types/node": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
