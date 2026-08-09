@@ -10,14 +10,18 @@ import { z } from 'zod';
  * DTO. Only the fields we actually read are declared — Zod strips the rest, so
  * the schema stays small and survives Scryfall adding fields.
  *
+ * Scryfall serves bulk dumps as gzipped JSONL (`.jsonl.gz`), so we read
+ * `jsonl_download_uri` (the download) and `compressed_size` (bytes on the wire);
+ * the legacy `download_uri`/`size` JSON-array fields were dropped.
+ *
  * `updated_at` is the incremental hook: the worker compares it against its last
  * sync to decide whether to re-download the (multi-GB) dump. Kept as a string
  * (ISO 8601) — the consumer parses it if needed.
  */
 export const ScryfallBulkDataSchema = z.object({
-  download_uri: z.string(),
+  jsonl_download_uri: z.string(),
   updated_at: z.string(),
-  size: z.number(),
+  compressed_size: z.number(),
 });
 
 export type ScryfallBulkData = z.infer<typeof ScryfallBulkDataSchema>;

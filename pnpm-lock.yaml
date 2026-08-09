@@ -508,9 +508,6 @@ importers:
       '@decksmith/domain':
         specifier: workspace:*
         version: link:../domain
-      '@streamparser/json-whatwg':
-        specifier: ^0.0.23
-        version: 0.0.23
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -2959,12 +2956,6 @@ packages:
     hasBin: true
     peerDependencies:
       storybook: ^0.0.0-0 || ^10.0.0 || ^10.0.0-0 || ^10.1.0-0 || ^10.2.0-0 || ^10.3.0-0 || ^10.4.0-0 || ^10.5.0-0 || ^10.6.0-0
-
-  '@streamparser/json-whatwg@0.0.23':
-    resolution: {integrity: sha512-L6/1P1etb6YK7oX07Hyi7VjbO3HVgPXZG6HiyY5C9Q4NQdehqP04MBly77ywtNxsyF2ZHO7drwvQwoni/4D2Ew==}
-
-  '@streamparser/json@0.0.23':
-    resolution: {integrity: sha512-givIVGxVGwP2oh5wiGdjQBKLZAS6LMkvnOxKybKTZDWP9LCO20eAzAL8OkUg8iR7u28cB2Ti7lFfLHnAAZGN6A==}
 
   '@supabase/auth-js@2.112.2':
     resolution: {integrity: sha512-l1InCp4j98d09LZ6+RgubgF4eVPGBGXcLEhFusLg1qUCHJ2IEkYu5FohKK+eaFmIOwEk0kqG/j/lycw5e15mcQ==}
@@ -9534,12 +9525,6 @@ snapshots:
       - node-notifier
       - supports-color
       - ts-node
-
-  '@streamparser/json-whatwg@0.0.23':
-    dependencies:
-      '@streamparser/json': 0.0.23
-
-  '@streamparser/json@0.0.23': {}
 
   '@supabase/auth-js@2.112.2':
     dependencies:

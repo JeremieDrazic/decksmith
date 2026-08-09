@@ -1,20 +1,38 @@
+import { gzipSync } from 'node:zlib';
+
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { fetchBulkStream } from './index.js';
 
-const DOWNLOAD_URI = 'https://data.scryfall.io/default-cards/default-cards.json';
+const DOWNLOAD_URI = 'https://data.scryfall.io/default-cards/default-cards.jsonl.gz';
+
+async function readAll(stream: ReadableStream<Uint8Array>): Promise<string> {
+  const reader = stream.getReader();
+  const chunks: Uint8Array[] = [];
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    chunks.push(value);
+  }
+  return Buffer.concat(chunks).toString('utf8');
+}
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
 describe('fetchBulkStream', () => {
-  it('returns the response body as a byte stream', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response('[]')));
+  it('decompresses the gzipped body into a byte stream', async () => {
+    const payload = '{"object":"card","name":"Forest"}\n';
+    const gzipped = gzipSync(Buffer.from(payload));
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(gzipped)));
 
     const stream = await fetchBulkStream(DOWNLOAD_URI);
 
     expect(stream).toBeInstanceOf(ReadableStream);
+    await expect(readAll(stream)).resolves.toBe(payload);
   });
 
   it('throws with the status when the response is not ok', async () => {

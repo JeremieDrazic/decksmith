@@ -6,9 +6,9 @@ import { getBulkDataInfo } from './index.js';
 const validPayload = {
   object: 'bulk_data',
   type: 'default_cards',
-  download_uri: 'https://data.scryfall.io/default-cards/default-cards.json',
+  jsonl_download_uri: 'https://data.scryfall.io/default-cards/default-cards.jsonl.gz',
   updated_at: '2026-08-08T09:00:00.000+00:00',
-  size: 2_100_000_000,
+  compressed_size: 77_452_403,
 };
 
 afterEach(() => {
@@ -20,9 +20,9 @@ describe('getBulkDataInfo', () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify(validPayload))));
 
     await expect(getBulkDataInfo()).resolves.toEqual({
-      downloadUri: 'https://data.scryfall.io/default-cards/default-cards.json',
+      downloadUri: 'https://data.scryfall.io/default-cards/default-cards.jsonl.gz',
       updatedAt: '2026-08-08T09:00:00.000+00:00',
-      size: 2_100_000_000,
+      size: 77_452_403,
     });
   });
 
@@ -33,7 +33,7 @@ describe('getBulkDataInfo', () => {
   });
 
   it('throws when the payload does not match the schema', async () => {
-    const { size: _size, ...withoutSize } = validPayload;
+    const { compressed_size: _compressedSize, ...withoutSize } = validPayload;
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify(withoutSize))));
 
     await expect(getBulkDataInfo()).rejects.toThrow();

@@ -27,9 +27,10 @@ const digitalCard = { ...validCard, id: 'digital-id', games: ['arena', 'mtgo'] }
 // Wrong type for cmc → fails schema validation.
 const invalidCard = { ...validCard, id: 'invalid-id', cmc: 'not-a-number' };
 
-/** Turns an array of raw rows into the byte stream the client consumes. */
+/** Turns raw rows into the JSONL byte stream the client consumes (one per line). */
 function toByteStream(rows: unknown[]): ReadableStream<Uint8Array> {
-  const body = new Response(JSON.stringify(rows)).body;
+  const jsonl = rows.map((row) => JSON.stringify(row)).join('\n');
+  const body = new Response(jsonl).body;
   if (!body) throw new Error('expected a response body');
   return body;
 }

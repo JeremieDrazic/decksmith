@@ -36,8 +36,8 @@ export async function getBulkDataInfo(): Promise<BulkDataInfo> {
   const raw = ScryfallBulkDataSchema.parse(await res.json());
 
   return {
-    downloadUri: raw.download_uri,
+    downloadUri: raw.jsonl_download_uri,
     updatedAt: raw.updated_at,
-    size: raw.size,
+    size: raw.compressed_size,
   };
 }
