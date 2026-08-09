@@ -40,6 +40,8 @@ evolution history.
 | [0027](./0027-web-hosting-ssr-node-server.md)             | Web Hosting — TanStack Start SSR Node Server      | Active | 2026-07-24 |
 | [0028](./0028-release-versioning.md)                      | Release & Versioning — semantic-release           | Active | 2026-07-29 |
 | [0029](./0029-multi-face-card-modeling.md)                | Multi-Face Card Modeling & Scryfall Fields        | Active | 2026-07-30 |
+| [0030](./0030-worker-database-access.md)                  | Worker Database Access — Prisma Direct            | Active | 2026-08-09 |
+| [0031](./0031-job-queue-bullmq-redis.md)                  | Job Queue — BullMQ + Self-Hosted Redis            | Active | 2026-08-09 |
 
 ---
 

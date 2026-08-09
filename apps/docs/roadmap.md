@@ -173,11 +173,16 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 3.2 Initial Data Sync (apps/worker)
 
+- ✅ ADR : worker → DB — **Prisma direct** (ADR-0030). Worker = pair backend, écrit les tables de
+  référence uniquement (Card/CardPrint/CardFace), zéro règle métier, préserve le streaming de 3.1.
+- ✅ ADR : job queue — **BullMQ + Redis auto-hébergé** (ADR-0031). Redis en conteneur (compose
+  minimal en dev, service interne en prod), Upstash abandonné (facturation à la commande × polling
+  BullMQ).
 - ⬜ BullMQ + Redis setup in `apps/worker`
 - ⬜ `scryfall-sync` job + daily cron schedule
 - ⬜ Incremental update handling
-- ⬜ In-memory caching layer (déplacé depuis 3.1 — suivi de sync + métadonnées bulk)
-- ⬜ ADR : worker → DB (Prisma direct vs via API)
+- ⬜ Sync-state persistence (`SyncState` — dernier dump traité, suivi + métadonnées bulk ; déplacé
+  depuis 3.1)
 
 ### 3.3 Card API
 
@@ -378,7 +383,7 @@ _Dependency: Phase 4.1 (apps/web initialized)_
 
 ### 9.2 Worker Infrastructure
 
-- ⬜ Redis (Docker for dev, Upstash for production)
+- ⬜ Redis — self-hosted container (introduit en Phase 3.2, ADR-0031 ; Upstash abandonné)
 - ⬜ BullMQ PDF job
 
 ### 9.3 PDF API + UI
