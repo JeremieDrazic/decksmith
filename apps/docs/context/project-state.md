@@ -1,9 +1,9 @@
 # Project State
 
-_Updated: 2026-08-03 (Phase 3.1 — field extension: gameplay stats + `finishes` across Prisma /
-schema DTOs / scryfall + tests; on branch `feat/scryfall-field-extension`). This file describes the
-**current** state only: environment, what works today, blockers, and what's next. Per-session
-history lives in `decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-08-09 (Phase 3.1 **complete** — bulk download client (streaming) in
+`packages/scryfall`; on branch `feat/scryfall-bulk-client`). This file describes the **current**
+state only: environment, what works today, blockers, and what's next. Per-session history lives in
+`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
 
@@ -26,8 +26,8 @@ history lives in `decisions-log.md`, the merged PRs, and git — see also `retro
 ## What's Working (today)
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
-7): 0 errors. `pnpm test`: 257 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
-6 utils · 41 web-ui · 37 services · 14 web · 11 scryfall). Storybook CI runs play functions + axe on
+7): 0 errors. `pnpm test`: 266 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
+6 utils · 41 web-ui · 37 services · 14 web · 20 scryfall). Storybook CI runs play functions + axe on
 every story.
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
@@ -47,9 +47,10 @@ EN + FR from `packages/i18n` (ADR-0025).
 
 **Packages** — `tokens` (tokens.css single source of truth), `web-ui` (~40 components + hooks, all
 Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
-codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard`, provider
-knowledge), `api-client`, `query`, `services`, `test-utils`, `utils`, `i18n`, `db`. Build pipeline
-compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
+codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard` + bulk download
+client: `getBulkDataInfo` / `fetchBulkStream` / `streamNormalizedCards`, provider knowledge),
+`api-client`, `query`, `services`, `test-utils`, `utils`, `i18n`, `db`. Build pipeline compiles
+packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 
 **Production** — fully deployed, see Infrastructure below.
 
@@ -87,15 +88,17 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.1 — field extension done (branch `feat/scryfall-field-extension`)** — gameplay stats
-  (`power`/`toughness`/`loyalty`/`defense` on `Card` + `CardFace`, stored as String; `keywords` +
-  `producedMana` on `Card`) and `CardPrint.finishes String[]` replacing `foil`/`nonfoil`, applied
-  across Prisma (db:push'd) + schema DTOs + `packages/scryfall` (raw schemas, `normalizeCard`,
-  types, tests). `db-reviewer` passed. Follow-up #85 (collection/deck `foil` → `finish` enum); GIN
-  index on `Card.keywords` deferred to 3.3. **Next concrete step: bulk data download client
-  (streaming) — stream the `default_cards` dump, `ScryfallCardSchema.parse()` each row, filter with
-  `isCollectibleCard`, `normalizeCard`, hand off to the worker (3.2).** Then 3.2: BullMQ + Redis
-  worker, worker→DB ADR (Prisma direct vs via API).
+- **Phase 3.1 complete (branch `feat/scryfall-bulk-client`)** — bulk download client shipped:
+  `getBulkDataInfo` (metadata), `fetchBulkStream` (dump bytes), `streamNormalizedCards` (async
+  generator via `@streamparser/json-whatwg`, backpressure, `onInvalidRow` skip+report). Network
+  isolated from parsing; the file is never buffered whole. Public surface of `packages/scryfall`
+  complete. Also fixed the silently-broken scryfall build (tsconfig `node` preset + `.js`
+  extensions); CI-build-gate follow-up #91. Deferred: `foil`→`finish` enum #85, GIN index on
+  `Card.keywords` → 3.3.
+- **Next concrete step: Phase 3.2 (`apps/worker`)** — BullMQ + Redis setup, `scryfall-sync` job that
+  composes the 3 bricks (`getBulkDataInfo` → compare `updatedAt` → `fetchBulkStream` →
+  `streamNormalizedCards` → batch upsert), daily cron, incremental handling. **ADR first: worker→DB
+  (Prisma direct vs via API)** + ADR for BullMQ/Redis (significant deps).
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -106,7 +109,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- `feat/scryfall-field-extension` — gameplay stats + `finishes` across Prisma / schema / scryfall
+- `feat/scryfall-bulk-client` — bulk download client (streaming) + scryfall build fix (not yet
+  pushed / no PR opened)
 - `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
 
 ---
@@ -140,9 +144,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `feat/scryfall-field-extension` — field extension (gameplay stats + `finishes`) across Prisma /
-  schema DTOs / scryfall + tests. Based on `main` @ `6dd0a1c` (#84 scryfall scaffold merged; live at
-  **v1.2.0**).
+- `feat/scryfall-bulk-client` — bulk download client (streaming) + scryfall build fix + `.types.ts`
+  convention. Based on `main` @ `08af255` (#90 field extension merged; live at **v1.4.0**).
 
 ---
 
