@@ -1,0 +1,121 @@
+/* Decksmith's real design tokens (packages/tokens) — :root / .dark custom
+   properties. The @theme blocks inside are Tailwind v4 syntax, meaningless
+   outside a Tailwind build; browsers drop unknown at-rules silently, so they
+   no-op here rather than error. VitePress toggles the same `.dark` class on
+   <html> that Decksmith's own dark-mode selector keys off, so theme
+   switching works for free.
+
+   Only colors.css survives that no-op cleanly: it duplicates its values into
+   a plain :root/.dark block alongside its @theme inline block. layout.css
+   (radius, z-index) and motion.css (durations) declare their tokens ONLY
+   inside a bare @theme block with no such duplicate — Tailwind compiles
+   that into real :root custom properties at build time, but nothing here
+   runs that compiler, so --radius-interactive / --duration-fast / etc.
+   never actually resolve. Below, radius and duration values are hardcoded
+   to match packages/tokens/src/web/layout.css and motion.css's current
+   numbers for exactly that reason — not an oversight, verified by reading
+   both files. */
+@import '@decksmith/tokens/web/tokens.css';
+
+.mermaid {
+  position: relative;
+  cursor: zoom-in;
+}
+
+/* ─── Fake hover affordance ──────────────────────────────────────────────
+   A decorative badge, not a real control — pointer-events: none lets clicks
+   fall through to the diagram underneath, which already opens the zoom
+   overlay via the delegated listener in mermaid-zoom.ts. Injected per
+   diagram by mermaid-zoom.ts since Mermaid.vue only renders the <svg>. */
+.mermaid-zoom-badge {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 0.5rem; /* --radius-interactive, see note above */
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--accent-text);
+  box-shadow: var(--shadow-popover);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease-out; /* --duration-fast, see note above */
+}
+
+.mermaid:hover .mermaid-zoom-badge {
+  opacity: 1;
+}
+
+/* ─── Zoom overlay (our own UI) ────────────────────────────────────────── */
+
+.mermaid-zoom-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--vp-z-index-backdrop);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+}
+
+.mermaid-zoom-svg {
+  width: 90vw;
+  height: 90vh;
+  cursor: grab;
+}
+
+.mermaid-zoom-svg:active {
+  cursor: grabbing;
+}
+
+.mermaid-zoom-close {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  width: 40px;
+  height: 40px;
+  border-radius: 0.5rem; /* --radius-interactive, see note above */
+  border: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mermaid-zoom-close:hover {
+  background-color: var(--surface-raised);
+}
+
+/* ─── svg-pan-zoom vendor override ────────────────────────────────────────
+   control-icons.js injects its own <style> at click time with hardcoded
+   fill colors (black icon at 0.333 opacity on a white 0.8-opacity chip) —
+   generic grey boxes regardless of site theme. These selectors carry one
+   more class than the library's own, so they win on specificity without
+   !important; fill-opacity is set explicitly since it's a separate property
+   the higher-specificity fill override doesn't implicitly replace.
+
+   Hover uses a CHILD combinator (>), not a descendant one: the library
+   gives its outer wrapping <g id="svg-pan-zoom-controls"> the SAME
+   ".svg-pan-zoom-control" class as each of the 3 individual icon groups.
+   Hovering any one icon puts that shared-class ancestor into :hover too,
+   so a descendant selector lit up every icon at once. `>` only matches an
+   icon's OWN direct child paths, not paths nested under a sibling icon via
+   the shared outer wrapper. */
+.mermaid-zoom-svg .svg-pan-zoom-control-background {
+  fill: var(--surface);
+  fill-opacity: 1;
+}
+
+.mermaid-zoom-svg .svg-pan-zoom-control-element {
+  fill: var(--text-muted);
+  fill-opacity: 1;
+}
+
+.mermaid-zoom-svg .svg-pan-zoom-control:hover > .svg-pan-zoom-control-element {
+  fill: var(--accent-text);
+}

@@ -153,6 +153,13 @@ New dependency added:
 
 Never add dependencies silently. Stale docs are worse than no docs.
 
+New diagram-worthy change:
+
+- New architectural decision or subsystem → check the architecture-diagrams backlog (issue #93);
+  if it changes the system-level picture, update the root README diagram too
+- New composed `packages/web-ui` component (multiple sub-parts, each with its own `data-slot`) →
+  add an anatomy-diagram Storybook story (see issue #94 for the pattern and checklist)
+
 ---
 
 ## Dependency Management
