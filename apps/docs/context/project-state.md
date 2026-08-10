@@ -1,26 +1,28 @@
 # Project State
 
-_Updated: 2026-08-10 (Phase 3.2 **complete** — `apps/worker` `scryfall-card-sync` job (BullMQ +
-Redis, ADR-0030/0031) validated end-to-end: 34,526 cards synced into Supabase. Next: perf (#96) then
-Phase 3.3 Card API). This file describes the **current** state only: environment, what works today,
-blockers, and what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git
-— see also `retrospectives/`._
+_Updated: 2026-08-10 (Phase 3.2 **fully complete** — `apps/worker` `scryfall-card-sync` job
+(BullMQ + Redis, ADR-0030/0031) validated end-to-end (34,526 cards synced) **and now deployed in
+prod** (PR #111): worker + internal Redis container live on the VPS, daily cron 06:00 UTC active.
+Next: perf (#96) then Phase 3.3 Card API. This file describes the **current** state only:
+environment, what works today, blockers, and what's next. Per-session history lives in
+`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
 
 ## Environment
 
-| Variable                    | Status                                                                       |
-| --------------------------- | ---------------------------------------------------------------------------- |
-| `DATABASE_URL`              | ✅ Configured (Session Pooler port 5432 — `wcvexyibmjkuzufbvuyh`, eu-west-1) |
-| Supabase project            | ✅ Active (`wcvexyibmjkuzufbvuyh.supabase.co`) — recreated session 21        |
-| `SUPABASE_URL`              | ✅ Configured                                                                |
-| `SUPABASE_ANON_KEY`         | ✅ Configured (`sb_publishable_*` format)                                    |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured (`sb_secret_*` format)                                         |
-| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret)                                          |
-| `NODE_ENV`                  | ✅ `development` — required for `secure: false` cookies on localhost         |
-| Redis                       | Not needed yet                                                               |
-| `.env.example`              | ✅ Up to date (Session Pooler + COOKIE_SECRET + VITE_API_URL + NODE_ENV)     |
+| Variable                    | Status                                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| `DATABASE_URL`              | ✅ Configured (Session Pooler port 5432 — `wcvexyibmjkuzufbvuyh`, eu-west-1)            |
+| Supabase project            | ✅ Active (`wcvexyibmjkuzufbvuyh.supabase.co`) — recreated session 21                   |
+| `SUPABASE_URL`              | ✅ Configured                                                                           |
+| `SUPABASE_ANON_KEY`         | ✅ Configured (`sb_publishable_*` format)                                               |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured (`sb_secret_*` format)                                                    |
+| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret)                                                     |
+| `NODE_ENV`                  | ✅ `development` — required for `secure: false` cookies on localhost                    |
+| Redis                       | ✅ Dev: `docker-compose.yml` (localhost:6379, passwordless). Prod: internal container   |
+| `REDIS_PASSWORD`            | ✅ Prod only — server `~/apps/decksmith/.env` (never committed; `openssl rand -hex 32`) |
+| `.env.example`              | ✅ Up to date (Session Pooler + COOKIE_SECRET + VITE_API_URL + NODE_ENV)                |
 
 ---
 
@@ -50,7 +52,9 @@ EN + FR from `packages/i18n` (ADR-0025).
 `scryfall-card-sync` job on BullMQ (daily cron, concurrency 1, idempotent retries), writing
 `Card`/`CardPrint`/`CardFace` via Prisma directly (ADR-0030). Composes the 3.1 bricks →
 `chunkAsyncIterable` → `groupChunk` (dedup, FK order) → `upsertChunk` (per-chunk transaction). Redis
-via `docker-compose.yml` (dev). Boot verified; one-off trigger `pnpm worker:sync:once`.
+via `docker-compose.yml` (dev). One-off trigger `pnpm worker:sync:once`. **Deployed in prod** (PR
+#111): 4th GHCR image, internal Redis container (`internal` network only, requirepass + AOF +
+`redis-data` volume), `depends_on: service_healthy`; daily cron 06:00 UTC live and verified.
 
 **Packages** — `tokens` (tokens.css single source of truth), `web-ui` (~40 components + hooks, all
 Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
@@ -65,7 +69,7 @@ compiled `node dist/index.js`.
 **Observability & Release** — API docs (Scalar) at `/api/reference`; error tracking via self-hosted
 GlitchTip (`@sentry/node` + `@sentry/react`, prod-only, no-op in dev), web stacks de-minified via
 source maps uploaded to GlitchTip per release; automated SemVer releases (semantic-release,
-ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.2.0`); external uptime (Better
+ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.8.0`); external uptime (Better
 Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ---
@@ -103,16 +107,15 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.2 done (2026-08-10)** — write path validated: `sync:once` upserted 34,526 cards into
-  Supabase (verified). Card catalogue now populated.
+- **Phase 3.2 fully done (2026-08-10)** — write path validated (34,526 cards) **and worker + Redis
+  deployed in prod** (PR #111): daily cron 06:00 UTC live on the VPS. Card catalogue populated and
+  self-updating.
 - **#96** — bulk `INSERT … ON CONFLICT` upsert (removes the P2028 workaround, ~seconds instead of
   ~15 min). Top perf ticket.
 - **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
   oracle tags / all_parts / edhrec_rank are the high-leverage next data wins).
-- **Phase 3.2 tail** — deploy the worker in prod (4th Docker image + internal Redis container,
-  ADR-0031 follow-up).
 - **Phase 3.3 (Card API)** — `GET /cards/search` + `/cards/:id` + autocomplete; GIN index on
-  `Card.keywords`; `foil`→`finish` enum (#85).
+  `Card.keywords`; `foil`→`finish` enum (#85). **Next up.**
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -123,9 +126,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- `feat/scryfall-sync-worker` — Phase 3.2 worker + ADR-0030/0031 + SyncState + Scryfall JSONL fix
-  (PR opened this session; includes the `chore/deps-safe-bumps` commit)
-- `fix/rls-policies` — RLS docs/idempotence follow-up (session 25)
+- `docs/phase-3.2-worker-prod` — this session's doc wrap-up (roadmap + project-state closing Phase
+  3.2 after the worker prod deploy).
 
 ---
 
@@ -136,13 +138,18 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
   cookies).
 - **Traefik** owns 80/443 on the VPS, label-driven routing over the shared `proxy` network, wildcard
   TLS via ACME DNS-01 (auto-renew). ADR-0026 + `apps/docs/deployment/reverse-proxy.md`.
-- **Deploy pipeline**: `.github/workflows/deploy.yml` builds 3 GHCR images (api / web / statics) →
-  scp `deploy/compose.yml` + SSH `docker compose pull && up -d`. Deployed SHA pinned as `IMAGE_TAG`
-  in the server `.env`. Secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY` (dedicated ed25519 key). GHCR
-  images public.
+- **Deploy pipeline**: `.github/workflows/deploy.yml` builds 4 GHCR images (api / web / statics /
+  worker) → scp `deploy/compose.yml` + SSH (`set -euo pipefail`) `docker compose pull && up -d`.
+  Deployed SHA pinned as `IMAGE_TAG` in the server `.env`. Secrets: `VPS_HOST`, `VPS_USER`,
+  `VPS_SSH_KEY` (dedicated ed25519 key). GHCR images public.
+- **Worker + Redis** (PR #111, ADR-0030/0031): the `worker` container (headless BullMQ consumer,
+  daily Scryfall sync) and an internal `redis` container (digest-pinned, requirepass + AOF +
+  `redis-data` volume, healthcheck) run on the `internal` network only — never Traefik-routed. The
+  worker waits on `depends_on: redis service_healthy`; cron 06:00 UTC. One-off:
+  `docker compose exec worker node dist/sync-once.js`.
 - **Server-side `~/apps/decksmith/.env`** (never committed): `DECKSMITH_HOST`, `CORS_ORIGIN`,
-  `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `COOKIE_SECRET`, `IMAGE_TAG`.
-  `NODE_ENV` unset → `production` (secure cookies, `trustProxy`).
+  `DATABASE_URL`, `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `COOKIE_SECRET`, `REDIS_PASSWORD`,
+  `IMAGE_TAG`. `NODE_ENV` unset → `production` (secure cookies, `trustProxy`).
 - **DNS**: wildcard record → VPS via API-capable provider. Traefik dashboard behind IP-allowlist +
   basic auth. Infra secrets live only in server-side `~/infra/.env`.
 - **Observability**: self-hosted **GlitchTip** (error tracking) at `monitoring.<domain>` in
@@ -158,9 +165,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `feat/scryfall-sync-worker` — Phase 3.2 worker (ADR-0030/0031, `SyncState`, batch upsert),
-  Scryfall gzipped-JSONL fix, safe dep bumps. Based on `main` @ `a160f6c` (#92 bulk client merged;
-  live at **v1.4.0**). 8 commits; PR opened this session.
+- `docs/phase-3.2-worker-prod` — doc wrap-up after the worker + Redis prod deploy (PR #111 merged
+  into `main` @ `38a6873`). Also removed the retired `github-pages` repo environment (Pages fully
+  gone). Based on `main` post-#111.
 
 ---
 

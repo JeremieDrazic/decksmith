@@ -198,8 +198,10 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   526 cartes** dans Supabase (vérifié), 81 lignes ignorées (edge layouts type `reversible_card` —
   oracle_id/cmc absents au top-level). Perf : per-row-upsert en transactions (~15 min) ; P2028
   contourné (chunk 200 + timeout 60 s) ; vrai fix bulk `ON CONFLICT` → #96.
-- ⬜ Déploiement du worker en prod (4ᵉ image Docker api/web/statics/**worker** + Redis conteneur
-  interne) — follow-up ADR-0031.
+- ✅ Déploiement du worker en prod (4ᵉ image Docker api/web/statics/**worker** + Redis conteneur
+  interne, `internal` only, requirepass + AOF + volume, fail-closed `REDIS_PASSWORD` guard,
+  `depends_on: service_healthy`) — PR #111, ADR-0031. Live + vérifié (worker `Up`, redis `healthy`,
+  scheduler cron enregistré). Cron quotidien 06:00 UTC actif. **Phase 3.2 close.**
 
 ### 3.3 Card API
 
