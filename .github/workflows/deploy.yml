@@ -205,8 +205,38 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  build-worker:
+    needs: [release]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # push the image to GHCR
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ env.DEPLOY_SHA }}
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+      - name: Log in to GHCR
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push worker image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6
+        with:
+          context: .
+          file: apps/worker/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/jeremiedrazic/decksmith-worker:${{ env.DEPLOY_SHA }}
+            ghcr.io/jeremiedrazic/decksmith-worker:${{ needs.release.outputs.version }}
+            ghcr.io/jeremiedrazic/decksmith-worker:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   deploy:
-    needs: [build-api, build-web, build-statics]
+    needs: [build-api, build-web, build-statics, build-worker]
     runs-on: ubuntu-latest
     # Least privilege: this job holds the VPS SSH key — no package/write access,
     # so a compromised step here cannot also tamper with GHCR images.
@@ -237,6 +267,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           envs: IMAGE_TAG
           script: |
+            set -euo pipefail
             cd ~/apps/decksmith
             sed -i '/^IMAGE_TAG=/d' .env
             echo "IMAGE_TAG=$IMAGE_TAG" >> .env
