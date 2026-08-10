@@ -73,10 +73,63 @@ services:
       - traefik.http.services.decksmith-statics.loadbalancer.server.port=8080
       - traefik.http.routers.decksmith-statics.middlewares=decksmith-security
 
+  # Redis — BullMQ's backing store: holds the job queue and the repeatable-job schedule.
+  # `internal` ONLY: never routed by Traefik, never reachable from the internet.
+  # --requirepass locks it (any container on `internal` could otherwise read/write the queue);
+  # --appendonly yes (+ the redis-data volume) persists the daily-sync schedule across a Redis
+  # restart — without it, a Redis-only restart would silently drop the cron until the worker reboots.
+  redis:
+    # Pinned by digest (7.4-alpine at time of writing) for reproducible prod pulls, matching the
+    # exact-pin convention of the node base images. Bump deliberately when adopting a new patch.
+    image: redis:7.4-alpine@sha256:e7723ff73d963f5cc6d9c4643ea3d989527a402a319239054e9472a7fb9219a2
+    container_name: decksmith-redis
+    restart: unless-stopped
+    logging: *default-logging
+    # `:?` fails `docker compose up` loudly if REDIS_PASSWORD is unset/empty, rather than
+    # silently starting a passwordless Redis. Set it in the server .env (never committed).
+    command:
+      redis-server --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD is required — set it in
+      ~/apps/decksmith/.env} --appendonly yes
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    networks: [internal]
+    volumes:
+      - redis-data:/data
+    # `$$` escapes to a single `$` in the container, so redis-cli reads REDIS_PASSWORD from the
+    # container env at runtime rather than baking the secret into the healthcheck definition.
+    healthcheck:
+      test: ['CMD-SHELL', 'redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG']
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Background worker — the BullMQ consumer running the daily Scryfall card-sync (ADR-0030/0031).
+  # Headless: no HTTP server, no Traefik labels, `internal` only. Still has egress to Supabase +
+  # Scryfall (internal is a normal bridge). Waits for Redis to be healthy before starting.
+  worker:
+    image: ghcr.io/jeremiedrazic/decksmith-worker:${IMAGE_TAG:-latest}
+    container_name: decksmith-worker
+    restart: unless-stopped
+    logging: *default-logging
+    env_file: .env # DATABASE_URL + SUPABASE_* (shared with the API)
+    environment:
+      # Redis URL format is redis://:PASSWORD@HOST:PORT; `redis` is the service name (Docker DNS).
+      # Same fail-closed guard as the redis service: never connect with an empty password segment.
+      - REDIS_URL=redis://:${REDIS_PASSWORD:?REDIS_PASSWORD is required — set it in
+        ~/apps/decksmith/.env}@redis:6379
+    networks: [internal]
+    depends_on:
+      redis:
+        condition: service_healthy
+
 networks:
   # Shared with the Traefik stack — how the proxy discovers and reaches this container.
   proxy:
     external: true
-  # Project-private network for service-to-service calls (web → api),
+  # Project-private network for service-to-service calls (web → api, worker → redis),
   # isolated from the shared proxy network's DNS namespace.
   internal: {}
+
+volumes:
+  # Persists Redis's AOF file so the daily-sync schedule survives container recreation.
+  redis-data: {}

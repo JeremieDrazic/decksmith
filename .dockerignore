@@ -1,0 +1,28 @@
+# Root build-context ignore — the shared deny-list for the api, web, and worker images.
+# BuildKit uses this whenever a build has no <Dockerfile>.dockerignore of its own.
+# The statics image is the exception: deploy/statics.Dockerfile.dockerignore is an allow-list
+# (it needs apps/docs + storybook-static, which this file excludes) and therefore overrides this.
+
+# Never copy host installs or build artifacts into the image —
+# each builder stage produces its own via pnpm install + turbo build (incl. a fresh .output).
+**/node_modules
+**/dist
+**/.turbo
+**/.output
+**/coverage
+**/storybook-static
+# Prisma Client is generated inside the image by packages/db postinstall — never ship the host copy.
+# (Harmless for images that don't use Prisma: nothing matches.)
+**/generated
+
+# Secrets must never enter a build context (they would persist in image layers).
+.env
+.env.*
+
+# Irrelevant to image builds — keeps the context small and the cache stable.
+.git
+.github
+.claude
+.husky
+.vscode
+apps/docs
