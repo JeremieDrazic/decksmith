@@ -129,6 +129,15 @@ finish/variation data. Feeds collection value and display.
 
 ---
 
+## Open questions
+
+- **Image format / `image_uris` (webp?) + host change.** Scryfall appears to be moving card images
+  to WebP and is changing image-URL hosts (blog #224). Impact depends on whether `image_uris` keys
+  stay the same (transparent — we store URL strings, the daily sync self-heals host changes) or new
+  keys were added (then extend `ScryfallImageUris` / `NormalizedImageUris` + normalizer). To
+  confirm: read the live `image_uris` shape (docs are Cloudflare-gated for headless fetch). Deferred
+  2026-08-10.
+
 ## References
 
 - [Tags API](https://scryfall.com/docs/api/tags) ·

@@ -1,10 +1,10 @@
 # Project State
 
-_Updated: 2026-08-09 (Phase 3.2 **code-complete** — `apps/worker` `scryfall-card-sync` job (BullMQ +
-Redis, ADR-0030/0031); write-path end-to-end validation pending a Scryfall Cloudflare unblock. On
-branch `feat/scryfall-sync-worker`). This file describes the **current** state only: environment,
-what works today, blockers, and what's next. Per-session history lives in `decisions-log.md`, the
-merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-08-10 (Phase 3.2 **complete** — `apps/worker` `scryfall-card-sync` job (BullMQ +
+Redis, ADR-0030/0031) validated end-to-end: 34,526 cards synced into Supabase. Next: perf (#96) then
+Phase 3.3 Card API). This file describes the **current** state only: environment, what works today,
+blockers, and what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git
+— see also `retrospectives/`._
 
 ---
 
@@ -72,10 +72,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## What's NOT Working / Blockers
 
-- **Phase 3.2 write-path validation pending** — `pnpm worker:sync:once` reaches Scryfall then gets a
-  Cloudflare bot challenge (403, `cf-mitigated: challenge`) on `api.scryfall.com`, triggered by the
-  day's repeated automated requests. Not a code bug (read path proven in isolation); clears after an
-  IP cooldown — retry later. The DB write path itself is untested end-to-end until then.
+- The 81 rows the sync skips are edge layouts (likely `reversible_card` — `oracle_id`/`cmc` live on
+  the faces, not top-level) that fail `ScryfallCardSchema`. Small (0.09%), not a bug; a follow-up
+  may handle/filter them explicitly instead of logging them as "invalid".
 - `apps/mobile` is an empty shell
 - OAuth providers (Google, GitHub) not yet enabled in Supabase dashboard
 - Supabase email confirmation **disabled** (dev-only) — re-enable before production or when the
@@ -104,11 +103,12 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Immediate: finish Phase 3.2 validation** — once Scryfall's Cloudflare challenge clears, run
-  `pnpm worker:sync:once` to validate the write path end-to-end (expect ~15 min), then verify
-  `cards`/`card_prints`/`sync_state` in `pnpm db:studio` (`status = success`, `lastCardCount`).
-- **Then #96** — bulk `INSERT … ON CONFLICT` upsert (removes the P2028 workaround, ~seconds instead
-  of ~15 min). First ticket next session.
+- **Phase 3.2 done (2026-08-10)** — write path validated: `sync:once` upserted 34,526 cards into
+  Supabase (verified). Card catalogue now populated.
+- **#96** — bulk `INSERT … ON CONFLICT` upsert (removes the P2028 workaround, ~seconds instead of
+  ~15 min). Top perf ticket.
+- **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
+  oracle tags / all_parts / edhrec_rank are the high-leverage next data wins).
 - **Phase 3.2 tail** — deploy the worker in prod (4th Docker image + internal Redis container,
   ADR-0031 follow-up).
 - **Phase 3.3 (Card API)** — `GET /cards/search` + `/cards/:id` + autocomplete; GIN index on

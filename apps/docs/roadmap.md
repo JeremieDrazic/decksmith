@@ -194,10 +194,10 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Fix Scryfall JSONL — l'API a migré `default_cards` vers du **gzip JSONL** (`.jsonl.gz`,
   `jsonl_download_uri`/`compressed_size`) ; client 3.1 adapté (`DecompressionStream` + parsing JSONL
   via `readline`). Chemin de **lecture prouvé en réel**.
-- ⏳ **Validation end-to-end du chemin d'écriture — en attente.** P2028 (timeout transaction)
-  contourné (chunk 200 + timeout 60 s ; vrai fix bulk `ON CONFLICT` → #96). Puis bloqué par un
-  challenge bot Cloudflare de Scryfall (403, temporaire, non lié au code). À relancer
-  (`pnpm worker:sync:once`) une fois l'IP déflaggée.
+- ✅ **Validation end-to-end du chemin d'écriture — OK (2026-08-10).** `sync:once` a upserté **34
+  526 cartes** dans Supabase (vérifié), 81 lignes ignorées (edge layouts type `reversible_card` —
+  oracle_id/cmc absents au top-level). Perf : per-row-upsert en transactions (~15 min) ; P2028
+  contourné (chunk 200 + timeout 60 s) ; vrai fix bulk `ON CONFLICT` → #96.
 - ⬜ Déploiement du worker en prod (4ᵉ image Docker api/web/statics/**worker** + Redis conteneur
   interne) — follow-up ADR-0031.
 
