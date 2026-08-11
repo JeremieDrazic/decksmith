@@ -42,6 +42,7 @@ evolution history.
 | [0029](./0029-multi-face-card-modeling.md)                | Multi-Face Card Modeling & Scryfall Fields        | Active | 2026-07-30 |
 | [0030](./0030-worker-database-access.md)                  | Worker Database Access — Prisma Direct            | Active | 2026-08-09 |
 | [0031](./0031-job-queue-bullmq-redis.md)                  | Job Queue — BullMQ + Self-Hosted Redis            | Active | 2026-08-09 |
+| [0032](./0032-card-search-architecture.md)                | Card Search Architecture                          | Active | 2026-08-10 |
 
 ---
 
