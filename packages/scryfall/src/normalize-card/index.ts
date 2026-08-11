@@ -63,6 +63,7 @@ export function normalizeCard(raw: ScryfallCard): NormalizedCardBundle {
     oracleId: raw.oracle_id,
     imageUris,
     setCode: raw.set,
+    setName: raw.set_name,
     collectorNumber: raw.collector_number,
     rarity: raw.rarity,
     finishes: raw.finishes,
@@ -71,6 +72,7 @@ export function normalizeCard(raw: ScryfallCard): NormalizedCardBundle {
     localizedName: raw.printed_name,
     localizedText: raw.printed_text,
     localizedType: raw.printed_type_line,
+    releasedAt: raw.released_at ? new Date(raw.released_at) : undefined,
   };
 
   const faces: NormalizedFace[] = (raw.card_faces || []).map((face, faceIndex) => ({

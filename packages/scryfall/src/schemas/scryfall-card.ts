@@ -38,6 +38,7 @@ export const ScryfallCardSchema = z.object({
   // → CardPrint (printing level)
   id: z.string(),
   set: z.string(),
+  set_name: z.string(),
   collector_number: z.string(),
   rarity: z.string(),
   finishes: z.array(z.string()),
@@ -48,6 +49,7 @@ export const ScryfallCardSchema = z.object({
   printed_name: z.string().optional(),
   printed_type_line: z.string().optional(),
   printed_text: z.string().optional(),
+  released_at: z.string().optional(),
 
   // → CardFace (multi-faced cards only)
   card_faces: z.array(ScryfallCardFaceSchema).optional(),
