@@ -5,9 +5,9 @@ architecture: per-resource endpoints + **targeted denormalization** of print att
 Schema migrated (`Card.rarities`/`finishes`/`firstReleasedAt` + `CardPrint.releasedAt`/`setName`,
 `db:push` applied) + DTOs updated; Scryfall `special`/`bonus` rarities added across every layer;
 sync **level 1** (per-print `releasedAt`/`setName` normalization) done + tested. Remaining: sync
-**level 2** (aggregate SQL pass) then the endpoints. On branch `feat/phase-3.3-card-api` (not yet
-pushed). This file describes the **current** state only: environment, what works today, blockers,
-and what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
+**level 2** (aggregate SQL pass) then the endpoints. On branch `feat/phase-3.3-card-api` (PR #114
+open). This file describes the **current** state only: environment, what works today, blockers, and
+what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
 `retrospectives/`._
 
 ---
@@ -137,8 +137,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- None. `feat/phase-3.3-card-api` is local only (6 commits) — push + open a PR once sync level 2 and
-  the first endpoints land.
+- **#114** `feat/phase-3.3-card-api` — Phase 3.3 groundwork (ADR-0032, schema fields + DTOs,
+  `special`/`bonus` rarities, sync level 1). Additive + green; not yet merged. Sync level 2 +
+  endpoints continue on this branch (or a follow-up) before/after merge.
 
 ---
 
@@ -177,7 +178,7 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 ## Current Branch
 
 - `feat/phase-3.3-card-api` — Phase 3.3 groundwork (ADR-0032, schema fields + DTOs,
-  `special`/`bonus` rarities, sync level 1). Based on `main` post-#112. **Not yet pushed / no PR.**
+  `special`/`bonus` rarities, sync level 1). Based on `main` post-#112. **Pushed — PR #114 open.**
   Next: sync level 2 (aggregate SQL pass) + endpoints.
 
 ---
