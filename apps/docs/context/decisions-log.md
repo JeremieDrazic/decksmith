@@ -4,6 +4,30 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-08-11] — Scryfall's 6 rarities added; duplicate `Rarity` definitions kept parallel
+
+**Context:** ADR-0032 denormalizes `Card.rarities[]` (aggregate of all a card's print rarities). Our
+`RaritySchema` only knew 4 values (`common`/`uncommon`/`rare`/`mythic`), but Scryfall emits **6** —
+`special` (timeshifted) and `bonus` (bonus sheets) too. Left as-is, the aggregate DTO would reject
+any card printed at those rarities. Discovered in the process: `Rarity` is defined **twice** —
+`RaritySchema` (Zod, `packages/schema`) and a plain `Rarity` union (`packages/domain`, consumed by
+`web-ui`'s `RarityBadge`), with the same duplication existing for colours (`ColorSchema` vs
+`MtgColor`).
+
+**Decision:** add `special` + `bonus` across **every** layer (schema enum, domain type,
+`RarityBadge` `Record` + two new `rarity-special`/`rarity-bonus` design tokens + the design-system
+story), keeping the two `Rarity` definitions **parallel and hand-synced** — the same pattern colours
+already use. Unifying the duplicated MTG enums into a single source of truth (which package owns
+them, dependency direction) is a broader architectural choice deferred to a small ADR — tracked in
+**issue #113**. Token colours (`special` purple `#8b47c4`, `bonus` teal `#2fa39a`) are provisional
+pending the search UI review.
+
+**Impact:** `packages/schema` (`RaritySchema`), `packages/domain` (`Rarity`), `packages/tokens`
+(`mtg.css`), `packages/web-ui` (`RarityBadge` + story). No behaviour change until the aggregate is
+populated (sync level 2).
+
+---
+
 ## [2026-08-09] — Scryfall migrated bulk data to gzipped JSONL — client reworked
 
 **Context:** The first real Phase 3.2 worker run surfaced that Scryfall's `/bulk-data/default_cards`

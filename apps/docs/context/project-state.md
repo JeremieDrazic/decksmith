@@ -1,11 +1,14 @@
 # Project State
 
-_Updated: 2026-08-10 (Phase 3.2 **fully complete** — `apps/worker` `scryfall-card-sync` job
-(BullMQ + Redis, ADR-0030/0031) validated end-to-end (34,526 cards synced) **and now deployed in
-prod** (PR #111): worker + internal Redis container live on the VPS, daily cron 06:00 UTC active.
-Next: perf (#96) then Phase 3.3 Card API. This file describes the **current** state only:
-environment, what works today, blockers, and what's next. Per-session history lives in
-`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-08-11 (Phase 3.3 Card API **started** — ADR-0032 (Active) fixes the search
+architecture: per-resource endpoints + **targeted denormalization** of print attributes onto `Card`.
+Schema migrated (`Card.rarities`/`finishes`/`firstReleasedAt` + `CardPrint.releasedAt`/`setName`,
+`db:push` applied) + DTOs updated; Scryfall `special`/`bonus` rarities added across every layer;
+sync **level 1** (per-print `releasedAt`/`setName` normalization) done + tested. Remaining: sync
+**level 2** (aggregate SQL pass) then the endpoints. On branch `feat/phase-3.3-card-api` (not yet
+pushed). This file describes the **current** state only: environment, what works today, blockers,
+and what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
+`retrospectives/`._
 
 ---
 
@@ -29,8 +32,8 @@ environment, what works today, blockers, and what's next. Per-session history li
 ## What's Working (today)
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
-7): 0 errors. `pnpm test`: 276 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
-11 utils · 41 web-ui · 37 services · 14 web · 20 scryfall · 5 worker). Storybook CI runs play
+7): 0 errors. `pnpm test`: 278 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
+11 utils · 41 web-ui · 37 services · 14 web · 22 scryfall · 5 worker). Storybook CI runs play
 functions + axe on every story.
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
@@ -39,9 +42,11 @@ handler with `ServiceError` exception mapper (ADR-0024), auth plugin (`app.authe
 limiting + CORS. All orchestration in `packages/services`; routes are HTTP glue.
 
 **Database** — Prisma 7 schema (18 models — `SyncState` added for worker sync bookkeeping, ADR-0031;
-`CardFace` for multi-face cards, ADR-0029) synced to Supabase via session pooler; Supabase client
-working from `packages/db`. RLS policies applied and verified (4 policies on the `authenticated`
-role — defense-in-depth, the API bypasses RLS; ADR-0022, session 25).
+`CardFace` for multi-face cards, ADR-0029; `Card` + `CardPrint` gained the search-support fields of
+ADR-0032 — `rarities`/`finishes`/`firstReleasedAt` and `releasedAt`/`setName`) synced to Supabase
+via session pooler; Supabase client working from `packages/db`. RLS policies applied and verified (4
+policies on the `authenticated` role — defense-in-depth, the API bypasses RLS; ADR-0022, session
+25).
 
 **Frontend** — `pnpm dev:web` → `localhost:3001`. TanStack Start SSR: auth pages (login, register,
 forgot-password), `_authenticated` guard (`beforeLoad` + SSR cookie forwarding, ADR-0023),
@@ -107,15 +112,21 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.2 fully done (2026-08-10)** — write path validated (34,526 cards) **and worker + Redis
-  deployed in prod** (PR #111): daily cron 06:00 UTC live on the VPS. Card catalogue populated and
-  self-updating.
+- **Phase 3.3 sync level 2 (aggregates)** — post-load SQL pass
+  (`UPDATE cards … FROM (… GROUP BY oracle_id)`, `unnest` on `finishes`) as the final job phase + a
+  standalone one-shot entry; fills `Card.rarities`/`finishes`/`firstReleasedAt`. **Next up.** Then a
+  full re-sync to backfill the new columns.
+- **Phase 3.3 endpoints** — `GET /cards/search` (+ `CardSearchQuerySchema`: filters/sort/pagination)
+  - `/cards/:id` + `/cards/:id/prints` + autocomplete; Postgres indexing (generated `tsvector` +
+    GIN, array GIN, prefix/trigram) in raw SQL; `useCardSearch` in `packages/query` (unblocks Phase
+    4.3).
 - **#96** — bulk `INSERT … ON CONFLICT` upsert (removes the P2028 workaround, ~seconds instead of
   ~15 min). Top perf ticket.
+- **#113** — unify the duplicated MTG enums (`Rarity`/`Color`: schema Zod vs domain type) into a
+  single source of truth (small ADR). Surfaced while adding `special`/`bonus` rarities.
 - **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
   oracle tags / all_parts / edhrec_rank are the high-leverage next data wins).
-- **Phase 3.3 (Card API)** — `GET /cards/search` + `/cards/:id` + autocomplete; GIN index on
-  `Card.keywords`; `foil`→`finish` enum (#85). **Next up.**
+- `foil`→`finish` enum (#85); GIN index on `Card.keywords`.
 - Phase 2.2 remainder: enable OAuth providers (Google, GitHub); email confirmation + password reset
   flow (blocked on OAuth/deep-link spec)
 - Consolidation backlog P1: 30-min service-layer walkthrough (retro E2)
@@ -126,8 +137,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- `docs/phase-3.2-worker-prod` — this session's doc wrap-up (roadmap + project-state closing Phase
-  3.2 after the worker prod deploy).
+- None. `feat/phase-3.3-card-api` is local only (6 commits) — push + open a PR once sync level 2 and
+  the first endpoints land.
 
 ---
 
@@ -165,9 +176,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `docs/phase-3.2-worker-prod` — doc wrap-up after the worker + Redis prod deploy (PR #111 merged
-  into `main` @ `38a6873`). Also removed the retired `github-pages` repo environment (Pages fully
-  gone). Based on `main` post-#111.
+- `feat/phase-3.3-card-api` — Phase 3.3 groundwork (ADR-0032, schema fields + DTOs,
+  `special`/`bonus` rarities, sync level 1). Based on `main` post-#112. **Not yet pushed / no PR.**
+  Next: sync level 2 (aggregate SQL pass) + endpoints.
 
 ---
 

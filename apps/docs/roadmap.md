@@ -205,9 +205,35 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 ### 3.3 Card API
 
+**Foundations (2026-08-11):**
+
+- ✅ ADR-0032 : architecture de la recherche — endpoints par ressource (cartes seul en 3.3 ; global
+  spotlight = fan-out futur documenté) ; **dénormalisation ciblée** d'attributs print sur `Card`
+  (`rarities[]`, `finishes[]`, `firstReleasedAt`) pour une recherche mono-table, recalculée par le
+  sync (reconstructible) ; `set`/prix non dénormalisés. A vs B (jointures `EXISTS`) pesés.
+- ✅ Migration Prisma : `Card.rarities` / `Card.finishes` / `Card.firstReleasedAt` +
+  `CardPrint.releasedAt` / `CardPrint.setName` (nullable/array → backfill au prochain sync) —
+  `db:push` appliqué ; DTOs (`CardResponseSchema`, `CardPrintResponseSchema`) mis à jour.
+- ✅ Raretés Scryfall complètes : `special` + `bonus` ajoutées partout (`RaritySchema`, domain
+  `Rarity`, `RarityBadge` + tokens `rarity-special`/`bonus`, story) — l'agrégat `rarities[]` ne
+  rejette plus ces cartes. Follow-up : unifier les enums MTG dupliqués (schema vs domain) → issue
+  #113.
+- ✅ Sync niveau 1 (par-print) : `set_name` + `released_at` remontés du dump →
+  `NormalizedPrint.setName`/`releasedAt` (parse ISO→`Date` déterministe) → écrits par le worker sans
+  changement ; tests colocalisés (nominal + date absente).
+- ⬜ Sync niveau 2 (agrégats) : passe SQL post-load (`UPDATE cards … FROM … GROUP BY oracle_id`,
+  `unnest` sur `finishes`) en phase finale du job + entrée one-shot — peuple
+  `rarities`/`finishes`/`firstReleasedAt`.
+
+**Endpoints:**
+
 - ⬜ `GET /api/v1/cards/search` (full-text + filters: color, CMC, rarity, format)
 - ⬜ `GET /api/v1/cards/:id` (card detail + prints)
+- ⬜ `GET /api/v1/cards/:id/prints` (print-selection modal)
 - ⬜ Autocomplete endpoint (< 200ms)
+- ⬜ Indexation Postgres : `tsvector` généré + GIN (full-text), GIN sur les tableaux, prefix/trigram
+  (autocomplete) — SQL brut
+- ⬜ `useCardSearch` dans `packages/query` (débloque Phase 4.3)
 
 ---
 
