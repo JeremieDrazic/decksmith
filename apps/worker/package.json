@@ -11,6 +11,7 @@
     "dev": "NODE_OPTIONS='--conditions=source' tsx watch src/index.ts",
     "start": "node dist/index.js",
     "sync:once": "NODE_OPTIONS='--conditions=source' tsx src/sync-once.ts",
+    "aggregate:once": "NODE_OPTIONS='--conditions=source' tsx src/aggregate-once.ts",
     "lint": "oxlint .",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
