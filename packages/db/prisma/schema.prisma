@@ -185,6 +185,8 @@ model SyncState {
   lastSyncedAt      DateTime? @map("last_synced_at") // When a run last succeeded
   lastCardCount     Int?      @map("last_card_count") // Only set on a run that upserted
   lastError         String?   @map("last_error") // Failure message when status = "failed"
+  lastCheckedAt     DateTime? @map("last_checked_at") // Bumped on every run (success/skip/fail) — the job's heartbeat; a stale value means the cron stopped
+  startedAt         DateTime? @map("started_at") // Start of the last real sync run (not skips) — a "running" status with an old startedAt is a stalled/crashed run
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

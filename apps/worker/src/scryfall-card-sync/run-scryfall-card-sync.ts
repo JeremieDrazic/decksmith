@@ -30,6 +30,9 @@ const CHUNK_SIZE = 200;
  */
 export async function runScryfallCardSync(): Promise<void> {
   const reporter = createSyncReporter();
+  // This run's timestamp: recorded as `lastCheckedAt` on every path (the job's
+  // heartbeat) and as `startedAt` when a real sync begins (to spot a stalled run).
+  const now = new Date();
   const info = await getBulkDataInfo();
   const dumpUpdatedAt = new Date(info.updatedAt);
 
@@ -40,7 +43,7 @@ export async function runScryfallCardSync(): Promise<void> {
   if (state?.lastDumpUpdatedAt && state.lastDumpUpdatedAt.getTime() === dumpUpdatedAt.getTime()) {
     await prisma.syncState.update({
       where: { source: SYNC_SOURCE },
-      data: { status: 'skipped' },
+      data: { status: 'skipped', lastCheckedAt: now },
     });
     reporter.unchanged(info.updatedAt);
     return;
@@ -48,8 +51,8 @@ export async function runScryfallCardSync(): Promise<void> {
 
   await prisma.syncState.upsert({
     where: { source: SYNC_SOURCE },
-    create: { source: SYNC_SOURCE, status: 'running' },
-    update: { status: 'running', lastError: null },
+    create: { source: SYNC_SOURCE, status: 'running', lastCheckedAt: now, startedAt: now },
+    update: { status: 'running', lastError: null, lastCheckedAt: now, startedAt: now },
   });
   reporter.start(info);
 
