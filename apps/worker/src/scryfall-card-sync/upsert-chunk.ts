@@ -1,52 +1,36 @@
 import { prisma } from '@decksmith/db';
 
+import { bulkUpsertCards } from './bulk-upsert-cards.js';
+import { bulkUpsertFaces } from './bulk-upsert-faces.js';
+import { bulkUpsertPrints } from './bulk-upsert-prints.js';
 import type { GroupedChunk } from './group-chunk.types.js';
 
 /**
- * Writes one grouped chunk to Postgres in a single transaction.
+ * Writes one grouped chunk to Postgres in a single transaction, using one bulk
+ * `INSERT … ON CONFLICT` per table (see `bulkUpsert*`) instead of a Prisma op per
+ * row. This keeps the whole sync idempotent (upserts on natural keys) while
+ * holding memory flat and cutting the run from ~15 min to seconds — the previous
+ * per-row-in-transaction approach both leaked memory (OOM in prod) and was slow.
  *
- * Every row is an `upsert` keyed on its natural key (`Card.oracleId`,
- * `CardFace.(oracleId, faceIndex)`, `CardPrint.scryfallId`), which makes the
- * whole sync idempotent: re-running produces the same rows, never duplicates.
- *
- * The operations run in FK order — cards, then faces, then prints — so a new
- * card is committed before the print/face rows that reference it. Wrapping a
- * chunk in one transaction makes it all-or-nothing: a crash mid-run leaves
- * earlier chunks committed (safe to re-process, thanks to idempotence) rather
- * than a half-written chunk.
- *
- * `prices` defaults to `{}` because `CardPrint.prices` is a required JSON column
- * while Scryfall may omit the field.
+ * The three writes run in FK order — cards, then faces, then prints — so a new
+ * card is committed before the face/print rows that reference it. Wrapping them in
+ * one transaction makes the chunk all-or-nothing: a crash mid-run leaves earlier
+ * chunks committed (safe to re-process, thanks to idempotence), never a half-
+ * written chunk.
  *
  * @param chunk - The deduplicated, FK-ordered lists from `groupChunk`
  */
 export async function upsertChunk(chunk: GroupedChunk): Promise<void> {
-  const cardOps = chunk.cards.map((card) =>
-    prisma.card.upsert({ where: { oracleId: card.oracleId }, create: card, update: card })
+  // Interactive transactions default to a 5s budget; a chunk's three bulk writes
+  // are fast but a latency spike to Supabase (remote pooler, several round-trips)
+  // can exceed it (P2028). 30s is ample headroom while still catching a genuine
+  // hang. maxWait covers pool-acquire time.
+  await prisma.$transaction(
+    async (db) => {
+      await bulkUpsertCards(db, chunk.cards);
+      await bulkUpsertFaces(db, chunk.faces);
+      await bulkUpsertPrints(db, chunk.prints);
+    },
+    { timeout: 30_000, maxWait: 15_000 }
   );
-
-  const faceOps = chunk.faces.map((face) =>
-    prisma.cardFace.upsert({
-      where: { oracleId_faceIndex: { oracleId: face.oracleId, faceIndex: face.faceIndex } },
-      create: face,
-      update: face,
-    })
-  );
-
-  const printOps = chunk.prints.map((print) => {
-    const data = { ...print, prices: print.prices ?? {} };
-    return prisma.cardPrint.upsert({
-      where: { scryfallId: print.scryfallId },
-      create: data,
-      update: data,
-    });
-  });
-
-  // Per-row upserts over the network are slow, so a chunk's transaction can run
-  // past Prisma's 5s default. Raise the budget (and the pool-acquire wait) until
-  // the bulk INSERT … ON CONFLICT rewrite lands (see follow-up issue).
-  await prisma.$transaction([...cardOps, ...faceOps, ...printOps], {
-    timeout: 60_000,
-    maxWait: 15_000,
-  });
 }

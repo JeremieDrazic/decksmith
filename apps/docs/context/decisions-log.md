@@ -4,6 +4,45 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-08-12] — Sync upsert rewritten to bulk `INSERT … ON CONFLICT` (OOM fix, #96)
+
+**Context:** The prod worker's daily Scryfall sync was **OOM-crash-looping** (heap ~1.9 GB, last
+successful sync 3 days stale, `SyncState.status` stuck at `running` because the OOM kill never hits
+the `catch`). Root cause found by instrumentation, not guesswork: the streaming path was first
+cleared (a slow-consumer probe kept heap flat at ~50 MB, so backpressure works), then the **per-row
+upsert** was confirmed as the leak — a probe of the real write loop showed heap climbing
+monotonically (127 → 411 MB by chunk 40 → OOM). Each chunk built ~600 Prisma ops
+(`prisma.card/cardFace/cardPrint.upsert` × 200 in one `$transaction`); the Prisma 7 client engine /
+adapter-pg retains something per op that never gets collected. This is the same work already tracked
+for perf as **#96**.
+
+**Decision:** replace the per-row upsert with **one bulk `INSERT … ON CONFLICT DO UPDATE` per
+table** (`bulkUpsertCards` / `Faces` / `Prints`), composed via `Prisma.sql` + `Prisma.join` (safe
+parameterized multi-row `VALUES`), run inside one interactive `$transaction` in FK order. Key
+points:
+
+- `gen_random_uuid()` supplies `CardFace`/`CardPrint` ids inline — `@default(uuid())` in Prisma is
+  **client-side**, so those columns have **no Postgres default** and a raw `INSERT` must provide the
+  id.
+- `cards` deliberately **omits** the level-2 aggregate columns (`rarities`/`finishes`/
+  `firstReleasedAt`) from both `INSERT` and `DO UPDATE`, so the per-print sync never clobbers what
+  `aggregateCardAttributes` owns.
+- `updated_at = now()` explicit (raw SQL bypasses `@updatedAt`); JSON via `::jsonb`, arrays as
+  `text[]`.
+- Interactive-transaction `timeout` raised to 30 s to absorb Supabase pooler latency spikes (P2028).
+
+Kept the interactive-transaction shape over the `$transaction([...])` array form for readability
+(explicit early-return on empty chunks, no lazy-PrismaPromise plumbing) — _clarity over cleverness_.
+
+**Impact:** `apps/worker/src/scryfall-card-sync/` — `upsert-chunk.ts` rewritten as a 3-call
+orchestrator + new `bulk-upsert-{cards,faces,prints}.ts`. Proven end-to-end: full dump in **3m13s**
+(34.5k cards, 101k prints) under a **512 MB** cap, heap flat — vs ~15 min + OOM before. Closes the
+perf goal of **#96** and unblocks the prod worker. **Lessons:** (1) instrument before fixing — the
+first hypothesis (broken stream backpressure) was wrong and a 2-minute probe disproved it; (2)
+Prisma's `@default(uuid())` generates client-side, so raw SQL must generate ids itself.
+
+---
+
 ## [2026-08-11] — Scryfall's 6 rarities added; duplicate `Rarity` definitions kept parallel
 
 **Context:** ADR-0032 denormalizes `Card.rarities[]` (aggregate of all a card's print rarities). Our
