@@ -14,7 +14,7 @@
 import { z } from 'zod';
 
 import { DateTimeSchema, UuidSchema } from '../primitives/common.js';
-import { ColorSchema } from '../primitives/enums.js';
+import { ColorSchema, RaritySchema } from '../primitives/enums.js';
 
 // =============================================================================
 // LEGALITIES
@@ -160,8 +160,28 @@ export const CardResponseSchema = z.object({
   /** Format legalities */
   legalities: LegalitiesSchema,
 
+  /**
+   * Distinct rarities this card has ever been printed at, aggregated across all
+   * prints by the sync worker (ADR-0032). A card may be common in one set and
+   * rare in another. Denormalized onto the oracle for single-table search.
+   */
+  rarities: z.array(RaritySchema),
+
+  /**
+   * Distinct finishes available across all prints (e.g. ["nonfoil", "foil",
+   * "etched"]), aggregated by the sync worker (ADR-0032). Free strings — matches
+   * CardPrint.finishes — since Scryfall may introduce new finish kinds.
+   */
+  finishes: z.array(z.string()),
+
   /** Link to Scryfall card page */
   scryfallUri: z.url(),
+
+  /**
+   * Earliest release date across all prints — drives the "newest/oldest" sort.
+   * Null until the sync backfills it, or when no print carries a release date.
+   */
+  firstReleasedAt: DateTimeSchema.nullable(),
 
   /** When this card was first synced */
   createdAt: DateTimeSchema,

@@ -4,7 +4,7 @@ import { Text } from '../../typography/Text';
 import { Eyebrow } from '../../typography/Eyebrow';
 import { RarityBadge } from './RarityBadge';
 
-const RARITIES = ['common', 'uncommon', 'rare', 'mythic'] as const;
+const RARITIES = ['common', 'uncommon', 'rare', 'special', 'mythic', 'bonus'] as const;
 const SIZES = ['sm', 'md', 'lg'] as const;
 
 const meta = {

@@ -49,6 +49,7 @@ export type NormalizedPrint = {
   scryfallId: string;
   oracleId: string;
   setCode: string;
+  setName: string;
   collectorNumber: string;
   illustrationId?: string;
   imageUris?: { front: NormalizedImageUris; back?: NormalizedImageUris };
@@ -59,6 +60,7 @@ export type NormalizedPrint = {
   localizedName?: string;
   localizedType?: string;
   localizedText?: string;
+  releasedAt?: Date;
 };
 
 /** Per-face oracle data → our `CardFace` table (multi-faced cards only). */

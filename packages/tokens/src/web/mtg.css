@@ -34,12 +34,17 @@
   --color-rarity-common: #b8b8b8;
   --color-rarity-uncommon: #8fa9bf;
   --color-rarity-rare: #c8a951;
+  --color-rarity-special: #8b47c4; /* timeshifted / special frame — historically purple */
   --color-rarity-mythic: #e05c1e;
+  --color-rarity-bonus: #2fa39a; /* bonus sheet (e.g. VMA Power Nine) */
 
   /* Rarity foreground — glyph color on each rarity badge, WCAG AA contrast-derived
-   * common 8.7:1 · uncommon 5.7:1 · rare 8.75:1 · mythic (white) 5.9:1 */
+   * common 8.7:1 · uncommon 5.7:1 · rare 8.75:1 · special (white) ~5:1 · mythic (white) 5.9:1 ·
+   * bonus 5.8:1 */
   --color-rarity-common-fg: #1a160b;
   --color-rarity-uncommon-fg: #1a160b;
   --color-rarity-rare-fg: #1a160b;
+  --color-rarity-special-fg: #ffffff;
   --color-rarity-mythic-fg: #ffffff;
+  --color-rarity-bonus-fg: #1a160b;
 }

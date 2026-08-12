@@ -18,6 +18,8 @@ const lightningBolt: ScryfallCard = {
   scryfall_uri: 'https://scryfall.com/card/lea/161',
   id: 'e3285e6b-3e79-4d7c-bf96-d920f973b122',
   set: 'lea',
+  set_name: 'Limited Edition Alpha',
+  released_at: '1993-08-05',
   collector_number: '161',
   rarity: 'common',
   finishes: ['nonfoil'],
@@ -47,6 +49,7 @@ const delver: ScryfallCard = {
   scryfall_uri: 'https://scryfall.com/card/isd/51',
   id: '11bf83bb-c95b-4b4f-9a56-ce7a1816307a',
   set: 'isd',
+  set_name: 'Innistrad',
   collector_number: '51',
   rarity: 'common',
   finishes: ['nonfoil', 'foil'],
@@ -90,6 +93,8 @@ const fireIce: ScryfallCard = {
   scryfall_uri: 'https://scryfall.com/card/apc/128',
   id: 'cf68e9b0-9a2e-4b7a-9c3e-0c1f0d2a3b4c',
   set: 'apc',
+  set_name: 'Apocalypse',
+  released_at: '2001-06-04',
   collector_number: '128',
   rarity: 'uncommon',
   finishes: ['nonfoil', 'foil'],
@@ -172,6 +177,22 @@ describe('normalizeCard', () => {
       expect(faces[0]?.colors).toEqual(['R']);
       expect(faces[1]?.colors).toEqual(['U']);
       expect(card.colorIdentity).toEqual(['U', 'R']);
+    });
+  });
+
+  describe('printing metadata', () => {
+    it('maps the set name and parses released_at into a UTC Date', () => {
+      const { print } = normalizeCard(lightningBolt);
+
+      expect(print.setName).toBe('Limited Edition Alpha');
+      expect(print.releasedAt).toEqual(new Date('1993-08-05'));
+    });
+
+    it('leaves releasedAt undefined when Scryfall omits released_at', () => {
+      const { print } = normalizeCard(delver);
+
+      expect(print.setName).toBe('Innistrad');
+      expect(print.releasedAt).toBeUndefined();
     });
   });
 });

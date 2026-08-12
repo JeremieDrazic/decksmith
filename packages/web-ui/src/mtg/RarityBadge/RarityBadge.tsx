@@ -13,7 +13,9 @@ const RARITY_MAP = {
   common: { fill: 'fill-rarity-common', label: 'Common' },
   uncommon: { fill: 'fill-rarity-uncommon', label: 'Uncommon' },
   rare: { fill: 'fill-rarity-rare', label: 'Rare' },
+  special: { fill: 'fill-rarity-special', label: 'Special' },
   mythic: { fill: 'fill-rarity-mythic', label: 'Mythic Rare' },
+  bonus: { fill: 'fill-rarity-bonus', label: 'Bonus' },
 } satisfies Record<Rarity, RarityConfig>;
 
 const badge = cva('inline-block flex-none', {

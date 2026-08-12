@@ -71,15 +71,19 @@ export const ColorSchema = z.enum(['W', 'U', 'B', 'R', 'G', 'C']);
 export type Color = z.infer<typeof ColorSchema>;
 
 /**
- * Card rarity levels.
+ * Card rarity levels (Scryfall's full set — order roughly ascending scarcity).
  *
- * Determines how often a card appears in booster packs:
+ * Booster-frequency rarities:
  * - common: ~10 per pack
  * - uncommon: ~3 per pack
  * - rare: ~1 per pack (or mythic)
  * - mythic: ~1 in 8 packs (replaces rare slot)
+ *
+ * Non-booster rarities Scryfall also emits:
+ * - special: timeshifted / special-frame cards
+ * - bonus: bonus-sheet cards (e.g. the Vintage Masters Power Nine)
  */
-export const RaritySchema = z.enum(['common', 'uncommon', 'rare', 'mythic']);
+export const RaritySchema = z.enum(['common', 'uncommon', 'rare', 'special', 'mythic', 'bonus']);
 export type Rarity = z.infer<typeof RaritySchema>;
 
 // =============================================================================

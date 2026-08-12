@@ -5,6 +5,7 @@ import { chunkAsyncIterable } from '@decksmith/utils';
 import { groupChunk } from './group-chunk.js';
 import { createSyncReporter } from './sync-reporter.js';
 import { upsertChunk } from './upsert-chunk.js';
+import { aggregateCardAttributes } from './aggregate-card-attributes.js';
 
 // Scryfall's bulk type we ingest; also the SyncState key. A future prices or
 // rulings sync would use a different source string against the same table.
@@ -68,6 +69,9 @@ export async function runScryfallCardSync(): Promise<void> {
       await upsertChunk(grouped);
       reporter.recordChunk(batch.length, grouped.cards.length);
     }
+
+    const aggregatedCount = await aggregateCardAttributes();
+    reporter.aggregated(aggregatedCount);
 
     await prisma.syncState.update({
       where: { source: SYNC_SOURCE },

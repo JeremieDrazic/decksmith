@@ -92,10 +92,10 @@ model Card {
   manaCost      String?  @map("mana_cost")
   typeLine      String?  @map("type_line")
   oracleText    String?  @map("oracle_text")
-  power         String?  // P/T/loyalty/defense are strings ("*", "1+*", "X") — never parse to int
+  power         String? // P/T/loyalty/defense are strings ("*", "1+*", "X") — never parse to int
   toughness     String?
-  loyalty       String?  // Planeswalker starting loyalty
-  defense       String?  // Battle defense
+  loyalty       String? // Planeswalker starting loyalty
+  defense       String? // Battle defense
   colors        String[] // Postgres array - stores ["W", "U"] etc.
   colorIdentity String[] @map("color_identity")
   keywords      String[] // Aggregated keyword abilities (Flying, Trample…) — card-level in Scryfall
@@ -103,10 +103,13 @@ model Card {
   cmc           Float
   layout        String
   legalities    Json // { "commander": "legal", "standard": "not_legal", ... }
+  rarities      String[]
+  finishes      String[]
   scryfallUri   String   @map("scryfall_uri")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  firstReleasedAt DateTime? @map("first_released_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   // Relations
   prints   CardPrint[]
@@ -134,9 +137,11 @@ model CardPrint {
   localizedName   String?   @map("localized_name")
   localizedType   String?   @map("localized_type")
   localizedText   String?   @map("localized_text")
+  setName         String?   @map("set_name")
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  releasedAt DateTime? @map("released_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
 
   // Relation: Restrict = can't delete a Card if prints exist
   card              Card              @relation(fields: [oracleId], references: [oracleId], onDelete: Restrict)
@@ -159,7 +164,7 @@ model CardFace {
   typeLine   String?  @map("type_line")
   oracleText String?  @map("oracle_text")
   colors     String[] // This face's colours (may differ per face)
-  power      String?  // Per-face gameplay stats (string) — may differ front vs back
+  power      String? // Per-face gameplay stats (string) — may differ front vs back
   toughness  String?
   loyalty    String?
   defense    String?

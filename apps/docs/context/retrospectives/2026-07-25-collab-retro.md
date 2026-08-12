@@ -180,6 +180,23 @@ concepts introduced in pair mode score ✅ at the next self-assessment.
   bundle) — the one that specifically explains why `apps/web` is blocked. Re-check at Phase 3.3
   (Card API) or any new `packages/db` consumer.
 
+- **Added 2026-08-11 (P2) — why denormalized/derived data is "safe" (reconstructibility):** the
+  safety of `Card.rarities[]` (ADR-0032) is **not** "it comes from the oracle" — it's that the field
+  is **derived from `card_prints`** (the source of truth) and **recomputed idempotently by the
+  sync** on every run. So drift is never permanent: a re-sync regenerates it. The mental model: a
+  derived value is safe to duplicate _when you can always rebuild it from the source of truth_.
+  Jérémie's miss: got the "coherence over perf" argument right, but framed the safety as "everything
+  comes from oracle" instead of "reconstructible from prints". Re-check at sync level 2 (the
+  aggregate pass).
+
+- **Added 2026-08-11 (P2) — `tsvector` + GIN vs `LIKE '%…%'`:** a leading-wildcard `LIKE '%x%'`
+  can't use an index → Postgres **full-scans every row's text** each query, and matches neither case
+  nor word-stems. A `tsvector` pre-chops each card's text into normalized word-roots **once** (the
+  book's back-of-book index); a **GIN** index is the **inverted index** (word → which cards) that
+  turns "which cards contain 'lightning'" into a direct lookup instead of a full read. Jérémie's
+  recall: kept the "index of a book" analogy (the anchor) but not the mechanism (full-scan cost +
+  inverted index + normalization). Re-check when building the search/autocomplete endpoints.
+
 ### E3 — Retention check at session end
 
 `session.end` gains a step: 2–3 questions on the concepts introduced during the session. Misses join

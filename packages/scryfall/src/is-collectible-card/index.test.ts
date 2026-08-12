@@ -14,6 +14,7 @@ const base: ScryfallCard = {
   scryfall_uri: 'https://scryfall.com/card/lea/161',
   id: 'e3285e6b-3e79-4d7c-bf96-d920f973b122',
   set: 'lea',
+  set_name: 'Limited Edition Alpha',
   collector_number: '161',
   rarity: 'common',
   finishes: ['nonfoil'],

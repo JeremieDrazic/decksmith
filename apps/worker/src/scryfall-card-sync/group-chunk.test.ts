@@ -31,6 +31,7 @@ function makeBundle(
       scryfallId,
       oracleId,
       setCode: 'tst',
+      setName: 'Test Set',
       collectorNumber: '1',
       rarity: 'common',
       finishes: ['nonfoil'],

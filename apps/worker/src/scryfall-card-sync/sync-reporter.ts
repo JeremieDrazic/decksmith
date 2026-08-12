@@ -119,6 +119,14 @@ export function createSyncReporter() {
       console.info(paint('dim', `↩ dump unchanged (${isoDay(updatedAt)}) — skipping`));
     },
 
+    /** Record the post-load aggregation pass: how many card rows it refreshed. */
+    aggregated(count: number): void {
+      clearLine();
+      console.info(
+        `${paint(['cyan', 'bold'], '🧩 aggregated')}${paint('dim', ` — ${numberFmt.format(count)} cards refreshed`)}`
+      );
+    },
+
     /** Final success summary. */
     done(): void {
       clearLine();

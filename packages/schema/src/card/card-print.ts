@@ -90,6 +90,9 @@ export const CardPrintResponseSchema = z.object({
   /** Set code (e.g., "LEA" for Limited Edition Alpha) */
   setCode: z.string().min(2).max(6),
 
+  /** Human-readable set name (e.g., "Limited Edition Alpha"). Null until backfilled. */
+  setName: z.string().nullable(),
+
   /** Collector number within set (e.g., "162") */
   collectorNumber: z.string(),
 
@@ -110,6 +113,9 @@ export const CardPrintResponseSchema = z.object({
 
   /** When prices were last updated */
   pricesUpdatedAt: DateTimeSchema.nullable(),
+
+  /** This printing's release date. Null until backfilled, or when Scryfall omits it. */
+  releasedAt: DateTimeSchema.nullable(),
 
   /** Language code (e.g., "en", "fr", "es") */
   language: z.string().length(2),
