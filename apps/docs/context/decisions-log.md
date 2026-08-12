@@ -4,6 +4,24 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-08-12] — `SyncState` observability: `lastCheckedAt` + `startedAt` (#116)
+
+**Context:** The OOM incident (entry below) left `SyncState.status` stuck at `running` for days, and
+`lastSyncedAt` — only bumped on a real write — couldn't tell "cron skipping daily (dump unchanged)"
+from "cron dead". No field answered _did the job run?_ or _is this `running` stalled?_.
+
+**Decision:** add two nullable columns to `SyncState`. `lastCheckedAt` is bumped on **every** run
+(skip and running paths, so success/fail inherit it) — the job's heartbeat; a stale value means the
+cron stopped. `startedAt` marks the start of the last **real** sync run — a `running` status with an
+old `startedAt` is a stalled/crashed run (an OOM kill never reaches the `catch`). One `now` in
+`runScryfallCardSync`, written on the skip and running paths. No index (a handful of rows), no DTO
+(internal worker bookkeeping, not API-exposed).
+
+**Impact:** `packages/db` (`SyncState` + `db:push`), `apps/worker` (`run-scryfall-card-sync.ts`). PR
+#116.
+
+---
+
 ## [2026-08-12] — Sync upsert rewritten to bulk `INSERT … ON CONFLICT` (OOM fix, #96)
 
 **Context:** The prod worker's daily Scryfall sync was **OOM-crash-looping** (heap ~1.9 GB, last

@@ -221,9 +221,20 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 - ✅ Sync niveau 1 (par-print) : `set_name` + `released_at` remontés du dump →
   `NormalizedPrint.setName`/`releasedAt` (parse ISO→`Date` déterministe) → écrits par le worker sans
   changement ; tests colocalisés (nominal + date absente).
-- ⬜ Sync niveau 2 (agrégats) : passe SQL post-load (`UPDATE cards … FROM … GROUP BY oracle_id`,
-  `unnest` sur `finishes`) en phase finale du job + entrée one-shot — peuple
-  `rarities`/`finishes`/`firstReleasedAt`.
+- ✅ Sync niveau 2 (agrégats) : passe SQL post-load — `UPDATE cards … FROM` deux CTE
+  (`array_agg(DISTINCT rarity)` + `min(released_at)` d'un côté, `unnest(finishes)` de l'autre) en
+  phase finale du job (`aggregateCardAttributes`) + entrée one-shot `aggregate:once`. Peuple
+  `rarities`/`finishes`/`firstReleasedAt`. Mergé #114 ; backfill exécuté (rarities/finishes 100 %,
+  `first_released_at` 100 % après re-sync complet).
+- ✅ **Fix OOM du sync (2026-08-12, #115 → #96 fermé)** : le per-row upsert fuyait en mémoire (heap
+  ~1,9 GB → OOM crash-loop en prod, sync cassé 3 j). Diagnostiqué par instrumentation (streaming
+  innocenté, Prisma per-row confirmé). Remplacé par un **bulk `INSERT … ON CONFLICT`** par table
+  (`bulkUpsert{Cards,Faces,Prints}` via `Prisma.sql`/`join`, `gen_random_uuid()` pour les id
+  `@default(uuid())` client-side). Dump complet **3m13s / <512 MB** (vs ~15 min + OOM) ; P2028
+  absorbé par un timeout de transaction à 30 s. Prod redéployée + vérifiée saine.
+- ✅ Observabilité `SyncState` (mergé #116) : `lastCheckedAt` (heartbeat sur tous les chemins)
+  - `startedAt` (détection d'un `running` bloqué) — comble le trou « le cron tourne-t-il ? » vs «
+    dernier succès ». `db:push` appliqué.
 
 **Endpoints:**
 
