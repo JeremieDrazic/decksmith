@@ -1,14 +1,14 @@
 # Project State
 
-_Updated: 2026-08-11 (Phase 3.3 Card API **started** — ADR-0032 (Active) fixes the search
-architecture: per-resource endpoints + **targeted denormalization** of print attributes onto `Card`.
-Schema migrated (`Card.rarities`/`finishes`/`firstReleasedAt` + `CardPrint.releasedAt`/`setName`,
-`db:push` applied) + DTOs updated; Scryfall `special`/`bonus` rarities added across every layer;
-sync **level 1** (per-print `releasedAt`/`setName` normalization) done + tested. Remaining: sync
-**level 2** (aggregate SQL pass) then the endpoints. On branch `feat/phase-3.3-card-api` (PR #114
-open). This file describes the **current** state only: environment, what works today, blockers, and
-what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
-`retrospectives/`._
+_Updated: 2026-08-12 (Phase 3.3 Card API — **sync levels 1 & 2 done and merged** (#114). Level 2 = a
+post-load SQL pass (`aggregateCardAttributes`) recomputing `Card.rarities`/`finishes`/
+`firstReleasedAt` from the prints; backfilled. **Prod OOM incident resolved** (#115, #96 closed):
+the per-row sync upsert leaked memory and crash-looped the worker — replaced by a bulk
+`INSERT … ON CONFLICT` per table (3m13s / <512 MB vs ~15 min + OOM); prod redeployed and verified
+healthy. `SyncState` observability (`lastCheckedAt` + `startedAt`) **merged** (#116, released 1.9.0;
+`db:push` applied). Remaining in 3.3: the endpoints. This file describes the **current** state only:
+environment, what works today, blockers, and what's next. Per-session history lives in
+`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
 
@@ -95,9 +95,6 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
   `test-strategy.md`
 - Dev docker-compose now exists but Redis-only (Postgres stays on Supabase cloud); needs OrbStack/
   Docker running for the worker
-- Batch upsert is per-row-in-transaction (slow, ~15 min for the full dump); bulk
-  `INSERT … ON CONFLICT` optimization tracked in #96 (P2028 timeout worked around with chunk 200 +
-  60 s budget)
 - `packages/query` has no `useCardSearch` — blocked on Phase 3 (Scryfall)
 - Deploy workflow actions target deprecated Node 20 — bump in a future session
 - Storybook preview: brief light-theme flash on story change (cosmetic)
@@ -112,16 +109,10 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.3 sync level 2 (aggregates)** — post-load SQL pass
-  (`UPDATE cards … FROM (… GROUP BY oracle_id)`, `unnest` on `finishes`) as the final job phase + a
-  standalone one-shot entry; fills `Card.rarities`/`finishes`/`firstReleasedAt`. **Next up.** Then a
-  full re-sync to backfill the new columns.
 - **Phase 3.3 endpoints** — `GET /cards/search` (+ `CardSearchQuerySchema`: filters/sort/pagination)
   - `/cards/:id` + `/cards/:id/prints` + autocomplete; Postgres indexing (generated `tsvector` +
     GIN, array GIN, prefix/trigram) in raw SQL; `useCardSearch` in `packages/query` (unblocks Phase
-    4.3).
-- **#96** — bulk `INSERT … ON CONFLICT` upsert (removes the P2028 workaround, ~seconds instead of
-  ~15 min). Top perf ticket.
+    4.3). **Next up.**
 - **#113** — unify the duplicated MTG enums (`Rarity`/`Color`: schema Zod vs domain type) into a
   single source of truth (small ADR). Surfaced while adding `special`/`bonus` rarities.
 - **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
@@ -137,9 +128,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- **#114** `feat/phase-3.3-card-api` — Phase 3.3 groundwork (ADR-0032, schema fields + DTOs,
-  `special`/`bonus` rarities, sync level 1). Additive + green; not yet merged. Sync level 2 +
-  endpoints continue on this branch (or a follow-up) before/after merge.
+- None. #114 (Phase 3.3 sync levels 1 & 2), #115 (bulk-upsert OOM fix, closes #96) and #116
+  (`SyncState` heartbeat, released 1.9.0) **all merged**.
 
 ---
 
@@ -177,9 +167,7 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `feat/phase-3.3-card-api` — Phase 3.3 groundwork (ADR-0032, schema fields + DTOs,
-  `special`/`bonus` rarities, sync level 1). Based on `main` post-#112. **Pushed — PR #114 open.**
-  Next: sync level 2 (aggregate SQL pass) + endpoints.
+- `main` — #116 merged (released 1.9.0). Next: the Phase 3.3 Card API endpoints.
 
 ---
 
