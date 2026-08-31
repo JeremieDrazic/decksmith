@@ -21,17 +21,17 @@ What works today is the foundation: accounts, the card database, and the design 
 deckbuilding and printing features described in the Vision are designed (database models and API
 contracts are in place) but not implemented yet.
 
-| Area | State |
-|---|---|
-| Authentication (register, login, password reset) | Working |
-| User profile and preferences | Working |
-| Scryfall card sync (~34.5k cards, ~101k prints) | Working |
-| Design system and component library | Working |
-| Card search API | In progress |
-| Deck creation and editing | Designed, not implemented |
-| Decklist import (plain text) | Designed, not implemented |
-| Proxy sheet generation (A4, 3×3) | Designed, not implemented |
-| Print-ready PDF export (crop marks) | Designed, not implemented |
+| Area                                             | State                     |
+| ------------------------------------------------ | ------------------------- |
+| Authentication (register, login, password reset) | Working                   |
+| User profile and preferences                     | Working                   |
+| Scryfall card sync (~34.5k cards, ~101k prints)  | Working                   |
+| Design system and component library              | Working                   |
+| Card search API                                  | In progress               |
+| Deck creation and editing                        | Designed, not implemented |
+| Decklist import (plain text)                     | Designed, not implemented |
+| Proxy sheet generation (A4, 3×3)                 | Designed, not implemented |
+| Print-ready PDF export (crop marks)              | Designed, not implemented |
 
 APIs and internal structure may change as the project evolves.
 
@@ -108,14 +108,14 @@ mobile app, and background jobs can share the same domain logic and data contrac
 
 ### Applications
 
-| App | Purpose |
-|---|---|
-| `apps/web` | React SPA for deck building and print preparation |
-| `apps/api` | Fastify HTTP API — authentication, deck data, job orchestration |
-| `apps/worker` | Background worker — Scryfall sync, PDF generation |
-| `apps/docs` | VitePress documentation site (ADR, specs) |
-| `apps/storybook` | Component library workbench |
-| `apps/mobile` | Expo app — placeholder, not started |
+| App              | Purpose                                                         |
+| ---------------- | --------------------------------------------------------------- |
+| `apps/web`       | React SPA for deck building and print preparation               |
+| `apps/api`       | Fastify HTTP API — authentication, deck data, job orchestration |
+| `apps/worker`    | Background worker — Scryfall sync, PDF generation               |
+| `apps/docs`      | VitePress documentation site (ADR, specs)                       |
+| `apps/storybook` | Component library workbench                                     |
+| `apps/mobile`    | Expo app — placeholder, not started                             |
 
 ### Shared packages
 
