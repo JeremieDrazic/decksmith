@@ -9,6 +9,35 @@ It is designed first for my own use: to experiment, iterate, and build decks ser
 strong focus on correctness, structure, and long-term maintainability.  
 If it's useful to others, even better.
 
+## Links
+
+The app itself requires an account. Everything below is public.
+
+**Look at it**
+
+|                                                           |                                                                     |
+| --------------------------------------------------------- | ------------------------------------------------------------------- |
+| [Design system](https://decksmith.jerem.io/design-system) | Storybook — components, tokens, accessibility checks on every story |
+| [API reference](https://decksmith.jerem.io/api/reference) | OpenAPI generated from Zod, rendered with Scalar                    |
+
+**Read the thinking**
+
+|                                                                        |                                                |
+| ---------------------------------------------------------------------- | ---------------------------------------------- |
+| [Documentation](https://decksmith.jerem.io/docs/)                      | VitePress site — the whole thing               |
+| [Architecture decisions](https://decksmith.jerem.io/docs/adr/)         | ADRs, with the trade-offs written down         |
+| [Feature specs](https://decksmith.jerem.io/docs/specs/)                | What each feature is meant to do               |
+| [Roadmap](https://decksmith.jerem.io/docs/roadmap)                     | Phase by phase, with what is actually done     |
+| [Project state](https://decksmith.jerem.io/docs/context/project-state) | What works today, what is broken, what is next |
+
+**Running system**
+
+|                                                                                                     |                                 |
+| --------------------------------------------------------------------------------------------------- | ------------------------------- |
+| [Health](https://decksmith.jerem.io/api/health) · [Version](https://decksmith.jerem.io/api/version) | Live endpoints                  |
+| [Releases](https://github.com/JeremieDrazic/decksmith/releases)                                     | Automated with semantic-release |
+| [Issues](https://github.com/JeremieDrazic/decksmith/issues)                                         | The working backlog             |
+
 <!-- TODO: add a screenshot of a generated A4 3x3 proxy sheet here once packages/pdf ships. -->
 
 ---
