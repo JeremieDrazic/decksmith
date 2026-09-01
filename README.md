@@ -3,7 +3,14 @@
 Decksmith is a personal tool for building Magic: The Gathering decks and generating clean,
 print-ready proxy sheets.
 
-**[decksmith.jerem.io](https://decksmith.jerem.io)**
+**[decksmith.jerem.io](https://decksmith.jerem.io)** — the app itself requires an account. These
+three do not:
+
+|                                                           |                                                      |
+| --------------------------------------------------------- | ---------------------------------------------------- |
+| [Design system](https://decksmith.jerem.io/design-system) | Storybook — components, tokens, accessibility checks |
+| [API reference](https://decksmith.jerem.io/api/reference) | OpenAPI, rendered with Scalar                        |
+| [Documentation](https://decksmith.jerem.io/docs/)         | Architecture, ADRs, specs                            |
 
 It is designed first for my own use: to experiment, iterate, and build decks seriously — with a
 strong focus on correctness, structure, and long-term maintainability.  
