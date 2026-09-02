@@ -48,6 +48,11 @@
       "import": "./dist/card/prices.js",
       "types": "./dist/card/prices.d.ts"
     },
+    "./card/search": {
+      "source": "./src/card/search.ts",
+      "import": "./dist/card/search.js",
+      "types": "./dist/card/search.d.ts"
+    },
     "./user/user": {
       "source": "./src/user/user.ts",
       "import": "./dist/user/user.js",

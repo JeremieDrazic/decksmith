@@ -6,8 +6,9 @@ import { aggregateCardAttributes } from './scryfall-card-sync/aggregate-card-att
 
 /**
  * One-off manual trigger for the level-2 aggregation pass *only* — recomputes
- * the denormalized `Card.rarities`/`finishes`/`firstReleasedAt` columns from the
- * prints already in the database, without re-downloading the Scryfall dump.
+ * the denormalized `Card.rarities`/`finishes`/`sets`/`firstReleasedAt` columns
+ * from the prints already in the database, without re-downloading the Scryfall
+ * dump.
  *
  * Used to backfill those columns on data loaded before they existed: a full sync
  * would re-fetch + re-upsert the whole dump (~15 min), whereas this is a single
