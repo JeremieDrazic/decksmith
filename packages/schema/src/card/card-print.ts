@@ -193,3 +193,16 @@ export const CardPrintSelectionSchema = z.object({
   quantity: z.number().int().positive().default(1),
 });
 export type CardPrintSelection = z.infer<typeof CardPrintSelectionSchema>;
+
+/**
+ * Card detail with all its prints — the `GET /api/v1/cards/:oracleId` response.
+ *
+ * The full oracle card (rules identity, faces, legalities) plus every printing
+ * (sets, artwork, prices). Lives here rather than in `card.ts` because that would
+ * make `card.ts` import `card-print.ts`, which already imports `card.ts` — a cycle.
+ */
+export const CardWithPrintsSchema = CardResponseSchema.extend({
+  /** Every printing of this card. */
+  prints: z.array(CardPrintResponseSchema),
+});
+export type CardWithPrints = z.infer<typeof CardWithPrintsSchema>;

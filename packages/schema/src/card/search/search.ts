@@ -10,7 +10,10 @@
 
 import { z } from 'zod';
 
-import { ColorSchema, FormatSchema, RaritySchema } from '../primitives/enums.js';
+import { ColorSchema, FormatSchema, RaritySchema } from '../../primitives/enums.js';
+import { makePaginatedSchema } from '../../primitives/pagination/pagination.js';
+
+import { CardSearchResultSchema } from '../card.js';
 
 /**
  * Builds a Zod schema that parses a comma-separated param **value** into a
@@ -91,3 +94,10 @@ export const CardSearchQuerySchema = z
     path: ['cmcMax'],
   });
 export type CardSearchQuery = z.infer<typeof CardSearchQuerySchema>;
+
+/**
+ * Card search response — a page of card search results (grid-ready items:
+ * name, mana cost, type line, colours, and the most-recent print's image).
+ */
+export const CardSearchResponseSchema = makePaginatedSchema(CardSearchResultSchema);
+export type CardSearchResponse = z.infer<typeof CardSearchResponseSchema>;
