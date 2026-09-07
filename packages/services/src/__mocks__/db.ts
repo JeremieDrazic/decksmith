@@ -30,6 +30,12 @@ export const prisma = {
     create: vi.fn(),
     update: vi.fn(),
   },
+  card: {
+    findUnique: vi.fn(),
+  },
+  cardPrint: {
+    findMany: vi.fn(),
+  },
 };
 
 export const SUPABASE_USER_ALREADY_EXISTS = 'user_already_exists';

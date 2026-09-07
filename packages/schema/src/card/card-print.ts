@@ -206,3 +206,20 @@ export const CardWithPrintsSchema = CardResponseSchema.extend({
   prints: z.array(CardPrintResponseSchema),
 });
 export type CardWithPrints = z.infer<typeof CardWithPrintsSchema>;
+
+/**
+ * Sort order for a card's prints (`GET /api/v1/cards/:oracleId/prints`).
+ *
+ * - date: newest printing first (by release date)
+ * - name: alphabetical by set name
+ *
+ * `price` is intentionally absent until pricing lands (Phase 8).
+ */
+export const CardPrintSortSchema = z.enum(['date', 'name']);
+export type CardPrintSort = z.infer<typeof CardPrintSortSchema>;
+
+/** Query params for `GET /api/v1/cards/:oracleId/prints`. */
+export const CardPrintsQuerySchema = z.object({
+  sort: CardPrintSortSchema.default('date'),
+});
+export type CardPrintsQuery = z.infer<typeof CardPrintsQuerySchema>;
