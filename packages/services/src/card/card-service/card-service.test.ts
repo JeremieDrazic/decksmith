@@ -4,7 +4,7 @@ vi.mock('@decksmith/db', () => import('../../__mocks__/db.js'));
 
 import { prisma } from '@decksmith/db';
 
-import { getCardPrints, getCardWithPrints } from './card-service.js';
+import { autocompleteCards, getCardPrints, getCardWithPrints } from './card-service.js';
 
 // ---------------------------------------------------------------------------
 // Factory
@@ -117,5 +117,36 @@ describe('getCardPrints', () => {
       where: { oracleId: 'oracle-123' },
       orderBy: { setName: { sort: 'asc', nulls: 'last' } },
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// autocompleteCards
+// ---------------------------------------------------------------------------
+
+describe('autocompleteCards', () => {
+  it('returns the rows matched by the query', async () => {
+    const rows = [
+      {
+        oracle_id: 'o1',
+        name: 'Lightning Bolt',
+        mana_cost: '{R}',
+        type_line: 'Instant',
+        colors: ['R'],
+        cmc: 1,
+      },
+    ];
+    vi.mocked(prisma.$queryRaw).mockResolvedValue(rows as never);
+
+    const result = await autocompleteCards('bolt');
+
+    expect(result).toEqual(rows);
+    expect(prisma.$queryRaw).toHaveBeenCalledOnce();
+  });
+
+  it('returns an empty list when nothing matches', async () => {
+    vi.mocked(prisma.$queryRaw).mockResolvedValue([] as never);
+
+    expect(await autocompleteCards('zzzzz')).toEqual([]);
   });
 });

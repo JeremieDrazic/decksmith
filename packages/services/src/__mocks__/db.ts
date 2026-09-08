@@ -36,6 +36,7 @@ export const prisma = {
   cardPrint: {
     findMany: vi.fn(),
   },
+  $queryRaw: vi.fn(),
 };
 
 export const SUPABASE_USER_ALREADY_EXISTS = 'user_already_exists';
