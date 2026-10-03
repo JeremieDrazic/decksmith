@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import fp from 'fastify-plugin';
 
 import authRoutes from '../modules/auth/auth-routes.js';
+import cardRoutes from '../modules/card/card-routes.js';
 import userRoutes from '../modules/user/user-routes.js';
 
 /**
@@ -15,6 +16,7 @@ export default fp(
     await app.register(
       async (v1) => {
         await v1.register(authRoutes, { prefix: '/auth' });
+        await v1.register(cardRoutes, { prefix: '/cards' });
         await v1.register(userRoutes, { prefix: '/users' });
       },
       { prefix: '/api/v1' }
