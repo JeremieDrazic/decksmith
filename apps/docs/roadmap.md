@@ -238,12 +238,21 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 
 **Endpoints:**
 
-- ⬜ `GET /api/v1/cards/search` (full-text + filters: color, CMC, rarity, format)
-- ⬜ `GET /api/v1/cards/:id` (card detail + prints)
-- ⬜ `GET /api/v1/cards/:id/prints` (print-selection modal)
-- ⬜ Autocomplete endpoint (< 200ms)
-- ⬜ Indexation Postgres : `tsvector` généré + GIN (full-text), GIN sur les tableaux, prefix/trigram
-  (autocomplete) — SQL brut
+- ✅ DTOs (`packages/schema`) : `CardSearchQuerySchema` (filtres/tri/pagination, `makeCsvSchema` via
+  `z.preprocess`) + `CardSearchResponseSchema` (via `makePaginatedSchema` générique),
+  `CardWithPrintsSchema` (dans `card-print.ts`, évite le cycle card↔card-print), `CardPrintsQuery`,
+  `CardAutocompleteQuery/Response` (#122)
+- ✅ Indexation Postgres (#122) : GIN sur `colors`/`rarities`/`sets` côté Prisma + index
+  d'expression full-text pondéré (name A > type B > texte C) + trigram `pg_trgm` sur `lower(name)`
+  en SQL brut (`sql/card-search-indexes.sql`), rejoué automatiquement par `db:push` (idempotent ;
+  `migrate diff` confirme que `db push` ne drop pas les index d'expression/trigram)
+- ✅ Couche service (`packages/services/card-service`, retourne des valeurs métier — ADR-0024, le
+  mapping DTO vit côté route) : `searchCards` (full-text `@@` + `ts_rank`, filtres dynamiques en
+  `Prisma.sql`, image du print le plus récent via `LEFT JOIN LATERAL`, `{ rows, total }`),
+  `getCardWithPrints`, `getCardPrints`, `autocompleteCards` (trigram) + util `makeContainsPattern` ;
+  **smoke-testé en réel** (#122)
+- ⬜ Routes `apps/api` : `GET /cards/search` · `/cards/:id` · `/cards/:id/prints` ·
+  `/cards/autocomplete` + `card-mapper.ts` (valeur métier Prisma → DTO)
 - ⬜ `useCardSearch` dans `packages/query` (débloque Phase 4.3)
 
 ---

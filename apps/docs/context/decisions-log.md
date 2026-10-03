@@ -4,6 +4,46 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-10-03] — Card search indexes: two-tier (Prisma GIN + raw SQL), replayed by `db:push`
+
+**Context:** Card search needs GIN indexes on the array columns (`colors`/`rarities`/`sets`), a
+full-text **expression** index (`to_tsvector` over name/type/oracle_text) and a `pg_trgm`
+**trigram** index on `lower(name)`. Prisma can express GIN on scalar lists but **not**
+expression/trigram indexes. And `prisma db push` is declarative — it drops DB objects absent from
+the schema.
+
+**Decision:** two tiers. (1) GIN array indexes in `schema.prisma` (Prisma-managed, survive
+`db push`). (2) Full-text + trigram + the `pg_trgm` extension in raw SQL
+(`packages/db/sql/card-search-indexes.sql`, idempotent `IF NOT EXISTS`), with `db:push` rewritten to
+`prisma db push && prisma db execute --file …` so the SQL is replayed on every push. `migrate diff`
+confirmed `db push` does **not** drop expression/trigram indexes (Prisma doesn't introspect them),
+so the replay is for fresh environments, not repair. The weighted full-text expression (name A >
+type B
+
+> oracle text C) must stay byte-identical between the index and the query, so it's a single function
+> in the service.
+
+**Impact:** `packages/db` (`schema.prisma` GIN, `sql/card-search-indexes.sql`, `db:push` script).
+
+---
+
+## [2026-10-03] — Card search: service returns plain domain values, route maps (ADR-0024 confirmed)
+
+**Context:** Debated whether `card-service` should map Prisma→DTO itself (returning DTOs) or return
+plain values and let `apps/api` map. ADR-0024 already legislates this; a `cto-advisor` pass flagged
+that returning DTOs couples the service to the HTTP wire format (ISO dates, pagination envelope) and
+weakens reuse for the future worker caller.
+
+**Decision:** keep ADR-0024 — service returns plain domain values, the route maps to DTO (via a
+`card-mapper`, mirroring `user-mapper`). No new/amended ADR. Nuance for the `$queryRaw` functions
+(`searchCards`/`autocomplete`): their raw SQL rows **are** the plain value (no Prisma model to
+protect), so the service picks the row shape, the route still owns the DTO + pagination envelope.
+
+**Impact:** `packages/services/card-service` (returns `{ rows, total }` / Prisma records);
+`card-mapper` + routes to come in `apps/api`.
+
+---
+
 ## [2026-09-05] — Card search has no `packages/domain` layer (service-direct)
 
 **Context:** The Phase 3.3 build plan reserved a step for pure filter parsers/validators in

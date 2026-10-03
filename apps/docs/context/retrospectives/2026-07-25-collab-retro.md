@@ -197,6 +197,15 @@ concepts introduced in pair mode score ✅ at the next self-assessment.
   recall: kept the "index of a book" analogy (the anchor) but not the mechanism (full-scan cost +
   inverted index + normalization). Re-check when building the search/autocomplete endpoints.
 
+- **Added 2026-10-03 (P2) — `prisma db push` is declarative/destructive + the two-tier index
+  split:** `db push` makes the DB match the schema and **drops any object not in it**. Prisma can
+  express GIN on array columns but **not** expression (full-text `to_tsvector`) or trigram
+  (`pg_trgm`) indexes — so those live in raw SQL (`sql/card-search-indexes.sql`), replayed by the
+  `db:push` script. What _forces_ the two-tier split is Prisma's inability to express those indexes,
+  not preference. Jérémie's miss: blanked on what forces the separation (kept the "robot + fridge"
+  analogy for `db push` being destructive, but not that Prisma _can't express_ the full-text/trigram
+  indexes). Re-check when touching the search indexes or adding a new index type.
+
 ### E3 — Retention check at session end
 
 `session.end` gains a step: 2–3 questions on the concepts introduced during the session. Misses join

@@ -1,13 +1,14 @@
 # Project State
 
-_Updated: 2026-08-12 (Phase 3.3 Card API — **sync levels 1 & 2 done and merged** (#114). Level 2 = a
-post-load SQL pass (`aggregateCardAttributes`) recomputing `Card.rarities`/`finishes`/
-`firstReleasedAt` from the prints; backfilled. **Prod OOM incident resolved** (#115, #96 closed):
-the per-row sync upsert leaked memory and crash-looped the worker — replaced by a bulk
-`INSERT … ON CONFLICT` per table (3m13s / <512 MB vs ~15 min + OOM); prod redeployed and verified
-healthy. `SyncState` observability (`lastCheckedAt` + `startedAt`) **merged** (#116, released 1.9.0;
-`db:push` applied). Remaining in 3.3: the endpoints. This file describes the **current** state only:
-environment, what works today, blockers, and what's next. Per-session history lives in
+_Updated: 2026-10-03 (Phase 3.3 Card API — **search data + service layer done and merged** (#122):
+schema DTOs (`CardSearchQuerySchema`, paginated `CardSearchResponseSchema`, `CardWithPrints`,
+autocomplete), Postgres indexes (GIN on `colors`/`rarities`/`sets` via Prisma + a weighted full-text
+expression index + `pg_trgm` trigram in raw SQL, replayed by `db:push`), and the `card-service`
+(`searchCards` / `getCardWithPrints` / `getCardPrints` / `autocompleteCards`) returning plain domain
+values — ADR-0024, mapping to DTO lives route-side; **smoke-tested against the real DB**. Earlier in
+3.3: sync levels 1 & 2 (#114), OOM fix (#115/#96), `SyncState` heartbeat (#116). Remaining in 3.3:
+the `apps/api` routes (+ a `card-mapper`) and `useCardSearch`. This file describes the **current**
+state only: environment, what works today, blockers, and what's next. Per-session history lives in
 `decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
@@ -65,9 +66,10 @@ via `docker-compose.yml` (dev). One-off trigger `pnpm worker:sync:once`. **Deplo
 Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
 codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard` + bulk client:
 `getBulkDataInfo` / `fetchBulkStream` (gzip) / `streamNormalizedCards` (JSONL via readline),
-provider knowledge), `api-client`, `query`, `services`, `test-utils`, `utils` (+
-`chunkAsyncIterable`), `i18n`, `db`. Build pipeline compiles packages to `dist/`; `apps/api` runs
-compiled `node dist/index.js`.
+provider knowledge), `api-client`, `query`, `services` (+ `card-service`: `searchCards` /
+`getCardWithPrints` / `getCardPrints` / `autocompleteCards` via `$queryRaw` + `Prisma.sql`,
+smoke-tested), `test-utils`, `utils` (+ `chunkAsyncIterable`, `makeContainsPattern`), `i18n`, `db`.
+Build pipeline compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
 
 **Production** — fully deployed, see Infrastructure below.
 
@@ -109,10 +111,10 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.3 endpoints** — `GET /cards/search` (+ `CardSearchQuerySchema`: filters/sort/pagination)
-  - `/cards/:id` + `/cards/:id/prints` + autocomplete; Postgres indexing (generated `tsvector` +
-    GIN, array GIN, prefix/trigram) in raw SQL; `useCardSearch` in `packages/query` (unblocks Phase
-    4.3). **Next up.**
+- **Phase 3.3 routes** — the `card-service` + DTOs + indexes are done (#122); next is the HTTP
+  layer: `GET /cards/search` · `/cards/:id` · `/cards/:id/prints` · `/cards/autocomplete` in
+  `apps/api` (pure glue), plus a `card-mapper.ts` turning the service's plain domain values into
+  DTOs (ADR-0024). Then `useCardSearch` in `packages/query` (unblocks Phase 4.3). **Next up.**
 - **#113** — unify the duplicated MTG enums (`Rarity`/`Color`: schema Zod vs domain type) into a
   single source of truth (small ADR). Surfaced while adding `special`/`bonus` rarities.
 - **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
@@ -128,8 +130,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- None. #114 (Phase 3.3 sync levels 1 & 2), #115 (bulk-upsert OOM fix, closes #96) and #116
-  (`SyncState` heartbeat, released 1.9.0) **all merged**.
+- None. #122 (Phase 3.3 search data + service layer) **merged**. Earlier: #114, #115 (closes #96),
+  #116 all merged.
 
 ---
 
@@ -167,7 +169,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `main` — #116 merged (released 1.9.0). Next: the Phase 3.3 Card API endpoints.
+- `main` — #122 merged (Phase 3.3 search data + service layer). Next: the Phase 3.3 `apps/api`
+  routes (+ `card-mapper`) and `useCardSearch`.
 
 ---
 
