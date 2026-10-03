@@ -68,3 +68,10 @@ export const INVALID_REFERENCE = 'INVALID_REFERENCE';
 
 /** Too many requests — the rate limiter rejected the call (HTTP 429). */
 export const RATE_LIMITED = 'RATE_LIMITED';
+
+// =============================================================================
+// CARD
+// =============================================================================
+
+/** The requested card (by oracle ID) does not exist. */
+export const CARD_NOT_FOUND = 'CARD_NOT_FOUND';

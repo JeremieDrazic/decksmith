@@ -193,3 +193,33 @@ export const CardPrintSelectionSchema = z.object({
   quantity: z.number().int().positive().default(1),
 });
 export type CardPrintSelection = z.infer<typeof CardPrintSelectionSchema>;
+
+/**
+ * Card detail with all its prints — the `GET /api/v1/cards/:oracleId` response.
+ *
+ * The full oracle card (rules identity, faces, legalities) plus every printing
+ * (sets, artwork, prices). Lives here rather than in `card.ts` because that would
+ * make `card.ts` import `card-print.ts`, which already imports `card.ts` — a cycle.
+ */
+export const CardWithPrintsSchema = CardResponseSchema.extend({
+  /** Every printing of this card. */
+  prints: z.array(CardPrintResponseSchema),
+});
+export type CardWithPrints = z.infer<typeof CardWithPrintsSchema>;
+
+/**
+ * Sort order for a card's prints (`GET /api/v1/cards/:oracleId/prints`).
+ *
+ * - date: newest printing first (by release date)
+ * - name: alphabetical by set name
+ *
+ * `price` is intentionally absent until pricing lands (Phase 8).
+ */
+export const CardPrintSortSchema = z.enum(['date', 'name']);
+export type CardPrintSort = z.infer<typeof CardPrintSortSchema>;
+
+/** Query params for `GET /api/v1/cards/:oracleId/prints`. */
+export const CardPrintsQuerySchema = z.object({
+  sort: CardPrintSortSchema.default('date'),
+});
+export type CardPrintsQuery = z.infer<typeof CardPrintsQuerySchema>;

@@ -33,6 +33,11 @@
       "import": "./dist/primitives/common.js",
       "types": "./dist/primitives/common.d.ts"
     },
+    "./primitives/pagination": {
+      "source": "./src/primitives/pagination/pagination.ts",
+      "import": "./dist/primitives/pagination/pagination.js",
+      "types": "./dist/primitives/pagination/pagination.d.ts"
+    },
     "./card/card": {
       "source": "./src/card/card.ts",
       "import": "./dist/card/card.js",
@@ -47,6 +52,16 @@
       "source": "./src/card/prices.ts",
       "import": "./dist/card/prices.js",
       "types": "./dist/card/prices.d.ts"
+    },
+    "./card/search": {
+      "source": "./src/card/search/search.ts",
+      "import": "./dist/card/search/search.js",
+      "types": "./dist/card/search/search.d.ts"
+    },
+    "./card/autocomplete": {
+      "source": "./src/card/autocomplete/autocomplete.ts",
+      "import": "./dist/card/autocomplete/autocomplete.js",
+      "types": "./dist/card/autocomplete/autocomplete.d.ts"
     },
     "./user/user": {
       "source": "./src/user/user.ts",

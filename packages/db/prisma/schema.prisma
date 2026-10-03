@@ -105,6 +105,7 @@ model Card {
   legalities    Json // { "commander": "legal", "standard": "not_legal", ... }
   rarities      String[]
   finishes      String[]
+  sets          String[] // Distinct set codes (lowercase, e.g. "lea") this card was printed in (aggregated by sync, ADR-0032)
   scryfallUri   String   @map("scryfall_uri")
 
   firstReleasedAt DateTime? @map("first_released_at")
@@ -116,6 +117,12 @@ model Card {
   cardTags CardTag[]
   faces    CardFace[]
 
+  // GIN indexes for array-overlap filters in card search (ADR-0032).
+  // Full-text + trigram indexes live in sql/card-search-indexes.sql (not
+  // expressible in Prisma) — see that file.
+  @@index([colors], type: Gin)
+  @@index([rarities], type: Gin)
+  @@index([sets], type: Gin)
   @@map("cards")
 }
 

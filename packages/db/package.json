@@ -12,7 +12,7 @@
     "postinstall": "prisma generate",
     "build": "tsc -p tsconfig.build.json",
     "db:generate": "prisma generate",
-    "db:push": "prisma db push",
+    "db:push": "prisma db push && prisma db execute --file sql/card-search-indexes.sql",
     "db:migrate:dev": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",

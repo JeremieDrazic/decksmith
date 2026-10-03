@@ -4,6 +4,23 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-09-05] — Card search has no `packages/domain` layer (service-direct)
+
+**Context:** The Phase 3.3 build plan reserved a step for pure filter parsers/validators in
+`packages/domain`. In practice card search carries no pure MTG domain logic: filter
+parsing/validation is fully handled by `CardSearchQuerySchema` (Zod), and the colour/rarity filters
+are plain enums. The real work is SQL — full-text, array-overlap, ranking, pagination.
+
+**Decision:** skip the domain layer for search. `packages/domain` stays reserved for pure MTG logic
+(colours, mana). Search logic lives in the `card-search-service`; the only pure bit — resolving the
+default sort (`relevance` when a `query` is present, else `name`) — lives as a small colocated,
+tested helper next to the service, not in `domain` (it isn't MTG knowledge).
+
+**Impact:** no `packages/domain` file for search; `card-search-service` owns query building +
+Prisma→DTO mapping; `apps/api` routes stay HTTP glue (ADR-0024).
+
+---
+
 ## [2026-08-12] — `SyncState` observability: `lastCheckedAt` + `startedAt` (#116)
 
 **Context:** The OOM incident (entry below) left `SyncState.status` stuck at `running` for days, and
