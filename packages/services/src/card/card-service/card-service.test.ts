@@ -4,7 +4,13 @@ vi.mock('@decksmith/db', () => import('../../__mocks__/db.js'));
 
 import { prisma } from '@decksmith/db';
 
-import { autocompleteCards, getCardPrints, getCardWithPrints } from './card-service.js';
+import {
+  autocompleteCards,
+  getCardPrints,
+  getCardWithPrints,
+  resolveSort,
+  searchCards,
+} from './card-service.js';
 
 // ---------------------------------------------------------------------------
 // Factory
@@ -148,5 +154,54 @@ describe('autocompleteCards', () => {
     vi.mocked(prisma.$queryRaw).mockResolvedValue([] as never);
 
     expect(await autocompleteCards('zzzzz')).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// resolveSort
+// ---------------------------------------------------------------------------
+
+describe('resolveSort', () => {
+  // Expected values are literals on purpose: a test pins the observable contract,
+  // so it should fail if an enum value ever changes.
+  it('keeps an explicitly requested sort, regardless of query presence', () => {
+    expect(resolveSort('cmc', true)).toBe('cmc');
+    expect(resolveSort('cmc', false)).toBe('cmc');
+  });
+
+  it('defaults to relevance when there is a query and no explicit sort', () => {
+    expect(resolveSort(undefined, true)).toBe('relevance');
+  });
+
+  it('defaults to name when there is no query and no explicit sort', () => {
+    expect(resolveSort(undefined, false)).toBe('name');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// searchCards
+// ---------------------------------------------------------------------------
+
+describe('searchCards', () => {
+  it('returns the page rows and the total count (two queries)', async () => {
+    const rows = [
+      {
+        oracle_id: 'o1',
+        name: 'Lightning Bolt',
+        mana_cost: '{R}',
+        type_line: 'Instant',
+        colors: ['R'],
+        cmc: 1,
+        image_url: 'https://img/bolt.png',
+      },
+    ];
+    vi.mocked(prisma.$queryRaw)
+      .mockResolvedValueOnce(rows as never) // data query
+      .mockResolvedValueOnce([{ count: 128n }] as never); // count query
+
+    const result = await searchCards({ page: 1, limit: 20 });
+
+    expect(result.rows).toEqual(rows);
+    expect(result.total).toBe(128);
   });
 });

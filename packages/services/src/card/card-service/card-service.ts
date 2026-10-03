@@ -1,5 +1,7 @@
-import { type Prisma, type PrismaCardPrint, prisma } from '@decksmith/db';
+import { Prisma, type PrismaCardPrint, prisma } from '@decksmith/db';
+import { LegalityStatusSchema } from '@decksmith/schema/card/card';
 import type { CardPrintSort } from '@decksmith/schema/card/card-print';
+import { type CardSearchQuery, type CardSort, CardSortSchema } from '@decksmith/schema/card/search';
 import { CARD_NOT_FOUND } from '@decksmith/schema/errors/codes';
 import { makeContainsPattern } from '@decksmith/utils';
 
@@ -121,4 +123,155 @@ export async function autocompleteCards(query: string): Promise<AutocompleteRow[
     ORDER BY position(${term} IN lower(name)), name
     LIMIT ${AUTOCOMPLETE_LIMIT}
   `;
+}
+
+/**
+ * Resolves the effective sort for a search.
+ *
+ * An explicit `requested` sort always wins. With none, the default is
+ * conditional: `relevance` ranks against the query text, so it only makes sense
+ * when a query is present — otherwise fall back to `name`.
+ *
+ * @param requested - The sort asked for, or undefined
+ * @param hasQuery - Whether the search has full-text query
+ * @returns The sort to apply
+ */
+export function resolveSort(requested: CardSort | undefined, hasQuery: boolean): CardSort {
+  if (requested) {
+    return requested;
+  }
+
+  return hasQuery ? CardSortSchema.enum.relevance : CardSortSchema.enum.name;
+}
+
+/**
+ * Weighted full-text expression over name (A) / type line (B) / oracle text (C).
+ *
+ * MUST stay byte-identical to the expression in `sql/card-search-indexes.sql`
+ * (`cards_fts_idx`) — Postgres only uses the index when the query repeats the
+ * same expression. Reused by both the WHERE match and the `ts_rank` sort.
+ *
+ * A function, not a module-level constant: evaluating `Prisma.sql` at import
+ * time would run for every consumer of `@decksmith/services` (e.g. apps/api),
+ * breaking any that mock `@decksmith/db` without `Prisma.sql`.
+ */
+function ftsExpression(): Prisma.Sql {
+  return Prisma.sql`(
+    setweight(to_tsvector('english', coalesce(name, '')), 'A') ||
+    setweight(to_tsvector('english', coalesce(type_line, '')), 'B') ||
+    setweight(to_tsvector('english', coalesce(oracle_text, '')), 'C')
+  )`;
+}
+
+/**
+ * Builds the dynamic `WHERE` clause from the active filters: one `Prisma.sql`
+ * fragment per provided filter, joined with `AND`. Returns `Prisma.empty` when
+ * nothing is filtered (browse-all). Values are bound as parameters — no injection.
+ */
+function buildSearchWhere(params: CardSearchQuery): Prisma.Sql {
+  const conditions: Prisma.Sql[] = [];
+
+  if (params.query) {
+    conditions.push(Prisma.sql`${ftsExpression()} @@ plainto_tsquery('english', ${params.query})`);
+  }
+  if (params.colors?.length) {
+    conditions.push(Prisma.sql`colors && ${params.colors}::text[]`);
+  }
+  if (params.rarities?.length) {
+    conditions.push(Prisma.sql`rarities && ${params.rarities}::text[]`);
+  }
+  if (params.sets?.length) {
+    conditions.push(Prisma.sql`sets && ${params.sets}::text[]`);
+  }
+  if (params.cmcMin !== undefined) {
+    conditions.push(Prisma.sql`cmc >= ${params.cmcMin}`);
+  }
+  if (params.cmcMax !== undefined) {
+    conditions.push(Prisma.sql`cmc <= ${params.cmcMax}`);
+  }
+  if (params.format) {
+    conditions.push(Prisma.sql`legalities->>${params.format} = ${LegalityStatusSchema.enum.legal}`);
+  }
+
+  return conditions.length > 0
+    ? Prisma.sql`WHERE ${Prisma.join(conditions, ' AND ')}`
+    : Prisma.empty;
+}
+
+/**
+ * Builds the ORDER BY fragment for the resolved sort. `relevance` ranks by
+ * full-text score (`ts_rank` over the same expression as the index); the rest
+ * come from a typed map (so a new sort value forces an entry — exhaustive).
+ * `query` is defined whenever sort is `relevance` (guaranteed by `resolveSort`).
+ */
+function buildOrderBy(sort: CardSort, query: string | undefined): Prisma.Sql {
+  if (sort === CardSortSchema.enum.relevance) {
+    return Prisma.sql`ts_rank(${ftsExpression()}, plainto_tsquery('english', ${query})) DESC`;
+  }
+
+  const staticOrderBy: Record<Exclude<CardSort, 'relevance'>, Prisma.Sql> = {
+    name: Prisma.sql`c.name ASC`,
+    cmc: Prisma.sql`c.cmc ASC`,
+    released: Prisma.sql`c.first_released_at DESC NULLS LAST`,
+  };
+
+  return staticOrderBy[sort];
+}
+
+/**
+ * A raw card search row as selected from the DB (snake_case, plain domain
+ * value). `image_url` is the most-recent print's front image, or null. The
+ * `apps/api` mapper turns it into a `CardSearchResult`.
+ */
+export type CardSearchRow = {
+  oracle_id: string;
+  name: string;
+  mana_cost: string | null;
+  type_line: string | null;
+  colors: string[];
+  cmc: number;
+  image_url: string | null;
+};
+
+/** What `searchCards` returns: the page of rows plus the total match count. */
+export type CardSearchResultSet = {
+  rows: CardSearchRow[];
+  total: number;
+};
+
+/**
+ * Searches cards (single-table, ADR-0032): one grid-ready row per matching card
+ * with the most-recent print's image, plus the total match count for pagination.
+ *
+ * Sort defaults to relevance when a query is present, otherwise name
+ * (see {@link resolveSort}). Both queries share the same WHERE fragment.
+ */
+export async function searchCards(params: CardSearchQuery): Promise<CardSearchResultSet> {
+  const where = buildSearchWhere(params);
+  const sort = resolveSort(params.sort, params.query !== undefined);
+  const orderBy = buildOrderBy(sort, params.query);
+  const offset = (params.page - 1) * params.limit;
+
+  const rows = await prisma.$queryRaw<CardSearchRow[]>`
+    SELECT
+      c.oracle_id, c.name, c.mana_cost, c.type_line, c.colors, c.cmc,
+      recent.image_uris -> 'front' ->> 'normal' AS image_url
+    FROM cards c
+    LEFT JOIN LATERAL (
+      SELECT image_uris
+      FROM card_prints
+      WHERE oracle_id = c.oracle_id
+      ORDER BY released_at DESC NULLS LAST
+      LIMIT 1
+    ) recent ON true
+    ${where}
+    ORDER BY ${orderBy}
+    LIMIT ${params.limit} OFFSET ${offset}
+  `;
+
+  const [{ count }] = await prisma.$queryRaw<[{ count: bigint }]>`
+    SELECT COUNT(*) AS count FROM cards c ${where}
+  `;
+
+  return { rows, total: Number(count) };
 }

@@ -51,4 +51,9 @@ class PrismaClientKnownRequestError extends Error {
   }
 }
 
-export const Prisma = { PrismaClientKnownRequestError };
+// Minimal stand-ins so module-level `Prisma.sql` tags evaluate on import. Tests
+// assert on mocked `$queryRaw` results, not on the SQL these produce.
+const sql = (strings: TemplateStringsArray, ...values: unknown[]) => ({ strings, values });
+const join = (values: unknown[], separator = ', ') => ({ values, separator });
+
+export const Prisma = { PrismaClientKnownRequestError, sql, join, empty: {} };
