@@ -1,5 +1,6 @@
 import { createFetcher } from './fetcher/fetcher.js';
 import { createAuthModule } from './modules/auth/auth.js';
+import { createCardsModule } from './modules/cards/cards.js';
 import { createUsersModule } from './modules/users/users.js';
 
 /**
@@ -20,6 +21,7 @@ export function createApiClient(baseUrl: string) {
   const fetcher = createFetcher(baseUrl);
   return {
     auth: createAuthModule(fetcher),
+    cards: createCardsModule(fetcher),
     users: createUsersModule(fetcher),
   };
 }

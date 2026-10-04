@@ -13,6 +13,12 @@ const mockClient = {
     resetPassword: vi.fn(),
     me: vi.fn(),
   },
+  cards: {
+    search: vi.fn(),
+    autocomplete: vi.fn(),
+    getCard: vi.fn(),
+    getCardPrints: vi.fn(),
+  },
   users: {
     getUser: vi.fn(),
     updateUser: vi.fn(),

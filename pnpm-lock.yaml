@@ -399,10 +399,16 @@ importers:
       '@decksmith/schema':
         specifier: workspace:*
         version: link:../schema
+      '@decksmith/utils':
+        specifier: workspace:*
+        version: link:../utils
     devDependencies:
       '@decksmith/config':
         specifier: workspace:*
         version: link:../config
+      '@decksmith/test-utils':
+        specifier: workspace:*
+        version: link:../test-utils
       msw:
         specifier: ^2.15.0
         version: 2.15.0(@types/node@26.2.0)(typescript@7.0.2)

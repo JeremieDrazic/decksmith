@@ -13,10 +13,12 @@
     "./errors": "./src/errors/errors.ts"
   },
   "dependencies": {
-    "@decksmith/schema": "workspace:*"
+    "@decksmith/schema": "workspace:*",
+    "@decksmith/utils": "workspace:*"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
+    "@decksmith/test-utils": "workspace:*",
     "msw": "^2.15.0",
     "typescript": "catalog:",
     "vitest": "catalog:"
