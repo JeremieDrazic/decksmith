@@ -1,15 +1,16 @@
 # Project State
 
-_Updated: 2026-10-03 (Phase 3.3 Card API — **search data + service layer done and merged** (#122):
-schema DTOs (`CardSearchQuerySchema`, paginated `CardSearchResponseSchema`, `CardWithPrints`,
-autocomplete), Postgres indexes (GIN on `colors`/`rarities`/`sets` via Prisma + a weighted full-text
-expression index + `pg_trgm` trigram in raw SQL, replayed by `db:push`), and the `card-service`
-(`searchCards` / `getCardWithPrints` / `getCardPrints` / `autocompleteCards`) returning plain domain
-values — ADR-0024, mapping to DTO lives route-side; **smoke-tested against the real DB**. Earlier in
-3.3: sync levels 1 & 2 (#114), OOM fix (#115/#96), `SyncState` heartbeat (#116). Remaining in 3.3:
-the `apps/api` routes (+ a `card-mapper`) and `useCardSearch`. This file describes the **current**
-state only: environment, what works today, blockers, and what's next. Per-session history lives in
-`decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-10-04 (**Phase 3.3 Card API complete** — the HTTP + front-end layers landed on top of
+the search data/service of #122. Routes (#124): four **public** `/api/v1/cards` endpoints (`search`
+/ `:id` / `:id/prints` / `autocomplete`), `card-mapper` (Prisma value → DTO: narrow Json/array
+types, ISO dates, drop the `sets` aggregate), a reusable `toPaginated` builder next to
+`makePaginatedSchema`, and `CARD_NOT_FOUND → 404` (was a latent 500). Front (#125): `useCardSearch`
+(paginated, `keepPreviousData`), an api-client `cards` module, and a generic isomorphic
+`toQueryString` util; api-client tests migrated to the shared MSW server. Earlier in 3.3: search
+data + service layer (#122), sync levels 1 & 2 (#114), OOM fix (#115/#96), `SyncState` heartbeat
+(#116). This file describes the **current** state only: environment, what works today, blockers, and
+what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
+`retrospectives/`._
 
 ---
 
@@ -33,14 +34,16 @@ state only: environment, what works today, blockers, and what's next. Per-sessio
 ## What's Working (today)
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
-7): 0 errors. `pnpm test`: 278 passing (30 domain · 47 schema · 34 api · 19 api-client · 18 query ·
-11 utils · 41 web-ui · 37 services · 14 web · 22 scryfall · 5 worker). Storybook CI runs play
+7): 0 errors. `pnpm test`: 362 passing (30 domain · 76 schema · 56 api · 24 api-client · 21 query ·
+23 utils · 41 web-ui · 50 services · 14 web · 22 scryfall · 5 worker). Storybook CI runs play
 functions + axe on every story.
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
-(register, login, logout, refresh, forgot/reset-password, `GET /me`), Zod type provider, error
-handler with `ServiceError` exception mapper (ADR-0024), auth plugin (`app.authenticate`), rate
-limiting + CORS. All orchestration in `packages/services`; routes are HTTP glue.
+(register, login, logout, refresh, forgot/reset-password, `GET /me`), **card search — four public
+`/api/v1/cards` routes (`search` / `:id` / `:id/prints` / `autocomplete`) + `card-mapper`, #124**,
+Zod type provider, error handler with `ServiceError` exception mapper (ADR-0024;
+`CARD_NOT_FOUND → 404`), auth plugin (`app.authenticate`), rate limiting + CORS. All orchestration
+in `packages/services`; routes are HTTP glue.
 
 **Database** — Prisma 7 schema (18 models — `SyncState` added for worker sync bookkeeping, ADR-0031;
 `CardFace` for multi-face cards, ADR-0029; `Card` + `CardPrint` gained the search-support fields of
@@ -66,10 +69,13 @@ via `docker-compose.yml` (dev). One-off trigger `pnpm worker:sync:once`. **Deplo
 Base UI + semantic tokens), `domain` (MTG color/mana logic), `schema` (Zod DTOs + stable error
 codes), `scryfall` (raw Scryfall Zod schemas + `normalizeCard` + `isCollectibleCard` + bulk client:
 `getBulkDataInfo` / `fetchBulkStream` (gzip) / `streamNormalizedCards` (JSONL via readline),
-provider knowledge), `api-client`, `query`, `services` (+ `card-service`: `searchCards` /
-`getCardWithPrints` / `getCardPrints` / `autocompleteCards` via `$queryRaw` + `Prisma.sql`,
-smoke-tested), `test-utils`, `utils` (+ `chunkAsyncIterable`, `makeContainsPattern`), `i18n`, `db`.
-Build pipeline compiles packages to `dist/`; `apps/api` runs compiled `node dist/index.js`.
+provider knowledge), `api-client` (+ `cards` module: `search`/`autocomplete`/`getCard`/
+`getCardPrints`), `query` (+ `useCardSearch` — paginated, `keepPreviousData`), `services` (+
+`card-service`: `searchCards` / `getCardWithPrints` / `getCardPrints` / `autocompleteCards` via
+`$queryRaw` + `Prisma.sql`, smoke-tested), `test-utils`, `utils` (+ `chunkAsyncIterable`,
+`makeContainsPattern`, `toQueryString`), `i18n`, `db`. `schema` also exports a `toPaginated` runtime
+builder beside `makePaginatedSchema`. Build pipeline compiles packages to `dist/`; `apps/api` runs
+compiled `node dist/index.js`.
 
 **Production** — fully deployed, see Infrastructure below.
 
@@ -97,7 +103,6 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
   `test-strategy.md`
 - Dev docker-compose now exists but Redis-only (Postgres stays on Supabase cloud); needs OrbStack/
   Docker running for the worker
-- `packages/query` has no `useCardSearch` — blocked on Phase 3 (Scryfall)
 - Deploy workflow actions target deprecated Node 20 — bump in a future session
 - Storybook preview: brief light-theme flash on story change (cosmetic)
 - Postgres log noise: `42P01`/`3F000` on `supabase_migrations.schema_migrations` (we use Prisma
@@ -111,10 +116,10 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Phase 3.3 routes** — the `card-service` + DTOs + indexes are done (#122); next is the HTTP
-  layer: `GET /cards/search` · `/cards/:id` · `/cards/:id/prints` · `/cards/autocomplete` in
-  `apps/api` (pure glue), plus a `card-mapper.ts` turning the service's plain domain values into
-  DTOs (ADR-0024). Then `useCardSearch` in `packages/query` (unblocks Phase 4.3). **Next up.**
+- **Card search UI** — the whole search stack now exists end-to-end (DB → service → routes →
+  `useCardSearch`), so the next build is the real UI in `apps/web`: a `/search` page + the header
+  spotlight/autocomplete (see `design/screens/card-search.md` and the three search patterns in
+  `DESIGN.md`). **Next up.** Phase 3 (Scryfall) is fully complete.
 - **#113** — unify the duplicated MTG enums (`Rarity`/`Color`: schema Zod vs domain type) into a
   single source of truth (small ADR). Surfaced while adding `special`/`bonus` rarities.
 - **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
@@ -130,8 +135,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- None. #122 (Phase 3.3 search data + service layer) **merged**. Earlier: #114, #115 (closes #96),
-  #116 all merged.
+- None. #124 (card routes + `toPaginated`) and #125 (`useCardSearch` + api-client cards module +
+  `toQueryString`) **merged** — Phase 3.3 complete. Earlier: #122, #114, #115 (closes #96), #116.
 
 ---
 
@@ -169,8 +174,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `main` — #122 merged (Phase 3.3 search data + service layer). Next: the Phase 3.3 `apps/api`
-  routes (+ `card-mapper`) and `useCardSearch`.
+- `main` — #124 + #125 merged (card routes + `useCardSearch`). **Phase 3.3 complete.** Next: the
+  card search UI in `apps/web` (`/search` page + header spotlight).
 
 ---
 
