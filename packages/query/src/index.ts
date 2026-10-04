@@ -7,3 +7,4 @@ export {
 export { useLogin } from './hooks/use-login/use-login.js';
 export { useRegister } from './hooks/use-register/use-register.js';
 export { useForgotPassword } from './hooks/use-forgot-password/use-forgot-password.js';
+export { useCardSearch, cardKeys } from './hooks/use-card-search/use-card-search.js';

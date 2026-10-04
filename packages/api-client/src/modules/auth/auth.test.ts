@@ -1,6 +1,6 @@
+import { server } from '@decksmith/test-utils/server';
 import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { ApiError } from '../../errors/errors.js';
 import { createFetcher } from '../../fetcher/fetcher.js';
@@ -8,12 +8,6 @@ import { createAuthModule } from './auth.js';
 
 const BASE_URL = 'http://localhost:3000';
 const auth = createAuthModule(createFetcher(BASE_URL));
-
-const server = setupServer();
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 describe('auth.login', () => {
   it('returns the user on a successful login', async () => {

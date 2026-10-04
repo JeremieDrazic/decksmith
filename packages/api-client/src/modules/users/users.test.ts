@@ -1,6 +1,6 @@
+import { server } from '@decksmith/test-utils/server';
 import { http, HttpResponse } from 'msw';
-import { setupServer } from 'msw/node';
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { createFetcher } from '../../fetcher/fetcher.js';
 import { createUsersModule } from './users.js';
@@ -19,12 +19,6 @@ const mockUser = {
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
-
-const server = setupServer();
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
 
 describe('users.getUser', () => {
   it('fetches the user at the correct path', async () => {

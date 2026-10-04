@@ -6,6 +6,7 @@ export default mergeConfig(
   defineConfig({
     test: {
       include: ['src/**/*.test.ts'],
+      setupFiles: ['@decksmith/test-utils/server'],
     },
   })
 );
