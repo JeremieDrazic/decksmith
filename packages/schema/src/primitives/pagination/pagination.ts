@@ -46,3 +46,26 @@ export type Paginated<T> = {
   page: number;
   limit: number;
 };
+
+/**
+ * Builds the paginated envelope around an already-mapped page of items — the
+ * runtime counterpart to {@link makePaginatedSchema}. Any list endpoint maps its
+ * rows to DTOs, then wraps them here.
+ *
+ * `meta` is a named object rather than positional args because `total`, `page`
+ * and `limit` are all numbers: a bag of positionals would silently accept them
+ * in the wrong order.
+ *
+ * @param data - The DTO items on this page (already mapped from the raw rows)
+ * @param meta - Pagination counters: `total` (full match count), `page`, `limit`
+ * @returns The `{ data, total, page, limit }` envelope
+ */
+export const toPaginated = <T>(
+  data: T[],
+  meta: { total: number; page: number; limit: number }
+): Paginated<T> => ({
+  data,
+  total: meta.total,
+  page: meta.page,
+  limit: meta.limit,
+});

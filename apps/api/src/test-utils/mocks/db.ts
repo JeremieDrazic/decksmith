@@ -29,6 +29,15 @@ export const prisma = {
     create: vi.fn(),
     update: vi.fn(),
   },
+  card: {
+    findUnique: vi.fn(),
+  },
+  cardPrint: {
+    findMany: vi.fn(),
+  },
+  // Card search/autocomplete run raw SQL. The query never executes under test
+  // (this is a mock), so tests set the resolved rows directly.
+  $queryRaw: vi.fn(),
 };
 
 export const SUPABASE_USER_ALREADY_EXISTS = 'user_already_exists';
@@ -43,4 +52,13 @@ class PrismaClientKnownRequestError extends Error {
   }
 }
 
-export const Prisma = { PrismaClientKnownRequestError };
+// The card service composes its WHERE/ORDER BY clauses with `Prisma.sql`,
+// `Prisma.join` and `Prisma.empty`. Since `$queryRaw` is mocked and never runs
+// the SQL, these only need to exist and not throw — a placeholder object is enough.
+const sqlPlaceholder = {};
+export const Prisma = {
+  PrismaClientKnownRequestError,
+  sql: (..._args: unknown[]) => sqlPlaceholder,
+  join: (..._args: unknown[]) => sqlPlaceholder,
+  empty: sqlPlaceholder,
+};
