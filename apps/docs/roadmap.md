@@ -251,9 +251,15 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
   `Prisma.sql`, image du print le plus récent via `LEFT JOIN LATERAL`, `{ rows, total }`),
   `getCardWithPrints`, `getCardPrints`, `autocompleteCards` (trigram) + util `makeContainsPattern` ;
   **smoke-testé en réel** (#122)
-- ⬜ Routes `apps/api` : `GET /cards/search` · `/cards/:id` · `/cards/:id/prints` ·
-  `/cards/autocomplete` + `card-mapper.ts` (valeur métier Prisma → DTO)
-- ⬜ `useCardSearch` dans `packages/query` (débloque Phase 4.3)
+- ✅ Routes `apps/api` : `GET /cards/search` · `/cards/:id` · `/cards/:id/prints` ·
+  `/cards/autocomplete` — **publiques** (données de référence MTG, non user-owned) +
+  `card-mapper.ts` (valeur métier Prisma → DTO : narrow des types Json/array, dates ISO, drop de
+  l'agrégat `sets`) + `toPaginated` (builder d'enveloppe colocalisé au schéma) +
+  `CARD_NOT_FOUND → 404` (était un 500 latent) (#124)
+- ✅ `useCardSearch` dans `packages/query` + module client `cards`
+  (`search`/`autocomplete`/`getCard`/`getCardPrints`) + `toQueryString` (util générique isomorphe,
+  arrays→CSV) ; `keepPreviousData` pour la pagination ; migration des tests api-client vers le
+  serveur MSW partagé (#125). **Phase 3.3 complète.**
 
 ---
 
@@ -296,7 +302,7 @@ Status: ✅ Done · 🔄 In progress · ⬜ Not started
 ### 4.3 packages/query
 
 - ✅ TanStack Query hooks: `useUser`, `useUserPreferences`
-- ⬜ `useCardSearch` (deferred — depends on Phase 3 Scryfall integration)
+- ✅ `useCardSearch` (Phase 3.3, #125 — paginated, `keepPreviousData`)
 
 ### 4.4 Auth UI
 

@@ -4,6 +4,38 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-10-04] — Card API routes public; reusable pagination + query-string builders
+
+**Context:** Wiring the Phase 3.3 HTTP + front-end layers (#124, #125) raised four small choices.
+
+**Decision:**
+
+1. **Card endpoints are public** (no `app.authenticate`). MTG card data is reference data from
+   Scryfall, not user-owned, and public access keeps shared deck pages (Phase 7) working without a
+   login. The global rate-limit still applies.
+2. **`toPaginated(data, { total, page, limit })`** extracted as a runtime builder colocated with
+   `makePaginatedSchema` in `packages/schema` — builder and its schema stay in sync. Named `meta`
+   object, not positional args (three adjacent numbers = silent-swap hazard). Done now rather than
+   at the 2nd paginated endpoint because the shape is certain.
+3. **`toQueryString`** generic util in `packages/utils` (not a card-specific helper) — the
+   serialisation is MTG-agnostic and will serve decks/collection search. Uses `encodeURIComponent`
+   rather than `URLSearchParams` so the package needs no DOM/Node lib and stays `lib: ["ES2022"]`
+   isomorphic (the one place manual string-building beats the platform API). Space → `%20`.
+4. **Shared MSW server** (`@decksmith/test-utils/server` via `setupFiles`) adopted for all
+   `api-client` tests, dropping the repeated `setupServer` + lifecycle boilerplate. All-or-nothing
+   per package: a mix would run two MSW servers at once.
+
+**Impact:** `apps/api/src/modules/card/*`, `error-handler.ts` (`CARD_NOT_FOUND → 404`),
+`packages/schema/.../pagination.ts`, `packages/utils/src/to-query-string/`, `packages/api-client`
+(cards module + test migration + `@decksmith/test-utils` devDep), `packages/query`
+(`useCardSearch`).
+
+**Gotcha logged:** cross-package consumers resolve workspace deps via **`dist`** in Vitest (SSR),
+not source — a new export in `schema`/`utils` needs a `build` before dependent packages' tests see
+it. CI is safe (`test`/`typecheck` depend on `^build`); only matters for local iteration.
+
+---
+
 ## [2026-10-03] — Card search indexes: two-tier (Prisma GIN + raw SQL), replayed by `db:push`
 
 **Context:** Card search needs GIN indexes on the array columns (`colors`/`rarities`/`sets`), a
