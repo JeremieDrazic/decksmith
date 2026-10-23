@@ -28,15 +28,15 @@
     }
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.9.1",
-    "@prisma/client": "^7.9.1",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
     "@supabase/supabase-js": "catalog:"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
-    "@faker-js/faker": "^10.5.0",
+    "@faker-js/faker": "^10.6.0",
     "dotenv": "catalog:",
-    "prisma": "^7.9.1",
+    "prisma": "^7.10.0",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }
