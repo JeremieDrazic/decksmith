@@ -3,7 +3,7 @@
 #   docker build -f apps/web/Dockerfile -t decksmith-web .
 
 # ── builder ──────────────────────────────────────────────────────────────────
-FROM node:22.23.1-alpine3.24 AS builder
+FROM node:22.23.4-alpine3.24 AS builder
 RUN corepack enable
 WORKDIR /app
 
@@ -69,7 +69,7 @@ RUN --mount=type=secret,id=sentry_auth_token \
 RUN pnpm deploy --filter @decksmith/web --prod --ignore-scripts --legacy /deploy
 
 # ── runner ───────────────────────────────────────────────────────────────────
-FROM node:22.23.1-alpine3.24 AS runner
+FROM node:22.23.4-alpine3.24 AS runner
 WORKDIR /app
 COPY --from=builder --chown=node:node /deploy .
 COPY --from=builder --chown=node:node /app/apps/web/.output ./.output
