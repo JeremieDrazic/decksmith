@@ -23,6 +23,8 @@ const preview: Preview = {
   ],
   parameters: {
     backgrounds: { disable: true },
+    // Run axe on every story via the Vitest addon and fail the test on any violation.
+    a11y: { test: 'error' },
     options: {
       storySort: {
         order: ['Design System', 'Components', '*'],

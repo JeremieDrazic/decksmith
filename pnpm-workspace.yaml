@@ -37,6 +37,9 @@ overrides:
   fast-copy: '>=4.1.0' # via pino logger
   follow-redirects: '>=1.16.1'
   uuid: '>=11.1.1'
+  tinypool: '>=2.1.2' # via vitest worker pool
+  undici: '>=7.29.1' # via @vitest/browser test infra
+  brace-expansion: '>=5.0.10' # via glob/minimatch in test tooling
   dompurify: '>=3.4.17' # via VitePress (apps/docs)
   katex: '>=0.18.2' # via VitePress (apps/docs)
 
