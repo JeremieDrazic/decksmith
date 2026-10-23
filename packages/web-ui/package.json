@@ -28,12 +28,12 @@
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@decksmith/tokens": "workspace:*",
-    "@storybook/react-vite": "^10.6.2",
+    "@storybook/react-vite": "~10.5.7",
     "@testing-library/react": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "jsdom": "catalog:",
-    "storybook": "^10.6.2",
+    "storybook": "~10.5.7",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
