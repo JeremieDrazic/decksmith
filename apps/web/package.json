@@ -18,29 +18,29 @@
     "@decksmith/tokens": "workspace:*",
     "@decksmith/web-ui": "workspace:*",
     "@sentry/react": "^10.69.0",
-    "@tanstack/react-form": "^1.33.3",
-    "@tanstack/react-query": "^5.101.4",
-    "@tanstack/react-router": "^1.170.23",
-    "@tanstack/react-start": "^1.168.40",
-    "i18next": "^26.3.6",
+    "@tanstack/react-form": "^1.33.5",
+    "@tanstack/react-query": "^5.104.1",
+    "@tanstack/react-router": "^1.170.41",
+    "@tanstack/react-start": "^1.168.60",
+    "i18next": "^26.4.2",
     "lucide-react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-i18next": "^17.0.11"
+    "react-i18next": "^17.0.15"
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
     "@sentry/vite-plugin": "^5.4.0",
     "@tailwindcss/vite": "^4.3.3",
-    "@tanstack/react-query-devtools": "^5.101.4",
+    "@tanstack/react-query-devtools": "^5.104.1",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@vitejs/plugin-react": "^6.1.1",
     "jsdom": "^29.1.1",
     "nitro": "3.0.260610-beta",
     "typescript": "catalog:",
-    "vite": "^8.2.1",
+    "vite": "^8.3.3",
     "vitest": "catalog:"
   }
 }

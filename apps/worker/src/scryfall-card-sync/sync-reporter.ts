@@ -16,6 +16,13 @@ function paint(format: Parameters<typeof styleText>[0], text: string): string {
   return IS_TTY ? styleText(format, text) : text;
 }
 
+function clearLine(): void {
+  if (IS_TTY) {
+    cursorTo(process.stdout, 0);
+    clearTerminalLine(process.stdout, 0);
+  }
+}
+
 function formatDuration(ms: number): string {
   const totalSeconds = Math.floor(ms / 1000);
   const minutes = Math.floor(totalSeconds / 60);
@@ -62,13 +69,6 @@ export function createSyncReporter() {
   let cards = 0;
   let skipped = 0;
   let lastRenderAt = 0;
-
-  function clearLine(): void {
-    if (IS_TTY) {
-      cursorTo(process.stdout, 0);
-      clearTerminalLine(process.stdout, 0);
-    }
-  }
 
   function renderProgress(force: boolean): void {
     if (!IS_TTY) {
