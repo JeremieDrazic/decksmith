@@ -15,7 +15,12 @@ const config: StorybookConfig = {
     '../../web/src/**/*.mdx',
     '../../web/src/**/*.stories.@(ts|tsx)',
   ],
-  addons: ['@storybook/addon-docs', '@storybook/addon-themes', '@storybook/addon-a11y'],
+  addons: [
+    '@storybook/addon-docs',
+    '@storybook/addon-themes',
+    '@storybook/addon-a11y',
+    '@storybook/addon-vitest',
+  ],
   framework: '@storybook/react-vite',
   viteFinal: (viteConfig) => {
     viteConfig.plugins ??= [];
