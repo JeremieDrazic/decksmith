@@ -3,7 +3,7 @@
 #   docker build -f apps/worker/Dockerfile -t decksmith-worker .
 
 # ── builder ──────────────────────────────────────────────────────────────────
-FROM node:22.23.1-alpine3.24 AS builder
+FROM node:22.23.4-alpine3.24 AS builder
 RUN corepack enable
 WORKDIR /app
 
@@ -51,7 +51,7 @@ RUN pnpm deploy --filter @decksmith/worker --prod --no-optional --ignore-scripts
 # Plain node:22-alpine — no corepack/pnpm at runtime, only `node`.
 # The runner receives only /deploy: the pnpm global store stays in the builder stage.
 # No EXPOSE / HEALTHCHECK: the worker is a headless BullMQ consumer, not an HTTP server.
-FROM node:22.23.1-alpine3.24 AS runner
+FROM node:22.23.4-alpine3.24 AS runner
 WORKDIR /app
 COPY --from=builder --chown=node:node /deploy .
 

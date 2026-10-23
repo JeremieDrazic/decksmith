@@ -11,7 +11,7 @@ catalog:
   '@types/react': ^19.2.18
   '@types/react-dom': ^19.2.4
   dotenv: ^17.4.2
-  fastify: ^5.11.3
+  fastify: ^5.12.6
   fastify-plugin: ^6.0.0
   fastify-type-provider-zod: ^6.1.0
   jsdom: ^29.1.1
@@ -19,10 +19,26 @@ catalog:
   pino-pretty: ^13.1.3
   react: ^19.2.8
   react-dom: ^19.2.8
-  tsx: ^4.23.11
+  tsx: ^4.23.15
   typescript: ^7.0.2
-  vitest: ^4.1.10
-  zod: ^4.4.3
+  vitest: ^4.1.11
+  zod: ^4.6.6
+
+# Security pins (CVE fixes) — force patched versions of transitive deps whose
+# parents still resolve a vulnerable range. Revisit when the parents catch up.
+overrides:
+  # Runtime (shipped in Docker images)
+  ip-address: '>=10.7.4' # via @fastify/rate-limit — subnet/parse bugs
+  mysql2: '>=3.23.1' # unused optional prisma driver (we use pg) — pinned defensively
+  deepmerge-ts: '>=8.0.0' # via @prisma/config (build-time CLI) — stack-exhaustion fix
+  # Dev/build tooling only (never in prod images)
+  picomatch: '>=4.0.4' # ReDoS via extglob
+  seroval: '>=1.6.3' # via @tanstack/react-start serialization
+  fast-copy: '>=4.1.0' # via pino logger
+  follow-redirects: '>=1.16.1'
+  uuid: '>=11.1.1'
+  dompurify: '>=3.4.17' # via VitePress (apps/docs)
+  katex: '>=0.18.2' # via VitePress (apps/docs)
 
 allowBuilds:
   '@prisma/engines': true
