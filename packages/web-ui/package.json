@@ -12,14 +12,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@base-ui/react": "^1.7.0",
+    "@base-ui/react": "^1.8.0",
     "@decksmith/domain": "workspace:*",
     "@decksmith/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "catalog:",
-    "tailwind-merge": "^3.6.0",
-    "tinykeys": "^4.0.0"
+    "tailwind-merge": "^3.7.0",
+    "tinykeys": "^4.0.1"
   },
   "peerDependencies": {
     "react": "catalog:",
