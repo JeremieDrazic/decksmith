@@ -23,9 +23,9 @@
   },
   "devDependencies": {
     "@decksmith/config": "workspace:*",
-    "@tanstack/react-query": "^5.104.1",
-    "@types/react": "^19.2.18",
-    "react": "^19.2.8",
+    "@tanstack/react-query": "catalog:",
+    "@types/react": "catalog:",
+    "react": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }
