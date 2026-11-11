@@ -1,16 +1,16 @@
 # Project State
 
-_Updated: 2026-10-04 (**Phase 3.3 Card API complete** — the HTTP + front-end layers landed on top of
-the search data/service of #122. Routes (#124): four **public** `/api/v1/cards` endpoints (`search`
-/ `:id` / `:id/prints` / `autocomplete`), `card-mapper` (Prisma value → DTO: narrow Json/array
-types, ISO dates, drop the `sets` aggregate), a reusable `toPaginated` builder next to
-`makePaginatedSchema`, and `CARD_NOT_FOUND → 404` (was a latent 500). Front (#125): `useCardSearch`
-(paginated, `keepPreviousData`), an api-client `cards` module, and a generic isomorphic
-`toQueryString` util; api-client tests migrated to the shared MSW server. Earlier in 3.3: search
-data + service layer (#122), sync levels 1 & 2 (#114), OOM fix (#115/#96), `SyncState` heartbeat
-(#116). This file describes the **current** state only: environment, what works today, blockers, and
-what's next. Per-session history lives in `decisions-log.md`, the merged PRs, and git — see also
-`retrospectives/`._
+_Updated: 2026-11-11 (**maintenance + toolchain session**, Phase 3.3 Card API already complete).
+Four PRs shipped to prod: **#128** security (Node 22.23.4 / Node2Shell CVE-2026-111497 +
+`pnpm audit --prod` → 0), **#129** Storybook testing migrated from the deprecated jest-based
+`@storybook/test-runner` to the **Vitest addon** (jest removed entirely, storybook 10.6.3), **#130**
+hotfix for a prod outage ("No QueryClient set" — two `@tanstack/react-query` copies in the bundle;
+see decisions-log), **#131** remaining dep updates (react/react-dom 19.3, prisma 7.10, …) +
+**cataloged `@tanstack/react-query`** so cross-package deps can't dedupe-drift again. Prod live at
+**v1.11.3**. Then a design discussion settled the **Card Search UI** approach (shell-first, `/cards`
+browse destination, mobile-first, filters-in-URL — see decisions-log). This file describes the
+**current** state only: environment, what works today, blockers, and what's next. Per-session
+history lives in `decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
 
 ---
 
@@ -35,8 +35,10 @@ what's next. Per-session history lives in `decisions-log.md`, the merged PRs, an
 
 **Quality gates** — `pnpm lint` (oxlint), `pnpm format:check` (oxfmt), `pnpm typecheck` (TypeScript
 7): 0 errors. `pnpm test`: 362 passing (30 domain · 76 schema · 56 api · 24 api-client · 21 query ·
-23 utils · 41 web-ui · 50 services · 14 web · 22 scryfall · 5 worker). Storybook CI runs play
-functions + axe on every story.
+23 utils · 41 web-ui · 50 services · 14 web · 22 scryfall · 5 worker). Storybook tests run as
+**Vitest browser tests** (Playwright/Chromium) — interaction + a11y (`a11y.test: 'error'`) on every
+story, via `@storybook/addon-vitest` (migrated off the deprecated jest `test-runner`, #129; jest is
+gone from the repo).
 
 **Backend** — Fastify API (`pnpm dev:api` → `localhost:3000`): user CRUD + all 7 auth routes
 (register, login, logout, refresh, forgot/reset-password, `GET /me`), **card search — four public
@@ -82,7 +84,7 @@ compiled `node dist/index.js`.
 **Observability & Release** — API docs (Scalar) at `/api/reference`; error tracking via self-hosted
 GlitchTip (`@sentry/node` + `@sentry/react`, prod-only, no-op in dev), web stacks de-minified via
 source maps uploaded to GlitchTip per release; automated SemVer releases (semantic-release,
-ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.8.0`); external uptime (Better
+ADR-0028) surfaced at `GET /api/version` + web footer (currently `1.11.3`); external uptime (Better
 Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ---
@@ -116,10 +118,19 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **Card search UI** — the whole search stack now exists end-to-end (DB → service → routes →
-  `useCardSearch`), so the next build is the real UI in `apps/web`: a `/search` page + the header
-  spotlight/autocomplete (see `design/screens/card-search.md` and the three search patterns in
-  `DESIGN.md`). **Next up.** Phase 3 (Scryfall) is fully complete.
+- **App shell (mobile-first) → then Card Search UI.** The search stack exists end-to-end (DB →
+  service → routes → `useCardSearch`), but a design discussion re-sequenced the frontend work (see
+  decisions-log 2026-11-11):
+  1. **Authenticated app shell first** — the spotlight lives in the header and `/cards` lives in the
+     layout, so the shell is the prerequisite (and unblocks collection/decks too). Grafts onto the
+     existing `_authenticated` route. **Mobile-first**: bottom-nav + top-bar on mobile, collapsed
+     icon sidebar + header on desktop.
+  2. **`/cards`** — the browse _destination_ (a noun, not a "/search" utility page): `useCardSearch`
+     - filters in the **URL** (TanStack Router search params) + grid + pagination. Reference impl,
+       fully unblocked.
+  3. **Header spotlight** — grafts onto the shell, points to `/cards?q=…`; needs a new
+     `useAutocomplete` hook. **Follow-up to remember: its DECKS/COLLECTION result groups wait on
+     those features** (open a GH issue when building it). Deck-builder slide-over = Phase 7.
 - **#113** — unify the duplicated MTG enums (`Rarity`/`Color`: schema Zod vs domain type) into a
   single source of truth (small ADR). Surfaced while adding `special`/`bonus` rarities.
 - **Scryfall feature backlog** — survey in `scryfall-capabilities.md`, issues #100–#108 (Tier 1:
@@ -135,8 +146,8 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- None. #124 (card routes + `toPaginated`) and #125 (`useCardSearch` + api-client cards module +
-  `toQueryString`) **merged** — Phase 3.3 complete. Earlier: #122, #114, #115 (closes #96), #116.
+- None. #128 (security/Node2Shell), #129 (storybook Vitest migration), #130 (react-query dedup
+  hotfix), #131 (dep updates + catalog) all **merged + deployed**. #127 closed (superseded/split).
 
 ---
 
@@ -174,8 +185,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `main` — #124 + #125 merged (card routes + `useCardSearch`). **Phase 3.3 complete.** Next: the
-  card search UI in `apps/web` (`/search` page + header spotlight).
+- `main` — #128/#129/#130/#131 merged + deployed (security, storybook Vitest, react-query dedup
+  hotfix, dep updates + catalog). Prod **v1.11.3**. Next: the authenticated **app shell**
+  (mobile-first) in `apps/web`, then `/cards`, then the header spotlight.
 
 ---
 
