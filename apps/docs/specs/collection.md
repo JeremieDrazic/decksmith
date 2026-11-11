@@ -74,12 +74,13 @@ quickly.**
 - Foil indicator (rainbow border)
 - Price overlay (bottom)
 
-**Table View:** | Column | Description | Sortable | Filterable |
-|--------|-------------|----------|------------| | Image | Thumbnail | No | No | | Name | Card name
-| Yes | Yes (autocomplete) | | Set | Set code + icon | Yes | Yes (multi-select) | | Quantity | #
-copies | Yes | Yes (range) | | Condition | NM/LP/MP/HP/DMG | Yes | Yes (multi-select) | | Foil | ✓
-or ✗ | Yes | Yes (checkbox) | | Price | USD or EUR | Yes | Yes (range slider) | | Tags | User tags
-(pills) | No | Yes (multi-select) | | Custom Fields | User-defined (JSONB) | No | No |
+**Table View:** | Column | Description | Sortable |
+Filterable | |--------|-------------|----------|------------| | Image | Thumbnail | No | No | |
+Name | Card name | Yes | Yes (autocomplete) | | Set | Set code + icon | Yes | Yes (multi-select) | |
+Quantity | # copies | Yes | Yes (range) | | Condition | NM/LP/MP/HP/DMG | Yes | Yes
+(multi-select) | | Foil | ✓ or ✗ | Yes | Yes (checkbox) | | Price | USD or EUR | Yes | Yes (range
+slider) | | Tags | User tags (pills) | No | Yes (multi-select) | | Custom Fields | User-defined
+(JSONB) | No | No |
 
 **Configurable Columns:**
 

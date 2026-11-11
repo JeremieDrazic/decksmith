@@ -43,6 +43,17 @@ function invalidFields(error: unknown): string | null {
 }
 
 /**
+ * Clears the current terminal line so a discrete log message can print without
+ * garbling the in-place progress line. No-op when stdout is not a TTY.
+ */
+function clearLine(): void {
+  if (IS_TTY) {
+    cursorTo(process.stdout, 0);
+    clearTerminalLine(process.stdout, 0);
+  }
+}
+
+/**
  * Owns the worker's stdout during one card sync. Emits concise, human-readable
  * milestone logs (colored on a TTY, plain in prod) and, on a TTY only, a live
  * in-place progress line. The dump is streamed with no known total, so progress
@@ -62,13 +73,6 @@ export function createSyncReporter() {
   let cards = 0;
   let skipped = 0;
   let lastRenderAt = 0;
-
-  function clearLine(): void {
-    if (IS_TTY) {
-      cursorTo(process.stdout, 0);
-      clearTerminalLine(process.stdout, 0);
-    }
-  }
 
   function renderProgress(force: boolean): void {
     if (!IS_TTY) {
