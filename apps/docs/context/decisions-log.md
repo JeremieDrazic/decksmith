@@ -4,6 +4,75 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-11-11] — Card Search UI: shell-first, `/cards` destination, mobile-first, filters-in-URL
+
+**Context:** the search back-end is complete (service + 4 routes + `useCardSearch`), time to build
+the UI. Design discussion challenged the `/search`-page-vs-spotlight framing.
+
+**Decisions:**
+
+- **Build the authenticated app shell FIRST**, before any search UI. The header spotlight lives in
+  the shell and `/cards` lives in the shell layout, so the shell is a hard prerequisite — building
+  search first means retrofitting it into the shell later. The shell also unblocks collection/decks.
+  Grafts onto the existing `_authenticated` route.
+- **A dedicated browse surface IS the right UX** (challenged and upheld): faceted card filtering
+  (colors, CMC range, rarity, format, set) + grid + pagination cannot live in a popover, and every
+  catalog app does this (Scryfall — the direct competitor — Moxfield, e-commerce). But reframed from
+  a verb-y "/search" **utility page** to **`/cards`**, a browse **destination** (a noun). The
+  spotlight and `/cards` coexist by intent: spotlight = quick lookup/navigation, `/cards` = faceted
+  exploration; the spotlight's "see all results" jumps to `/cards?q=…`.
+- **Mobile-first** for all of `apps/web` going forward (Tailwind default: unprefixed = mobile,
+  `md:`/ `lg:` up). Mobile nav = bottom bar, desktop = collapsed icon sidebar; spotlight =
+  full-screen overlay on mobile, centered popover on desktop.
+- **Filters live in the URL** (TanStack Router typed search params) as the single source of truth →
+  `useCardSearch(params)`: shareable, back-button-friendly, SSR-able.
+
+**Sequence:** app shell → `/cards` → header spotlight (needs a new `useAutocomplete` hook; its
+DECKS/COLLECTION result groups wait on those features — open a GH issue when building it).
+Deck-builder slide-over = Phase 7. **Impact:** `apps/web` (upcoming),
+`design/screens/card-search.md` reframe.
+
+---
+
+## [2026-11-11] — Catalog cross-package React-context deps (`@tanstack/react-query` postmortem)
+
+**Context:** a prod outage — every authenticated page crashed with _"No QueryClient set, use
+QueryClientProvider to set one"_ (#130). Root cause: #128 bumped `apps/web` to
+`@tanstack/react-query@^5.104.1` but left `packages/query` + `packages/test-utils` at `^5.101.4`, so
+the bundle carried **two react-query copies**. The hooks in `packages/query` (`useUser`,
+`useCardSearch`) read a different `QueryClient` React **context** than `apps/web`'s provider →
+crash.
+
+**Decision:** any dependency that (a) is used by more than one workspace package and (b) carries a
+React context / must be a singleton (react-query today; react-router/react if they ever go
+cross-package) **must live in the pnpm `catalog`**, referenced as `catalog:` everywhere — not as
+independent literals that can drift. Added `@tanstack/react-query` to the catalog (#131). The hotfix
+(#130) first aligned the literals; #131 made it structural. **Why the catalog didn't already protect
+us:** react-query simply wasn't in it (unlike `react`, which stayed aligned precisely because it
+is).
+
+**Impact:** `pnpm-workspace.yaml` catalog, `apps/web` + `packages/query` + `packages/test-utils` use
+`catalog:` for react-query. **Rule of thumb:** singleton/context libs shared across packages →
+catalog.
+
+---
+
+## [2026-11-11] — Storybook testing: Vitest addon replaces the jest `test-runner`
+
+**Context:** bumping storybook to 10.6.x (for its CVE fix) broke the a11y CI job — storybook 10.6
+loads config via `module.register()`, which the deprecated jest-based `@storybook/test-runner` (jest
+30.5) refuses. Pinning jest would have been a fragile workaround on a deprecated tool.
+
+**Decision:** migrate to Storybook's recommended, **jest-free** path — `@storybook/addon-vitest` +
+`@vitest/browser` + `@vitest/browser-playwright`. Stories now run as **Vitest browser tests**
+(Playwright/Chromium), consistent with the repo's vitest-native setup; **jest is removed from the
+repo entirely**. a11y via `@storybook/addon-a11y` + `parameters.a11y.test = 'error'` (same
+fail-on-violation guarantee as the old `checkA11y`). `.storybook/vitest.setup.ts` keeps the
+synchronous dark-theme decorator so axe's contrast checks are accurate. CI dropped the
+`build + http-server` dance → just `vitest`. **Impact:** `apps/storybook` (#129).
+
+---
+
 ## [2026-10-04] — Card API routes public; reusable pagination + query-string builders
 
 **Context:** Wiring the Phase 3.3 HTTP + front-end layers (#124, #125) raised four small choices.
