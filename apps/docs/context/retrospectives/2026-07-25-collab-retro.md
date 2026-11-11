@@ -22,8 +22,8 @@ first. Re-run the self-assessment below and compare line by line.
 
 ## Learning self-assessment (baseline)
 
-Test used per concept: _"could I explain this to another dev without notes?"_ ✅ = can explain · 🟡
-= fuzzy · ❌ = needs relearning.
+Test used per concept: _"could I explain this to another dev without notes?"_ ✅ = can explain ·
+🟡 = fuzzy · ❌ = needs relearning.
 
 ### A. Auth & security
 

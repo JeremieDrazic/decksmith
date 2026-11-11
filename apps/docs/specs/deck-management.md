@@ -676,8 +676,8 @@ POST /api/recommendations/:id/feedback
 - **Storage**: JSONB fields in `DeckRecommendation` table
 
 **Performance Targets:** | Metric | Target | Notes | |--------|--------|-------| | Algorithm
-execution | < 2s | Pure JS pattern matching | | LLM API call | 10-30s | Depends on Anthropic load |
-| Total analysis time | 15-35s | Async job (non-blocking) |
+execution | < 2s | Pure JS pattern matching | | LLM API call | 10-30s | Depends on Anthropic
+load | | Total analysis time | 15-35s | Async job (non-blocking) |
 
 #### User Experience Flow
 

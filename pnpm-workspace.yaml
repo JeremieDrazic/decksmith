@@ -8,7 +8,7 @@ catalog:
   '@supabase/supabase-js': ^2.117.2
   '@tanstack/react-query': ^5.104.1 # cross-package (apps/web + query + test-utils) — cataloged so it can never dedupe-drift again
   '@testing-library/react': ^16.3.3
-  '@types/node': ^26.6.4
+  '@types/node': ^26.6.6
   '@types/react': ^19.3.0
   '@types/react-dom': ^19.3.0
   dotenv: ^17.4.2
@@ -22,7 +22,7 @@ catalog:
   react-dom: ^19.3.0
   tsx: ^4.23.15
   typescript: ^7.0.2
-  vitest: ^4.1.11
+  vitest: ^5.1.0
   zod: ^4.6.6
 
 # Security pins (CVE fixes) — force patched versions of transitive deps whose
