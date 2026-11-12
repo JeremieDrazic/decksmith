@@ -1,5 +1,6 @@
 import { useCallback, useState, type ReactNode } from 'react';
 
+import { ONE_YEAR_SECONDS, writeCookie } from '../../lib/write-cookie/write-cookie';
 import { DEFAULT_THEME, THEME_COOKIE } from './theme-cookie';
 import { ThemeContext, type Theme } from './ThemeContext';
 
@@ -29,8 +30,7 @@ export function ThemeProvider({
   const setTheme = useCallback((next: Theme) => {
     setThemeState(next);
     document.documentElement.classList.toggle('dark', next === 'dark');
-    // oxlint-disable-next-line unicorn/no-document-cookie -- intentional write; Cookie Store API not viable for sync context
-    document.cookie = `${THEME_COOKIE}=${next}; path=/; max-age=31536000; SameSite=Lax`;
+    writeCookie(THEME_COOKIE, next, { maxAgeSeconds: ONE_YEAR_SECONDS });
   }, []);
 
   const toggleTheme = useCallback(() => {

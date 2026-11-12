@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import {
+  ONE_YEAR_SECONDS,
   Select,
   SelectContent,
   SelectIcon,
   SelectItem,
   SelectList,
   SelectTrigger,
+  writeCookie,
 } from '@decksmith/web-ui';
 
 import { LANGUAGE_COOKIE } from '../i18n';
@@ -31,8 +33,7 @@ export function LanguageControl() {
   function switchLanguage(next: string | null) {
     if (!next || next === lang) return;
     void i18n.changeLanguage(next);
-    // oxlint-disable-next-line unicorn/no-document-cookie -- intentional write; Cookie Store API not viable for sync context
-    document.cookie = `${LANGUAGE_COOKIE}=${next}; path=/; max-age=31536000; SameSite=Lax`;
+    writeCookie(LANGUAGE_COOKIE, next, { maxAgeSeconds: ONE_YEAR_SECONDS });
   }
 
   return (

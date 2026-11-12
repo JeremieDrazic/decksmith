@@ -303,6 +303,9 @@ importers:
       '@decksmith/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@decksmith/utils':
+        specifier: workspace:*
+        version: link:../../packages/utils
       '@decksmith/web-ui':
         specifier: workspace:*
         version: link:../../packages/web-ui

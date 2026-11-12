@@ -371,6 +371,7 @@ export { useArmedState } from './hooks/use-armed-state';
 export { usePrefersReducedMotion } from './hooks/use-prefers-reduced-motion';
 export { useMediaQuery, useBreakpoint, BREAKPOINTS } from './hooks/use-media-query';
 export type { Breakpoint } from './hooks/use-media-query';
+export { useIsHydrated } from './hooks/use-is-hydrated';
 export { useKeyboardShortcut } from './hooks/use-keyboard-shortcut';
 export type { KeyboardShortcutOptions } from './hooks/use-keyboard-shortcut';
 export { useLocalStorage } from './hooks/use-local-storage';
@@ -385,3 +386,8 @@ export {
 export type { Theme, ThemeContextValue } from './hooks/use-theme';
 export { ThemeToggle } from './ui/ThemeToggle';
 export type { ThemeToggleProps } from './ui/ThemeToggle';
+
+// ─── Lib ───────────────────────────────────────────────────────────────────────
+
+export { writeCookie, ONE_YEAR_SECONDS } from './lib/write-cookie/write-cookie';
+export type { WriteCookieOptions } from './lib/write-cookie/write-cookie';
