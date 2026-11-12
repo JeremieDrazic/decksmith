@@ -10,6 +10,7 @@ import {
   frErrors,
   type I18nResources,
 } from '@decksmith/i18n';
+import { readCookie } from '@decksmith/utils';
 
 declare module 'i18next' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -23,8 +24,7 @@ export const LANGUAGE_COOKIE = 'decksmith-language';
 export const SUPPORTED_LANGUAGES = ['en', 'fr'] as const;
 
 export function parseLangFromCookieString(cookieStr: string): string {
-  const match = cookieStr.match(new RegExp(`(?:^|;\\s*)${LANGUAGE_COOKIE}=([^;]+)`));
-  const stored = match?.[1];
+  const stored = readCookie(cookieStr, LANGUAGE_COOKIE);
   if (stored && (SUPPORTED_LANGUAGES as readonly string[]).includes(stored)) return stored;
   return 'en';
 }

@@ -1,3 +1,5 @@
+import { readCookie } from '@decksmith/utils';
+
 import type { Theme } from './ThemeContext';
 
 /** Cookie key for SSR theme resolution — written on every theme change. */
@@ -18,8 +20,7 @@ export const VALID_THEMES: readonly Theme[] = ['light', 'dark'] as const;
  * @returns The stored theme, or `DEFAULT_THEME` if absent or invalid.
  */
 export function parseThemeFromCookieString(cookieStr: string): Theme {
-  const match = cookieStr.match(new RegExp(`(?:^|;\\s*)${THEME_COOKIE}=([^;]+)`));
-  const value = match?.[1];
+  const value = readCookie(cookieStr, THEME_COOKIE);
   return (VALID_THEMES as readonly string[]).includes(value ?? '')
     ? (value as Theme)
     : DEFAULT_THEME;
