@@ -262,6 +262,21 @@ export type {
   DropdownMenuTriggerProps,
 } from './ui/DropdownMenu';
 
+export {
+  ResponsiveMenu,
+  ResponsiveMenuContent,
+  ResponsiveMenuItem,
+  ResponsiveMenuSeparator,
+  ResponsiveMenuTrigger,
+} from './ui/ResponsiveMenu';
+export type {
+  ResponsiveMenuContentProps,
+  ResponsiveMenuItemProps,
+  ResponsiveMenuProps,
+  ResponsiveMenuSeparatorProps,
+  ResponsiveMenuTriggerProps,
+} from './ui/ResponsiveMenu';
+
 export { DeleteButton } from './ui/DeleteButton';
 export type { DeleteButtonProps } from './ui/DeleteButton';
 
