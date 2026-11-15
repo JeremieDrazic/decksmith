@@ -1,33 +1,34 @@
 # Project State
 
-_Updated: 2026-11-11 (**maintenance + toolchain session**, Phase 3.3 Card API already complete).
-Four PRs shipped to prod: **#128** security (Node 22.23.4 / Node2Shell CVE-2026-111497 +
-`pnpm audit --prod` → 0), **#129** Storybook testing migrated from the deprecated jest-based
-`@storybook/test-runner` to the **Vitest addon** (jest removed entirely, storybook 10.6.3), **#130**
-hotfix for a prod outage ("No QueryClient set" — two `@tanstack/react-query` copies in the bundle;
-see decisions-log), **#131** remaining dep updates (react/react-dom 19.3, prisma 7.10, …) +
-**cataloged `@tanstack/react-query`** so cross-package deps can't dedupe-drift again. Prod live at
-**v1.11.3**. Then a design discussion settled the **Card Search UI** approach (shell-first, `/cards`
-browse destination, mobile-first, filters-in-URL — see decisions-log). This file describes the
-**current** state only: environment, what works today, blockers, and what's next. Per-session
-history lives in `decisions-log.md`, the merged PRs, and git — see also `retrospectives/`._
+_Updated: 2026-11-15 (**authenticated app shell session**). Four PRs merged: **#133** deps
+(devtooling + **Vitest 4→5**), **#134** `ResponsiveMenu` primitive (anchored menu ↔ bottom sheet),
+**#135** cookie/SSR foundations (`readCookie`/`writeCookie`, theme/lang migration, `useIsHydrated`,
+`shell-cookie` seed), **#136** the **authenticated app shell** (full-height rail / top bar /
+floating bottom-nav, focus mode + fold via an SSR-cookie-seeded reducer, no hydration flash). Design
+follows Codex's validated **"atelier"** exploration (continuous `bg`, document scroll) and its
+**tooltip = solid-accent label** restyle; `AccountMenu` (avatar + theme/language/logout),
+`useLogout`, `shadow-inset` token, `Logo sm`=18px, dev ports moved to **API 3100 / web 3101** +
+`pnpm dev:app`. Exploration comparators removed;
+`apps/docs/design/{shell,tooltip}-exploration-codex.md` kept as the validated-decision record. This
+file describes the **current** state only; per-session history lives in `decisions-log.md`, the
+merged PRs, and git — see also `retrospectives/`._
 
 ---
 
 ## Environment
 
-| Variable                    | Status                                                                                  |
-| --------------------------- | --------------------------------------------------------------------------------------- |
-| `DATABASE_URL`              | ✅ Configured (Session Pooler port 5432 — `wcvexyibmjkuzufbvuyh`, eu-west-1)            |
-| Supabase project            | ✅ Active (`wcvexyibmjkuzufbvuyh.supabase.co`) — recreated session 21                   |
-| `SUPABASE_URL`              | ✅ Configured                                                                           |
-| `SUPABASE_ANON_KEY`         | ✅ Configured (`sb_publishable_*` format)                                               |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured (`sb_secret_*` format)                                                    |
-| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret)                                                     |
-| `NODE_ENV`                  | ✅ `development` — required for `secure: false` cookies on localhost                    |
-| Redis                       | ✅ Dev: `docker-compose.yml` (localhost:6379, passwordless). Prod: internal container   |
-| `REDIS_PASSWORD`            | ✅ Prod only — server `~/apps/decksmith/.env` (never committed; `openssl rand -hex 32`) |
-| `.env.example`              | ✅ Up to date (Session Pooler + COOKIE_SECRET + VITE_API_URL + NODE_ENV)                |
+| Variable                    | Status                                                                                       |
+| --------------------------- | -------------------------------------------------------------------------------------------- |
+| `DATABASE_URL`              | ✅ Configured (Session Pooler port 5432 — `wcvexyibmjkuzufbvuyh`, eu-west-1)                 |
+| Supabase project            | ✅ Active (`wcvexyibmjkuzufbvuyh.supabase.co`) — recreated session 21                        |
+| `SUPABASE_URL`              | ✅ Configured                                                                                |
+| `SUPABASE_ANON_KEY`         | ✅ Configured (`sb_publishable_*` format)                                                    |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ Configured (`sb_secret_*` format)                                                         |
+| `COOKIE_SECRET`             | ✅ Configured (real 64-char secret)                                                          |
+| `NODE_ENV`                  | ✅ `development` — required for `secure: false` cookies on localhost                         |
+| Redis                       | ✅ Dev: `docker-compose.yml` (localhost:6379, passwordless). Prod: internal container        |
+| `REDIS_PASSWORD`            | ✅ Prod only — server `~/apps/decksmith/.env` (never committed; `openssl rand -hex 32`)      |
+| `.env.example`              | ✅ Up to date — dev ports now **API 3100 / web 3101** (`VITE_API_URL=http://localhost:3100`) |
 
 ---
 
@@ -54,10 +55,14 @@ via session pooler; Supabase client working from `packages/db`. RLS policies app
 policies on the `authenticated` role — defense-in-depth, the API bypasses RLS; ADR-0022, session
 25).
 
-**Frontend** — `pnpm dev:web` → `localhost:3001`. TanStack Start SSR: auth pages (login, register,
-forgot-password), `_authenticated` guard (`beforeLoad` + SSR cookie forwarding, ADR-0023),
-dashboard, root redirect by auth state. Cookie-based theme + language (SSR-safe, no FOUC/FOUT), i18n
-EN + FR from `packages/i18n` (ADR-0025).
+**Frontend** — `pnpm dev:web` → `localhost:3101` (or `pnpm dev:app` = api + web). TanStack Start
+SSR: auth pages (login, register, forgot-password), `_authenticated` guard (`beforeLoad` + SSR
+cookie forwarding, ADR-0023), dashboard, root redirect by auth state. Cookie-based theme + language
+(SSR-safe, no FOUC/FOUT), i18n EN + FR from `packages/i18n` (ADR-0025). **Authenticated app shell**
+(#136): full-height rail (204/68 fold) + top bar + floating bottom-nav, one nav mounted at a time
+(no double landmark), focus mode + fold seeded by `wide`/`folded` cookies read in the
+`_authenticated` loader (no hydration flash) and corrected via `useIsHydrated`; `AccountMenu`
+(avatar + theme/language/`useLogout`); solid-accent `Tooltip`. Continuous `bg`, document scroll.
 
 **Worker** — `apps/worker` (`pnpm dev:worker`, or `pnpm dev:backend` for Redis + api + worker):
 `scryfall-card-sync` job on BullMQ (daily cron, concurrency 1, idempotent retries), writing
@@ -118,16 +123,15 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Next Up
 
-- **App shell (mobile-first) → then Card Search UI.** The search stack exists end-to-end (DB →
-  service → routes → `useCardSearch`), but a design discussion re-sequenced the frontend work (see
-  decisions-log 2026-11-11):
-  1. **Authenticated app shell first** — the spotlight lives in the header and `/cards` lives in the
-     layout, so the shell is the prerequisite (and unblocks collection/decks too). Grafts onto the
-     existing `_authenticated` route. **Mobile-first**: bottom-nav + top-bar on mobile, collapsed
-     icon sidebar + header on desktop.
+- **`/cards` browse UI — the next build.** The app shell is **done** (#136); the search stack exists
+  end-to-end (DB → service → routes → `useCardSearch`). Remaining of the re-sequenced frontend plan
+  (decisions-log 2026-11-11):
+  1. ✅ **Authenticated app shell** — done (#136): full-height rail / top bar / floating bottom-nav,
+     focus + fold, SSR-cookie-seeded, mobile-first.
   2. **`/cards`** — the browse _destination_ (a noun, not a "/search" utility page): `useCardSearch`
-     - filters in the **URL** (TanStack Router search params) + grid + pagination. Reference impl,
-       fully unblocked.
+     - filters in the **URL** (TanStack Router search params) + grid + pagination. Fully unblocked;
+       the top-bar **search slot is reserved** in `TopBar` and lands with this route (deferred so
+       far to avoid a dead affordance).
   3. **Header spotlight** — grafts onto the shell, points to `/cards?q=…`; needs a new
      `useAutocomplete` hook. **Follow-up to remember: its DECKS/COLLECTION result groups wait on
      those features** (open a GH issue when building it). Deck-builder slide-over = Phase 7.
@@ -146,8 +150,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Open PRs
 
-- None. #128 (security/Node2Shell), #129 (storybook Vitest migration), #130 (react-query dedup
-  hotfix), #131 (dep updates + catalog) all **merged + deployed**. #127 closed (superseded/split).
+- None. This session: #133 (deps + Vitest 5), #134 (`ResponsiveMenu`), #135 (cookie/SSR
+  foundations), #136 (authenticated app shell) all **merged to `main`**. Not yet deployed/released
+  (no `chore(release)` tag since — the app-shell work lives on `main` ahead of the last prod tag).
 
 ---
 
@@ -185,9 +190,9 @@ Stack); infra dashboard (Homepage) at `dashboard.<domain>`.
 
 ## Current Branch
 
-- `main` — #128/#129/#130/#131 merged + deployed (security, storybook Vitest, react-query dedup
-  hotfix, dep updates + catalog). Prod **v1.11.3**. Next: the authenticated **app shell**
-  (mobile-first) in `apps/web`, then `/cards`, then the header spotlight.
+- `main` — #133/#134/#135/#136 merged (deps + Vitest 5, `ResponsiveMenu`, cookie/SSR foundations,
+  authenticated app shell). Last prod tag **v1.11.3**; this session's work is on `main` ahead of it.
+  Next: **`/cards` browse UI**, then the header spotlight.
 
 ---
 
