@@ -6,7 +6,7 @@ import { z } from 'zod';
 loadEnv({ path: path.resolve(import.meta.dirname, '../../../.env') });
 
 const EnvSchema = z.object({
-  PORT: z.coerce.number().default(3000),
+  PORT: z.coerce.number().default(3100),
   HOST: z.string().default('0.0.0.0'),
   // Defaults to 'production' so cookies are always secure: true unless explicitly overridden.
   // Set NODE_ENV=development in .env for local development.
@@ -22,7 +22,7 @@ const EnvSchema = z.object({
       64,
       'COOKIE_SECRET must be at least 64 characters. Generate one with: openssl rand -base64 64'
     ),
-  CORS_ORIGIN: z.string().default('http://localhost:3001'),
+  CORS_ORIGIN: z.string().default('http://localhost:3101'),
 });
 
 const parsed = EnvSchema.safeParse(process.env);

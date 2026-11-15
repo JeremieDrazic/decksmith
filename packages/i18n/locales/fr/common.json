@@ -5,6 +5,21 @@
   "dashboard": {
     "title": "Tableau de bord"
   },
+  "nav": {
+    "primary": "Navigation principale",
+    "skipToContent": "Aller au contenu",
+    "collapse": "Réduire",
+    "collapseRail": "Réduire la barre latérale",
+    "expandRail": "Déployer la barre latérale",
+    "focusMode": "Mode focus",
+    "focusEnter": "Activer le mode focus",
+    "focusExit": "Quitter le mode focus",
+    "dashboard": "Tableau de bord"
+  },
+  "account": {
+    "title": "Compte",
+    "logout": "Déconnexion"
+  },
   "theme": {
     "dark": "Mode sombre",
     "light": "Mode clair"
