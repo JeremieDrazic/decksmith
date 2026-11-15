@@ -13,6 +13,6 @@ import { createApiClient } from '@decksmith/api-client';
 const baseUrl =
   globalThis.window === undefined && process.env['API_URL']
     ? process.env['API_URL']
-    : (import.meta.env['VITE_API_URL'] ?? 'http://localhost:3000');
+    : (import.meta.env['VITE_API_URL'] ?? 'http://localhost:3100');
 
 export const apiClient = createApiClient(baseUrl);

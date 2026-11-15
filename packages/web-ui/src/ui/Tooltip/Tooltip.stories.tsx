@@ -1,9 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { Copy, Download, Save, Share2, Trash2 } from 'lucide-react';
+import {
+  BookOpen,
+  Copy,
+  Download,
+  Eye,
+  EyeOff,
+  Layers3,
+  LayoutGrid,
+  Save,
+  Share2,
+  Trash2,
+} from 'lucide-react';
 
 import { Button } from '../Button/Button';
 import { ButtonGroup } from '../ButtonGroup/ButtonGroup';
 import { IconButton } from '../IconButton/IconButton';
+import { IconToggle } from '../IconToggle/IconToggle';
+import { Kbd } from '../Kbd/Kbd';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './Tooltip';
 
 const meta = {
@@ -20,8 +33,8 @@ const meta = {
   args: {
     side: 'top',
     align: 'center',
-    sideOffset: 10,
-    showArrow: true,
+    sideOffset: 8,
+    showArrow: false,
   },
   argTypes: {
     side: { control: 'select', options: ['top', 'right', 'bottom', 'left'] },
@@ -73,11 +86,15 @@ export const Sides: Story = {
   ),
 };
 
-export const WithoutArrow: Story = {
+/**
+ * The default is arrowless. `showArrow` stays available for the rare case where
+ * the anchor is genuinely ambiguous — the arrow follows the accent popup.
+ */
+export const WithArrow: Story = {
   render: () => (
     <Tooltip>
-      <TooltipTrigger render={<Button variant="secondary" />}>No arrow</TooltipTrigger>
-      <TooltipContent showArrow={false}>No directional arrow</TooltipContent>
+      <TooltipTrigger render={<Button variant="secondary" />}>With arrow</TooltipTrigger>
+      <TooltipContent showArrow={true}>Opt-in directional arrow</TooltipContent>
     </Tooltip>
   ),
 };
@@ -119,5 +136,78 @@ export const Toolbar: Story = {
         </Tooltip>
       ))}
     </ButtonGroup>
+  ),
+};
+
+const COLLAPSED_NAV = [
+  { label: 'Dashboard', icon: <LayoutGrid aria-hidden={true} /> },
+  { label: 'Decks', icon: <Layers3 aria-hidden={true} /> },
+  { label: 'Collection and wishlist', icon: <BookOpen aria-hidden={true} /> },
+];
+
+/**
+ * The collapsed rail: icons in a column, each naming itself in a tooltip to the
+ * right. The third's longer label wraps within the 260px cap.
+ */
+export const RailCollapsed: Story = {
+  parameters: { layout: 'padded' },
+  render: () => (
+    <div className="flex w-16 flex-col items-center gap-1 bg-bg p-2">
+      {COLLAPSED_NAV.map(({ label, icon }) => (
+        <Tooltip key={label}>
+          <TooltipTrigger render={<IconButton variant="ghost" aria-label={label} icon={icon} />} />
+          <TooltipContent side="right">{label}</TooltipContent>
+        </Tooltip>
+      ))}
+    </div>
+  ),
+};
+
+/**
+ * The top-bar focus toggle in both states — the tooltip names the action
+ * (enter / exit), below the control.
+ */
+export const FocusToggle: Story = {
+  render: () => (
+    <div className="flex gap-4">
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <IconToggle variant="ghost" aria-label="Focus mode" icon={<Eye aria-hidden={true} />} />
+          }
+        />
+        <TooltipContent side="bottom">Enter focus mode</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger
+          render={
+            <IconToggle
+              variant="ghost"
+              aria-label="Focus mode"
+              defaultPressed={true}
+              icon={<EyeOff aria-hidden={true} />}
+            />
+          }
+        />
+        <TooltipContent side="bottom">Exit focus mode</TooltipContent>
+      </Tooltip>
+    </div>
+  ),
+};
+
+/**
+ * Composed content stays legible on the accent ground — here a keyboard hint.
+ * Verifies a nested `Kbd` keeps its own typography and enough contrast.
+ */
+export const WithKbd: Story = {
+  render: () => (
+    <Tooltip>
+      <TooltipTrigger render={<Button variant="secondary" />}>Save</TooltipTrigger>
+      <TooltipContent>
+        <span className="flex items-center gap-2">
+          Save changes <Kbd>⌘S</Kbd>
+        </span>
+      </TooltipContent>
+    </Tooltip>
   ),
 };

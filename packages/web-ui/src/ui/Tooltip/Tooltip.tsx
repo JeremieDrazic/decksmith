@@ -64,7 +64,7 @@ export type TooltipContentProps = TooltipPrimitive.Popup.Props & {
   align?: TooltipPrimitive.Positioner.Props['align'];
   /** Gap in pixels between trigger and tooltip. @default 8 */
   sideOffset?: number;
-  /** Whether to render the directional arrow. @default true */
+  /** Whether to render the directional arrow. @default false */
   showArrow?: boolean;
 };
 
@@ -80,8 +80,8 @@ export function TooltipContent({
   className,
   side = 'top',
   align = 'center',
-  sideOffset = 10,
-  showArrow = true,
+  sideOffset = 8,
+  showArrow = false,
   children,
   ...props
 }: TooltipContentProps) {
@@ -91,11 +91,12 @@ export function TooltipContent({
         <TooltipPrimitive.Popup
           data-slot="tooltip-content"
           className={cn(
-            // 'dark' forces dark-mode CSS variables regardless of html theme —
-            // tooltip always uses its dark palette (bg-surface = #1a1827, text = #f0eef8).
-            'dark relative z-tooltip max-w-[280px]',
-            'rounded-interactive border border-border bg-surface px-3 py-1.5',
-            'text-xs text-text shadow-popover',
+            // "Accent plein": a small solid-accent label — gold text-on-dark in dark mode,
+            // white-on-violet in light. on-accent carries the per-theme contrast. The only
+            // shadow is a faint inset; never add a drop shadow or halo. Body font, 13px/400.
+            'relative z-tooltip max-w-[260px]',
+            'rounded-interactive border border-accent bg-accent px-2.5 py-1.5',
+            'font-body text-[13px] font-normal leading-[1.4] text-on-accent shadow-inset',
             POPUP_ANIMATION,
             className
           )}
@@ -107,7 +108,8 @@ export function TooltipContent({
               className={cn(
                 // Base UI injects only cross-axis centering (left/top inline style).
                 // We add: position:absolute + main-axis offset to seat the arrow at the popup edge.
-                'absolute size-2.5 rotate-45 bg-surface border border-border',
+                // Opt-in only (showArrow); follows the accent popup so it is never the old surface.
+                'absolute size-2.5 rotate-45 bg-accent border border-accent',
                 'data-[side=top]:bottom-[-6px]',
                 'data-[side=bottom]:top-[-6px]',
                 'data-[side=left]:right-[-6px]',

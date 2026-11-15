@@ -5,6 +5,21 @@
   "dashboard": {
     "title": "Dashboard"
   },
+  "nav": {
+    "primary": "Primary navigation",
+    "skipToContent": "Skip to content",
+    "collapse": "Collapse",
+    "collapseRail": "Collapse sidebar",
+    "expandRail": "Expand sidebar",
+    "focusMode": "Focus mode",
+    "focusEnter": "Enter focus mode",
+    "focusExit": "Exit focus mode",
+    "dashboard": "Dashboard"
+  },
+  "account": {
+    "title": "Account",
+    "logout": "Log out"
+  },
   "theme": {
     "dark": "Dark mode",
     "light": "Light mode"

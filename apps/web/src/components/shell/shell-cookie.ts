@@ -2,43 +2,50 @@ import { readCookie } from '@decksmith/utils';
 import { ONE_YEAR_SECONDS, writeCookie } from '@decksmith/web-ui';
 
 /**
- * Remembers the viewport class this browser last measured, so a returning
- * visitor gets the right navigation on the very first server render.
+ * Per-browser shell preferences the server has to know to paint the right frame
+ * on the first render — no flash on reload for a returning visitor.
  *
- * The server cannot measure the window; without this seed it would always send
- * the mobile floor and a desktop reload would flash the bottom bar before the
- * rail appeared. The shell writes the measured value back on every render; the
- * `_authenticated` loader reads it to pick the shape it renders.
+ * - `wide`: is the viewport at the rail breakpoint (desktop) or below (mobile)?
+ * - `folded`: has the user collapsed the desktop rail to its icons?
+ *
+ * Both are booleans encoded as `'1'` / `'0'`; the server reads the value via
+ * `getCookie`, the client parses `document.cookie`. Not `httpOnly` — the browser
+ * writes them.
  */
 
-/** Cookie key for SSR navigation-shape resolution. */
 export const WIDE_COOKIE = 'decksmith-shell-wide';
+export const FOLDED_COOKIE = 'decksmith-shell-folded';
 
-/** Value meaning "wide" (desktop rail). Anything else — or no cookie — means narrow. */
-export const WIDE_COOKIE_VALUE = '1';
+/** Cookie value for a true flag; absence — or any other value — reads as false. */
+export const TRUE_COOKIE_VALUE = '1';
+const FALSE_COOKIE_VALUE = '0';
 
-/** Value written for the narrow (mobile bottom-nav) shape. */
-const NARROW_COOKIE_VALUE = '0';
-
-/**
- * Parse the shell-wide flag from a raw cookie string (client-side).
- * The server reads the value via `getCookie` and compares to `WIDE_COOKIE_VALUE`.
- *
- * @param cookieStr - Raw cookie string (e.g. `document.cookie`).
- * @returns `true` for the wide shape, `false` when absent or any other value.
- */
-export function parseWideFromCookieString(cookieStr: string): boolean {
-  return readCookie(cookieStr, WIDE_COOKIE) === WIDE_COOKIE_VALUE;
+function parseBoolCookie(cookieStr: string, name: string): boolean {
+  return readCookie(cookieStr, name) === TRUE_COOKIE_VALUE;
 }
 
-/**
- * Remember this browser's current viewport class for the next request.
- * Client-only.
- *
- * @param wide - `true` when the viewport is at or above the rail breakpoint.
- */
-export function writeWideCookie(wide: boolean): void {
-  writeCookie(WIDE_COOKIE, wide ? WIDE_COOKIE_VALUE : NARROW_COOKIE_VALUE, {
+function writeBoolCookie(name: string, value: boolean): void {
+  writeCookie(name, value ? TRUE_COOKIE_VALUE : FALSE_COOKIE_VALUE, {
     maxAgeSeconds: ONE_YEAR_SECONDS,
   });
+}
+
+/** Parse the viewport-shape flag (client). The server compares `getCookie` to `TRUE_COOKIE_VALUE`. */
+export function parseWideFromCookieString(cookieStr: string): boolean {
+  return parseBoolCookie(cookieStr, WIDE_COOKIE);
+}
+
+/** Remember the measured viewport shape for the next request. Client-only. */
+export function writeWideCookie(wide: boolean): void {
+  writeBoolCookie(WIDE_COOKIE, wide);
+}
+
+/** Parse the rail-folded preference (client). The server compares `getCookie` to `TRUE_COOKIE_VALUE`. */
+export function parseFoldedFromCookieString(cookieStr: string): boolean {
+  return parseBoolCookie(cookieStr, FOLDED_COOKIE);
+}
+
+/** Remember whether the user collapsed the rail. Client-only. */
+export function writeFoldedCookie(folded: boolean): void {
+  writeBoolCookie(FOLDED_COOKIE, folded);
 }

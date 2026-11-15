@@ -8,10 +8,11 @@ import { defineConfig } from 'vite';
 const sentryAuthToken = process.env['SENTRY_AUTH_TOKEN'];
 
 export default defineConfig({
-  // Pin the dev server to 3001: the framework default (3000) collides with apps/api.
-  // The API's dev CORS_ORIGIN default allows http://localhost:3001.
+  // Pin the dev server to 3101 — the decksmith dev range is 31xx (API 3100, web 3101),
+  // kept clear of the sibling la-chapelle project on 3000/3001 so both run at once.
+  // The API's dev CORS_ORIGIN default allows http://localhost:3101.
   server: {
-    port: 3001,
+    port: 3101,
   },
   // Emit hidden source maps (no //# sourceMappingURL comment in the shipped JS): the
   // plugin uploads them to GlitchTip, then deletes the .map files, so they're never

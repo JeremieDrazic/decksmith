@@ -140,12 +140,12 @@ Both fonts are self-hosted from `apps/web/public/fonts/`, `font-display: optiona
 
 ### Semantic roles — use these in components
 
-| Token                | Value  | Use cases                                           |
-| -------------------- | ------ | --------------------------------------------------- |
-| `radius-interactive` | 8px    | Buttons, inputs, selects, toggles, checkboxes       |
-| `radius-surface`     | 12px   | Cards, panels, popovers, tooltips, dropdowns        |
-| `radius-modal`       | 16px   | Modals, dialogs, drawers, bottom sheets             |
-| `radius-badge`       | 9999px | Pills, tags, avatars, mana symbol backgrounds, dots |
+| Token                | Value  | Use cases                                               |
+| -------------------- | ------ | ------------------------------------------------------- |
+| `radius-interactive` | 8px    | Buttons, inputs, selects, toggles, checkboxes, tooltips |
+| `radius-surface`     | 12px   | Cards, panels, popovers, dropdowns                      |
+| `radius-modal`       | 16px   | Modals, dialogs, drawers, bottom sheets                 |
+| `radius-badge`       | 9999px | Pills, tags, avatars, mana symbol backgrounds, dots     |
 
 **Rule:** components always use a semantic role, never a scale token directly. **Exception:**
 `radius-sm` (4px) for stamp/seal elements — MTG format badges, rarity chips — with an inline
@@ -168,12 +168,12 @@ comment. These intentionally look crisp/printed, not rounded.
 
 ### Semantic roles — use these in components
 
-| Token            | Value (= scale alias) | Use cases                                |
-| ---------------- | --------------------- | ---------------------------------------- |
-| `shadow-popover` | = shadow-sm           | Tooltips, small dropdowns, hints         |
-| `shadow-card`    | = shadow-md           | Cards, panels, menus                     |
-| `shadow-overlay` | = shadow-lg           | Modals, dialogs, drawers                 |
-| `shadow-accent`  | mode-specific glow    | Hover/focus glow on interactive surfaces |
+| Token            | Value (= scale alias) | Use cases                                               |
+| ---------------- | --------------------- | ------------------------------------------------------- |
+| `shadow-popover` | = shadow-sm           | Small dropdowns, hints (tooltips use shadow-inset only) |
+| `shadow-card`    | = shadow-md           | Cards, panels, menus                                    |
+| `shadow-overlay` | = shadow-lg           | Modals, dialogs, drawers                                |
+| `shadow-accent`  | mode-specific glow    | Hover/focus glow on interactive surfaces                |
 
 **Rule:** components always use a semantic role — `shadow-card`, not `shadow-md`. Combining
 `shadow-card + shadow-accent` is the standard card hover state.

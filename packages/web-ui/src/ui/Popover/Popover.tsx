@@ -51,7 +51,7 @@ export type PopoverContentProps = PopoverPrimitive.Popup.Props & {
 
 /**
  * The floating popover panel. Renders via Portal to avoid stacking context issues.
- * Follows the page theme (unlike Tooltip which is always dark).
+ * Surface-grounded panel for rich content — distinct from Tooltip, which is a small solid-accent label.
  *
  * @example
  * <PopoverContent side="bottom" align="start">

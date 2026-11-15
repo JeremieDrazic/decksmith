@@ -15,7 +15,8 @@ const logoVariants = cva('inline-flex items-center', {
   defaultVariants: { size: 'md' },
 });
 
-const WORD_CLASS = { sm: 'text-sm', md: 'text-xl', lg: 'text-3xl' } as const;
+// sm's wordmark matches the 18px mark (see Mark MARK_PX.sm); md/lg unchanged.
+const WORD_CLASS = { sm: 'text-lg', md: 'text-xl', lg: 'text-3xl' } as const;
 
 export type LogoProps = React.ComponentProps<'span'> &
   VariantProps<typeof logoVariants> & {

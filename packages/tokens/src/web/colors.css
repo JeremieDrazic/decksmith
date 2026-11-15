@@ -195,6 +195,7 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-popover: var(--shadow-popover);
   --shadow-card: var(--shadow-card);
+  --shadow-inset: var(--shadow-inset);
   --shadow-card-rest: var(--shadow-card-rest);
   --shadow-card-lift: var(--shadow-card-lift);
   --shadow-overlay: var(--shadow-overlay);
