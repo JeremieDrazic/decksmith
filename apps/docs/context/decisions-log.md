@@ -4,6 +4,71 @@ Micro-decisions that don't warrant a full ADR. Ordered newest-first.
 
 ---
 
+## [2026-11-15] — App shell: "atelier" direction, 3-state nav, SSR cookie seeding
+
+**Context:** building the authenticated shell (#136). Two external design explorations (by Codex,
+captured in `apps/docs/design/{shell,tooltip}-exploration-codex.md`) were run and validated by
+Jérémie; this logs the decisions ported into the real components.
+
+**Decisions:**
+
+- **"Atelier sans feuille" layout** — one continuous `bg` ground (rail + content share it, no framed
+  "sheet", no borders), full-height rail + top bar **sticky with document scroll** (not internal
+  scroll). Rail 204px / 68px folded; top bar + rail-brand box both 68px so folding never shifts
+  content. Active nav entry = `surface` tile + `shadow-inset` + a 4px `accent-text` ◈ gem (accent
+  lives only in the gem, not a loud fill).
+- **Rail state = a reducer with `folded` + `hidden` kept independent** (not one boolean). `folded`
+  (collapse) is persisted in a `decksmith-shell-folded` cookie; `hidden` (focus mode, top-bar eye
+  toggle) is **session-local, not persisted**. Entering/leaving focus preserves the fold.
+- **SSR cookie seeding over CSS responsive** for the nav shape — the server can't measure the
+  viewport, so `wide`/`folded` cookies read in the `_authenticated` loader pick the shape for the
+  first paint (no flash); `useIsHydrated` + `useMediaQuery` correct a resized browser after
+  hydration. This mounts exactly **one** nav tree (rail OR bottom-nav), avoiding the duplicate
+  "navigation" landmark a CSS `hidden`/`md:flex` swap would ship.
+- **Tooltip → "solid-accent" label** — `bg-accent` / `text-on-accent` / body font / 13px / 400 /
+  `shadow-inset` only / **no arrow** (`showArrow` default `false`, `sideOffset` 8). Replaces the
+  previous surface/mono/drop-shadow look. `shadow-inset` promoted to a public `@theme` utility.
+- **`ResponsiveMenu` primitive** (#134): one menu, two shapes — Base UI `Menu` anchored on desktop ↔
+  `Drawer` bottom sheet on mobile, chosen by `useMediaQuery`. Scoped to anchored menus only (the
+  spotlight Dialog and the `/cards` filters sidebar are separate patterns — verified against the
+  three design mocks, not forced into one god-component).
+- **`readCookie` (pure, `packages/utils`) + `writeCookie` (`packages/web-ui/lib`)** (#135) — cookie
+  logic was duplicated across the theme and language code; centralized, both migrated. `apps/web`
+  gained a direct `@decksmith/utils` dependency (pure utils, allowed — ADR-0016 only bars
+  `apps/web → @decksmith/domain`).
+- **Settings page dropped for now** — theme + language live as click items in `AccountMenu` (not a
+  `/settings` page); re-introduce the page when it has real content (account/preferences). Nav shows
+  only live destinations (Dashboard); no disabled "coming soon" entries.
+- **Shell components stay presentational** — the signed-in `user` is passed down as a prop from the
+  `_authenticated` route (which has it from `beforeLoad`), not read via `useRouteContext` deep in
+  the tree, keeping `AppShell`/`TopBar`/`AccountMenu` decoupled from routing.
+
+**Impact:** `apps/web/src/components/shell/*`, `apps/web/src/routes/_authenticated.tsx`,
+`packages/web-ui` (`ResponsiveMenu`, `Tooltip`, `Avatar`, `Logo`, `lib/write-cookie`,
+`hooks/use-is-hydrated`), `packages/utils/read-cookie`, `packages/query` (`useLogout`),
+`packages/tokens` (`shadow-inset`), i18n.
+
+---
+
+## [2026-11-15] — Dev ports moved to 31xx; Vitest 4→5
+
+**Context:** `decksmith` and the sibling `la-chapelle` project both used ports 3000/3001, so they
+couldn't run at once. Separately, routine dep maintenance included a Vitest major.
+
+**Decisions:**
+
+- **Dev ports → API `3100` / web `3101`** (the `31xx` range), clear of la-chapelle's `30xx`. Prod is
+  unaffected — the API Dockerfile pins `ENV PORT=3000`, so the code default change only touches
+  local dev. Added a **`pnpm dev:app`** script (api + web only, no worker/storybook/docs) to avoid
+  the noisy Redis/port errors of `pnpm dev`.
+- **Vitest 4 → 5** (#133): `@storybook/addon-vitest` already allowed `^5`; no v5 breaking change
+  touched our code (no `sequential`, no `@vitest/expect`/`runner` imports, no `expect.poll`).
+
+**Impact:** `apps/web/vite.config.ts`, `apps/api/src/config.ts`, `apps/web/src/lib/api-client.ts`,
+`.env.example`, root `package.json`, catalog + `@vitest/*` pins.
+
+---
+
 ## [2026-11-11] — Card Search UI: shell-first, `/cards` destination, mobile-first, filters-in-URL
 
 **Context:** the search back-end is complete (service + 4 routes + `useCardSearch`), time to build
